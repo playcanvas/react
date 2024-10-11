@@ -1,0 +1,12 @@
+{
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+      "packages/lib",
+      "packages/examples"
+    ],
+    "scripts": {
+      "build": "npm run build --workspace=react",
+      "dev": "npm run dev --workspace=examples"
+    }
+  }

@@ -1,0 +1,1 @@
+export { fetchAsset } from './fetch-asset'
