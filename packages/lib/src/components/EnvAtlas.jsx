@@ -12,6 +12,12 @@ export const EnvAtlas = ({ asset, ...props }) => {
 
         app.scene.envAtlas = asset.resource;
 
+        return () => {
+            if(!asset) return 
+            // asset.unload()
+            app.scene.envAtlas = null
+        }
+
     }, [asset]);
 
 }

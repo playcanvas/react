@@ -23,11 +23,13 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
     const [app, setApp] = useState();
 
     useEffect(() => {
-        if(canvasRef.current){
+        if(canvasRef.current && !app){
+
+            console.log('Initializing App');
 
             const opts = {
-                mouse: new Mouse(document.body),
-                touch: new TouchDevice(document.body)
+                mouse: new Mouse(canvasRef.current),
+                touch: new TouchDevice(canvasRef.current)
             }
 
             const localApp = new PlayCanvasApplication(canvasRef.current, opts);
@@ -40,7 +42,12 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
 
         }
     
-        return () => {};
+        return () => {
+            if(!app) return
+            console.log('Destroying App');
+            app.destroy();
+            setApp(null);
+        };
     }, [canvasRef]);
 
     
