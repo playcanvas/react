@@ -1,7 +1,29 @@
 {
     "name": "@playcanvas/react",
-    "type": "module",
+    "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
     "version": "1.0.0",
+    "keywords": [
+        "2d",
+        "3d",
+        "react",
+        "react-native",
+        "gaussian",
+        "game",
+        "gltf",
+        "splatting",
+        "webgl",
+        "webgl2",
+        "webgpu",
+        "webxr"
+    ],
+    "bugs": {
+        "url": "https://github.com/playcanvas/react/issues"
+      },
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/playcanvas/react/tree/main/packages/lib"
+      },
+    "type": "module",
     "main": "src/index.js",
     "files": ["src"],
     "exports": {
