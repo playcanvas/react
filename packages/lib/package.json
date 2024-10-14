@@ -1,7 +1,7 @@
 {
     "name": "@playcanvas/react",
     "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "keywords": [
         "2d",
         "3d",
