@@ -1,3 +1,3 @@
-export { Application, ApplicationWithoutCanvas, useApp } from './Application';
+export { Application, ApplicationWithoutCanvas } from './Application';
 export { Container } from './Container';
-export { Entity, useParent } from './Entity';
+export { Entity } from './Entity';

@@ -1,23 +1,20 @@
-import { useEffect, use } from "react";
-import { useApp } from "../Application";
+import { useLayoutEffect } from "react";
+import { useApp } from "../hooks/use-app";
 
 export const EnvAtlas = ({ asset, ...props }) => {
 
     const app = useApp();
+    if(asset?.resource) app.scene.envAtlas = asset.resource;
+    
+    // useLayoutEffect(() => {
+    //     if (!asset?.resource) return;
+        
+    //     app.scene.envAtlas = asset.resource;
 
-    if (asset) app.scene.envAtlas = asset.resource;
+    //     return () => {
+    //         app.scene.envAtlas = null
+    //     }
 
-    useEffect(() => {
-        if (!asset) return;
-
-        app.scene.envAtlas = asset.resource;
-
-        return () => {
-            if(!asset) return 
-            // asset.unload()
-            app.scene.envAtlas = null
-        }
-
-    }, [asset]);
+    // }, [asset?.resource]);
 
 }

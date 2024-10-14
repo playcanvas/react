@@ -1,15 +1,15 @@
-import { useEffect, useRef } from "react";
+import { useLayoutEffect, useRef } from "react";
 import { Entity } from "./Entity";
 
 export const Container = ({ asset, ...props }) => {
     
     const entityRef = useRef();
     
-    useEffect(() => {
+    useLayoutEffect(() => {
         
         const entity = entityRef.current;
         if(asset && entity) {
-            const assetEntity = asset.resource.instantiateModelEntity();
+            const assetEntity = asset.resource.instantiateRenderEntity();
             entity.addChild(assetEntity);
         }
         
@@ -18,7 +18,7 @@ export const Container = ({ asset, ...props }) => {
 
             const assetEntity = entity.children[0];
             entity.removeChild(assetEntity);
-            assetEntity.destroy();
+            // assetEntity.destroy();
 
         }
     }, [asset]);

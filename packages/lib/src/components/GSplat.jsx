@@ -1,29 +1,27 @@
-import { useEffect, useRef } from "react";
-import { Entity, useParent } from "../Entity";
+import { useLayoutEffect, useRef } from "react";
+import { Entity } from "../Entity";
 
 export const GSplat = ({ asset, ...props } = {}) => {
 
     const entityRef = useRef();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
 
         if(asset) {
             const assetEntity = asset.resource.instantiate();
             entityRef.current.addChild(assetEntity);
         }
 
-        // return () => {
+        return () => {
 
-        //     const entity = entityRef.current;
-        //     if (!entity) return;
+            const entity = entityRef.current;
+            if (!entity) return;
 
-        //     const assetEntity = entity.children[0];
+            const assetEntity = entity.children[0];
+            if (!assetEntity) return;
 
-        //     if (!assetEntity) return;
-
-        //     entity.removeChild(assetEntity);
-        //     assetEntity.destroy();
-        // }
+            entity.removeChild(assetEntity);
+        }
     }, [asset]);
 
     return <Entity ref={entityRef} {...props} />

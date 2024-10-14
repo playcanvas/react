@@ -1,39 +1,31 @@
 import { Entity as pcEntity } from 'playcanvas';
-import { createContext, forwardRef, useContext, useEffect, useImperativeHandle, useRef } from 'react';
-import { useApp } from './Application';
+import { forwardRef, useImperativeHandle, useLayoutEffect, useRef } from 'react';
+import { ParentContext } from './contexts/parent-context';
+import { useApp } from './hooks/use-app';
+import { useParent } from './hooks/use-parent';
 
-export const ParentContext = createContext(null);
+export const Entity = forwardRef(function Entity({ children, name = 'Untitled', position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] }, ref) {
 
-export const useParent = () => {
-    return useContext(ParentContext);
-}
-
-export const Entity = forwardRef(function Entity({ children, name, position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] }, ref) {
-
-    const entityRef = useRef();
     const parent = useParent();
     const app = useApp();
+    const entityRef = useRef(new pcEntity(name, app));
 
     useImperativeHandle(ref, () => entityRef.current);
 
-    if(!entityRef.current) {
-        entityRef.current = new pcEntity(name, app);
-    }
+    useLayoutEffect(() => {
+        parent.addChild(entityRef.current);
 
-    // set entity props
-    entityRef.current.name = name;
-    entityRef.current.setLocalPosition(...position);
-    entityRef.current.setLocalScale(...scale);
-    entityRef.current.setLocalEulerAngles(...rotation);
-
-    useEffect(() => {
-        if(parent){
-            parent.addChild(entityRef.current);
-        }
         return () => {
             parent.removeChild(entityRef.current);
         }
-    }, [parent]);
+    }, [app, parent, children]);
+
+    useLayoutEffect(() => {
+        entityRef.current.name = name;
+        entityRef.current.setLocalPosition(...position);
+        entityRef.current.setLocalScale(...scale);
+        entityRef.current.setLocalEulerAngles(...rotation);
+    }, [name, position, scale, rotation]);
   
     return <ParentContext.Provider value={entityRef.current}>
       {children}

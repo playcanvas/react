@@ -6,19 +6,23 @@ import { useEnvMap, useModel } from "./utils/hooks"
 
 export const Game = () => {
   
-    const { data: envMap } = useEnvMap('/assets/outdoor_umbrellas_2k.png');
-    const { data: model } = useModel('/assets/statue.glb');
+    const { data: envMap, isPending: isEnvLoading } = useEnvMap('/assets/ballroom_2k.png');
+    const { data: model, isPending: isModeLoading } = useModel('/assets/statue.glb');
+
+    // Don't render unless the 
+    if(isEnvLoading || isModeLoading) return null;
 
     return <>
 
         <EnvAtlas asset={envMap} />
 
-        <Entity>
-          <Camera/>
+        <Entity >
+          <Camera />
           <OrbitControls inertiaFactor={0.1} />
+          <Script script={CameraFrame} />
         </Entity>
 
-        <Entity scale={[1, 1, 1]}>
+        <Entity name='Asset' scale={[1, 1, 1]}>
           <Container asset={model} />
         </Entity>
     

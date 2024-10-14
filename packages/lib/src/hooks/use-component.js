@@ -1,12 +1,12 @@
-import { useEffect, useRef } from "react";
-import { useParent } from "../Entity";
+import { useLayoutEffect, useRef } from "react";
+import { useParent } from "./use-parent";
 
 export const useComponent = (ctype, props) => {
 
     const parent = useParent();
     const componentRef = useRef();
     
-    useEffect(() => {
+    useLayoutEffect(() => {
         if(parent){
 
             // It is necessary to clone the props object to avoid mutating the original object
@@ -20,7 +20,9 @@ export const useComponent = (ctype, props) => {
 
         return () => {
             if(componentRef.current) {
+                componentRef.current.enabled = false;
                 parent.removeComponent(ctype);
+                componentRef.current = null;
             }
         }
 

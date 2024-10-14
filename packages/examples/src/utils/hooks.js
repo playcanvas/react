@@ -1,5 +1,5 @@
 import { TEXTURETYPE_RGBP } from "playcanvas"
-import { useApp } from "@playcanvas/react"
+import { useApp } from "@playcanvas/react/hooks"
 import { useQuery } from "@tanstack/react-query";
 import { fetchAsset } from "@playcanvas/react/utils"
 
@@ -7,10 +7,10 @@ export const useAsset = (src, type, props) => {
     const app = useApp();
   
     return useQuery({ 
-      queryKey: [src],
-      queryFn: () => fetchAsset(app, src, type, props)
+        queryKey: [src],
+        queryFn: () => fetchAsset(app, src, type, props)
     })
-  }
+}
   
 export const useEnvMap = (src, props) => useAsset(src, 'texture', { 
     ...props, 
