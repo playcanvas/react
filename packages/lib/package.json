@@ -32,7 +32,8 @@
         ".": "./src/index.js",
         "./components": "./src/components/index.js",
         "./utils": "./src/utils/index.js",
-        "./scripts": "./src/scripts/index.js"
+        "./scripts": "./src/scripts/index.js",
+        "./hooks": "./src/hooks/index.jsx"
     },
     "engines": {
         "node": ">=18.0.0"

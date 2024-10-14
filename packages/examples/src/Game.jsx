@@ -16,7 +16,6 @@ export const Game = () => {
         <Entity>
           <Camera/>
           <OrbitControls inertiaFactor={0.1} />
-          <Script script={CameraFrame} />
         </Entity>
 
         <Entity scale={[1, 1, 1]}>
