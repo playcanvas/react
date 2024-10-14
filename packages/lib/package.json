@@ -1,7 +1,7 @@
 {
     "name": "@playcanvas/react",
     "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "2d",
         "3d",
@@ -18,14 +18,16 @@
     ],
     "bugs": {
         "url": "https://github.com/playcanvas/react/issues"
-      },
-      "repository": {
+    },
+    "repository": {
         "type": "git",
         "url": "https://github.com/playcanvas/react/tree/main/packages/lib"
-      },
+    },
     "type": "module",
     "main": "src/index.js",
-    "files": ["src"],
+    "files": [
+        "src"
+    ],
     "exports": {
         ".": "./src/index.js",
         "./components": "./src/components/index.js",
@@ -43,4 +45,4 @@
     "publishConfig": {
         "access": "public"
     }
-  }
+}
