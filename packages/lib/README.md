@@ -1,5 +1,3 @@
-# @playcanvas/react
-
 [![npm version](https://img.shields.io/npm/v/@playcanvas/react.svg)](https://www.npmjs.com/package/@playcanvas/react)
 
 A React renderer for [PlayCanvas](https://github.com/playcanvas/engine) – build interactive 3D applications using React's declarative paradigm.

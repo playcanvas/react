@@ -4,7 +4,6 @@ import { Entity } from "./Entity";
 export const Container = ({ asset, ...props }) => {
     
     const entityRef = useRef();
-    // if (asset.resource) entity.
     
     useEffect(() => {
         
