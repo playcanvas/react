@@ -6,8 +6,8 @@ import { useEnvMap, useModel } from "./utils/hooks"
 
 export const Game = () => {
   
-    const { data: envMap, isPending: isEnvLoading } = useEnvMap('/assets/ballroom_2k.png');
-    const { data: model, isPending: isModeLoading } = useModel('/assets/statue.glb');
+    const { data: envMap, isPending: isEnvLoading } = useEnvMap('/umbrellas_2k.png');
+    const { data: model, isPending: isModeLoading } = useModel('/statue.glb');
 
     // Don't render unless the 
     if(isEnvLoading || isModeLoading) return null;

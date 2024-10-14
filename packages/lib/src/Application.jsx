@@ -1,8 +1,6 @@
 import { FILLMODE_NONE, Application as PlayCanvasApplication, RESOLUTION_AUTO, Mouse, TouchDevice } from "playcanvas";
 import { useLayoutEffect, useRef, useState } from "react";
-import { AppContext } from "./contexts/app-context";
-import { ParentContext } from "./contexts/parent-context";
-import { Entity } from "./Entity";
+import { AppContext, ParentContext } from "./hooks";
 
 export const Application = ({ children }) => {
     const canvas = useRef();
@@ -21,8 +19,6 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
     useLayoutEffect(() => {
         if(canvasRef.current && !app){
 
-            console.log('starting')
-
             const localApp = new PlayCanvasApplication(canvasRef.current, {
                 mouse: new Mouse(canvasRef.current),
                 touch: new TouchDevice(canvasRef.current)
@@ -37,22 +33,17 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
         }
         
         return () => {
-            console.log('destroying')
             setApp(null);
         };
     }, [canvasRef]);
     
     
     if(!app) return null;
-
-    // console.log(app.scene)
     
     return (
         <AppContext.Provider value={app}>
             <ParentContext.Provider value={app.root}>
-                {/* <Entity > */}
                 { children }
-                {/* </Entity> */}
             </ParentContext.Provider>
         </AppContext.Provider>
     )

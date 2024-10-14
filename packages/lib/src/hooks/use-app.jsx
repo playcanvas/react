@@ -1,5 +1,6 @@
-import { useContext } from "react";
-import { AppContext } from "../contexts/app-context";
+import { useContext, createContext } from "react";
+
+export const AppContext = createContext(null);
 
 export const useApp = () => {
     const appContext = useContext(AppContext);
@@ -8,4 +9,5 @@ export const useApp = () => {
     }
     return appContext;
 };
-  
+
+

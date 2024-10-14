@@ -1,5 +1,6 @@
-import { useContext } from "react";
-import { ParentContext } from "../contexts/parent-context";
+import { useContext, createContext } from "react";
+
+export const ParentContext = createContext(null);
 
 export const useParent = () => {
     const context = useContext(ParentContext);
@@ -8,3 +9,4 @@ export const useParent = () => {
     }
     return context;
 };
+

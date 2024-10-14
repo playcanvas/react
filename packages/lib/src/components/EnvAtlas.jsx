@@ -1,5 +1,5 @@
 import { useLayoutEffect } from "react";
-import { useApp } from "../hooks/use-app";
+import { useApp } from "../hooks";
 
 export const EnvAtlas = ({ asset, ...props }) => {
 

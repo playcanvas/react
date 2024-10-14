@@ -1,4 +1,4 @@
-import { useComponent } from "../hooks/use-component";
+import { useComponent } from "../hooks";
 
 export const Render = (props = {}) => {
 

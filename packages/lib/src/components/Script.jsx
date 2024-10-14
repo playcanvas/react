@@ -1,4 +1,4 @@
-import { useScript } from "../hooks/use-script.jsx"
+import { useScript } from "../hooks"
 
 
 export const Script = ({ script, ...props }) => {
