@@ -1,4 +1,4 @@
-import {  useLayoutEffect, useRef } from "react";
+import { useLayoutEffect, useEffect, useRef } from "react";
 import { useParent } from "./use-parent";
 
 const toLowerCamelCase = str => str[0].toLowerCase() + str.substring(1);
@@ -8,7 +8,7 @@ export const useScript = (ScriptConstructor, props) => {
     const scriptName = toLowerCamelCase(ScriptConstructor.name)
     const scriptRef = useRef(null);
 
-
+    // Create the script synchronously
     useLayoutEffect(() => {
         // if (parent) {
         // Ensure the parent entity has a script component
@@ -41,8 +41,8 @@ export const useScript = (ScriptConstructor, props) => {
         };
     }, [parent, ScriptConstructor, scriptRef.current]);
 
-    // Update script attributes when props change
-    useLayoutEffect(() => {
+    // And update script props in the 
+    useEffect(() => {
         if (scriptRef.current) {
             for (const key in props) {
                 if (scriptRef.current[key] !== undefined) {

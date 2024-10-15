@@ -3,28 +3,29 @@ import { Camera, Script, EnvAtlas } from "@playcanvas/react/components"
 import { CameraFrame, OrbitControls } from "@playcanvas/react/scripts"
 
 import { useEnvMap, useModel } from "./utils/hooks"
+import { useRef } from "react"
 
 export const Game = () => {
   
     const { data: envMap, isPending: isEnvLoading } = useEnvMap('/umbrellas_2k.png');
     const { data: model, isPending: isModeLoading } = useModel('/statue.glb');
 
-    // Don't render unless the 
-    if(isEnvLoading || isModeLoading) return null;
+    const focusRef = useRef();
 
-    return <>
+  // Don't render unless loaded
+  if (isEnvLoading || isModeLoading) return null;
+  return (
+    <>
+      <EnvAtlas asset={envMap} />
 
-        <EnvAtlas asset={envMap} />
+      <Entity>
+        <Camera />
+        <OrbitControls inertiaFactor={0.3} focusEntity={focusRef.current} />
+      </Entity>
 
-        <Entity >
-          <Camera />
-          <OrbitControls inertiaFactor={0.1} />
-          <Script script={CameraFrame} />
-        </Entity>
-
-        <Entity name='Asset' scale={[1, 1, 1]}>
-          <Container asset={model} />
-        </Entity>
-    
+      <Entity name="Asset" ref={focusRef}>
+        <Container asset={model} />
+      </Entity>
     </>
+  );
 }
