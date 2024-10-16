@@ -25,9 +25,8 @@ export const GlbViewer = ({
 
   const { data: envMap, isPending: isEnvLoading } = useEnvMap(envMapSrc);
   const { data: model, isPending: isModeLoading } = useModel(src);
-  const diffuse = useMemo(_ => new Color(0.18, 0.16, 0.158));
-  const clearColor = useMemo(_ => new Color(0.18, 0.16, 0.158));
-  const floor = useMaterial({ blendType: BLEND_MULTIPLICATIVE, useSkybox: false });
+  const clearColor = useMemo(_ => new Color(0.18, 0.17, 0.168));
+  const floor = useMaterial({ blendType: BLEND_MULTIPLICATIVE, useSkybox: true, useGammaTonemap: false });
 
   useEffect(() => {
     if (isModeLoading || isEnvLoading) return;
@@ -49,17 +48,17 @@ export const GlbViewer = ({
       <EnvAtlas asset={envMap} />
       <Script script={Grid} />
 
-      <Entity name='camera' position={[4, 4, 4]}>
-        <Camera clearColor={clearColor} fov={25} newClip={1} farClip={1000000}/>
-        <OrbitControls inertiaFactor={0.07} distanceMin={30} distanceMax={30} />
+      <Entity name='camera' position={[4, 2, 4]}>
+        <Camera clearColor={clearColor} fov={28} />
+        <OrbitControls inertiaFactor={0.07} distanceMin={35} distanceMax={35} pitchAngleMin={1}/>
       </Entity>
 
-      <Entity name='floor' scale={[10000, 1, 10000]} position={[0, 0.1, 0]}>
+      <Entity name='scene' scale={[10000, 10000, 10000]} position={[0, 0.1, 0]}>
         <Render type='plane' receiveShadows material={floor}/>
       </Entity>
 
       <Entity name='light' rotation={[45, 350, 20]}  >
-        <Light type='directional' castShadows shadowIntensity={0.7}/>
+        <Light type='directional' castShadows shadowIntensity={1.1} shadowDistance={50} />
       </Entity>
 
       <Entity name='asset'>
