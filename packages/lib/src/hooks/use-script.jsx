@@ -1,89 +1,50 @@
-import { useLayoutEffect, useEffect, useRef } from "react";
-import { useParent } from "./use-parent";
+import { useLayoutEffect, useEffect, useRef } from 'react';
+import { useParent } from './use-parent';
+import { useApp } from './use-app';
 
-const toLowerCamelCase = str => str[0].toLowerCase() + str.substring(1);
+const toLowerCamelCase = (str) => str[0].toLowerCase() + str.substring(1);
 
 export const useScript = (ScriptConstructor, props) => {
-    const parent = useParent();
-    const scriptName = toLowerCamelCase(ScriptConstructor.name)
-    const scriptRef = useRef(null);
+  const parent = useParent();
+  const app = useApp();
+  const scriptName = toLowerCamelCase(ScriptConstructor.name);
+  const scriptRef = useRef(null);
 
-    // Create the script synchronously
-    useLayoutEffect(() => {
-        // if (parent) {
-        // Ensure the parent entity has a script component
-        if (!parent.script) {
-            parent.addComponent('script');
+  // Create the script synchronously
+  useLayoutEffect(() => {
+    // Ensure the parent entity has a script component
+    if (!parent.script) {
+      parent.addComponent('script');
+    }
+
+    // Check if we've already created the script
+    if (!scriptRef.current) {
+      // Create the script instance with the provided attributes
+      const scriptInstance = parent.script.create(ScriptConstructor, {
+        properties: { ...props },
+        preloading: false,
+      });
+      scriptInstance.__name = scriptName;
+      scriptRef.current = scriptInstance;
+    }
+
+    // Cleanup function to remove the script when the component is unmounted
+    return () => {
+      if (parent?.script && scriptRef.current) {
+        parent.script.destroy(scriptRef.current);
+        scriptRef.current = null;
+      }
+    };
+  }, [app, parent, ScriptConstructor]);
+
+  // Update script props when they change
+  useEffect(() => {
+    if (scriptRef.current) {
+      for (const key in props) {
+        if (scriptRef.current[key] !== undefined) {
+          scriptRef.current[key] = props[key];
         }
-
-        // Check if the script already exists on the parent
-        // console.log('Script Name', scriptName)
-        if (!parent.script[scriptName]) {
-            // Create the script instance with the provided attributes
-            const scriptInstance = parent.script.create(ScriptConstructor, { properties: { ...props }, preloading: false });
-            scriptInstance.__name = scriptName;
-            scriptRef.current = scriptInstance;
-        } else {
-            throw new Error(
-                `Multiple '${scriptName}' scripts have been added to the '${parent.name}' entity. Only one '${scriptName}' script is allowed.`
-            );
-        }
-        // }
-
-        // Cleanup function to remove the script when the component is unmounted
-        return () => {
-            // console.log('Running Script cleanup');
-            if (scriptRef.current) {
-                parent.script[scriptName] = null;
-                parent.script.destroy(scriptRef.current);
-                scriptRef.current = null;
-            }
-        };
-    }, [parent, ScriptConstructor, scriptRef.current]);
-
-    // And update script props in the 
-    useEffect(() => {
-        if (scriptRef.current) {
-            for (const key in props) {
-                if (scriptRef.current[key] !== undefined) {
-                    scriptRef.current[key] = props[key];
-                }
-            }
-        }
-    }, [props]); // Re-run effect when props change
+      }
+    }
+  }, [props]);
 };
-
-
-    // useLayoutEffect(() => {
-    //     if (parent) {
-    //         // Ensure the parent entity has a script component
-    //         if (!parent.script) {
-    //             parent.addComponent('script');
-    //         }
-
-    //         // Check if the script already exists on the parent
-    //         // console.log('Script Name', scriptName)
-    //         if (!parent.script[scriptName]) {
-    //             // Create the script instance with the provided attributes
-    //             const scriptInstance = parent.script.create(ScriptConstructor, { properties: { ...props }, preloading: false });
-    //             scriptInstance.__name = scriptName;
-    //             scriptRef.current = scriptInstance;
-    //         } else {
-    //             throw new Error(
-    //                 `Multiple '${scriptName}' scripts have been added to the '${parent.name}' entity. Only one '${scriptName}' script is allowed.`
-    //             );
-    //         }
-    //     }
-
-    //     // Cleanup function to remove the script when the component is unmounted
-    //     return () => {
-    //         // console.log('Running Script cleanup');
-    //         if (scriptRef.current) {
-    //             parent.script[scriptName] = null;
-    //             parent.script.destroy(scriptRef.current);
-    //             scriptRef.current = null;
-    //         }
-    //     };
-    // }, [parent, ScriptConstructor, scriptRef.current]);
-
-    // if (!scriptRef.current) return;

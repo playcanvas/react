@@ -1,39 +1,39 @@
 import { useLayoutEffect, useRef } from "react";
 import { useParent } from "./use-parent";
+import { useApp } from "./use-app";
 
 export const useComponent = (ctype, props) => {
+  const parent = useParent();
+  const app = useApp();
+  const componentRef = useRef();
 
-    const parent = useParent();
-    const componentRef = useRef();
-    
-    useLayoutEffect(() => {
-        if(parent){
-
-            // It is necessary to clone the props object to avoid mutating the original object
-            if(!parent.c[ctype]) {
-                const clonedOpts = { ...props }
-                componentRef.current = parent.addComponent(ctype, clonedOpts);
-            } else {
-                throw `Multiple '${ctype}' components have been added on the '${parent.name}' entity. Only one '${ctype}' component is allowed.`
-            }
-        }
-
-        return () => {
-            if(componentRef.current) {
-                componentRef.current.enabled = false;
-                parent.removeComponent(ctype);
-                componentRef.current = null;
-            }
-        }
-
-    }, [parent, ctype] );
-
-    if(!componentRef.current) return;
-
-    // copy props to component
-    for (const key in props) {
-        if (componentRef.current[key] !== undefined) {
-            componentRef.current[key] = props[key];
-        }
+  useLayoutEffect(() => {
+    if (parent) {
+      // Only add the component if it hasn't been added yet
+      if (!componentRef.current) {
+        const clonedOpts = { ...props };
+        componentRef.current = parent.addComponent(ctype, clonedOpts);
+      }
+      // Do not throw an error if the component already exists
     }
-}
+
+    return () => {
+      if (componentRef.current) {
+        // componentRef.current.enabled = false;
+        parent.removeComponent(ctype);
+        componentRef.current = null;
+      }
+    };
+  }, [app, parent, ctype]);
+
+  useLayoutEffect(() => {
+    // Ensure componentRef.current exists before updating props
+    if (componentRef.current) {
+      for (const key in props) {
+        if (componentRef.current[key] !== undefined) {
+          componentRef.current[key] = props[key];
+        }
+      }
+    }
+  }, [props]);
+};

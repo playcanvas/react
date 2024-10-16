@@ -13,38 +13,39 @@ export const Application = ({ children }) => {
 }
 
 export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
-
     const [app, setApp] = useState();
-
+    const appRef = useRef(null);
+  
     useLayoutEffect(() => {
-        if(canvasRef.current && !app){
-
-            const localApp = new PlayCanvasApplication(canvasRef.current, {
-                mouse: new Mouse(canvasRef.current),
-                touch: new TouchDevice(canvasRef.current)
-            });
-            
-            setApp(localApp);
-            localApp.start();
-
-            localApp.setCanvasFillMode(FILLMODE_NONE);
-            localApp.setCanvasResolution(RESOLUTION_AUTO);
-            
-        }
+      if (canvasRef.current && !appRef.current) {
+        const localApp = new PlayCanvasApplication(canvasRef.current, {
+          mouse: new Mouse(canvasRef.current),
+          touch: new TouchDevice(canvasRef.current),
+        });
+  
         
-        return () => {
-            setApp(null);
-        };
+        appRef.current = localApp;
+        setApp(localApp);
+
+        localApp.start();
+        localApp.setCanvasFillMode(FILLMODE_NONE);
+        localApp.setCanvasResolution(RESOLUTION_AUTO);
+      }
+  
+      return () => {
+        if (!appRef.current) return;
+        appRef.current.destroy();
+        appRef.current = null;
+        setApp(null);
+      };
+
     }, [canvasRef]);
-    
-    
-    if(!app) return null;
-    
+  
+    if (!app) return null;
+  
     return (
-        <AppContext.Provider value={app}>
-            <ParentContext.Provider value={app.root}>
-                { children }
-            </ParentContext.Provider>
-        </AppContext.Provider>
-    )
-}
+      <AppContext.Provider value={app}>
+        <ParentContext.Provider value={app.root}>{children}</ParentContext.Provider>
+      </AppContext.Provider>
+    );
+  };

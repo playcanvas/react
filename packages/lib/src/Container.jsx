@@ -1,27 +1,29 @@
 import { useLayoutEffect, useRef } from "react";
 import { Entity } from "./Entity";
+import { useApp, useParent } from "./hooks";
 
 export const Container = ({ asset, ...props }) => {
     
-    const entityRef = useRef();
+    const assetEntityRef = useRef();
+    const parent = useParent();
+    const app = useApp();
     
     useLayoutEffect(() => {
-        
-        const entity = entityRef.current;
-        if(asset && entity) {
+
+        if(asset) {
             const assetEntity = asset.resource.instantiateRenderEntity();
-            entity.addChild(assetEntity);
+            parent.addChild(assetEntity);
+            assetEntityRef.current = assetEntity
         }
         
         return () => {
-            if(!asset || !entity) return;
+            if(!assetEntityRef.current || !parent) return;
 
-            const assetEntity = entity.children[0];
-            entity.removeChild(assetEntity);
-            // assetEntity.destroy();
+            const assetEntity = assetEntityRef.current
+            parent.removeChild(assetEntity)
+            assetEntity.destroy();
+            assetEntityRef.current = null
 
         }
-    }, [asset]);
-
-    return <Entity ref={entityRef} {...props} />
+    }, [app, parent, asset]);
 }

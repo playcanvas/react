@@ -196,13 +196,13 @@ export class OrbitCamera extends Script {
 
 
     /** @private */
-    _distance = 0;
+    _distance = 10;
 
     /** @private */
-    _distanceMin = 0;
+    _distanceMin = 10;
 
     /** @private */
-    _distanceMax = 0;
+    _distanceMax = 200;
 
     /** @private */
     _frameOnStart = true;
