@@ -5,9 +5,6 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Suspense, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SHADERPASS_FORWARD, SHADERPASS_WORLDNORMAL } from 'playcanvas';
-import { Script } from '@playcanvas/react/components';
-import { Grid } from '@playcanvas/react/scripts';
-import { Entity } from '@playcanvas/react';
 
 // Create a client
 const queryClient = new QueryClient()
@@ -28,10 +25,9 @@ function App() {
   return (
       <ErrorBoundary fallbackRender={fallbackRender} >
         <QueryClientProvider client={queryClient}>
-          <button onClick={_ => setShading(shading === SHADERPASS_FORWARD ? SHADERPASS_WORLDNORMAL : SHADERPASS_FORWARD)}>Change Shading</button>
           <Application >
               <Suspense >
-                <GlbViewer shading={shading} />
+                <GlbViewer src='/lamborghini_vision_gt.glb' shading={shading} />
               </Suspense>
           </Application>
         </QueryClientProvider>

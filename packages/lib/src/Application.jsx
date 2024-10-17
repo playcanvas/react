@@ -21,6 +21,9 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
         const localApp = new PlayCanvasApplication(canvasRef.current, {
           mouse: new Mouse(canvasRef.current),
           touch: new TouchDevice(canvasRef.current),
+          // graphicsDeviceOptions: {
+          //   alpha: true
+          // }
         });
   
         

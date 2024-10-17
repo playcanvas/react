@@ -78,7 +78,7 @@ class Rendering {
      * @precision 0
      * @step 1
      */
-    samples = 1;
+    samples = 8;
 
     sceneColorMap = false;
 
@@ -106,7 +106,7 @@ class Rendering {
     /**
      * @attribute
      */
-    fogColor = new Color(1, 1, 1, 1);
+    fogColor = new Color(0, 0, 0);
 
     /**
      * @attribute
