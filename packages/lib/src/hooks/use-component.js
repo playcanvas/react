@@ -20,7 +20,7 @@ export const useComponent = (ctype, props) => {
     return () => {
       if (componentRef.current) {
         // componentRef.current.enabled = false;
-        parent.removeComponent(ctype);
+        if (app.systems[ctype]) parent.removeComponent(ctype);
         componentRef.current = null;
       }
     };
