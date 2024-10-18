@@ -20,10 +20,7 @@ export const ApplicationWithoutCanvas = ({ children, canvasRef }) => {
       if (canvasRef.current && !appRef.current) {
         const localApp = new PlayCanvasApplication(canvasRef.current, {
           mouse: new Mouse(canvasRef.current),
-          touch: new TouchDevice(canvasRef.current),
-          // graphicsDeviceOptions: {
-          //   alpha: true
-          // }
+          touch: new TouchDevice(canvasRef.current)
         });
   
         

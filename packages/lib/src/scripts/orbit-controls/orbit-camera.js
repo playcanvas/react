@@ -5,6 +5,9 @@ import {
 } from 'playcanvas';
 
 export class OrbitCamera extends Script {
+
+    static name = 'OrbitCamera';
+
     /**
      * @attribute
      * @title Distance Max
@@ -440,6 +443,9 @@ export class OrbitCamera extends Script {
 
 
 export class OrbitCameraInputMouse extends Script {
+
+    static name = 'OrbitCameraInputMouse';
+
     /**
      * How fast the camera moves around the orbit. Higher is faster
      *
@@ -569,6 +575,9 @@ export class OrbitCameraInputMouse extends Script {
 }
 
 export class OrbitCameraInputTouch extends Script {
+
+    static name = 'OrbitCameraInputTouch';
+
     /**
      * How fast the camera moves around the orbit. Higher is faster
      *

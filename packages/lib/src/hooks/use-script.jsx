@@ -32,8 +32,9 @@ export const useScript = (ScriptConstructor, props) => {
     return () => {
       if (parent?.script && scriptRef.current) {
         parent.script.destroy(scriptRef.current);
-        scriptRef.current = null;
       }
+      scriptRef.current.fire('destroy');
+      scriptRef.current = null;
     };
   }, [app, parent, ScriptConstructor]);
 

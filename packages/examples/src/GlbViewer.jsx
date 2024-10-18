@@ -70,7 +70,7 @@ export const GlbViewer = ({
       {/* THe GLB Asset to load */}
       <Entity name='asset'>
         <Script script={ShadowCatcher} />
-        <Container asset={model} castShadows/>
+          <Container asset={model} castShadows/>
       </Entity>
     </Entity>
   );

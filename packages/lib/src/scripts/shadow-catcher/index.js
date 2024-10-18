@@ -164,11 +164,13 @@ class ShadowCatcher extends Script {
 
 
     set intensity(value) {
-        this.light.light.shadowIntensity = value;
+        if(this.light?.light) {
+            this.light.light.shadowIntensity = value;
+        }
     }
 
     get intensity() {
-        return this.light.light.shadowIntensity;
+        return this.light?.light?.shadowIntensity;
     }
 
     set rotation(euler) {
