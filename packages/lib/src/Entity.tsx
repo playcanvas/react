@@ -1,8 +1,16 @@
 import { Entity as pcEntity } from 'playcanvas';
-import { forwardRef, useImperativeHandle, useLayoutEffect, useMemo, useState } from 'react';
+import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
 
-export const Entity = forwardRef(function Entity(
+interface EntityProps {
+  children: React.ReactNode;
+  name?: string;
+  position?: [number, number, number];
+  scale?: [number, number, number];
+  rotation?: [number, number, number];
+}
+
+export const Entity = forwardRef<pcEntity, EntityProps>(function Entity(
   { children, name = 'Untitled', position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] },
   ref
 ) {
@@ -23,7 +31,7 @@ export const Entity = forwardRef(function Entity(
     };
   }, [app, parent, entity]);
 
-  // Update entity properties when relevant props change
+
   useLayoutEffect(() => {
     entity.name = name;
     entity.setLocalPosition(...position);

@@ -1,14 +1,19 @@
 import { useLayoutEffect, useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
+import { Application, Entity, Script } from 'playcanvas';
 
-const toLowerCamelCase = (str) => str[0].toLowerCase() + str.substring(1);
+// const toLowerCamelCase = (str: string) => str[0].toLowerCase() + str.substring(1);
 
-export const useScript = (ScriptConstructor, props) => {
-  const parent = useParent();
-  const app = useApp();
-  const scriptName = toLowerCamelCase(ScriptConstructor.name);
-  const scriptRef = useRef(null);
+interface Props {
+  [key: string]: any;
+}
+
+export const useScript = (ScriptConstructor: typeof Script, props: Props) : void  => {
+  const parent: Entity = useParent();
+  const app: Application = useApp();
+  // const scriptName: string = toLowerCamelCase(ScriptConstructor.name);
+  const scriptRef = useRef<any>(null);
 
   // Create the script synchronously
   useLayoutEffect(() => {
@@ -20,11 +25,11 @@ export const useScript = (ScriptConstructor, props) => {
     // Check if we've already created the script
     if (!scriptRef.current) {
       // Create the script instance with the provided attributes
-      const scriptInstance = parent.script.create(ScriptConstructor, {
+      const scriptInstance = parent.script?.create(ScriptConstructor, {
         properties: { ...props },
         preloading: false,
       });
-      scriptInstance.__name = scriptName;
+      // scriptInstance.__name = scriptName;
       scriptRef.current = scriptInstance;
     }
 

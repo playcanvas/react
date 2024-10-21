@@ -1,7 +1,14 @@
 {
     "name": "@playcanvas/react",
     "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
-    "version": "0.1.6",
+    "version": "0.1.7",
+    "type": "module",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsc",
+        "prepare": "npm run build"
+    },
     "keywords": [
         "2d",
         "3d",
@@ -16,6 +23,9 @@
         "webgpu",
         "webxr"
     ],
+    "engines": {
+        "node": ">=18.0.0"
+    },
     "bugs": {
         "url": "https://github.com/playcanvas/react/issues"
     },
@@ -23,20 +33,15 @@
         "type": "git",
         "url": "https://github.com/playcanvas/react/tree/main/packages/lib"
     },
-    "type": "module",
-    "main": "src/index.js",
     "files": [
-        "src"
+        "dist"
     ],
     "exports": {
-        ".": "./src/index.js",
-        "./components": "./src/components/index.js",
-        "./utils": "./src/utils/index.js",
-        "./scripts": "./src/scripts/index.js",
-        "./hooks": "./src/hooks/index.js"
-    },
-    "engines": {
-        "node": ">=18.0.0"
+        ".": "./dist/index.js",
+        "./components": "./dist/components/index.js",
+        "./utils": "./dist/utils/index.js",
+        "./scripts": "./dist/scripts/index.js",
+        "./hooks": "./dist/hooks/index.js"
     },
     "peerDependencies": {
         "playcanvas": "^2.1.0",
@@ -45,5 +50,8 @@
     },
     "publishConfig": {
         "access": "public"
+    },
+    "devDependencies": {
+        "typescript": "^5.6.3"
     }
 }
