@@ -1,6 +1,6 @@
-import { Asset } from "playcanvas";
+import { Application, Asset } from "playcanvas";
 
-export const fetchAsset = (app, url, type, props = {}) => {
+export const fetchAsset = (app : Application, url : string, type : string, props = {}) => {
     return new Promise((resolve, reject) => {
         let asset = app.assets.find(url);
 
@@ -13,7 +13,7 @@ export const fetchAsset = (app, url, type, props = {}) => {
             resolve(asset);
         } else {
             asset.once('load', () => resolve(asset));
-            asset.once('error', (err) => reject(err));
+            asset.once('error', (err : string) => reject(err));
 
             // Start loading if not already loading
             if (!asset.loading) {

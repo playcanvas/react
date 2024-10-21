@@ -1,11 +1,18 @@
 import { useLayoutEffect, useRef } from "react";
 import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
+import { Application, Entity } from "playcanvas";
 
-export const useComponent = (ctype, props) => {
-  const parent = useParent();
-  const app = useApp();
-  const componentRef = useRef();
+interface ComponentProps {
+  [key: string]: any;
+}
+
+
+
+export const useComponent = (ctype: string, props: ComponentProps): void => {
+  const parent : Entity = useParent();
+  const app : Application = useApp();
+  const componentRef = useRef<any>();
 
   useLayoutEffect(() => {
     if (parent) {
@@ -19,8 +26,8 @@ export const useComponent = (ctype, props) => {
 
     return () => {
       if (componentRef.current) {
-        // componentRef.current.enabled = false;
-        if (app.system?.[ctype]) parent.removeComponent(ctype);
+        type SystemKeys = keyof typeof app.systems;
+        if (app.systems[ctype as SystemKeys]) parent.removeComponent(ctype);
         componentRef.current = null;
       }
     };

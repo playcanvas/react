@@ -2,7 +2,11 @@ import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
 
-export const useMaterial = (props) => {
+interface MaterialProps {
+  [key: string]: any;
+}
+
+export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
   // Create the material instance only once when 'app' changes
@@ -14,8 +18,7 @@ export const useMaterial = (props) => {
       // Loop through the props and assign them to the material
       for (const key in props) {
         if (props.hasOwnProperty(key)) {
-          // if(key === 'material') console.log('setting mat', material)
-          material[key] = props[key];
+          (material as any)[key] = props[key];
         }
       }
       material.update(); // Apply the changes to the material
