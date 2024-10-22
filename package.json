@@ -8,7 +8,9 @@
       "packages/examples"
     ],
     "scripts": {
+      "dev": "npm run dev --workspace=examples",
       "build": "npm run build --workspace=@playcanvas/react",
-      "dev": "npm run dev --workspace=examples"
+      "version": "npm version patch --workspace=my-@playcanvas/react",
+      "publish": "npm publish --workspace=my-@playcanvas/react"
     }
   }
