@@ -2,15 +2,15 @@
 
 A React renderer for [PlayCanvas](https://github.com/playcanvas/engine) – build interactive 3D applications using React's declarative paradigm.
 
-![Model Viewer](https://github.com/user-attachments/assets/1e85caa8-b61a-4c97-99e5-cb117fc6b338)
-
-[View Example](https://codesandbox.io/p/sandbox/upbeat-wave-d4s6ty?file=%2Fsrc%2FApp.jsx)
-
 ## Introduction
 
 **@playcanvas/react** is a thin React wrapper around the PlayCanvas 3D engine. It allows developers to create interactive 3D applications and games using React components and hooks, bringing the declarative and component-based architecture of React to PlayCanvas.
 
 By leveraging React's features, you can build complex 3D scenes with reusable components, manage state efficiently, and create interactive experiences with ease.
+
+![Model Viewer](https://github.com/user-attachments/assets/1e85caa8-b61a-4c97-99e5-cb117fc6b338)
+
+[View Example](https://codesandbox.io/p/sandbox/upbeat-wave-d4s6ty?file=%2Fsrc%2FApp.jsx)
 
 [See examples on CodeSandbox](https://codesandbox.io/examples/package/@playcanvas/react)
 
