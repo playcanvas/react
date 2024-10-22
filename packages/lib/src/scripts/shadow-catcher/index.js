@@ -47,7 +47,8 @@ class ShadowCatcher extends Script {
         this.material.useSkybox = false;
         this.material.useEnvAtlas = false;
         this.material.blendType = BLEND_NORMAL;
-        this.material.depthWrite = false;
+        this.material.depthWrite = true;
+        this.material.depthTest = true;
         this.material.diffuse.set(0, 0, 0);
         this.material.specular.set(0, 0, 0);
         this.material.chunks = {
@@ -78,21 +79,6 @@ class ShadowCatcher extends Script {
             enabled: true,
             shadowIntensity: 1,
             intensity: 0.5
-
-            // type: 'spot',
-            // shape: LIGHTSHAPE_RECT,
-            // color: new Color(0.25, 1, 0.25),
-            // castShadows: true,
-            // range: 150,
-            // shadowResolution: 2048,
-            // shadowDistance: 100,
-            // penumbraSize: 2,//data.get('script.area.size'),
-            // shadowType: SHADOW_TYPE,//data.get('script.area.shadowType'),
-            // intensity: 2,//data.get('script.area.intensity'),
-            // falloffMode: LIGHTFALLOFF_INVERSESQUARED,
-            // innerConeAngle: 45,
-            // outerConeAngle: 50,
-            // normalOffsetBias: 0.1
         });
 
         this.entity.addChild(this.plane);

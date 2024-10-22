@@ -1,13 +1,12 @@
 import { useEffect, useLayoutEffect, useMemo } from 'react';
 
 import { Container, Entity } from '@playcanvas/react';
-import { Camera, Script, EnvAtlas, Align } from '@playcanvas/react/components';
-import { CameraFrame, OrbitControls, Grid, ShadowCatcher } from '@playcanvas/react/scripts';
+import { Camera, Script, EnvAtlas, Align, Render } from '@playcanvas/react/components';
+import { CameraFrame, OrbitControls, Grid, ShadowCatcher, AutoRotator } from '@playcanvas/react/scripts';
 import { useApp } from '@playcanvas/react/hooks';
 import { Color, SHADERPASS_FORWARD, TONEMAP_ACES2 } from 'playcanvas';
 
 import { useEnvMap, useModel } from './utils/hooks';
-import { AutoRotator } from './scripts/auto-rotator';
 
 export const GlbViewer = ({
   envMapSrc = '/environment-map.png',

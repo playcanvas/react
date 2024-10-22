@@ -42,9 +42,10 @@ export const Align = (props: AlignProps) => {
       const updatedBounds = renderComponents.reduce((bounds, component) => {
         const meshInstances = component.meshInstances;
         meshInstances.forEach((mi) => {
-          invWorldTransform.copy(mi.node.getWorldTransform()).invert();
-          tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
-          bounds.add(tmpAABB);
+            // console.log(mi.node.getLocalPosition(), mi.node.getScale());
+            invWorldTransform.copy(mi.node.getWorldTransform()).invert();
+            tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
+            bounds.add(tmpAABB);
         });
         return bounds;
       }, bounds);
@@ -56,11 +57,14 @@ export const Align = (props: AlignProps) => {
     const { center, halfExtents } = boundsRef.current;
   
     // Align based on bounds and alignment flags
+    // const height = halfExtents.y * 2;
     const position: [number, number, number] = [
-      left ? center.x - halfExtents.x : right ? center.x + halfExtents.x : center.x,
-      bottom ? center.y - halfExtents.y : top ? center.y + halfExtents.y : center.y,
-      front ? center.z - halfExtents.z : back ? center.z + halfExtents.z : center.z,
+      left ? center.x - halfExtents.x : right ? center.x + halfExtents.x : 0,
+      bottom ? halfExtents.y * 2: top ? - halfExtents.y - center.y  : 0,
+      front ? center.z - halfExtents.z : back ? center.z + halfExtents.z : 0,
     ];
+
+    console.log(center.y, halfExtents.y, position[1]);
   
     return (
       <Entity ref={containerRef} position={position}>

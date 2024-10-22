@@ -224,7 +224,7 @@ class InfiniteGrid {
             if (this.visible && layer.name === this.layerName && !transparent) {
                 this.device.setBlendState(this.blendState);
                 this.device.setCullMode(CULLFACE_NONE);
-                this.device.setDepthState(DepthState.WRITEDEPTH);
+                this.device.setDepthState(DepthState.NODEPTH);
                 this.device.setStencilState(null, null);                
 
                 // update viewProjectionInverse matrix
