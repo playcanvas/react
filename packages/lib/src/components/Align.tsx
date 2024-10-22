@@ -1,15 +1,16 @@
 import { BoundingBox, Entity as PcEntity, Mat4, RenderComponent, Vec3, Application } from "playcanvas";
-import { Children, PropsWithChildren, useLayoutEffect, useRef, useState } from "react";
+import { Children, useLayoutEffect, useRef, useState } from "react";
 import { Entity } from "../Entity";
 import { useApp, useParent } from "../hooks";
 
-interface AlignProps extends PropsWithChildren {
+interface AlignProps {
     left?: boolean;
     right?: boolean;
     top?: boolean;
     bottom?: boolean;
     front?: boolean;
     back?: boolean;
+    children?: React.ReactNode;
 }
 
 export const Align = (props: AlignProps) => {
@@ -57,14 +58,11 @@ export const Align = (props: AlignProps) => {
     const { center, halfExtents } = boundsRef.current;
   
     // Align based on bounds and alignment flags
-    // const height = halfExtents.y * 2;
     const position: [number, number, number] = [
       left ? center.x - halfExtents.x : right ? center.x + halfExtents.x : 0,
       bottom ? halfExtents.y * 2: top ? - halfExtents.y - center.y  : 0,
       front ? center.z - halfExtents.z : back ? center.z + halfExtents.z : 0,
     ];
-
-    console.log(center.y, halfExtents.y, position[1]);
   
     return (
       <Entity ref={containerRef} position={position}>
