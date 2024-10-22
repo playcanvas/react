@@ -23,7 +23,7 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
       }
       material.update(); // Apply the changes to the material
     }
-  }, [material, props]);
+  }, [app, material, props]);
 
   // Clean up the material when the component unmounts
   useLayoutEffect(() => {

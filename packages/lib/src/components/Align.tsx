@@ -1,68 +1,70 @@
-import { BoundingBox, Entity as PcEntity, Mat4, RenderComponent, Vec3 } from "playcanvas";
-import { Children, ReactNode, useEffect, useRef, useState } from "react";
+import { BoundingBox, Entity as PcEntity, Mat4, RenderComponent, Vec3, Application } from "playcanvas";
+import { Children, PropsWithChildren, useLayoutEffect, useRef, useState } from "react";
 import { Entity } from "../Entity";
+import { useApp, useParent } from "../hooks";
 
-interface AlignProps {
-    align: {
-        left?: boolean;
-        right?: boolean;
-        top?: boolean;
-        bottom?: boolean;
-        front?: boolean;
-        back?: boolean;
-    };
-    children: ReactNode;
+interface AlignProps extends PropsWithChildren {
+    left?: boolean;
+    right?: boolean;
+    top?: boolean;
+    bottom?: boolean;
+    front?: boolean;
+    back?: boolean;
 }
 
 export const Align = (props: AlignProps) => {
-    const { align, children } = props;
-
+    const { left, right, top, bottom, front, back, children } = props;
+  
     const containerRef = useRef<PcEntity>(null);
     const boundsRef = useRef<BoundingBox>(new BoundingBox(new Vec3(), new Vec3()));
     const [, setBounds] = useState<BoundingBox | null>(null);
-
+    const app: Application = useApp();
+    const parent: PcEntity = useParent();
+  
     // all children should be part of the scene hierarchy now
-    useEffect(() => {
-        const entity : PcEntity | null = containerRef.current;
-        const bounds : BoundingBox = boundsRef.current;
-
-        if (!entity) return;
-
-        bounds.center.set(0, 0, 0);
-        bounds.halfExtents.set(0.0, 0.0, 0.0);
-
-        const tmpAABB : BoundingBox = new BoundingBox();
-        const invWorldTransform : Mat4 = new Mat4();
-
-        const renderComponents = entity.findComponents("render") as RenderComponent[];
-
-        // Compute the bounds of all render components
-        const updatedBounds = renderComponents.reduce((bounds, component) => {
-            const meshInstances = component.meshInstances;
-            meshInstances.forEach((mi) => {
-                invWorldTransform.copy(mi.node.getWorldTransform()).invert();
-                tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
-                bounds.add(tmpAABB);
-            });
-            return bounds;
-        }, bounds);
-
-        boundsRef.current = updatedBounds;
-        setBounds(updatedBounds);
-    }, [Children.count(children)]);
-
-    const { left, right, top, bottom, front, back } = align;
+    useLayoutEffect(() => {
+      if (!app) return;
+  
+      const entity: PcEntity | null = containerRef.current;
+      const bounds: BoundingBox = boundsRef.current;
+  
+      if (!entity) return;
+  
+      bounds.center.set(0, 0, 0);
+      bounds.halfExtents.set(0.0, 0.0, 0.0);
+  
+      const tmpAABB: BoundingBox = new BoundingBox();
+      const invWorldTransform: Mat4 = new Mat4();
+  
+      const renderComponents = entity.findComponents("render") as RenderComponent[];
+  
+      // Compute the bounds of all render components
+      const updatedBounds = renderComponents.reduce((bounds, component) => {
+        const meshInstances = component.meshInstances;
+        meshInstances.forEach((mi) => {
+          invWorldTransform.copy(mi.node.getWorldTransform()).invert();
+          tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
+          bounds.add(tmpAABB);
+        });
+        return bounds;
+      }, bounds);
+  
+      boundsRef.current = updatedBounds;
+      setBounds(updatedBounds);
+    }, [app, parent, Children.count(children)]);
+  
     const { center, halfExtents } = boundsRef.current;
-
+  
+    // Align based on bounds and alignment flags
     const position: [number, number, number] = [
-        left ? halfExtents.x : right ? -halfExtents.x : center.x,
-        bottom ? halfExtents.y * 2 : top ? -halfExtents.y * 2 : center.y,
-        front ? halfExtents.z * 0.5 : back ? -halfExtents.z * 0.5 : center.z,
+      left ? center.x - halfExtents.x : right ? center.x + halfExtents.x : center.x,
+      bottom ? center.y - halfExtents.y : top ? center.y + halfExtents.y : center.y,
+      front ? center.z - halfExtents.z : back ? center.z + halfExtents.z : center.z,
     ];
-
+  
     return (
-        <Entity ref={containerRef} position={position}>
-            {children}
-        </Entity>
+      <Entity ref={containerRef} position={position}>
+        {children}
+      </Entity>
     );
 };

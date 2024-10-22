@@ -8,7 +8,7 @@ export const useAsset = (src, type, props) => {
   
     return useQuery({ 
         queryKey: [src],
-        queryFn: () => fetchAsset(app, src, type, props)
+        queryFn: () => app && fetchAsset(app, src, type, props)
     })
 }
   

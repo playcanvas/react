@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { FC, useLayoutEffect } from "react";
 import { useApp } from "../hooks";
 import { Application, Asset } from "playcanvas";
 
@@ -6,7 +6,7 @@ interface EnvAtlasProps {
     asset: Asset;
 }
 
-export const EnvAtlas = ({ asset } : EnvAtlasProps ) => {
+export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
 
     const app: Application = useApp();
     
@@ -23,5 +23,7 @@ export const EnvAtlas = ({ asset } : EnvAtlasProps ) => {
         }
 
     }, [app, asset?.resource]);
+
+    return null
 
 }

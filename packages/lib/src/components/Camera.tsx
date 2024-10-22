@@ -1,7 +1,13 @@
+import { FC } from "react";
 import { useComponent } from "../hooks";
 
-export const Camera = (props : any) => {
+interface CameraProps {
+    [key: string]: any;
+}
+
+export const Camera: FC<CameraProps> = (props : any) => {
 
     useComponent("camera", props);
+    return null;
 
 }

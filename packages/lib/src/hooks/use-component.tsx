@@ -10,9 +10,9 @@ interface ComponentProps {
 
 
 export const useComponent = (ctype: string, props: ComponentProps): void => {
+  const componentRef = useRef<any>();
   const parent : Entity = useParent();
   const app : Application = useApp();
-  const componentRef = useRef<any>();
 
   useLayoutEffect(() => {
     if (parent) {

@@ -50,12 +50,13 @@ export const ApplicationWithoutCanvas: React.FC<ApplicationWithoutCanvasProps> =
         touch: new TouchDevice(canvas),
       });
 
-      appRef.current = localApp;
-      setApp(localApp);
-
+      
       localApp.start();
       localApp.setCanvasFillMode(FILLMODE_NONE);
       localApp.setCanvasResolution(RESOLUTION_AUTO);
+
+      appRef.current = localApp;
+      setApp(localApp);
     }
 
     return () => {
@@ -69,8 +70,8 @@ export const ApplicationWithoutCanvas: React.FC<ApplicationWithoutCanvasProps> =
   if (!app) return null;
 
   return (
-    <AppContext.Provider value={app}>
-      <ParentContext.Provider value={app.root as PcEntity}>
+    <AppContext.Provider value={appRef.current}>
+      <ParentContext.Provider value={appRef.current?.root as PcEntity}>
         {children}
       </ParentContext.Provider>
     </AppContext.Provider>

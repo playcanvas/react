@@ -1,7 +1,7 @@
 import { useEffect, useLayoutEffect, useMemo } from 'react';
 
 import { Container, Entity } from '@playcanvas/react';
-import { Camera, Script, EnvAtlas } from '@playcanvas/react/components';
+import { Camera, Script, EnvAtlas, Align } from '@playcanvas/react/components';
 import { CameraFrame, OrbitControls, Grid, ShadowCatcher } from '@playcanvas/react/scripts';
 import { useApp } from '@playcanvas/react/hooks';
 import { Color, SHADERPASS_FORWARD, TONEMAP_ACES2 } from 'playcanvas';
@@ -70,7 +70,9 @@ export const GlbViewer = ({
       {/* THe GLB Asset to load */}
       <Entity name='asset'>
         <Script script={ShadowCatcher} />
+        <Align bottom>
           <Container asset={model} castShadows/>
+        </Align>
       </Entity>
     </Entity>
   );

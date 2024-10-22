@@ -1,7 +1,12 @@
+import { FC } from "react";
 import { useComponent } from "../hooks";
 
-export const Render = (props = {}) => {
+interface RenderProps {
+}
+
+export const Render: FC<RenderProps> = (props) => {
 
     useComponent("render", props);
+    return null;
 
 }

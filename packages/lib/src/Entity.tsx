@@ -1,23 +1,22 @@
-import { Entity as pcEntity } from 'playcanvas';
-import React, { forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
+import { Entity as PcEntity } from 'playcanvas';
+import { PropsWithChildren, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
 
-interface EntityProps {
-  children: React.ReactNode;
+interface EntityProps extends PropsWithChildren {
   name?: string;
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
 }
 
-export const Entity = forwardRef<pcEntity, EntityProps>(function Entity(
+export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
   { children, name = 'Untitled', position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] },
   ref
-) {
+) : React.ReactElement | null {
   const parent = useParent();
   const app = useApp();
   // Create the entity only when 'app' changes
-  const entity = useMemo(() => new pcEntity(name, app), [app]);
+  const entity = useMemo(() => new PcEntity(name, app), [app]) as PcEntity;
 
   useImperativeHandle(ref, () => entity);
 
@@ -39,9 +38,9 @@ export const Entity = forwardRef<pcEntity, EntityProps>(function Entity(
     entity.setLocalEulerAngles(...rotation);
   }, [entity, name, position, scale, rotation]);
 
-  return (
+  return (<>
     <ParentContext.Provider value={entity}>
-      {children}
+      {children || null}
     </ParentContext.Provider>
-  );
+  </> );
 });

@@ -99,6 +99,8 @@ class ShadowCatcher extends Script {
         this.entity.addChild(this.light);
 
         this.on('destroy', () => {
+            this.plane.remove();
+            this.light.remove();
             this.plane.destroy();
             this.light.destroy();
             this.material.destroy();

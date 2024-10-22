@@ -1,30 +1,38 @@
-import { useLayoutEffect, useRef } from "react";
-import { useApp, useParent } from "./hooks";
-import { Asset, Entity } from "playcanvas";
+import { FC, useLayoutEffect, useRef } from "react";
+import { useApp } from "./hooks";
+import { Asset, Entity as PcEntity } from "playcanvas";
+import { Entity } from ".";
 
 interface ContainerProps {
     asset: Asset;
+    [key: string]: any;
 }
 
-export const Container = ({ asset } : ContainerProps) => {
-    const assetEntityRef = useRef<Entity | null>(null);
-    const parent: Entity = useParent();
+export const Container: FC<ContainerProps> = ({ asset }) => {
+
+    const entityRef = useRef<PcEntity | null>(null);
+    const assetEntityRef = useRef<PcEntity | null>(null);
     const app = useApp();
 
     useLayoutEffect(() => {
-        if (asset) {
+        if (asset && entityRef.current) {
             const assetEntity = asset.resource.instantiateRenderEntity();
-            parent.addChild(assetEntity);
+            entityRef.current.addChild(assetEntity);
             assetEntityRef.current = assetEntity;
         }
 
         return () => {
-            if (!assetEntityRef.current || !parent) return;
-
-            const assetEntity = assetEntityRef.current;
-            parent.removeChild(assetEntity);
-            assetEntity.destroy();
+            if (!entityRef.current || !assetEntityRef.current) return;
+        
+            entityRef.current.removeChild(assetEntityRef.current);
+            assetEntityRef.current.destroy();
+            entityRef.current = null;
             assetEntityRef.current = null;
+
         };
     }, [app, parent, asset]);
+
+    if (!asset) return null;
+
+    return <Entity ref={entityRef} />;
 };

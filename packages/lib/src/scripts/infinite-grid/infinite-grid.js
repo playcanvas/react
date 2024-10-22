@@ -248,7 +248,8 @@ class InfiniteGrid {
     }
 
     destroy() {
-        if(this._camera) this._camera.camera.onPreRenderLayer = null;
+        const camera = this._camera?.camera
+        if(camera?.onPreRenderLayer) camera.onPreRenderLayer = null;
     }
 }
 
