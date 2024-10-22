@@ -8,6 +8,12 @@ A React renderer for [PlayCanvas](https://github.com/playcanvas/engine) – buil
 
 By leveraging React's features, you can build complex 3D scenes with reusable components, manage state efficiently, and create interactive experiences with ease.
 
+![Model Viewer](https://github.com/user-attachments/assets/1e85caa8-b61a-4c97-99e5-cb117fc6b338)
+
+[View Example](https://codesandbox.io/p/sandbox/upbeat-wave-d4s6ty?file=%2Fsrc%2FApp.jsx)
+
+[See examples on CodeSandbox](https://codesandbox.io/examples/package/@playcanvas/react)
+
 ## Features
 
 - **Declarative 3D Scene Composition**: Construct 3D scenes using JSX, making your code more readable and maintainable.
