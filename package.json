@@ -10,7 +10,7 @@
     "scripts": {
       "dev": "npm run dev --workspace=examples",
       "build": "npm run build --workspace=@playcanvas/react",
-      "version": "npm version patch --workspace=my-@playcanvas/react",
-      "publish": "npm publish --workspace=my-@playcanvas/react"
+      "version": "npm version --workspace=@playcanvas/react",
+      "publish": "npm publish --workspace=@playcanvas/react"
     }
   }
