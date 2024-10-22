@@ -1,7 +1,12 @@
+import { FC } from "react";
 import { useComponent } from "../hooks";
 
-export const Sprite = (props : any) => {
+interface SpriteProps {
+}
+
+export const Sprite: FC<SpriteProps> = (props) => {
 
     useComponent("sprite", props);
+    return null;
 
 }

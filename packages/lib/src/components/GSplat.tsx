@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity } from "playcanvas";
 
@@ -6,7 +6,7 @@ interface GSplatProps {
     asset: Asset;
 }
 
-export const GSplat = ({ asset }: GSplatProps) => {
+export const GSplat: FC<GSplatProps> = ({ asset }) => {
     const parent: Entity = useParent();
     const assetRef = useRef<Entity | null>(null);
 
@@ -22,4 +22,6 @@ export const GSplat = ({ asset }: GSplatProps) => {
             parent.removeChild(assetRef.current);
         };
     }, [asset]);
+
+    return null;
 };

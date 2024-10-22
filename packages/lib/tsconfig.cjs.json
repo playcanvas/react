@@ -1,8 +1,8 @@
 {
     "compilerOptions": {
       "target": "ES2022",
-      "module": "ESNext",
-      "moduleResolution": "bundler",
+      "module": "CommonJS",
+      "moduleResolution": "node",
       "jsx": "react-jsx",
       "allowJs": true,
       "declaration": true,

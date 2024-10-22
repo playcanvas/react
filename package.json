@@ -1,5 +1,6 @@
 {
     "name": "playcanvas-react-monorepo",
+    "description": "A monorepo for PlayCanvas React renderer and examples. Please see the packages directory for more information.",
     "version": "1.0.0",
     "private": true,
     "workspaces": [
@@ -7,7 +8,7 @@
       "packages/examples"
     ],
     "scripts": {
-      "build": "npm run build --workspace=react",
+      "build": "npm run build --workspace=@playcanvas/react",
       "dev": "npm run dev --workspace=examples"
     }
   }
