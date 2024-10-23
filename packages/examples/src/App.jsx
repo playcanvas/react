@@ -5,6 +5,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Suspense, useState } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { SHADERPASS_FORWARD, SHADERPASS_WORLDNORMAL } from 'playcanvas';
+import { Leva } from 'leva';
 
 // Create a client
 const queryClient = new QueryClient()
@@ -20,14 +21,15 @@ function fallbackRender({ error, resetErrorBoundary }) {
 
 function App() {
 
-  const [shading, setShading] = useState(SHADERPASS_FORWARD);
-
   return (
       <ErrorBoundary fallbackRender={fallbackRender} >
         <QueryClientProvider client={queryClient}>
+          <div onMouseMove={e => e.stopPropagation() } >
+            <Leva />
+          </div>
           <Application >
               <Suspense >
-                <GlbViewer src='/lamborghini_vision_gt.glb' shading={shading} />
+                <GlbViewer src='/lamborghini_vision_gt.glb' envMapSrc='/environment-map.png'/>
               </Suspense>
           </Application>
         </QueryClientProvider>

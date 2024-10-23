@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "ES6",
+        "moduleResolution": "node",
+        "baseUrl": ".",
+    
+    },
+    "include": ["src/**/*", "../lib/dist/**/*.d.ts"],
+}

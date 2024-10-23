@@ -6,6 +6,9 @@ interface EnvAtlasProps {
     asset: Asset;
 }
 
+/**
+ * An environment atlas is a texture for rendering a skybox and global reflections.
+ */
 export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
 
     const app: Application = useApp();

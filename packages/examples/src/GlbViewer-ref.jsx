@@ -1,19 +1,10 @@
-import { Container, Entity } from "@playcanvas/react";
-import { Camera, EnvAtlas, Script } from "@playcanvas/react/components";
-import { Color } from "playcanvas";
-import { useEnvAtlas, useModel } from "./utils/hooks";
-import { AutoRotator, CameraFrame, Grid, OrbitControls, ShadowCatcher } from "@playcanvas/react/scripts";
-import { useLayoutEffect, useMemo } from "react";
-import { useApp } from "@playcanvas/react/hooks";
-import { usePostControls } from "./utils/post-controls";
 
-export const GlbViewer = ({ envMapSrc, src }) => {
 
-  const app = useApp();
-
+export const GlbViewer = ({}) => {
+    const app = useApp();
   const postSettings = usePostControls();
 
-  const { data: envMap, isPending: isEnvLoading } = useEnvAtlas(envMapSrc);
+  const { data: envMap, isPending: isEnvLoading } = useEnvMap(envMapSrc);
   const { data: model, isPending: isModeLoading } = useModel(src);
   const clearColor = useMemo(_ => new Color().fromString('#090707'));
 
@@ -32,7 +23,7 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       {/* The Camera with some default post */}
       <Entity name='camera' position={[4, 2, 4]}>
         <Camera clearColor={clearColor} fov={28} nearClip={1} farClip={10} exposure={1}/>
-        <OrbitControls inertiaFactor={0.07} distanceMin={8} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+        <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={8} pitchAngleMin={1} pitchAngleMax={90}/>
         <Script script={AutoRotator} />
         <Script script={CameraFrame} {...postSettings}/>
       </Entity>
@@ -44,5 +35,4 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       </Entity>
     </Entity>
   );
-  
-};
+});

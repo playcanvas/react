@@ -10,11 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@playcanvas/react": "*",
+    "leva": "^0.9.35",
     "playcanvas": "^2.1.0",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1",
-    "@playcanvas/react": "*"
-  },  
+    "react-dom": "^18.3.1"
+  },
   "devDependencies": {
     "@tanstack/react-query": "^5.59.9",
     "@types/react": "^18.3.3",
