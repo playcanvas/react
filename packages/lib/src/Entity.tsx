@@ -7,10 +7,20 @@ interface EntityProps extends PropsWithChildren {
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
+  onPointerDown: Function
+  onPointerUp: Function
 }
 
 export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
-  { children, name = 'Untitled', position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] },
+  { 
+    name = 'Untitled', 
+    children, 
+    position = [0, 0, 0], 
+    scale = [1, 1, 1], 
+    rotation = [0, 0, 0],
+    onPointerDown = () => null,
+    onPointerUp = () => null
+  },
   ref
 ) : React.ReactElement | null {
   const parent = useParent();
@@ -29,6 +39,20 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
         entity.destroy(); // Clean up the entity
     };
   }, [app, parent, entity]);
+
+
+  // PointerEvents
+  useLayoutEffect(() => {
+
+    entity.__pointerdown = (e : PointerEvent) => onPointerDown(e)
+    entity.__pointerup = (e : PointerEvent) => onPointerUp(e)
+
+    return () => {
+      entity.__pointerdown = null;
+      entity.__pointerup = null;
+    }
+
+  }, [app, parent, entity, onPointerDown, onPointerUp]);
 
 
   useLayoutEffect(() => {
