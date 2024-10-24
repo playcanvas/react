@@ -1,16 +1,33 @@
 import { Entity as PcEntity } from 'playcanvas';
 import { PropsWithChildren, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
+import { SyntheticPointerEvent } from './utils/synthetic-event';
 
 interface EntityProps extends PropsWithChildren {
   name?: string;
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
+  onPointerUp?: Function;
+  onPointerDown?: Function;
+  onPointerOver?: Function;
+  onPointerOut?: Function;
+  onClick?: Function;
 }
 
 export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
-  { children, name = 'Untitled', position = [0, 0, 0], scale = [1, 1, 1], rotation = [0, 0, 0] },
+  { 
+    name = 'Untitled', 
+    children, 
+    position = [0, 0, 0], 
+    scale = [1, 1, 1], 
+    rotation = [0, 0, 0],
+    onPointerDown = () => null,
+    onPointerUp = () => null,
+    onPointerOver = () => null,
+    onPointerOut = () => null,
+    onClick = () => null
+  },
   ref
 ) : React.ReactElement | null {
   const parent = useParent();
@@ -30,6 +47,35 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
     };
   }, [app, parent, entity]);
 
+
+  // PointerEvents
+  useLayoutEffect(() => {
+
+    // @ts-ignore
+    entity.__pointerdown = (e : SyntheticPointerEvent) => onPointerDown(e)
+    // @ts-ignore
+    entity.__pointerup = (e : SyntheticPointerEvent) => onPointerUp(e)
+    // @ts-ignore
+    entity.__pointerover = (e : SyntheticPointerEvent) => onPointerOver(e)
+    // @ts-ignore
+    entity.__pointerout = (e : SyntheticPointerEvent) => onPointerOut(e)
+    // @ts-ignore
+    entity.__click = (e : SyntheticMouseEvent) => onClick(e)
+    
+    return () => {
+      // @ts-ignore
+      entity.__pointerdown = null;
+      // @ts-ignore
+      entity.__pointerup = null;
+      // @ts-ignore
+      entity.__pointerover = null;
+      // @ts-ignore
+      entity.__pointerout = null;
+      // @ts-ignore
+      entity.__click = null;
+    }
+
+  }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);
 
   useLayoutEffect(() => {
     entity.name = name;

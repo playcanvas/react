@@ -32,15 +32,18 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       {/* The Camera with some default post */}
       <Entity name='camera' position={[4, 2, 4]}>
         <Camera clearColor={clearColor} fov={28} nearClip={1} farClip={10} exposure={1}/>
-        <OrbitControls inertiaFactor={0.07} distanceMin={8} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+        <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
         <Script script={AutoRotator} />
         <Script script={CameraFrame} {...postSettings}/>
       </Entity>
 
       {/* The GLB Asset to load */}
-      <Entity name='asset'>
-        <Script script={ShadowCatcher} intensity={2}/>
-          <Container asset={model} castShadows/>
+      <Entity name='asset' onClick={e => console.log('register click')}>
+        <Script script={ShadowCatcher} intensity={0.9}/>
+        <Container 
+          asset={model} 
+          castShadows
+         />
       </Entity>
     </Entity>
   );

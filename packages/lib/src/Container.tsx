@@ -8,7 +8,7 @@ interface ContainerProps {
     [key: string]: any;
 }
 
-export const Container: FC<ContainerProps> = ({ asset }) => {
+export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
 
     const entityRef = useRef<PcEntity | null>(null);
     const assetEntityRef = useRef<PcEntity | null>(null);
@@ -34,5 +34,5 @@ export const Container: FC<ContainerProps> = ({ asset }) => {
 
     if (!asset) return null;
 
-    return <Entity ref={entityRef} />;
+    return <Entity ref={entityRef} {...props}/>;
 };

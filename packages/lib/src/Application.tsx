@@ -8,6 +8,7 @@ import {
   Entity as PcEntity,
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
+import { usePicker } from './utils/picker';
 
 interface ApplicationProps {
   children: React.ReactNode;
@@ -41,6 +42,8 @@ export const ApplicationWithoutCanvas: React.FC<ApplicationWithoutCanvasProps> =
 }) => {
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
+  
+  usePicker(appRef.current, canvasRef.current);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
