@@ -1,6 +1,7 @@
 import { Entity as PcEntity } from 'playcanvas';
 import { PropsWithChildren, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
+import { SyntheticPointerEvent } from './utils/synthetic-event';
 
 interface EntityProps extends PropsWithChildren {
   name?: string;
@@ -9,8 +10,11 @@ interface EntityProps extends PropsWithChildren {
   rotation?: [number, number, number];
   onPointerUp?: Function;
   onPointerDown?: Function;
+  onMouseUp?: Function;
+  onMouseDown?: Function;
   onPointerOver?: Function;
-  onPointerOut?: Function
+  onPointerOut?: Function;
+  onClick?: Function;
 }
 
 export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
@@ -22,8 +26,11 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
     rotation = [0, 0, 0],
     onPointerDown = () => null,
     onPointerUp = () => null,
+    onMouseDown = () => null,
+    onMouseUp = () => null,
     onPointerOver = () => null,
-    onPointerOut = () => null
+    onPointerOut = () => null,
+    onClick = () => null
   },
   ref
 ) : React.ReactElement | null {
@@ -49,13 +56,19 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
   useLayoutEffect(() => {
 
     // @ts-ignore
-    entity.__pointerdown = (e : PointerEvent) => onPointerDown(e)
+    entity.__pointerdown = (e : SyntheticPointerEvent) => onPointerDown(e)
     // @ts-ignore
-    entity.__pointerup = (e : PointerEvent) => onPointerUp(e)
+    entity.__pointerup = (e : SyntheticPointerEvent) => onPointerUp(e)
     // @ts-ignore
-    entity.__pointerover = (e : PointerEvent) => onPointerOver(e)
+    entity.__mousedown = (e : SyntheticPointerEvent) => onMouseDown(e)
     // @ts-ignore
-    entity.__pointerout = (e : PointerEvent) => onPointerOut(e)
+    entity.__mouseup = (e : SyntheticPointerEvent) => onMouseUp(e)
+    // @ts-ignore
+    entity.__pointerover = (e : SyntheticPointerEvent) => onPointerOver(e)
+    // @ts-ignore
+    entity.__pointerout = (e : SyntheticPointerEvent) => onPointerOut(e)
+    // @ts-ignore
+    entity.__click = (e : SyntheticMouseEvent) => onClick(e)
     
     return () => {
       // @ts-ignore
@@ -66,6 +79,8 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
       entity.__pointerover = null;
       // @ts-ignore
       entity.__pointerout = null;
+      // @ts-ignore
+      entity.__click = null;
     }
 
   }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut]);

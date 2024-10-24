@@ -11,6 +11,7 @@ export class SyntheticPointerEvent {
 
     constructor(e: PointerEvent) {
         this.nativeEvent = e;
+        this.type = e.type;
         Object.assign(this, e);
     }
 
@@ -38,6 +39,7 @@ export class SyntheticMouseEvent {
 
     constructor(e: MouseEvent) {
         this.nativeEvent = e;
+        this.type = e.type;
         Object.assign(this, e);
     }
 

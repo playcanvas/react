@@ -38,7 +38,7 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       </Entity>
 
       {/* The GLB Asset to load */}
-      <Entity name='asset'>
+      <Entity name='asset' onClick={e => console.log('register click')}>
         <Script script={ShadowCatcher} intensity={0.9}/>
         <Container 
           asset={model} 

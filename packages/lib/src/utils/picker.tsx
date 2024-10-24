@@ -1,9 +1,9 @@
 import { AppBase, CameraComponent, Entity, GraphNode, Picker } from "playcanvas"
 import { useCallback, useLayoutEffect, useMemo, useRef } from "react"
-import { SyntheticPointerEvent } from "./synthetic-event";
+import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
 
 // Utility to propagate events up the entity hierarchy
-const propagateEvent = (entity: Entity, event: SyntheticPointerEvent, stopAt: Entity | null = null): boolean => {
+const propagateEvent = (entity: Entity, event: SyntheticPointerEvent | SyntheticMouseEvent, stopAt: Entity | null = null): boolean => {
     while (entity) {
         if(entity === stopAt) return false;
         // @ts-ignore
@@ -37,7 +37,7 @@ const getNearestCommonAncestor = (a: GraphNode | null, b: GraphNode | null): Gra
 };
 
 
-const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : PointerEvent) : Promise<Entity | null> => {
+const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : MouseEvent) : Promise<Entity | null> => {
     // Find the highest priority camera
     const [activeCamera] : CameraComponent[] = (app.root.findComponents('camera') as CameraComponent[])
         .filter((camera: CameraComponent) => !camera.renderTarget)
@@ -77,7 +77,6 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
         const entity = await getEntityAtPointerEvent(app, picker, e);
         if (!entity) return null;
 
-
         const prevEntity = activeEntity.current;
 
         // Find the common ancestor of the current target and last event. We do not need to bubble past this
@@ -101,11 +100,11 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
         activeEntity.current = entity;
 
         return null;
-        // }
+
     }, [picker] );
 
     // Construct a generic handler for pointer events
-    const onPointerEvent = useCallback(async (e: PointerEvent) => {
+    const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
         if (!picker || !app) return;
 
         const entity = await getEntityAtPointerEvent(app, picker, e);
@@ -113,24 +112,33 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
         if (!entity) return
 
         // Handle other pointer events (down, up, move)
-        const pointerEvent = new SyntheticPointerEvent(e);
-        propagateEvent(entity, pointerEvent);
+        const syntheticEvent = e instanceof PointerEvent
+            ? new SyntheticPointerEvent(e)
+            : new SyntheticMouseEvent(e);
+
+        propagateEvent(entity, syntheticEvent);
 
     }, [picker]);
 
     useLayoutEffect((): any => {
         if (!picker || !el || !app) return;
 
-        el.addEventListener('pointerup', onPointerEvent);
-        el.addEventListener('pointerdown', onPointerEvent);
+        el.addEventListener('pointerup', onInteractionEvent);
+        el.addEventListener('pointerdown', onInteractionEvent);
+        el.addEventListener('mousedown', onInteractionEvent);
+        el.addEventListener('mouseup', onInteractionEvent);
+        el.addEventListener('click', onInteractionEvent);
         el.addEventListener('pointermove', onPointerMove);
         app.on('update', onFrameUpdate);
         
         return () => {
-            el.removeEventListener('pointerup', onPointerEvent);
-            el.removeEventListener('pointerdown', onPointerEvent);
+            el.removeEventListener('pointerup', onInteractionEvent);
+            el.removeEventListener('pointerdown', onInteractionEvent);
+            el.removeEventListener('mousedown', onInteractionEvent);
+            el.removeEventListener('mouseup', onInteractionEvent);
+            el.removeEventListener('click', onInteractionEvent);
             el.removeEventListener('pointermove', onPointerMove);
             app.off('update', onFrameUpdate);
         };
-    }, [app, el, onPointerEvent]);
+    }, [app, el, onInteractionEvent]);
 }
