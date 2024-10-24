@@ -80,7 +80,7 @@ export const usePostControls = () => {
     "Bloom",
     {
       enabled: true,
-      intensity: { min: 0, max: 0.2, step: 0.001, value: 0.13 },
+      intensity: { min: 0, max: 0.1, step: 0.001, value: 0.1 },
       lastMipLevel: { min: 0, max: 12, step: 1, value: 1 },
     },
     { collapsed: true }
