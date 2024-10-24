@@ -10,8 +10,6 @@ interface EntityProps extends PropsWithChildren {
   rotation?: [number, number, number];
   onPointerUp?: Function;
   onPointerDown?: Function;
-  onMouseUp?: Function;
-  onMouseDown?: Function;
   onPointerOver?: Function;
   onPointerOut?: Function;
   onClick?: Function;
@@ -26,8 +24,6 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
     rotation = [0, 0, 0],
     onPointerDown = () => null,
     onPointerUp = () => null,
-    onMouseDown = () => null,
-    onMouseUp = () => null,
     onPointerOver = () => null,
     onPointerOut = () => null,
     onClick = () => null
@@ -60,10 +56,6 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
     // @ts-ignore
     entity.__pointerup = (e : SyntheticPointerEvent) => onPointerUp(e)
     // @ts-ignore
-    entity.__mousedown = (e : SyntheticPointerEvent) => onMouseDown(e)
-    // @ts-ignore
-    entity.__mouseup = (e : SyntheticPointerEvent) => onMouseUp(e)
-    // @ts-ignore
     entity.__pointerover = (e : SyntheticPointerEvent) => onPointerOver(e)
     // @ts-ignore
     entity.__pointerout = (e : SyntheticPointerEvent) => onPointerOut(e)
@@ -83,7 +75,7 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
       entity.__click = null;
     }
 
-  }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut]);
+  }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);
 
   useLayoutEffect(() => {
     entity.name = name;
