@@ -38,13 +38,11 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       </Entity>
 
       {/* The GLB Asset to load */}
-      <Entity name='asset' onPointerDown={e => console.log('parent down')}>
+      <Entity name='asset'>
         <Script script={ShadowCatcher} intensity={0.9}/>
         <Container 
           asset={model} 
-          castShadows 
-          onPointerOver={e => console.log('over')}
-          onPointerOut={e => console.log('out')}
+          castShadows
          />
       </Entity>
     </Entity>
