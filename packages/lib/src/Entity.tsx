@@ -7,8 +7,10 @@ interface EntityProps extends PropsWithChildren {
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
-  onPointerDown: Function
-  onPointerUp: Function
+  onPointerUp?: Function;
+  onPointerDown?: Function;
+  onPointerOver?: Function;
+  onPointerOut?: Function
 }
 
 export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
@@ -19,7 +21,9 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
     scale = [1, 1, 1], 
     rotation = [0, 0, 0],
     onPointerDown = () => null,
-    onPointerUp = () => null
+    onPointerUp = () => null,
+    onPointerOver = () => null,
+    onPointerOut = () => null
   },
   ref
 ) : React.ReactElement | null {
@@ -44,16 +48,27 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
   // PointerEvents
   useLayoutEffect(() => {
 
+    // @ts-ignore
     entity.__pointerdown = (e : PointerEvent) => onPointerDown(e)
+    // @ts-ignore
     entity.__pointerup = (e : PointerEvent) => onPointerUp(e)
-
+    // @ts-ignore
+    entity.__pointerover = (e : PointerEvent) => onPointerOver(e)
+    // @ts-ignore
+    entity.__pointerout = (e : PointerEvent) => onPointerOut(e)
+    
     return () => {
+      // @ts-ignore
       entity.__pointerdown = null;
+      // @ts-ignore
       entity.__pointerup = null;
+      // @ts-ignore
+      entity.__pointerover = null;
+      // @ts-ignore
+      entity.__pointerout = null;
     }
 
-  }, [app, parent, entity, onPointerDown, onPointerUp]);
-
+  }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut]);
 
   useLayoutEffect(() => {
     entity.name = name;
