@@ -25,10 +25,14 @@ export const useComponent = (ctype: string, props: ComponentProps): void => {
     }
 
     return () => {
-      if (componentRef.current) {
+      const comp = componentRef.current
+      componentRef.current = null;
+
+      if(!app || !app.root) return;
+
+      if (comp) {
         type SystemKeys = keyof typeof app.systems;
         if (app.systems[ctype as SystemKeys]) parent.removeComponent(ctype);
-        componentRef.current = null;
       }
     };
   }, [app, parent, ctype]);

@@ -484,10 +484,10 @@ export class OrbitCameraInputMouse extends Script {
 
             // Remove the listeners so if this entity is destroyed
             this.on('destroy', function () {
-                this.app.mouse.off(EVENT_MOUSEDOWN, this.onMouseDown, this);
-                this.app.mouse.off(EVENT_MOUSEUP, this.onMouseUp, this);
-                this.app.mouse.off(EVENT_MOUSEMOVE, this.onMouseMove, this);
-                this.app.mouse.off(EVENT_MOUSEWHEEL, this.onMouseWheel, this);
+                this.app.mouse?.off(EVENT_MOUSEDOWN, this.onMouseDown, this);
+                this.app.mouse?.off(EVENT_MOUSEUP, this.onMouseUp, this);
+                this.app.mouse?.off(EVENT_MOUSEMOVE, this.onMouseMove, this);
+                this.app.mouse?.off(EVENT_MOUSEWHEEL, this.onMouseWheel, this);
 
                 window.removeEventListener('mouseout', onMouseOut, false);
             });
@@ -619,10 +619,10 @@ export class OrbitCameraInputTouch extends Script {
             this.app.touch.on(EVENT_TOUCHMOVE, this.onTouchMove, this);
 
             this.on('destroy', function () {
-                this.app.touch.off(EVENT_TOUCHSTART, this.onTouchStartEndCancel, this);
-                this.app.touch.off(EVENT_TOUCHEND, this.onTouchStartEndCancel, this);
-                this.app.touch.off(EVENT_TOUCHCANCEL, this.onTouchStartEndCancel, this);
-                this.app.touch.off(EVENT_TOUCHMOVE, this.onTouchMove, this);
+                this.app.touch?.off(EVENT_TOUCHSTART, this.onTouchStartEndCancel, this);
+                this.app.touch?.off(EVENT_TOUCHEND, this.onTouchStartEndCancel, this);
+                this.app.touch?.off(EVENT_TOUCHCANCEL, this.onTouchStartEndCancel, this);
+                this.app.touch?.off(EVENT_TOUCHMOVE, this.onTouchMove, this);
             });
         }
     }

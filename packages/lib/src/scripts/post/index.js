@@ -362,7 +362,7 @@ class CameraFrame extends Script {
         this.cameraComponent.renderPasses?.forEach((renderPass) => {
             renderPass.destroy();
         });
-        this.cameraComponent.renderPasses = [];
+        if (this.app.system) this.cameraComponent.renderPasses = [];
         this.cameraComponent.rendering = null;
 
         this.cameraComponent.jitter = 0;

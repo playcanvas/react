@@ -92,7 +92,7 @@ class ShadowCatcher extends Script {
             this.material.destroy();
             layers.remove(this.layer);
             
-            const camera = this.app.root.findOne(node => node?.camera?.enabled)?.camera;
+            const camera = this.app.root?.findOne(node => node?.camera?.enabled)?.camera;
             if (!camera) return;
 
             camera.layers = camera.layers.filter(layer => layer !== this.layer.id);

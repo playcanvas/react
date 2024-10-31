@@ -15,7 +15,7 @@ export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
     const app = useApp();
 
     useLayoutEffect(() => {
-        if (asset && entityRef.current) {
+        if (app && asset?.resource && entityRef.current) {
             const assetEntity = asset.resource.instantiateRenderEntity();
             entityRef.current.addChild(assetEntity);
             assetEntityRef.current = assetEntity;
@@ -26,13 +26,14 @@ export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
         
             entityRef.current.removeChild(assetEntityRef.current);
             assetEntityRef.current.destroy();
+            asset.resource?.destroy();
+
             entityRef.current = null;
             assetEntityRef.current = null;
 
         };
-    }, [app, parent, asset]);
+    }, [app, parent, asset, asset.resource]);
 
-    if (!asset) return null;
 
     return <Entity ref={entityRef} {...props}/>;
 };

@@ -41,17 +41,16 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
 
     // Cleanup function to remove the script when the component is unmounted
     return () => {
-      if(!app) return;
       const scriptComponent = scriptComponentRef.current;
       const script = scriptRef.current;
-      if (script && scriptComponent) {
-        scriptComponent.destroy(scriptRef.current);
-      } else {
-        console.log('Script not found on parent entity', parent?.script, scriptRef.current);
-        script.fire('destroy');
-      }
       scriptRef.current = null;
       scriptComponentRef.current = null;
+
+      if (app && app.root && script && scriptComponent) {
+        scriptComponent.destroy(script);
+      } else if (script) {
+        script.fire('destroy');
+      }
     };
   }, [app, parent, ScriptConstructor]);
 

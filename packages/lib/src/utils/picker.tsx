@@ -125,6 +125,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
         el.addEventListener('pointerup', onInteractionEvent);
         el.addEventListener('pointerdown', onInteractionEvent);
+        el.addEventListener('mouseup', onInteractionEvent);
         el.addEventListener('click', onInteractionEvent);
         el.addEventListener('pointermove', onPointerMove);
         app.on('update', onFrameUpdate);
