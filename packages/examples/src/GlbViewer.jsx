@@ -43,7 +43,7 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       {/* The GLB Asset to load */}
       <Entity name='asset' onClick={e => console.log('register click')}>
         <Script script={ShadowCatcher} intensity={0.9}/>
-        <Align >
+        <Align bottom>
           <Container 
             asset={model} 
             castShadows
