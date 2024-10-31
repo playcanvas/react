@@ -7,7 +7,7 @@ export const useAsset = (src, type, props) => {
     const app = useApp();
   
     return useQuery({ 
-        queryKey: [src],
+        queryKey: [app.root?.getGuid(), src, type, props],
         queryFn: () => app && fetchAsset(app, src, type, props)
     })
 }
