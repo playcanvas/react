@@ -1,4 +1,4 @@
-import { BoundingBox, Entity as PcEntity, RenderComponent, Vec3, Application } from "playcanvas";
+import { BoundingBox, Entity as PcEntity, RenderComponent, Vec3, Application, Mat4 } from "playcanvas";
 import { Children, useLayoutEffect, useRef, useState } from "react";
 import { Entity } from "../Entity";
 import { useApp, useParent } from "../hooks";
@@ -34,8 +34,8 @@ export const Align = (props: AlignProps) => {
       bounds.center.set(0, 0, 0);
       bounds.halfExtents.set(0.0, 0.0, 0.0);
   
-      // const tmpAABB: BoundingBox = new BoundingBox();
-      // const invWorldTransform: Mat4 = new Mat4();
+      const tmpAABB: BoundingBox = new BoundingBox();
+      const invWorldTransform: Mat4 = new Mat4();
   
       const renderComponents = entity.findComponents("render") as RenderComponent[];
   
@@ -43,9 +43,8 @@ export const Align = (props: AlignProps) => {
       const updatedBounds = renderComponents.reduce((bounds, component) => {
         const meshInstances = component.meshInstances;
         meshInstances.forEach((mi) => {
-            // console.log(mi.node.getLocalPosition(), mi.node.getScale());
-            // invWorldTransform.copy(mi.node.getWorldTransform()).invert();
-            // tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
+            invWorldTransform.copy(mi.node.getWorldTransform()).invert();
+            tmpAABB.setFromTransformedAabb(mi.aabb, invWorldTransform);
             bounds.add(mi.aabb);
         });
         return bounds;
@@ -60,7 +59,7 @@ export const Align = (props: AlignProps) => {
     // Align based on bounds and alignment flags
     const position: [number, number, number] = [
       left ? -center.x + halfExtents.x : right ? -center.x - halfExtents.x : -center.x,
-      bottom ? -center.y + halfExtents.y: top ? -center.y - halfExtents.y  : -center.y,
+      bottom ? -center.y + halfExtents.y : top ? -center.y - halfExtents.y : -center.y,
       front ? -center.z + halfExtents.z : back ? -center.z - halfExtents.z : -center.z,
     ];
   
