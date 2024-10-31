@@ -1,15 +1,37 @@
 import { Asset, TEXTURETYPE_RGBP } from "playcanvas"
 import { useApp } from "@playcanvas/react/hooks"
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchAsset } from "@playcanvas/react/utils"
+import { useCallback, useEffect, useLayoutEffect } from "react";
 
 export const useAsset = (src, type, props) => {
     const app = useApp();
-  
-    return useQuery({ 
-        queryKey: [app.root?.getGuid(), src, type, props],
+    const queryClient = useQueryClient();
+    const queryKey = [app.root?.getGuid(), src, type, props];
+
+    // Construct a query for the asset
+    const query = useQuery({ 
+        queryKey,
         queryFn: () => app && fetchAsset(app, src, type, props)
     })
+
+    // Create a `release` that removes the query from the cache
+    const release = useCallback(_ => {  
+        queryClient.removeQueries({ queryKey });
+    }, [queryClient, ...queryKey] );
+
+    // When a query is removed, delete the corresponding resource
+    useLayoutEffect(_ => {
+        const unsubscribe = queryClient.getQueryCache().subscribe(({ type, query }) => {
+            if (type === "removed") {
+                const asset = query.state?.data;
+                asset?.unload();
+            }
+        });
+        return unsubscribe;
+    }, [queryClient])
+
+    return { ...query, release };
 }
 
 /**

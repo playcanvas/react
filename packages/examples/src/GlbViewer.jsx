@@ -1,26 +1,29 @@
 import { Container, Entity } from "@playcanvas/react";
-import { Camera, EnvAtlas, Script } from "@playcanvas/react/components";
+import { Align, Camera, EnvAtlas, Script } from "@playcanvas/react/components";
 import { Color } from "playcanvas";
 import { useEnvAtlas, useModel } from "./utils/hooks";
 import { AutoRotator, CameraFrame, Grid, OrbitControls, ShadowCatcher } from "@playcanvas/react/scripts";
 import { useLayoutEffect, useMemo } from "react";
 import { useApp } from "@playcanvas/react/hooks";
 import { usePostControls } from "./utils/post-controls";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const GlbViewer = ({ envMapSrc, src }) => {
 
   const app = useApp();
-
   const postSettings = usePostControls();
 
   const { data: envMap, isPending: isEnvLoading } = useEnvAtlas(envMapSrc);
-  const { data: model, isPending: isModeLoading } = useModel(src);
+  const { data: model, isPending: isModeLoading, release } = useModel(src, { autoRelease : true });
   const clearColor = useMemo(_ => new Color().fromString('#090707'));
-
 
   useLayoutEffect(() => {
     app.scene.layers.getLayerByName('Skybox').enabled = false;
   }, [app]);
+
+  useLayoutEffect(_ => {
+    return release;
+  }, [src])
 
   if (isEnvLoading || isModeLoading) return null;
 
@@ -40,10 +43,12 @@ export const GlbViewer = ({ envMapSrc, src }) => {
       {/* The GLB Asset to load */}
       <Entity name='asset' onClick={e => console.log('register click')}>
         <Script script={ShadowCatcher} intensity={0.9}/>
-        <Container 
-          asset={model} 
-          castShadows
-         />
+        <Align >
+          <Container 
+            asset={model} 
+            castShadows
+          />
+         </Align>
       </Entity>
     </Entity>
   );

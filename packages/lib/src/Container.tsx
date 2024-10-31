@@ -24,9 +24,9 @@ export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
         return () => {
             if (!entityRef.current || !assetEntityRef.current) return;
         
-            entityRef.current.removeChild(assetEntityRef.current);
+            // Don't destroy the underlying resource as it may be used by other components
             assetEntityRef.current.destroy();
-            asset.resource?.destroy();
+            entityRef.current.removeChild(assetEntityRef.current);
 
             entityRef.current = null;
             assetEntityRef.current = null;
