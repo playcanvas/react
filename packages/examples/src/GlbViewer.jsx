@@ -15,7 +15,6 @@ export const GlbViewer = ({ envMapSrc, src }) => {
 
   const { data: envMap, isPending: isEnvLoading } = useEnvAtlas(envMapSrc);
   const { data: model, isPending: isModeLoading, release } = useModel(src, { autoRelease : true });
-  const clearColor = useMemo(_ => new Color().fromString('#090707'));
 
   useLayoutEffect(() => {
     app.scene.layers.getLayerByName('Skybox').enabled = false;
@@ -34,7 +33,7 @@ export const GlbViewer = ({ envMapSrc, src }) => {
 
       {/* The Camera with some default post */}
       <Entity name='camera' position={[4, 2, 4]}>
-        <Camera clearColor={clearColor} fov={28} nearClip={1} farClip={10} exposure={1}/>
+        <Camera clearColor='#090707' fov={28} nearClip={1} farClip={10} exposure={1}/>
         <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
         <Script script={AutoRotator} />
         <Script script={CameraFrame} {...postSettings}/>
