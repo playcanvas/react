@@ -25,3 +25,5 @@ dist-ssr
 
 # ignore splats
 *.ply
+
+*storybook.log
