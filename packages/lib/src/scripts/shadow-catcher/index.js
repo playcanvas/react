@@ -161,6 +161,16 @@ class ShadowCatcher extends Script {
         return this.light?.light?.shadowIntensity;
     }
 
+    set blur(value) {
+        if(this.light?.light) {
+            this.light.light.vsmBlurSize = value;
+        }
+    }
+
+    get blur() {
+        return this.light?.light?.vsmBlurSize;
+    }
+
     set rotation(euler) {
         this.light.setEulerAngles(euler);
     }
