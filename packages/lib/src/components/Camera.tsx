@@ -1,8 +1,11 @@
 import { FC } from "react";
 import { useComponent } from "../hooks";
+import { Color } from "playcanvas";
+import { useColors } from "../utils/color";
 
 interface CameraProps {
     [key: string]: any;
+    clearColor: Color | string
 }
 
 /**
@@ -10,7 +13,9 @@ interface CameraProps {
  */
 export const Camera: FC<CameraProps> = (props : any) => {
 
-    useComponent("camera", props);
+    const colorProps = useColors(props, ['clearColor'])
+
+    useComponent("camera", { ...props, ...colorProps });
     return null;
 
 }
