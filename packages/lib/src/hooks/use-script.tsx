@@ -6,14 +6,14 @@ import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
 interface Props {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const useScript = (ScriptConstructor: typeof Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
   const scriptName: string = toLowerCamelCase(ScriptConstructor.name);
-  const scriptRef = useRef<any>(null);
+  const scriptRef = useRef<Script | null>(null);
   const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
   // Create the script synchronously
@@ -33,7 +33,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
         properties: { ...props },
         preloading: false,
       });
-      // @ts-ignore
+      // @ts-expect-error Override the super private `__name` instance
       scriptInstance.__name = scriptName;
       scriptRef.current = scriptInstance;
       scriptComponentRef.current = scriptComponent;

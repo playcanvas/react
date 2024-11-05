@@ -20,8 +20,7 @@ export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
 
         return () => {
             if(app && app.scene) {
-                // @ts-ignore
-                app.scene.envAtlas = null
+                app.scene.envAtlas = undefined;
             }
         }
 

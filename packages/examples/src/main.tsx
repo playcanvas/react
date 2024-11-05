@@ -5,7 +5,7 @@ import './index.css'
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
-function fallbackRender({ error, resetErrorBoundary }) {
+function fallbackRender({ error }) {
   return (
     <div role="alert">
       <p>Something went wrong:</p>

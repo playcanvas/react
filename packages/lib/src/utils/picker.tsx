@@ -6,8 +6,7 @@ import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
 const propagateEvent = (entity: Entity, event: SyntheticPointerEvent | SyntheticMouseEvent, stopAt: Entity | null = null): boolean => {
     while (entity) {
         if(entity === stopAt) return false;
-        // @ts-ignore
-        entity[`__${event.type}`]?.(event);
+        entity.fire(event.type, event);
         if (event.hasStoppedPropagation) return true;
         entity = entity.parent as Entity;
     }
@@ -59,7 +58,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
     const pointerDetails = useRef<PointerEvent | null>(null);
 
     // Construct a Global Picker
-    const picker: Picker | null = useMemo((): any => {
+    const picker: Picker | null = useMemo((): Picker | null => {
         if (!app || !app.graphicsDevice) return null;
         return new Picker(app, app.graphicsDevice.width, app.graphicsDevice.height);
     }, [app]);
@@ -120,7 +119,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
     }, [picker]);
 
-    useLayoutEffect((): any => {
+    useLayoutEffect(() => {
         if (!picker || !el || !app) return;
 
         el.addEventListener('pointerup', onInteractionEvent);

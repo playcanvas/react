@@ -7,7 +7,6 @@ import {
     QuadRender,
     Script,
     createShaderFromCode,
-    FUNC_LESSEQUAL,
     BLENDMODE_ONE,
     BLENDMODE_ONE_MINUS_SRC_ALPHA,
     BLENDMODE_SRC_ALPHA,
@@ -17,7 +16,7 @@ import {
 // import { Element, ElementType } from './element';
 // import { Serializer } from './serializer';
 
-const vsCode = /*glsl*/ `
+const vsCode = /* glsl*/ `
     uniform mat4 camera_matrix;
     uniform vec2 camera_params;
 
@@ -34,7 +33,7 @@ const vsCode = /*glsl*/ `
     }
 `;
 
-const fsCode = /*glsl*/ `
+const fsCode = /* glsl*/ `
     uniform vec3 camera_position;
     uniform mat4 camera_viewProjection;
     uniform sampler2D blueNoiseTex32;
@@ -174,7 +173,7 @@ const calcHalfSize = (fov, aspect, fovIsHorizontal) => {
         y = Math.tan(fov * Math.PI / 360);
         x = y * aspect;
     }
-    return [ x, y ];
+    return [x, y];
 };
 
 const attributes = {
@@ -205,7 +204,7 @@ class InfiniteGrid {
         this.cameraParamsId = this.device.scope.resolve('camera_params');
         this.cameraPositionId = this.device.scope.resolve('camera_position');
         this.cameraViewProjectionId = this.device.scope.resolve('camera_viewProjection');
-    
+
         this.blendState = new BlendState(
             true,
             BLENDEQUATION_ADD, BLENDMODE_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_ALPHA,
@@ -214,18 +213,18 @@ class InfiniteGrid {
     }
 
     set camera(entity) {
-        
-        const camera = entity?.camera;
-        if(!entity || !camera || this._camera === entity ) return;
 
-        this._camera = entity;        
+        const camera = entity?.camera;
+        if (!entity || !camera || this._camera === entity) return;
+
+        this._camera = entity;
 
         camera.onPreRenderLayer = (layer, transparent) => {
             if (this.visible && layer.name === this.layerName && !transparent) {
                 this.device.setBlendState(this.blendState);
                 this.device.setCullMode(CULLFACE_NONE);
                 this.device.setDepthState(DepthState.NODEPTH);
-                this.device.setStencilState(null, null);                
+                this.device.setStencilState(null, null);
 
                 // update viewProjectionInverse matrix
                 const cameraMatrix = this._camera.getWorldTransform().clone();
@@ -237,7 +236,7 @@ class InfiniteGrid {
                 this.cameraParamsId.setValue(cameraParams);
                 this.cameraPositionId.setValue([cameraPosition.x, cameraPosition.y, cameraPosition.z]);
                 this.cameraViewProjectionId.setValue(cameraViewProjection.data);
- 
+
                 this.quadRender.render();
             }
         };
@@ -248,8 +247,8 @@ class InfiniteGrid {
     }
 
     destroy() {
-        const camera = this._camera?.camera
-        if(camera?.onPreRenderLayer) camera.onPreRenderLayer = null;
+        const camera = this._camera?.camera;
+        if (camera?.onPreRenderLayer) camera.onPreRenderLayer = null;
     }
 }
 
@@ -264,11 +263,11 @@ export class Grid extends Script {
      */
     initialize() {
         this.grid = new InfiniteGrid(this.app);
-        this.on('destroy', _ => this.grid.destroy())
+        this.on('destroy', () => this.grid.destroy());
     }
 
-    update(){
-        const camera = this.app.root.findOne(node => node.camera)
+    update() {
+        const camera = this.app.root.findOne(node => node.camera);
         this.grid.camera = camera;
     }
 }

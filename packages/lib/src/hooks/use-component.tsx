@@ -1,16 +1,14 @@
 import { useLayoutEffect, useRef } from "react";
 import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
-import { Application, Entity } from "playcanvas";
+import { Application, Component, Entity } from "playcanvas";
 
 interface ComponentProps {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
-
-
 export const useComponent = (ctype: string, props: ComponentProps): void => {
-  const componentRef = useRef<any>();
+  const componentRef = useRef<Component | null>();
   const parent : Entity = useParent();
   const app : Application = useApp();
 

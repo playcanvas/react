@@ -1,13 +1,8 @@
-type PointerEventProps = Pick<PointerEvent, keyof PointerEvent>;
-
-export interface SyntheticPointerEvent extends PointerEventProps {
-    type: string;
-}
-
 export class SyntheticPointerEvent {
 
     nativeEvent: PointerEvent;
     hasStoppedPropagation: boolean = false;
+    type: string
 
     constructor(e: PointerEvent) {
         this.nativeEvent = e;
@@ -25,17 +20,11 @@ export class SyntheticPointerEvent {
         this.nativeEvent.stopImmediatePropagation();
     }
 }
-
-type MouseEventProps = Pick<MouseEvent, keyof MouseEvent>;
-
-export interface SyntheticMouseEvent extends MouseEventProps {
-    type: string;
-}
-
 export class SyntheticMouseEvent {
 
     nativeEvent: MouseEvent;
     hasStoppedPropagation: boolean = false;
+    type: string
 
     constructor(e: MouseEvent) {
         this.nativeEvent = e;
