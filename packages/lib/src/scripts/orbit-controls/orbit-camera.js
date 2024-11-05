@@ -5,7 +5,6 @@ import {
 } from 'playcanvas';
 
 export class OrbitCamera extends Script {
-
     static name = 'OrbitCamera';
 
     /**
@@ -215,6 +214,7 @@ export class OrbitCamera extends Script {
 
     /** @private */
     _modelsAabb = new BoundingBox();
+
     _pivotPoint = new Vec3();
 
     static fromWorldPoint = new Vec3();
@@ -286,7 +286,7 @@ export class OrbitCamera extends Script {
         this._checkAspectRatio();
 
         // Find all the models in the scene that are under the focused entity
-        
+
         this._buildAabb(this.focusEntity || this.app.root);
 
         this.entity.lookAt(this._modelsAabb.center);
@@ -443,7 +443,6 @@ export class OrbitCamera extends Script {
 
 
 export class OrbitCameraInputMouse extends Script {
-
     static name = 'OrbitCameraInputMouse';
 
     /**
@@ -575,7 +574,6 @@ export class OrbitCameraInputMouse extends Script {
 }
 
 export class OrbitCameraInputTouch extends Script {
-
     static name = 'OrbitCameraInputTouch';
 
     /**

@@ -5,7 +5,7 @@ import { Entity } from ".";
 
 interface ContainerProps {
     asset: Asset;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export const Container: FC<ContainerProps> = ({ asset, ...props }) => {

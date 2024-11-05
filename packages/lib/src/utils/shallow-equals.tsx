@@ -1,4 +1,4 @@
-export const shallowEquals = (objA: any, objB: any): boolean => {
+export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string, unknown>): boolean => {
     // If the two objects are the same object, return true
     if (objA === objB) {
       return true;

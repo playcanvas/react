@@ -1,18 +1,14 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "jsx": "react-jsx",
         "allowJs": true,
-        "declaration": true,
-        "declarationDir": "./dist",
         "forceConsistentCasingInFileNames": true,
-        "sourceMap": true,
         "removeComments": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
-        "outDir": "./dist",
-        "rootDir": "./src"
     },
     "include": ["src"]
   }

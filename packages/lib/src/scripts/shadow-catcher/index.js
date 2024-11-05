@@ -1,6 +1,5 @@
 import {
     BLEND_NORMAL,
-    CHUNKAPI_1_65,
     SHADOW_VSM16 as SHADOW_TYPE,
     SHADOWUPDATE_REALTIME as SHADOWUPDATE,
     Entity,
@@ -9,11 +8,7 @@ import {
     BoundingBox,
     Script,
     Vec3,
-    CHUNKAPI_2_1,
-    LIGHTSHAPE_RECT,
-    Color,
-    LIGHTFALLOFF_INVERSESQUARED,
-    SHADOW_PCSS
+    CHUNKAPI_2_1
 } from 'playcanvas';
 
 const endPS = `
@@ -21,21 +16,23 @@ const endPS = `
     gl_FragColor.rgb = vec3(0.0, 0.0, 0.0);
 `;
 
-const tmpMin = new Vec3()
-const tmpMax = new Vec3()
+const tmpMin = new Vec3();
+const tmpMax = new Vec3();
 
 class ShadowCatcher extends Script {
-
     layer;
+
     material;
+
     plane;
+
     light;
-    
+
     sceneBounds = new BoundingBox();
 
     initialize() {
         // create and add the shadow layers
-        this.layer = new Layer({ name: 'Shadow Layer'});
+        this.layer = new Layer({ name: 'Shadow Layer' });
 
         const layers = this.app.scene.layers;
         const worldLayer = layers.getLayerByName('World');
@@ -91,7 +88,7 @@ class ShadowCatcher extends Script {
             this.light.destroy();
             this.material.destroy();
             layers.remove(this.layer);
-            
+
             const camera = this.app.root?.findOne(node => node?.camera?.enabled)?.camera;
             if (!camera) return;
 
@@ -101,26 +98,26 @@ class ShadowCatcher extends Script {
         this.on('enable', () => {
             this.layer.enabled = true;
             this.light.enabled = true;
-        })
+        });
 
         this.on('disable', () => {
             this.layer.enabled = false;
             this.light.enabled = false;
-        })
+        });
 
     }
-        
+
     update() {
 
         const camera = this.app.root.findOne(node => node?.camera?.enabled)?.camera;
 
-        if(!camera) return;
+        if (!camera) return;
 
         const renderComponents = this.entity.findComponents('render');
 
         // Set the shadowCasters on the layer
         const meshInstances = renderComponents.reduce((arr, component) => ([...arr, ...component.meshInstances]), []);
-        meshInstances.forEach(mi => mi.castShadow = true)
+        meshInstances.forEach(mi => mi.castShadow = true);
         this.layer.addShadowCasters(meshInstances);
 
         this.sceneBounds.center.set(0, 0, 0);
@@ -133,8 +130,8 @@ class ShadowCatcher extends Script {
             tmpMin.copy(bounds.getMin()).min(position);
             tmpMax.copy(bounds.getMax()).max(position);
             bounds.setMinMax(tmpMin, tmpMax);
-            return bounds
-        }, this.sceneBounds );
+            return bounds;
+        }, this.sceneBounds);
 
         const bound = sceneBounds;
         const center = bound.center;
@@ -143,7 +140,7 @@ class ShadowCatcher extends Script {
         this.plane.setLocalScale(len * 10, 1, len * 10);
         this.plane.setPosition(center.x, 0, center.z);
 
-        if(!camera.layers.includes(this.layer.id)) {
+        if (!camera.layers.includes(this.layer.id)) {
             camera.layers = [...camera.layers, this.layer.id];
         }
 
@@ -152,7 +149,7 @@ class ShadowCatcher extends Script {
 
 
     set intensity(value) {
-        if(this.light?.light) {
+        if (this.light?.light) {
             this.light.light.shadowIntensity = value;
         }
     }
@@ -162,7 +159,7 @@ class ShadowCatcher extends Script {
     }
 
     set blur(value) {
-        if(this.light?.light) {
+        if (this.light?.light) {
             this.light.light.vsmBlurSize = value;
         }
     }
@@ -180,4 +177,4 @@ class ShadowCatcher extends Script {
     }
 }
 
-export { ShadowCatcher }
+export { ShadowCatcher };

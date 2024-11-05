@@ -1,4 +1,4 @@
-import { Script } from "playcanvas";
+import { Entity, Script } from "playcanvas";
 
 const smoothStep = (x: number): number =>
   x <= 0 ? 0 : x >= 1 ? 1 : Math.sin((x - 0.5) * Math.PI) * 0.5 + 0.5;
@@ -14,8 +14,11 @@ class AutoRotator extends Script {
   yaw: number = 0;
 
   update(dt: number): void {
-    const entity = this.entity as any;
-    const camera = entity.script.orbitCamera as any;
+
+    const entity = this.entity as Entity;
+
+    // @ts-expect-error The script is actually dynamic but PlayCanvas types do not reflect this.
+    const camera = entity?.script?.orbitCamera;
     if (!camera) {
       return;
     }

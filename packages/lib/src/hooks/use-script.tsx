@@ -6,14 +6,14 @@ import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
 interface Props {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export const useScript = (ScriptConstructor: typeof Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
   const scriptName: string = toLowerCamelCase(ScriptConstructor.name);
-  const scriptRef = useRef<any>(null);
+  const scriptRef = useRef<Script | null>(null);
   const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
   // Create the script synchronously
@@ -33,7 +33,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
         properties: { ...props },
         preloading: false,
       });
-      // @ts-ignore
+      // @ts-expect-error Override the super private `__name` instance
       scriptInstance.__name = scriptName;
       scriptRef.current = scriptInstance;
       scriptComponentRef.current = scriptComponent;
@@ -47,6 +47,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
       scriptComponentRef.current = null;
 
       if (app && app.root && script && scriptComponent) {
+        // @ts-expect-error The type of `destroy` is wrong
         scriptComponent.destroy(script);
       } else if (script) {
         script.fire('destroy');
@@ -56,12 +57,15 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
 
   // Update script props when they change
   useEffect(() => {
-    if (scriptRef.current) {
-      for (const key in props) {
-        if (scriptRef.current[key] !== undefined) {
-          scriptRef.current[key] = props[key];
-        }
-      }
-    }
+    const script: Script | null | undefined = scriptRef.current
+    // Ensure componentRef.current exists before updating props
+    if (!script) return;
+
+    const filteredProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key in script)
+    );
+
+    Object.assign(script, filteredProps)
+
   }, [props]);
 };

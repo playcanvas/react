@@ -1,6 +1,7 @@
 import { FC } from "react";
 import { useComponent } from "../hooks";
-interface LightProps {
+
+type LightProps = {
     type: string;
 }
 
