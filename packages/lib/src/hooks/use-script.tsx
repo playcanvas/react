@@ -47,6 +47,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
       scriptComponentRef.current = null;
 
       if (app && app.root && script && scriptComponent) {
+        // @ts-expect-error The type of `destroy` is wrong
         scriptComponent.destroy(script);
       } else if (script) {
         script.fire('destroy');
@@ -56,12 +57,15 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
 
   // Update script props when they change
   useEffect(() => {
-    if (scriptRef.current) {
-      for (const key in props) {
-        if (scriptRef.current[key] !== undefined) {
-          scriptRef.current[key] = props[key];
-        }
-      }
-    }
+    const script: Script | null | undefined = scriptRef.current
+    // Ensure componentRef.current exists before updating props
+    if (!script) return;
+
+    const filteredProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key in script)
+    );
+
+    Object.assign(script, filteredProps)
+
   }, [props]);
 };

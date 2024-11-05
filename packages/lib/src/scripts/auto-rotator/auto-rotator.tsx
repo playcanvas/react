@@ -16,6 +16,8 @@ class AutoRotator extends Script {
   update(dt: number): void {
 
     const entity = this.entity as Entity;
+
+    // @ts-expect-error The script is actually dynamic but PlayCanvas types do not reflect this.
     const camera = entity?.script?.orbitCamera;
     if (!camera) {
       return;

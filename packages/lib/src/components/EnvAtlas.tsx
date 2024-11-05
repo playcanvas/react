@@ -20,7 +20,8 @@ export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
 
         return () => {
             if(app && app.scene) {
-                app.scene.envAtlas = undefined;
+                // @ts-expect-error `envAtlas` has an incorrect type ot @type {Texture}
+                app.scene.envAtlas = null;
             }
         }
 

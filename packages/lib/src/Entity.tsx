@@ -57,24 +57,18 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   // PointerEvents
   useLayoutEffect(() => {
 
-    const onLocalPointerDown = (e : SyntheticPointerEvent) => onPointerDown(e)
-    const onLocalPointerUp = (e : SyntheticPointerEvent) => onPointerUp(e)
-    const onLocalPointerOver = (e : SyntheticPointerEvent) => onPointerOver(e)
-    const onLocalPointerOut = (e : SyntheticPointerEvent) => onPointerOut(e)
-    const onLocalClick = (e : SyntheticMouseEvent) => onClick(e)
-
-    entity.on('pointerdown', onLocalPointerDown);
-    entity.on('pointerup', onLocalPointerUp);
-    entity.on('pointerover', onLocalPointerOver);
-    entity.on('pointerout', onLocalPointerOut);
-    entity.on('click', onLocalClick);
+    entity.on('pointerdown', onPointerDown);
+    entity.on('pointerup', onPointerUp);
+    entity.on('pointerover', onPointerOver);
+    entity.on('pointerout', onPointerOut);
+    entity.on('click', onClick);
     
     return () => {
-      entity.off('pointerdown', onLocalPointerDown);
-      entity.off('pointerup', onLocalPointerUp);
-      entity.off('pointerover', onLocalPointerOver);
-      entity.off('pointerout', onLocalPointerOut);
-      entity.off('click', onLocalClick);
+      entity.off('pointerdown', onPointerDown);
+      entity.off('pointerup', onPointerUp);
+      entity.off('pointerover', onPointerOver);
+      entity.off('pointerout', onPointerOut);
+      entity.off('click', onClick);
     }
 
   }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);

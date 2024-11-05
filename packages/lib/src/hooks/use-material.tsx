@@ -1,7 +1,10 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
-import { WritableKeys } from '../utils/type-utils';
+
+type WritableKeys<T> = {
+  [K in keyof T]: T[K] extends { readonly [key: string]: unknown } ? never : K;
+}[keyof T];
 
 type MaterialProps = Pick<StandardMaterial, WritableKeys<StandardMaterial>>;
 

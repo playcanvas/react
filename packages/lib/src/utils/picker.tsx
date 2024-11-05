@@ -46,7 +46,8 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : MouseE
 
     // prepare the picker and perform picking
     picker.prepare(activeCamera, app.scene);
-    const [meshInstance] = await picker.getSelectionAsync(e.clientX, e.clientY);
+    const devicePixelRatio = window?.devicePixelRatio ?? 1;
+    const [meshInstance] = await picker.getSelectionAsync(e.clientX * devicePixelRatio , e.clientY * devicePixelRatio);
 
     if (!meshInstance) return null
 

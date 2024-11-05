@@ -20,7 +20,10 @@ export const GlbViewer: FC<GlbViewerProps> = ({ envMapSrc, src }) => {
   const { data: model, isPending: isModeLoading } = useModel(src, { autoRelease : true });
 
   useLayoutEffect(() => {
-    app.scene.layers.getLayerByName('Skybox').enabled = false;
+    const layer = app?.scene?.layers?.getLayerByName('Skybox');
+    if(layer){
+      layer.enabled = false;
+    }
   }, [app]);
 
 
@@ -33,17 +36,19 @@ export const GlbViewer: FC<GlbViewerProps> = ({ envMapSrc, src }) => {
 
       {/* The Camera with some default post */}
       <Entity name='camera' position={[4, 2, 4]}>
-        <Camera clearColor='#090707' fov={28} nearClip={1} farClip={10} exposure={1}/>
+        <Camera clearColor='#090707' fov={28} nearClip={1} farClip={100} exposure={1}/>
         <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
         <Script script={AutoRotator} />
         <Script script={CameraFrame} {...postSettings}/>
       </Entity>
 
       {/* The GLB Asset to load */}
-      <Entity name='asset' onClick={() => console.log('register click')}>
+      <Entity name='asset' >
         <Script script={ShadowCatcher} intensity={0.9}/>
         <Align bottom>
           <Container 
+            onPointerOver={() => console.log('hover')}
+            onPointerOut={() => console.log('out')}
             asset={model} 
             castShadows
           />

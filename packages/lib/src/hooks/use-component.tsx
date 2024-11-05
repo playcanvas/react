@@ -3,7 +3,7 @@ import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
 import { Application, Component, Entity } from "playcanvas";
 
-interface ComponentProps {
+type ComponentProps = {
   [key: string]: unknown;
 }
 
@@ -36,13 +36,16 @@ export const useComponent = (ctype: string, props: ComponentProps): void => {
   }, [app, parent, ctype]);
 
   useLayoutEffect(() => {
+
+    const comp: Component | null | undefined = componentRef.current
     // Ensure componentRef.current exists before updating props
-    if (componentRef.current) {
-      for (const key in props) {
-        if (componentRef.current[key] !== undefined) {
-          componentRef.current[key] = props[key];
-        }
-      }
-    }
+    if (!comp) return;
+
+    const filteredProps = Object.fromEntries(
+      Object.entries(props).filter(([key]) => key in comp)
+    );
+
+    Object.assign(comp, filteredProps)
+
   }, [props]);
 };
