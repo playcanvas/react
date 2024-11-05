@@ -1,21 +1,26 @@
 import { Entity as PcEntity } from 'playcanvas';
-import { PropsWithChildren, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
+import { ReactNode, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
-import { SyntheticPointerEvent } from './utils/synthetic-event';
+import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
 
-interface EntityProps extends PropsWithChildren {
+type PointerEventCallback = (event: SyntheticPointerEvent) => void;
+type MouseEventCallback = (event: SyntheticMouseEvent) => void;
+
+interface EntityProps {
   name?: string;
   position?: [number, number, number];
   scale?: [number, number, number];
   rotation?: [number, number, number];
-  onPointerUp?: Function;
-  onPointerDown?: Function;
-  onPointerOver?: Function;
-  onPointerOut?: Function;
-  onClick?: Function;
+  onPointerUp?: PointerEventCallback;
+  onPointerDown?: PointerEventCallback;
+  onPointerOver?: PointerEventCallback;
+  onPointerOut?: PointerEventCallback;
+  onClick?: MouseEventCallback;
+  children?: ReactNode
 }
 
-export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (function Entity(
+
+export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   { 
     name = 'Untitled', 
     children, 
@@ -32,8 +37,9 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
 ) : React.ReactElement | null {
   const parent = useParent();
   const app = useApp();
+
   // Create the entity only when 'app' changes
-  const entity = useMemo(() => new PcEntity(name, app), [app]) as PcEntity;
+  const entity = useMemo(() => new PcEntity(name, app), [app]) as PcEntity
 
   useImperativeHandle(ref, () => entity);
 
@@ -51,28 +57,18 @@ export const Entity = forwardRef<PcEntity, PropsWithChildren<EntityProps>> (func
   // PointerEvents
   useLayoutEffect(() => {
 
-    // @ts-ignore
-    entity.__pointerdown = (e : SyntheticPointerEvent) => onPointerDown(e)
-    // @ts-ignore
-    entity.__pointerup = (e : SyntheticPointerEvent) => onPointerUp(e)
-    // @ts-ignore
-    entity.__pointerover = (e : SyntheticPointerEvent) => onPointerOver(e)
-    // @ts-ignore
-    entity.__pointerout = (e : SyntheticPointerEvent) => onPointerOut(e)
-    // @ts-ignore
-    entity.__click = (e : SyntheticMouseEvent) => onClick(e)
+    entity.on('pointerdown', onPointerDown);
+    entity.on('pointerup', onPointerUp);
+    entity.on('pointerover', onPointerOver);
+    entity.on('pointerout', onPointerOut);
+    entity.on('click', onClick);
     
     return () => {
-      // @ts-ignore
-      entity.__pointerdown = null;
-      // @ts-ignore
-      entity.__pointerup = null;
-      // @ts-ignore
-      entity.__pointerover = null;
-      // @ts-ignore
-      entity.__pointerout = null;
-      // @ts-ignore
-      entity.__click = null;
+      entity.off('pointerdown', onPointerDown);
+      entity.off('pointerup', onPointerUp);
+      entity.off('pointerover', onPointerOver);
+      entity.off('pointerout', onPointerOut);
+      entity.off('click', onClick);
     }
 
   }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);

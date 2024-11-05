@@ -5,7 +5,7 @@ import { shallowEquals } from "../utils/shallow-equals";
 
 interface ScriptProps {
     script: typeof PcScript;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 const ScriptComponent: FC<ScriptProps> = ({ script, ...props }) => {

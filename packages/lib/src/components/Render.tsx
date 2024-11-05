@@ -3,7 +3,7 @@ import { useComponent } from "../hooks";
 
 interface RenderProps {
     type: string;
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export const Render: FC<RenderProps> = (props) => {

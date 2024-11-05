@@ -158,7 +158,7 @@ const cssColorNamesMap : Map<string, string> = new Map([
  * @param colorPropNames An array of prop names that are colors.
  * @returns An object mapping color prop names to their processed Color instances.
  */
-export const useColors = (props: any, colorPropNames: string[]): { [key: string]: Color } => {
+export const useColors = (props: Record<string, unknown>, colorPropNames: string[]): { [key: string]: Color } => {
     const colorRefs = useRef<{ [key: string]: Color }>({});
   
     // Filter colorPropNames to include only those keys that exist in props

@@ -7,8 +7,8 @@ export const usePostControls = () => {
 
   const app = useApp();
 
-  const tint = useMemo(_ =>new Color(), [app]);
-  const fogColor = useMemo(_ =>new Color(), [app]);
+  const tint = useMemo(() =>new Color(), [app]);
+  const fogColor = useMemo(() =>new Color(), [app]);
   
   const lighting = useControls("Lighting", {
     exposure: { min: 0.1, max: 2, step: 0.01, value: 1.21 },
@@ -18,10 +18,10 @@ export const usePostControls = () => {
   const rendering = useControls("rendering", {
     renderFormat: {
       options: {
-        RGBA8: 7, // PIXELFORMAT_RGBA8
-        RG11B10: 18, // PIXELFORMAT_111110F
-        RGBA16: 12, // PIXELFORMAT_RGBA16F
-        RGBA32: 14, // PIXELFORMAT_RGBA32F
+        RGBA8: 7,
+        RG11B10: 18,
+        RGBA16: 12,
+        RGBA32: 14,
       },
       value: 18,
     },
@@ -30,12 +30,12 @@ export const usePostControls = () => {
     samples: { value: 8, min: 1, max: 4, step: 1 },
     toneMapping: {
       options: {
-        LINEAR: 0, // TONEMAP_LINEAR
-        FILMIC: 1, // TONEMAP_FILMIC
-        HEJL: 2, // TONEMAP_HEJL
-        ACES: 3, // TONEMAP_ACES
-        ACES2: 4, // TONEMAP_ACES2
-        NEUTRAL: 5, // TONEMAP_NEUTRAL
+        LINEAR: 0,
+        FILMIC: 1,
+        HEJL: 2,
+        ACES: 3,
+        ACES2: 4,
+        NEUTRAL: 5,
       },
       value: 4,
     },

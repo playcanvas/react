@@ -1,5 +1,3 @@
-/* eslint-disable jsdoc/check-tag-names */
-
 import {
     Script,
     Color,
@@ -381,7 +379,7 @@ class CameraFrame extends Script {
         options.formats = [rendering.renderFormat, rendering.renderFormatFallback0, rendering.renderFormatFallback1];
     }
 
-    postUpdate(dt) {
+    postUpdate() {
 
         const cameraComponent = this.cameraComponent;
         const { options, renderPassCamera, renderingParams, rendering, bloom, grading, vignette, fringing, taa, ssao } = this;
