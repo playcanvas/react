@@ -1,4 +1,4 @@
-import { useApp } from "@playcanvas/react/hooks";
+import { useApp } from "@pc-react/hooks";
 import { useControls } from "leva";
 import { Color } from "playcanvas";
 import { useMemo } from "react";

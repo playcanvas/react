@@ -9,6 +9,10 @@
         "noUnusedParameters": true,
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
+        "paths": {
+            "@pc-react": ["./packages/lib/src"],
+            "@pc-react/*": ["./packages/lib/src/*"],
+        } 
     },
     "include": ["src"]
   }

@@ -1,7 +1,7 @@
 import { TEXTURETYPE_RGBP } from "playcanvas"
-import { useApp } from "@playcanvas/react/hooks"
+import { useApp } from "@pc-react/hooks"
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchAsset } from "@playcanvas/react/utils"
+import { fetchAsset } from "@pc-react/utils"
 import { useCallback, useLayoutEffect } from "react";
 
 /**

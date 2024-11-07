@@ -1,17 +1,22 @@
-import { Container, Entity } from "@playcanvas/react";
-import { Align, Camera, EnvAtlas, Script } from "@playcanvas/react/components";
+import { Container, Entity } from "@pc-react";
+import { Align, Camera, EnvAtlas, Script } from "@pc-react/components";
 import { useEnvAtlas, useModel } from "./utils/hooks";
-import { AutoRotator, CameraFrame, Grid, OrbitControls, ShadowCatcher } from "@playcanvas/react/scripts";
+import { AutoRotator, CameraFrame, Grid, OrbitControls, ShadowCatcher } from "@pc-react/scripts";
 import { FC, useLayoutEffect } from "react";
-import { useApp } from "@playcanvas/react/hooks";
+import { useApp } from "@pc-react/hooks";
 import { usePostControls } from "./utils/post-controls";
 
 type GlbViewerProps = {
-  envMapSrc: string,
+  /** The url to the glb */
   src: string
+  /** The url to an environment atlas texture, which is used for lighting */
+  envMapSrc: string,
 }
 
-export const GlbViewer: FC<GlbViewerProps> = ({ envMapSrc, src }) => {
+export const GlbViewer: FC<GlbViewerProps> = ({ 
+  src = '/environment-map.png',
+  envMapSrc = '/lamborghini_vision_gt.glb'
+}) => {
 
   const app = useApp();
   const postSettings = usePostControls();

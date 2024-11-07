@@ -3,6 +3,7 @@ export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string
     if (objA === objB) {
       return true;
     }
+    
   
     // If either is not an object (null or primitives), return false
     if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
@@ -21,7 +22,12 @@ export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string
     // Check if all keys and their values are equal
     for (let i = 0; i < keysA.length; i++) {
       const key = keysA[i];
-      if (objA[key] !== objB[key]) {
+      const propA = objA[key] as any;
+      const propB = objB[key] as any;
+      // If the object has an equality operator, use this
+      if(typeof propA?.equals === 'function') {
+        return propA.equals(propB);
+      } else if (propA !== propB) {
         return false;
       }
     }
