@@ -2,6 +2,7 @@ import globals from "globals";
 import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
+import reactCompiler from 'eslint-plugin-react-compiler'
 
 
 /** @type {import('eslint').Linter.Config[]} */
@@ -12,6 +13,9 @@ export default [
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   {
+    plugins: {
+      'react-compiler': reactCompiler,
+    },
     settings: {
       react: {
         version: "detect", // Automatically detect React version
@@ -20,9 +24,10 @@ export default [
     rules: {
       "react/jsx-uses-react": "off",      // Not needed with React 17+ JSX Transform
       "react/react-in-jsx-scope": "off",  // Not needed with React 17+ JSX Transform
+      "react-compiler/react-compiler": "error"
     },
   },
   {
     ignores: ["packages/lib/dist/", "packages/examples/dist/", "packages/lib/node_modules/"],
-  }
+  },
 ];
