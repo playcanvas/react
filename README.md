@@ -1,94 +1,63 @@
-[![npm version](https://img.shields.io/npm/v/@playcanvas/react.svg)](https://www.npmjs.com/package/@playcanvas/react)
+## @playcanvas/react
+[![Version](https://img.shields.io/npm/v/@playcanvas/react?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@playcanvas/react)
+[![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
+[![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=000000&colorB=000000&logo=twitter&logoColor=000000)](https://twitter.com/playcanvas)
+![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=000000&colorB=000000)
 
-A React renderer for [PlayCanvas](https://github.com/playcanvas/engine) – build interactive 3D applications using React's declarative paradigm.
+A lightweight, declarative library for for creating 3D apps, with an extensible Entity-Component System supporting Physics, Pointer Events, and a built-in Scripting API.
 
-## Introduction
+<img width="1339" alt="image" src="https://github.com/user-attachments/assets/c07f915a-fae2-4aa8-a727-46ec7f300aa8">
 
-**@playcanvas/react** is a thin React wrapper around the PlayCanvas 3D engine. It allows developers to create interactive 3D applications and games using React components and hooks, bringing the declarative and component-based architecture of React to PlayCanvas.
-
-By leveraging React's features, you can build complex 3D scenes with reusable components, manage state efficiently, and create interactive experiences with ease.
-
-![Model Viewer](https://github.com/user-attachments/assets/1e85caa8-b61a-4c97-99e5-cb117fc6b338)
-
-[View Example](https://codesandbox.io/p/sandbox/upbeat-wave-d4s6ty?file=%2Fsrc%2FApp.jsx)
-
-[See examples on CodeSandbox](https://codesandbox.io/examples/package/@playcanvas/react)
-
-## Features
-
-- **Declarative 3D Scene Composition**: Construct 3D scenes using JSX, making your code more readable and maintainable.
-- **Reusable Components**: Create and compose reusable 3D components, enabling modularity and scalability in your projects.
-- **React Hooks Integration**: Use React hooks to manage state and lifecycle events within your 3D components.
-- **Event Handling**: Utilize React's event system for user interactions within the 3D environment.
-- **Interoperability**: Seamlessly integrate with other React libraries and tools.
-
-## Installation
+### Getting Started
 
 Install the package via npm:
 
 ```bash
-npm install @playcanvas/react
+npm install @playcanvas/react react react-dom playcanvas --save
 ```
-
-Ensure that you have the peer dependencies installed:
-
-```bash
-npm install react react-dom playcanvas
-```
-
-## Getting Started
-
-Here's a simple example to get you started with **@playcanvas/react**.
-
-### Basic Setup
+Then, in your React app...
 
 ```jsx
-import React from 'react';
-import { createRoot } from 'react-dom/client';
-
 import { Application, Entity } from '@playcanvas/react'
 import { Camera } from "@playcanvas/react/components"
 import { OrbitControls } from "@playcanvas/react/scripts"
 
-function App() {
+const App = (lambo) => {
   return (
     <Application>
-        <Entity>
+        <Entity position={[0, 2, 0]}>
           <Camera/>
           <OrbitControls />
         </Entity>
-
         <Entity >
-          <Render type='box' />
+          <Container asset={lambo} />
         </Entity>
     </Application>
   );
 }
-
-const root = createRoot(document.getElementById('root'));
-root.render(<App />);
 ```
 
-## Contributing
+#### Features
+
+- **3D JSX** -  Construct complex interactive 3D scenes using nested Entities, Components and Assets.
+- **Supports Suspense** - Suspend 3D Assets whilst loading with [`swr`](https://www.npmjs.com/package/swr) or [`react-query`](https://www.npmjs.com/package/@tanstack/react-query).
+- **Interactive** - Supports PointerEvents with event bubbling
+- **Physics** - Supports [Ammo.js](https://github.com/kripken/ammo.js) out of the box. Just add a rigid bodies or collision component.
+- **Scripting** - Subscribe to frame updates with the `<Script/>` component
+- **ECS** - Extensible Entity Component System that allows you to add new features.
+
+#### Learning more
+
+With @playcanvas/react you can add interactive 3D content directly within a React project using the same familiar JSX syntax as the rest of your app. The entire React ecosystem such as it's powerful state management and dev tools are available, so you can make live changes and preserve all of your 3D state.
+
+`@playcanvas/react` is built around the popular PlayCanvas engine. If you're not familiar with it or React, it's worth checking out the docs for both. Much of the `@playcanvas/react` api is a thin wrapper around the Entity Component System (ECS) used in PlayCanvas, so even a basic understanding of this is helpful.
+
+You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
+
+#### Contributing
 
 We welcome contributions! Please read our [Contributing Guide](https://github.com/playcanvas/engine/blob/main/.github/CONTRIBUTING.md) to get started.
-
-## Roadmap
-
-- [ ] Support for advanced PlayCanvas features like physics and particles.
-- [ ] Integration with popular React libraries for state management and routing.
-- [ ] More examples and tutorials.
-- [ ] Improved TypeScript definitions.
 
 ## Support
 
 If you encounter any issues or have questions, please open an issue on our [GitHub repository](https://github.com/playcanvas/playcanvas-react/issues).
-
-## Acknowledgments
-
-- [PlayCanvas](https://playcanvas.com/) for their powerful 3D engine.
-- The React community for the inspiration and support.
-
----
-
-Happy coding!
