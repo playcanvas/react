@@ -39,12 +39,12 @@ const App = (lambo) => {
 
 #### Features
 
-- **3D JSX** -  Construct complex interactive 3D scenes using nested Entities, Components and Assets.
-- **Supports Suspense** - Suspend 3D Assets whilst loading with [`swr`](https://www.npmjs.com/package/swr) or [`react-query`](https://www.npmjs.com/package/@tanstack/react-query).
-- **Interactive** - Supports PointerEvents with event bubbling
-- **Physics** - Supports [Ammo.js](https://github.com/kripken/ammo.js) out of the box. Just add a rigid bodies or collision component.
-- **Scripting** - Subscribe to frame updates with the `<Script/>` component
-- **ECS** - Extensible Entity Component System that allows you to add new features.
+- [x] Simple nested Entities, Components and Assets.
+- [x] Suspend 3D Assets during loading with [`swr`](https://www.npmjs.com/package/swr) or [`react-query`](https://www.npmjs.com/package/@tanstack/react-query).
+- [x] Supports PointerEvents with event bubbling
+- [x] Supports [Ammo.js](https://github.com/kripken/ammo.js) physics out of the box
+- [x] Subscribe to frame updates with the `<Script/>` component
+- [x] Extensible Entity Component System that allows you to add new features.
 
 #### Learning more
 
@@ -54,10 +54,10 @@ With @playcanvas/react you can add interactive 3D content directly within a Reac
 
 You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
 
-#### Contributing
+### Contributing
 
 We welcome contributions! Please read our [Contributing Guide](https://github.com/playcanvas/engine/blob/main/.github/CONTRIBUTING.md) to get started.
 
-## Support
+### Support
 
 If you encounter any issues or have questions, please open an issue on our [GitHub repository](https://github.com/playcanvas/playcanvas-react/issues).
