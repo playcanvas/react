@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, ReactElement, useLayoutEffect, useRef, useState } from 'react';
+import React, { FC, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react';
 import {
   FILLMODE_NONE,
   FILLMODE_FILL_WINDOW,
@@ -12,7 +12,6 @@ import {
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { usePicker } from './utils/picker';
-import { Entity } from './Entity'
 
 interface GraphicsOptions {
   /** Boolean that indicates if the canvas contains an alpha buffer. */
@@ -37,7 +36,7 @@ interface GraphicsOptions {
   xrCompatible?: boolean,//false
 }
 
-interface ApplicationProps extends PropsWithChildren<ReactElement<typeof Entity>> {
+interface ApplicationProps extends PropsWithChildren<unknown> {
   /** The class name to attach to the canvas component */
   className?: string,
   /** A style object added to the canvas component */
