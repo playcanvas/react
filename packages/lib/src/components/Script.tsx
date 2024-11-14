@@ -18,8 +18,5 @@ const ScriptComponent: FC<ScriptProps> = ({ script, ...props }) => {
 
 // Memoize the component to prevent re-rendering if `script` or `props` are the same
 export const Script = memo(ScriptComponent, (prevProps, nextProps) => {
-    if (nextProps.script.name === 'OrbitCamera' && !shallowEquals(prevProps, nextProps)) {
-        console.log(prevProps.pivotPoint === nextProps.pivotPoint)
-    }
     return prevProps.script === nextProps.script && shallowEquals(prevProps, nextProps)
 });
