@@ -1,3 +1,14 @@
+type Equalable = {
+  equals: (other: unknown) => boolean;
+};
+
+function hasEqualsMethod(obj: unknown): obj is Equalable {
+  return typeof obj === 'object' && 
+    obj !== null && 
+    'equals' in obj && 
+    typeof (obj as Equalable).equals === 'function';
+}
+
 export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string, unknown>): boolean => {
     // If the two objects are the same object, return true
     if (objA === objB) {
@@ -22,10 +33,10 @@ export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string
     // Check if all keys and their values are equal
     for (let i = 0; i < keysA.length; i++) {
       const key = keysA[i];
-      const propA = objA[key] as any;
-      const propB = objB[key] as any;
+      const propA = objA[key];
+      const propB = objB[key];
       // If the object has an equality operator, use this
-      if(typeof propA?.equals === 'function') {
+      if(hasEqualsMethod(propA)) {
         return propA.equals(propB);
       } else if (propA !== propB) {
         return false;
