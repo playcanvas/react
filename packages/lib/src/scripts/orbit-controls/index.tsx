@@ -25,7 +25,7 @@ type OrbitControls = OrbitCameraProps & {
 };
 
 export const OrbitControls = ({ 
-    distanceMax = 20, distanceMin = 18, pitchAngleMax = 90, pitchAngleMin = 0, inertiaFactor = 0.0, focusEntity = null, pivotPoint = new Vec3(), frameOnStart = true, distance,
+    distanceMax = 20, distanceMin = 18, pitchAngleMax = 90, pitchAngleMin = 0, inertiaFactor = 0.0, focusEntity = null, pivotPoint = new Vec3(), frameOnStart = true, distance = 0,
     mouse = { orbitSensitivity: 0.3, distanceSensitivity: 0.15 }, 
     touch = { orbitSensitivity: 0.4, distanceSensitivity: 0.2 }, 
  } : OrbitControls) => {
