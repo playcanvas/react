@@ -557,12 +557,12 @@ export class OrbitCameraInputMouse extends Script {
     onMouseWheel(event) {
         if (this.entity.camera.projection === PROJECTION_PERSPECTIVE) {
             this.orbitCamera.distance -=
-                this.wheelDelta * -2 *
+                event.wheelDelta * -2 *
                 this.distanceSensitivity *
                 (this.orbitCamera.distance * 0.1);
         } else {
             this.orbitCamera.orthoHeight -=
-                this.wheelDelta * -2 * this.distanceSensitivity;
+                event.wheelDelta * -2 * this.distanceSensitivity;
         }
         event.event.preventDefault();
     }
