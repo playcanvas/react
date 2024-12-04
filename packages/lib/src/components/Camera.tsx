@@ -1,3 +1,5 @@
+"use client"
+
 import { FC } from "react";
 import { useComponent } from "../hooks";
 import { Color } from "playcanvas";
@@ -5,7 +7,7 @@ import { useColors } from "../utils/color";
 
 interface CameraProps {
     [key: string]: unknown;
-    clearColor: Color | string
+    clearColor?: Color | string
 }
 
 /**
