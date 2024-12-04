@@ -1,4 +1,5 @@
 import React, { FC, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react';
+import * as Ammo from 'sync-ammo';
 import {
   FILLMODE_NONE,
   FILLMODE_FILL_WINDOW,
@@ -49,6 +50,8 @@ interface ApplicationProps extends PropsWithChildren<unknown> {
   maxDeltaTime?: number
   /** Scales the global time delta. */
   timeScale?: number,
+  /** Whether to use the PlayCanvas Physics system. */
+  usePhysics?: boolean,
   /** Graphics Settings */
   graphicsDeviceOptions?: GraphicsOptions
 }
@@ -95,6 +98,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   resolutionMode = RESOLUTION_AUTO,
   maxDeltaTime = 0.1,
   timeScale = 1,
+  usePhysics = false,
   ...otherProps
 }) => {
 
@@ -115,12 +119,15 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
 
-  
   usePicker(appRef.current, canvasRef.current);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && !appRef.current) {
+
+      // @ts-expect-error The PC Physics system expects a global Ammo instance
+      if (usePhysics) globalThis.Ammo = Ammo.default
+
       const localApp = new PlayCanvasApplication(canvas, {
         mouse: new Mouse(canvas),
         touch: new TouchDevice(canvas),
@@ -137,8 +144,13 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
 
     return () => {
       if (!appRef.current) return;
+      
       appRef.current.destroy();
       appRef.current = null;
+
+      // @ts-expect-error Clean up the global Ammo instance
+      if (usePhysics && globalThis.Ammo) delete globalThis.Ammo;
+
       setApp(null);
     };
   }, [canvasRef, fillMode, resolutionMode, ...Object.values(graphicsDeviceOptions)]);
