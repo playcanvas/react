@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
 import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
+import { ScriptConstructor } from '../components/Script';
 
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
@@ -9,10 +10,10 @@ interface Props {
   [key: string]: unknown;
 }
 
-export const useScript = (ScriptConstructor: typeof Script, props: Props) : void  => {
+export const useScript = (scriptConstructor: ScriptConstructor, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
-  const scriptName: string = toLowerCamelCase(ScriptConstructor.name);
+  const scriptName: string = toLowerCamelCase(scriptConstructor.__name);
   const scriptRef = useRef<Script | null>(null);
   const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
@@ -29,7 +30,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
     if (!scriptRef.current) {
       // Create the script instance with the provided attributes
       const scriptComponent : ScriptComponent = parent.script as ScriptComponent;
-      const scriptInstance = scriptComponent.create(ScriptConstructor, {
+      const scriptInstance = scriptComponent.create(scriptConstructor as unknown as typeof Script, {
         properties: { ...props },
         preloading: false,
       });
@@ -53,7 +54,7 @@ export const useScript = (ScriptConstructor: typeof Script, props: Props) : void
         script.fire('destroy');
       }
     };
-  }, [app, parent, ScriptConstructor]);
+  }, [app, parent, scriptConstructor]);
 
   // Update script props when they change
   useEffect(() => {
