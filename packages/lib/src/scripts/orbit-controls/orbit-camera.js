@@ -5,7 +5,7 @@ import {
 } from 'playcanvas';
 
 export class OrbitCamera extends Script {
-    static name = 'OrbitCamera';
+    static __name = 'orbitCamera';
 
     /**
      * @attribute
@@ -443,13 +443,13 @@ export class OrbitCamera extends Script {
 
 
 export class OrbitCameraInputMouse extends Script {
-    static name = 'OrbitCameraInputMouse';
+    static __name = 'orbitCameraInputMouse';
 
     /**
      * How fast the camera moves around the orbit. Higher is faster
      *
      * @attribute
-     * @type {number}
+     * @type {number.0}
      */
     orbitSensitivity = 0.3;
 
@@ -574,7 +574,7 @@ export class OrbitCameraInputMouse extends Script {
 }
 
 export class OrbitCameraInputTouch extends Script {
-    static name = 'OrbitCameraInputTouch';
+    static __name = 'orbitCameraInputTouch';
 
     /**
      * How fast the camera moves around the orbit. Higher is faster
