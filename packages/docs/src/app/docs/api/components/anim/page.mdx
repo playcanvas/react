@@ -1,0 +1,42 @@
+# Anim
+
+Many loaded assets contain animations. The `Anim` component allows you to play those animations.
+
+{/* ## Props
+
+### asset
+The asset to use for the animation.
+
+Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
+
+### clip
+The name of the animation clip to play.
+
+Type: `string`
+
+### loop
+Whether to loop the animation.
+
+Type: `boolean`
+Default: `false`
+
+### Additional Props
+
+Any additional props will be passed to the PlayCanvas AnimComponent class directly. See the [PlayCanvas documentation](https://api.playcanvas.com/classes/Engine.AnimComponent.html) for more information. */}
+
+## Usage
+
+```jsx
+import { Entity } from '@playcanvas/react'
+import { Anim, Render } from '@playcanvas/react/components'
+
+const AnimatingDinosaur = (props) => {
+
+    const { data } = useAsset('/dinosaur.glb')
+
+    return (<Entity {...props}>
+        <Render type="asset" asset={data} />
+        <Anim asset={data} clip="Walk" loop />
+    </Entity>)
+}
+```

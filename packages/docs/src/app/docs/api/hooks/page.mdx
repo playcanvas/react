@@ -1,0 +1,26 @@
+# Hooks
+
+The are a a couple of hooks that are useful when working with `@playcanvas/react`. These can often be useful when creating custom components, hooks or utilities.
+
+## `useApp`
+
+The `useApp` hook returns the [`Application`](https://api.playcanvas.com/classes/Engine.Application.html) instance that is currently active. This is useful if you need reference to the PlayCanvas Application instance directly.
+
+```jsx
+import { useApp } from '@playcanvas/react/hooks'
+```
+
+## `useParent`
+
+The `useParent` hook returns the parent `Entity` of the current component. This can be useful if you need to access the parent entity of a component. For example, if you are creating a custom component that should be attached to a specific entity.
+
+```jsx
+import { useParent } from '@playcanvas/react/hooks'
+```
+
+## `useMaterial`
+
+The `useMaterial` hook returns a [`StandardMaterial`](https://api.playcanvas.com/classes/Engine.StandardMaterial.html) instance. This is useful if you need to create materials and apply them to `Render` components.
+```jsx
+import { useMaterial } from '@playcanvas/react/hooks'
+```

@@ -7,7 +7,8 @@
       "skipLibCheck": true,
       "jsx": "react-jsx",
       "moduleResolution": "bundler",
-      "baseUrl": "."
+      "baseUrl": ".",
+      "resolveJsonModule": true,
     },
     "include": [
       "packages/*"

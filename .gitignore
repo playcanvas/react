@@ -27,3 +27,6 @@ dist-ssr
 *.ply
 
 *storybook.log
+
+.next/
+_pagefind/

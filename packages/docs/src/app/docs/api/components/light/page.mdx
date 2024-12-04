@@ -1,0 +1,43 @@
+# Light
+
+The `Light` component attaches a [Light Component](https://api.playcanvas.com/classes/Engine.LightComponent.html) to an [`Entity`](/api/entity). You can position the light source by transforming the parent entity. A light can be directional, omnni, or spot. Each type has different properties and behaviors.
+
+You can add multiple lights to a scene to create a realistic lighting environment.
+
+## Usage
+
+```jsx
+import { Light } from '@playcanvas/react/components'
+
+const DirectionalLight = (props) => {
+    return <Entity>
+        <Light type="directional" {...props} />
+    </Entity>
+}
+```
+{/* 
+## Props
+
+### type
+The type of light to attach to the Entity.
+
+Type: `"directional" | "point" | "spot"`
+Default: `"directional"`
+
+### color
+The color of the light.
+
+Type: `Color`
+Default: `Color.WHITE`
+
+### intensity
+The intensity of the light.
+
+Type: `number`
+Default: `1`
+
+### Additional Props */}
+
+Any additional props will be passed to the Light Component directly. You can find out more about the [Light Component](https://api.playcanvas.com/classes/Engine.LightComponent.html) in the PlayCanvas documentation.
+
+

@@ -1,0 +1,39 @@
+# Collision
+
+The `Collision` component attaches a PlayCanvas [Collision Component](https://api.playcanvas.com/classes/Engine.CollisionComponent.html) to an [`Entity`](/api/entity).
+
+It allows an [`Entity`](/api/entity) to participate in collision detection with other entities that have collision components. This is useful for physics simulations, trigger zones, and other gameplay mechanics that require detecting when objects intersect.
+
+Learn more about Collision components in the [PlayCanvas documentation](https://api.playcanvas.com/classes/Engine.CollisionComponent.html). Also see the [Rigidbody](/api/components/rigidbody) component for more information on how to use collision components with physics.
+
+## Usage
+
+You attach a Collision component to an Entity in the same way you would attach a Render component. To work with physics, you should also attach a `Rigidbody` component to the same `Entity`, and probably a `Render` component too.
+
+```jsx copy
+import { Collision, Rigidbody } from '@playcanvas/react/components'
+
+<Entity>
+    <Collision type="box" />
+    <RigidBody type="dynamic" mass={12} />
+    <Render type="box" />
+</Entity>
+}
+```
+
+## Props
+
+### type
+The type of collision shape to attach to the Entity.
+
+Type: `"box" | "sphere" | "capsule" | "mesh" | "compound" | "cone" | "cylinder"`
+Default: `"box"`
+
+### asset
+The asset to use for the collision shape.
+
+Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
+
+### Additional Props
+
+Any additional props will be passed to the CollisionComponent class directly. See the [documentation](https://api.playcanvas.com/classes/Engine.CollisionComponent.html) for more information.

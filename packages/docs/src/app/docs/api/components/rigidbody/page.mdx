@@ -1,0 +1,40 @@
+# Rigidbody
+
+The `Rigidbody` component enables physics for an [`Entity`](/api/entity), allowing it to interact with the global physics simulation. You can apply forces, torques, and other physics behaviours to an entity with a `Rigidbody` component and it will respond accordingly.
+
+You can learn more about how physics work in PlayCanvas in the [Physics docs](https://developer.playcanvas.com/user-manual/physics/).
+
+> [!NOTE]
+>
+> To use physics you must enable it on the Application using`<Application usePhysics/>`. See the [Application docs](/api/application) for more information.
+
+## Usage
+
+```jsx
+import { Rigidbody } from '@playcanvas/react/components'
+
+<Entity>
+    <Rigidbody type="dynamic" mass={12} />
+    <Render type="box" />
+</Entity>
+}
+```
+
+## Props
+
+### type
+The type of rigidbody to attach to the Entity.
+
+Type: `"dynamic" | "kinematic" | "static"`
+Default: `"dynamic"`
+
+### mass
+The mass of the rigidbody.
+
+Type: `number`
+Default: `1`
+
+### Additional Props
+
+Any additional props will be passed to the PlayCanvas Rigidbody class directly. See the [PlayCanvas documentation](https://api.playcanvas.com/classes/Engine.RigidBodyComponent.html) for more information.
+

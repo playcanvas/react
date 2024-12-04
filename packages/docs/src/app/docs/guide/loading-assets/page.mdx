@@ -1,0 +1,108 @@
+---
+title: Loading Assets
+description: Learn how to load assets in PlayCanvas with React
+---
+
+# Working with Assets
+
+Assets are a big part of any 3D application, and they can also take a significant amount time to load, which can make your app feel sluggish. Knowing how to load and manage assets efficiently is key to a smooth user experience.
+
+`@playcanvas/react` provides a simple and flexible way to load assets that integrates with the rest of the React ecosystem.
+
+```jsx copy
+import { fetchAsset } from '@playcanvas/react/utils'
+
+const asset = await fetchAsset(app, 'dino.glb', 'container')
+```
+
+The `fetchAsset` function loads and returns assets. It takes an `Application` instance and the URL and type of the asset to load. This does nothing more than asynchronously load the asset, which can be used in the `<Render>` component.
+
+## useAsset
+
+This can easily be wrapped in a React hook to use in a component.
+
+```jsx copy
+import { fetchAsset } from '@playcanvas/react/utils'
+
+const useAsset = (url, type) => {
+    const app = useApp()
+    const [asset, setAsset] = useState(null)
+    useEffect(() => {
+        fetchAsset(app, url, type).then(setAsset)
+    }, [app, url, type])
+    return asset
+}
+```
+
+## SWR/React Query
+
+`fetchAsset` easily integrates with other data fetching libraries like [SWR](https://swr.vercel.app/) or [React Query](https://tanstack.com/query/latest). They provide a more robust and flexible way to manage assets with caching, error handling, and more.
+
+```jsx copy
+import { useSwr } from 'swr';
+
+const useAsset = (url, type) => {
+    const app = useApp()
+    return useSwr(url, (url) => fetchAsset(app, url, type))
+}
+```
+
+You can find an implementation of a `react-query` hook [here](https://github.com/playcanvas/react/blob/master/examples/src/utils/hooks.js).
+
+## Preloading
+
+Assets can be huge and can take up significant chunk of your download. Rather than block rendering, it's generally a good idea to display something while the page is loading. It helps users know the app isn't frozen and keeps them engaged.
+
+React provides a [`Suspense`](https://react.dev/reference/react/Suspense#suspense) component that works perfectly for this. Used in conjuction with [swr](https://swr.vercel.app/) or [`react-query`](https://tanstack.com/query/latest), it blocks rendering a component until it's ready, displaying instead a fallback UI whilst loading.
+
+
+```jsx copy filename="spinning-cube.js"
+// Spins an entity
+class Spinner extends Script {
+    update(dt) {
+        this.entity.rotateLocal(0, 10 * dt, 0);
+    }
+}
+
+export default SpinningCubePreloader = (props) => {
+    return (
+        <Entity {...props}>
+            <Script type={Spinner}/>
+            <Render type='box'/>
+        </Entity>
+    )
+}
+```
+
+```jsx copy filename="dino.js"
+import SpinningCubePreloader from './spinning-cube'
+
+const Dino = (props) => {
+    const { asset } = useAsset('dino.glb')
+    return <Entity {...props}>
+        <Render type='asset' asset={asset}/>
+    </Entity>
+}
+
+
+export const DinoWithPreloader = () => {
+    return (
+        <Suspense fallback={<SpinningCubePreloader/>}>
+            <Dino/>
+        </Suspense>
+    )
+}
+```
+
+Now when rendering the `DinoWithPreloader` component, the `SpinningCubePreloader` will be displayed while the `Dino` is loading. As soon as the `dino.glb` asset is ready, the `Dino` will be displayed instead.
+
+
+
+
+
+
+
+
+
+
+

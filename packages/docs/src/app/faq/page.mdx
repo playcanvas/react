@@ -1,0 +1,15 @@
+# FAQ's
+
+## What is the difference between `@playcanvas/react` and playcanvas?
+PlayCanvas is a 3D engine, @playcanvas/react is a library for building 3D apps with PlayCanvas. Most of the time you will use @playcanvas/react in your project and you won't need to worry about the PlayCanvas engine. However any PlayCanvas feature or class is available to you if you need it.
+
+## What are PlayCanvas Components?
+PlayCanvas is built on the concept of Entities and Components (ECS). Entities are nodes in the scene graph and Components are the features of those nodes. They add functionality to entities. This fits well with React's declarative approach to building UIs.
+
+## Is this a replacement for the PlayCanvas Editor?
+No, this is not a replacement for the PlayCanvas Editor. It's alternative way build projects using web tooling.
+
+## How does this compare to react-three-fiber?
+Conceptually it's similar to [react-three-fiber](https://github.com/pmndrs/react-three-fiber). It's a declarative way to build 3D apps. However PlayCanvas has an ECS and a neccesarily wider set of features than three.js, such as an asset system and physics system.
+
+Most importantly, react-three-fiber is a custom React renderer. This library is not.
