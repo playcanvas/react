@@ -29,3 +29,4 @@ dist-ssr
 *storybook.log
 
 .next/
+._pagefind/
