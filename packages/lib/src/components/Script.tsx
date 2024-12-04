@@ -1,10 +1,14 @@
-import { Script as PcScript } from "playcanvas";
+// import { Script as PcScript } from "playcanvas";
 import { useScript } from "../hooks"
 import { FC, memo, useMemo } from "react";
 import { shallowEquals } from "../utils/shallow-equals";
 
+export interface ScriptConstructor {
+    __name: string;
+}
+
 interface ScriptProps {
-    script: typeof PcScript;
+    script: ScriptConstructor
     [key: string]: unknown;
 }
 
