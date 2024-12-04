@@ -1,3 +1,5 @@
+"use client"
+
 import { BoundingBox, Entity as PcEntity, RenderComponent, Vec3, Application, Mat4 } from "playcanvas";
 import { Children, useLayoutEffect, useRef, useState } from "react";
 import { Entity } from "../Entity";

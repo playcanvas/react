@@ -5,10 +5,18 @@ import { Entity } from ".";
 
 interface ContainerProps {
     asset: Asset;
+    children?: React.ReactNode;
     [key: string]: unknown;
 }
 
-export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
+/**
+ * Renders a PlayCanvas asset as a React component.
+ * @param {Asset} asset - The PlayCanvas asset to render.
+ * @param {React.ReactNode} children - The children to render inside the container.
+ * @param {Object} [props] - Additional properties to pass to the container.
+ * @returns {React.ReactNode} - The rendered container.
+ */
+export const Container: FC<ContainerProps> = ({ asset, children, ...props }) => {
 
     const entityRef = useRef<PcEntity | null>(null);
     const assetEntityRef = useRef<PcEntity | null>(null);
@@ -32,8 +40,10 @@ export const Container: FC<ContainerProps> = ({ asset, ...props }) => {
             assetEntityRef.current = null;
 
         };
-    }, [app, parent, asset, asset.resource]);
+    }, [app, parent, asset, asset?.resource]);
 
 
-    return <Entity ref={entityRef} {...props}/>;
+    return <Entity ref={entityRef} {...props}>
+        { children }
+    </Entity>;
 };

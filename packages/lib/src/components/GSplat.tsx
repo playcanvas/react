@@ -1,3 +1,5 @@
+"use client"
+
 import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity } from "playcanvas";

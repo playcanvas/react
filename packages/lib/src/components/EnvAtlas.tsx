@@ -1,3 +1,5 @@
+"use client"
+
 import { FC, useLayoutEffect } from "react";
 import { useApp } from "../hooks";
 import { Application, Asset } from "playcanvas";

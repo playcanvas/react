@@ -1,5 +1,5 @@
 import { AppBase, CameraComponent, Entity, GraphNode, Picker } from "playcanvas"
-import { useCallback, useLayoutEffect, useMemo, useRef } from "react"
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
 
 // Utility to propagate events up the entity hierarchy
@@ -36,7 +36,7 @@ const getNearestCommonAncestor = (a: GraphNode | null, b: GraphNode | null): Gra
 };
 
 
-const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : MouseEvent) : Promise<Entity | null> => {
+const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMRect, e : MouseEvent) : Promise<Entity | null> => {
     // Find the highest priority camera
     const [activeCamera] : CameraComponent[] = (app.root.findComponents('camera') as CameraComponent[])
         .filter((camera: CameraComponent) => !camera.renderTarget)
@@ -44,10 +44,23 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : MouseE
 
     if (!activeCamera) return null;
 
-    // prepare the picker and perform picking
-    picker.prepare(activeCamera, app.scene);
-    const devicePixelRatio = window?.devicePixelRatio ?? 1;
-    const [meshInstance] = await picker.getSelectionAsync(e.clientX * devicePixelRatio , e.clientY * devicePixelRatio);
+     // Get canvas bounds
+     const canvas = app.graphicsDevice.canvas;
+     
+     // Calculate position relative to canvas
+     const x = e.clientX - rect.left;
+     const y = e.clientY - rect.top;
+     
+     // Account for canvas scaling
+     const scaleX = canvas.width / rect.width;
+     const scaleY = canvas.height / rect.height;
+ 
+     // prepare the picker and perform picking
+     picker.prepare(activeCamera, app.scene);
+     const [meshInstance] = await picker.getSelectionAsync(
+         x * scaleX,
+         y * scaleY
+     );
 
     if (!meshInstance) return null
 
@@ -57,6 +70,18 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, e : MouseE
 export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
     const activeEntity = useRef<Entity | null>(null);
     const pointerDetails = useRef<PointerEvent | null>(null);
+    const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
+
+    // Watch for the canvas to resize. Neccesary for correct picking
+    useEffect(() => {
+        const resizeObserver = new ResizeObserver(() => {
+            canvasRectRef.current = app ? app.graphicsDevice.canvas.getBoundingClientRect() : null;
+        });
+
+        if(app) resizeObserver.observe(app.graphicsDevice.canvas);
+        return () => resizeObserver.disconnect();
+
+    }, [app]);
 
     // Construct a Global Picker
     const picker: Picker | null = useMemo((): Picker | null => {
@@ -74,8 +99,10 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
         const e : PointerEvent | null = pointerDetails.current;
         if (!picker || !app || !e) return null;
 
-        const entity = await getEntityAtPointerEvent(app, picker, e);
-        if (!entity) return null;
+        if (!canvasRectRef.current) return null;
+
+        const entity = await getEntityAtPointerEvent(app, picker, canvasRectRef.current, e);
+        // if (!entity) return null;
 
         const prevEntity = activeEntity.current;
 
@@ -105,9 +132,9 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
     // Construct a generic handler for pointer events
     const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
-        if (!picker || !app) return;
+        if (!picker || !app || !canvasRectRef.current) return;
 
-        const entity = await getEntityAtPointerEvent(app, picker, e);
+        const entity = await getEntityAtPointerEvent(app, picker, canvasRectRef.current, e);
 
         if (!entity) return
 

@@ -1,13 +1,16 @@
 import { FC } from "react";
 import { useComponent } from "../hooks";
+import { useColors } from "../utils/color";
 
 type LightProps = {
-    type: string;
+    type: "directional" | "omni" | "spot";
 }
 
 export const Light: FC<LightProps> = (props) => {
 
-    useComponent("light", props);
+    const colorProps = useColors(props, ['color'])
+
+    useComponent("light", { ...props, ...colorProps });
     return null
     
 }
