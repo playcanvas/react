@@ -27,3 +27,5 @@ dist-ssr
 *.ply
 
 *storybook.log
+
+.next/
