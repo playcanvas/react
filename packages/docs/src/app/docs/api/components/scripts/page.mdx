@@ -1,0 +1,33 @@
+# Script
+
+The `Script` components provides a simple imperative way to add behaviours to an `Entity`.
+
+This is useful for things like physics, animation, and interactivity where, for performance reasons, you want to bypass the updating React props. It allows you to hook into the engine's update loop outside of React, which is useful for performance-critical code. You can also leverage existing Scripts from PlayCanvas Editor Projects.
+
+There's more information about [Scripts in the docs](https://developer.playcanvas.com/user-manual/scripting/).
+
+## Usage
+
+The `Script` component takes a class that extends the PlayCanvas [Script](https://api.playcanvas.com/classes/Engine.Script-1.html) class and attaches it to the `Entity`. Any additional props are passed to the Script class directly and can be used as properties on the class.
+
+In the example below, we create a simple script that rotates the entity every frame. The `update()` method is called every frame amd the speed prop is used as a class property. `this.entity` refers to the parent `Entity` the Script is attached to.
+
+```jsx {4-9}
+import { Script } from '@playcanvas/react/components'
+import { Script as PcScript } from 'playcanvas'
+
+// This class runs in the scope of the entity it's attached to
+class SpinMe extends PcScript {
+    update(dt) {
+        this.entity.rotate(0, dt * this.speed, 0)
+    }
+}
+
+const SpinningCube = () => {
+    return <Entity>
+        <Render type="box" />
+        <Script script={SpinMe} speed={10} />
+    </Entity>
+}
+```
+

@@ -1,0 +1,197 @@
+# Your first project
+
+This guide will walk you through the process of setting up a new `@playcanvas/react` project to create a simple 3D application that you can use as a starting point for your own projects. It assumes you have some familiarity with React. If you're new to React, it's worth taking a look at the [React documentation](https://react.dev/learn) to get up to speed.
+
+## Loading a 3D model
+
+In this example, we'll create a simple 3D scene that displays a Lamborghini model that you can rotate with the mouse, with some environment lighting and a ground plane shadowing effect.
+
+Here's what it should look like...
+<br/>
+
+<ReactQueryProvider>
+    <Application >
+        {/* Create some environment lighting */}
+        <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
+        {/* Render the background grid */}
+        <Grid />
+        {/* Create a camera entity */}
+        <Entity name='camera' position={[4, 1, 4]}>
+            <Camera clearColor='#090707' fov={28} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            {/* <PostEffects /> This doesn't work yet */}
+            <AutoRotate />
+        </Entity>
+
+        <Entity>
+            {/* Load our asset */}
+            <GlbAsset src='/lamborghini_vision_gt.glb' />
+            {/* Adds some ground plane shadowing */}
+            <ShadowCatcher intensity={0.9} />
+        </Entity>
+    </Application>
+</ReactQueryProvider>
+
+### Create a new project
+
+We recommend using [Vite](https://vitejs.dev/) to create your project. It's fast, easy to use, and quickly integrates with React. But you can use any other build tool you prefer.
+
+You can create a new project with the following command, and follow the prompts
+
+```bash
+npm create vite@latest my-first-3d-app -- --template react
+```
+
+Next, install the `@playcanvas/react` package and start the development server:
+
+```bash
+npm install @playcanvas/react playcanvas@latest
+npm run dev
+```
+
+If this goes smoothly, you'll see some default vite content in your browser.
+
+### Your first 3D project
+
+Before we get to anything more complex, let's create a simple example that displays a spinning cube.
+
+You'll probably want to modify the `App.css` to make the application fullscreen. You can do this by adding the following to the #root` selector:
+
+```css filename="src/App.css"
+#root {
+  width: 100vw;
+  height: 100vh; 
+  margin: 0;
+  padding: 0;
+}
+```
+
+In your `/src/App.jsx` file, you can delete everything and replace it with the following:
+
+```jsx copy filename="src/App.jsx"
+import './App.css'
+import { Application, Entity } from '@playcanvas/react'
+import { Render } from '@playcanvas/react/components'
+
+export default function App() {
+    return <Application>
+      <Entity name='box'>
+          <Render type='box'/>
+      </Entity>
+  </Application>
+}
+```
+
+_What's happening here?_ We've created a PlayCanvas `Application` and added an `Entity` containing a `Render` component. The `Application` is the root component, it sets up the `canvas` and initializes the scene. The `Entity` is a container for components, it has position, rotation, scale. Lastly the `Render` component provides the `Entity` with the ability to render a 3D asset.
+
+If you run this project though, you'll notice that nothing is displayed. This is because we don't actually have a camera, and you'll need a camera to see anything, so let's add one.
+
+```jsx copy filename="src/App.jsx" {7-9}
+import './App.css'
+import { Application, Entity } from '@playcanvas/react'
+import { Camera, Render } from '@playcanvas/react/components'
+
+export default function App() {
+    return <Application>
+        <Entity name='camera' position={[0, 0, 5]}>
+            <Camera/>
+        </Entity>
+        <Entity name='box'>
+            <Render type='box'/>
+        </Entity>
+    </Application>
+}
+```
+
+We've added an entity with a `Camera` component to the scene. Also, we've set the camera's position to `[0, 0, 5]` so that it's a bit away from the box. If you play with that value, you'll see the cube move closer or further away. If you run the project now, you should see the cube in the center of the screen.
+
+### Adding interactivity
+
+On it's own, this isn't very exciting. Let's add some interactivity by adding a `Script` component so you can rotate the cube with the mouse.
+
+```jsx copy filename="src/App.jsx" {10}
+import './App.css'
+import { Application, Entity } from '@playcanvas/react'
+import { Camera, Render } from '@playcanvas/react/components'
+import { OrbitControls } from '@playcanvas/react/scripts'
+
+export default function App() {
+    return <Application>
+        <Entity name='camera' position={[0, 0, 2]}>
+            <Camera/>
+            <OrbitControls/>
+        </Entity>
+        <Entity name='box' scale={[4, 4, 4]}>
+            <Render type='box'/>
+        </Entity>
+    </Application>
+}
+```
+
+Now when you run it, you should be able to rotate the cube with the mouse. What's actually happening is that you've added a `Script` component that uses the `OrbitControls` script to allow which rotates the camera around the cube with the mouse. We've also made the `box` a little bigger so it's easier to see using the `scale={[4, 4, 4]}` prop. This simply uniformly scales the entity on each axis.
+
+### Adding 3D models
+
+Ok, so we have a camera and a rotating box. Let's add a 3D model to the scene. You can can use any 3D model format that PlayCanvas supports. [Fab](https://www.fab.com/) is a great resource for free 3D models.
+
+For this example we'll use a Lamborghini model. You can download the model [here](/lamborghini_vision_gt.glb).
+
+```jsx copy filename="src/App.jsx" {11-13}
+import './App.css'
+import { Application, Entity } from '@playcanvas/react'
+import { Camera, Render, Light } from '@playcanvas/react/components'
+import { OrbitControls } from '@playcanvas/react/scripts'
+
+export default function App() {
+    return <Application>
+      <Entity name='camera' position={[0, 0, 2]}>
+            <Camera/>
+            <OrbitControls/>
+            <Entity name='light' rotation={[45, -45, 45]} >
+                <Light type='directional' color="orange" />
+            </Entity>
+        </Entity>
+        <Entity name='model' scale={[4, 4, 4]}>
+            <GlbAsset src='/lamborghini_vision_gt.glb' />
+        </Entity>
+    </Application>
+}
+```
+
+You should now see the Lamborghini model in the scene.  Note here that we've added the `GlbAsset` component to the `Entity` that contains the model. This isn't part of the `@playcanvas/react` library, but it's a simple component that wraps the `useModel` hook to make it easier to use in a React component. You can read more about [loading assets here](/docs/guide/loading-assets).
+
+### Putting it all together
+
+So far we've created a simple 3D scene with a camera, a rotating box, and a 3D model. In the next section, we'll add some more features to the scene to make it more interesting. It's mainly missing some staging, so we'll add a ground plane and some environment lighting. We'll also remove the orange light since we now have some environment lighting.
+
+```jsx copy filename="src/App.jsx" {8-11, 15, 19}
+import './App.css'
+import { Application, Entity } from '@playcanvas/react'
+import { Camera, Render, Light } from '@playcanvas/react/components'
+import { OrbitControls } from '@playcanvas/react/scripts'
+
+export default function App() {
+    return <Application>
+        {/* Create some environment lighting */}
+        <EnvAtlasComponent src='/environment-map.png' />
+        {/* Render the background grid */}
+        <Grid />
+        <Entity name='camera' position={[0, 0, 2]}>
+            <Camera/>
+            <OrbitControls/>
+            <AutoRotate />
+        </Entity>
+        <Entity name='model'>
+            <GlbAsset src='/lamborghini_vision_gt.glb' >
+                <ShadowCatcher intensity={0.9} />
+            </GlbAsset>
+        </Entity>
+    </Application>
+}
+```
+
+We now have a complete 3D scene with a camera, a rotating model, and some environment lighting. You can now start adding your own assets and creating your own scenes. Check out the [next section](/docs/guide/loading-assets) to learn how to load your own assets and adding interactivity with scripts.
+
+
+
+

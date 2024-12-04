@@ -1,0 +1,51 @@
+export const PointerEvents = () => {
+
+    /**
+     * This demo shows how to handle pointer events.
+     * Click on the left or right box to change the camera's clear color.
+     */
+    const [leftColor, setLeftColor] = useState('green')
+    const [rightColor, setRightColor] = useState('rebeccapurple')
+    const [leftScale, setLeftScale] = useState(1)
+    const [rightScale, setRightScale] = useState(1)
+
+    const leftMaterial = useMaterial({ diffuse: leftColor })
+    const rightMaterial = useMaterial({ diffuse: rightColor })
+
+    const onLeftClick = () => setLeftColor('rebeccapurple')
+    const onRightClick = () => setRightColor('red')
+
+    return <Entity>
+
+        <EnvAtlasComponent src='/environment-map.png' />
+
+        {/* Create a camera */}
+        <Entity name='camera' position={[0, 0, 4]} >
+            <Camera />
+        </Entity>
+
+        {/* Create the left box entity */}
+        <Entity 
+            position={[-1, 0, 0]} 
+            scale={[leftScale, leftScale, leftScale]}
+            onClick={onLeftClick} 
+            onPointerOver={() => setLeftScale(1.1)} 
+            onPointerOut={() => setLeftScale(1)}
+        >
+            <Render type='sphere' material={leftMaterial} />
+        </Entity>
+
+        {/* Create the right box entity */}
+        <Entity 
+            position={[1, 0, 0]} 
+            scale={[rightScale, rightScale, rightScale]}
+            onClick={onRightClick} 
+            onPointerOver={() => setRightScale(1.1)} 
+            onPointerOut={() => setRightScale(1)}
+        >
+            <Render type='box' material={rightMaterial} />
+        </Entity>
+    </Entity>
+}
+
+<PointerEvents />

@@ -1,0 +1,96 @@
+export const NUM_SHAPES = 20;
+export const SHAPES = new Array(NUM_SHAPES).fill(0).map(() => {
+    const scale = [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)] * 0.8 
+    return { 
+        scale: [scale, scale, scale]
+    }
+})
+
+export const Shape = ({ children, material, type = 'sphere', hide = false, ...props }) => (
+    <Entity {...props}>
+        { children }
+        { !hide && <Render type={type} material={material} /> }
+        <RigidBody type="dynamic" linearDamping={0.75} angularDamping={0.15} friction={0.5}/>
+        <Collision type={type} />
+    </Entity>
+)
+
+export const Physics = () => {
+
+    const matA = useMaterial({ diffuse: '#F26BB5' });
+    const matB = useMaterial({ diffuse: '#4E74BF' });
+    const matC = useMaterial({ diffuse: '#E4E9F2' });
+    const matD = useMaterial({ diffuse: '#F28444' });
+    const matE = useMaterial({ diffuse: '#F26B5E' });
+    const materials = [matA, matB, matC, matD, matE];
+
+    const SCALE = 0.05;
+    const tmpVec = new pc.Vec3();
+    const tmpVec2 = new pc.Vec3();
+
+    class MoverScript extends pc.Script {
+        update(dt) {
+
+            const clampedDelta = Math.min(0.1, dt)
+            tmpVec2.set(
+                -50 * clampedDelta * SCALE, 
+                -150 * clampedDelta * SCALE, 
+                -50 * clampedDelta * SCALE
+            )
+
+            tmpVec.copy(this.entity.getLocalPosition())
+                .normalize()
+                .mul(tmpVec2);
+
+            this.entity.rigidbody?.applyImpulse(tmpVec)
+        }
+    }
+
+    // Follows the mouse cursor
+    class FollowPointerScript extends pc.Script {
+        pointer = new pc.Vec3();
+
+        initialize()  {
+            // Get the camera
+            const [activeCamera] = this.app.root.findComponents('camera')
+                .filter((camera) => !camera.renderTarget)
+                .sort((a, b) => a.priority - b.priority);
+            
+            const onPointerMove = (e) => {
+                const dist = activeCamera.entity.getPosition().z;
+                activeCamera.screenToWorld(e.x, e.y, dist, this.pointer);
+            };
+
+            this.app.mouse?.on(pc.EVENT_MOUSEMOVE, onPointerMove);
+            this.app.touch?.on(pc.EVENT_TOUCHMOVE, onPointerMove);
+        }
+
+        update(dt) {
+            this.entity.rigidbody?.teleport(this.pointer)
+        }
+    }
+
+    
+    return (<Entity>
+        <EnvAtlasComponent src='/environment-map.png' />
+
+        {/* Create a camera */}
+        <Entity name='camera' position={[0, 0, 4]} >
+            <Camera clearColor='#F26BB5'/>
+            <PostEffects />
+        </Entity>
+
+        {/* Create a sphere that follows the pointer */}
+        <Shape type='sphere' hide>
+            <Script script={FollowPointerScript} />
+            <Light type='point' color='#F28444' />
+        </Shape>
+
+        {/* Create the other spheres with a mover script */}
+        { SHAPES.map((props, i) => (<Shape key={i} {...props} material={materials[i % materials.length]}>
+            <Script script={MoverScript}/>
+        </Shape>)) }
+    </Entity>)
+}
+
+<Physics/>

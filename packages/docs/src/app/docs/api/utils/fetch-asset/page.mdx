@@ -1,0 +1,36 @@
+# Fetch Asset
+
+`fetchAsset` is a simple function that loads an asset from a url and returns a corresponding `Asset`. It returns a promise that resolves when the asset loads meaning you can use it with libraries such as `SWR` or `react-query` which suspend whilst the asset loads.
+
+We recommend reading more about assets in the [Loading Assets](/docs/guide/loading-assets) guide.
+
+## Usage
+
+If you just want a simple loading hook, you can simply wrap `fetchAsset` in a custom hook.
+
+```jsx
+import { fetchAsset } from '@playcanvas/react/utils'
+
+const useAsset = (src, type) => {
+    const app = useApp()
+    const [asset, setAsset] = useState(null)
+
+    useEffect(() => {
+        fetchAsset(app, src, type).then(setAsset)
+    }, [src])
+
+    return asset
+}
+
+const Container = (( src )) => {
+
+    const model = useAsset(src, 'container')
+    if(!model) return null
+
+    return (<Entity {...props}>
+        <Render asset={model} />
+    </Entity>)
+}
+```
+
+

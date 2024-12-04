@@ -1,0 +1,31 @@
+# GSplat
+
+The `GSplat` component renders a Gaussian Splat in an `Entity`. 
+
+**Gaussian Splats** are a new way of capturing and rendering high quality 3D content. They capture the shape and lighting of a scene in a way that produces incredibly high quality results. You can read more about Gaussian Splats in the [PlayCanvas docs](https://developer.playcanvas.com/user-manual/graphics/gaussian-splatting/) or view this [Youtube video](https://www.youtube.com/watch?v=HVv_IQKlafQ).
+
+## Usage
+
+Once you load a Gaussian Splat model, you can use the `GSplat` component to render it.
+
+```jsx
+import { GSplat } from '@playcanvas/react/components'
+
+const Splat = (( src, ...props )) => {
+
+    const { data } = useGSplat(src)
+
+    return (<Entity {...props}>
+        <GSplat asset={data} />
+    </Entity>)
+}
+```
+
+## Props
+
+### asset
+The asset to use for the Gaussian Splat.
+
+Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
+
+

@@ -68,3 +68,7 @@ next-env.d.ts
 
 .olddocs
 .examples
+
+.next/
+_pagefind/
+

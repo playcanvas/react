@@ -1,0 +1,119 @@
+---
+title: Introduction
+---
+
+import { Cards } from 'nextra/components'
+import { Icons } from '@/components/icons'
+import { Terminal } from 'lucide-react'
+
+# `@playcanvas/react`
+
+A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
+
+import { Tabs } from 'nextra/components'
+
+<Tabs items={['Demo', 'Code']}>
+  <Tabs.Tab>
+    <ReactQueryProvider>
+      <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
+        <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
+        <Grid />
+        <Entity name='camera' position={[4, 1, 4]}>
+            <Camera clearColor='#090707' fov={28} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <StaticPostEffects />
+            <AutoRotate />
+        </Entity>
+
+        <Entity>  
+            <GlbAsset src='/lamborghini_vision_gt.glb' width={5} depth={5} />
+        </Entity>
+      </Application>
+    </ReactQueryProvider>
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```jsx copy
+    <Application className='hover:cursor-grab active:cursor-grabbing'>
+      <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
+      <Grid />
+      <Entity name='camera' position={[4, 2, 4]}>
+          <Camera clearColor='#090707' fov={28} />
+          <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+          <StaticPostEffects />
+          <AutoRotate />
+      </Entity>
+      <Entity>  
+          <GlbAsset src='/lamborghini_vision_gt.glb' />
+      </Entity>
+    </Application>
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+<Cards>
+  <Cards.Card
+    icon={<Terminal />}
+    title="Open in Playground"
+    href="/playground/model-viewer"
+    arrow
+  />
+</Cards>
+
+## How does it work?
+
+The library provides a thin declarative layer around the PlayCanvas ECS. You create an `Application` and add `Entities` to it. Entities have position, rotation and scale. You add behaviour by attaching `Components` to entities.
+
+Here's a simple example rendering a simple 3D asset with orbit controls.
+
+```jsx copy
+import { Application, Entity } from '@playcanvas/react'
+import { Camera } from "@playcanvas/react/components"
+import { OrbitControls } from "@playcanvas/react/scripts"
+
+const App = (car) => {
+  return (
+    <Application>
+        <Entity position={[0, 2, 0]}>
+          <Camera clearColor="blue"/>
+          <OrbitControls />
+        </Entity>
+        <Entity >
+          <Container asset={car} />
+        </Entity>
+    </Application>
+  );
+}
+```
+
+## Features
+
+PlayCanvas comes with a number of built in components and scripts that you can use. This makes it easy to get started building your app.
+
+- **Physics** - Add rigid body components to your entities to enable physics sims
+- **Gaussian Splats** - Add a `GSplat` component to render high quality 3D content
+- **Interactivity** - Supports PointerEvents with event bubbling
+- **Scripts** - Provides an imperative API for adding non-declaratives logic to your app
+- **Built using a natural ECS architecture.**
+- **Asset System** - Easy to use asset loader for 3D models, audio, video and other assets
+- **ECS** - Intuitive Entity Component System
+
+## Who's using it?
+
+The library is currently beng use in product at SnapChat for 
+
+<Cards>
+  <Cards.Card
+    icon={<Icons.snapchat />}
+    title="SnapChat"
+    href="https://ml.snapchat.com"
+    arrow
+  />
+</Cards>
+
+## First steps
+
+If you're familiar with React but new to PlayCanvas and 3D in general, the best place to start is the [Getting Started Guide](/docs/getting-started). It will walk you through creating a simple app and explain the core concepts.
+
+If you're already using PlayCanvas, but new to React, it's worth checking out the [React docs](https://react.dev/learn) first, which provide a great introduction to the React ecosystem. From then you can jump into the [API Reference](/docs/api-reference).
+
+You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
