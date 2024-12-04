@@ -35,6 +35,7 @@ export const useComponent = (ctype: string, props: ComponentProps): void => {
     };
   }, [app, parent, ctype]);
 
+  // Update component props
   useLayoutEffect(() => {
 
     const comp: Component | null | undefined = componentRef.current

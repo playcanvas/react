@@ -1,3 +1,5 @@
+"use client"
+
 import { Entity as PcEntity } from 'playcanvas';
 import { ReactNode, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
@@ -8,9 +10,9 @@ type MouseEventCallback = (event: SyntheticMouseEvent) => void;
 
 interface EntityProps {
   name?: string;
-  position?: [number, number, number];
-  scale?: [number, number, number];
-  rotation?: [number, number, number];
+  position?: number[];
+  scale?: number[];
+  rotation?: number[];
   onPointerUp?: PointerEventCallback;
   onPointerDown?: PointerEventCallback;
   onPointerOver?: PointerEventCallback;
@@ -75,9 +77,9 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
 
   useLayoutEffect(() => {
     entity.name = name;
-    entity.setLocalPosition(...position);
-    entity.setLocalScale(...scale);
-    entity.setLocalEulerAngles(...rotation);
+    entity.setLocalPosition(...position as [number, number, number]);
+    entity.setLocalScale(...scale as [number, number, number]);
+    entity.setLocalEulerAngles(...rotation as [number, number, number]);
   }, [entity, name, position, scale, rotation]);
 
   return (<>
