@@ -28,6 +28,12 @@ export default [
     },
   },
   {
-    ignores: ["packages/lib/dist/", "packages/examples/dist/", "packages/lib/node_modules/"],
+    ignores: [
+      "packages/*/dist/", 
+      "packages/*/node_modules/",
+      "packages/docs/public/",
+      "packages/docs/.next/",             // Next.js build output
+      "packages/docs/public/", 
+    ],
   },
 ];

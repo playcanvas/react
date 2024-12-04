@@ -1,0 +1,50 @@
+# Entity
+
+The `Entity` component is the fundamental building block in PlayCanvas React applications. It represents a node in the scene graph hierarchy and can contain other entities as children, as well as components that define its behavior and appearance.
+
+## Usage
+
+```jsx
+import { Entity } from '@playcanvas/react'
+
+export default function Scene() {
+  return (
+    <Entity >
+      <Entity name="child" />
+      <Entity name="other-child" >
+        <Entity name="nested-child" >
+      </Entity>
+    </Entity>
+  )
+}
+```
+
+Entities on their own are not visible, they need components to have behaviour. You can add components to an entity by nesting them within the `Entity` component.
+
+## Props
+
+### `name`
+The `name` prop sets the name of the entity in the scene graph. This is useful for debugging and finding entities at runtime.
+
+Type: `string`
+
+### `position`
+The `position` prop sets the local position of the entity relative to its parent.
+
+Type: `[number, number, number]` (x, y, z coordinates)
+
+### `rotation` 
+The `rotation` prop sets the local rotation of the entity in euler angles (degrees).
+
+Type: `[number, number, number]` (x, y, z rotation)
+
+### `scale`
+The `scale` prop sets the local scale of the entity.
+
+Type: `[number, number, number]` or `number` (uniform scale)
+
+### `enabled`
+The `enabled` prop determines if the entity and its children are enabled/visible.
+
+Type: `boolean`
+Default: `true`

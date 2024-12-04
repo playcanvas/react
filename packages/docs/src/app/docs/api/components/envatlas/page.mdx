@@ -1,0 +1,36 @@
+# EnvAtlas
+
+The `EnvAtlas` is used to add realtistic lighting to a scene. 
+
+Image Based Lighting (IBL) is a technique to simulate environmental lighting often using an capture of a real world environment. It can add much more natural nuanced lighting to a scene than simply by using [Lights](/api/components/light) alone.
+
+The EnvAtlas component requires a Textures Atlas Asset. There are many sources available that provide high quality textures assets such as [HDRI Haven](https://hdrihaven.com/), [Poly Haven](https://polyhaven.com/), and [OpenFootage](https://www.openfootage.net/). You may need to convert the format to a Textures Atlas asset using this [online texture tool](https://playcanvas.com/texture-tool).
+
+## Usage
+
+This example will load an environment atlas asset and apply it to the scene. An `<EnvAtlas>` component can be added to any entity in the scene, but it will have affect all entities in the scene.
+
+```jsx
+import { EnvAtlas } from '@playcanvas/react/components'
+
+// Load the environment atlas asset
+const { data : envAtlas } = useEnvAtlas('/env_atlas_1k.png')
+
+<Entity>
+    <EnvAtlas asset={envAtlas} />
+    <Entity>
+        <Render type="box" />
+    </Entity>
+</Entity>
+}
+```
+
+## Props
+
+### asset
+The asset to use for the environment atlas.
+
+Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
+
+
+

@@ -6,7 +6,7 @@
 
 A lightweight, declarative library for for creating 3D apps, with an extensible Entity-Component System supporting Physics, Pointer Events, and a built-in Scripting API.
 
-<img width="1339" alt="image" src="https://github.com/user-attachments/assets/c07f915a-fae2-4aa8-a727-46ec7f300aa8">
+<img width="1339" alt="image" src="https://github.com/user-attachments/assets/c07f915a-fae2-4aa8-a727-46ec7f300aa8"></img>
 
 ### Getting Started
 

@@ -1,0 +1,29 @@
+export const Demo = () => {
+    /**
+     * A simple glb viewer with a shadow catcher and auto rotate.
+     */
+
+    const { data: asset } = useModel('/lamborghini_vision_gt.glb')
+
+    return (<Entity>
+        {/* Create some environment lighting */}
+        <EnvAtlasComponent src='/environment-map.png' />
+        {/* Render the background grid */}
+        
+        {/* Create a camera entity */}
+        <Entity name='camera' position={[4, 1, 4]}>
+            <Camera />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            
+        </Entity>
+
+        <Entity scale={[0.5, 0.5, 0.5]}>
+            {/* Load our asset */}
+            <Render type='asset' asset={asset} >
+                {asset && <ShadowCatcher width={4} depth={4} />}
+            </Render>
+        </Entity>
+    </Entity>)
+}
+
+<Demo />
