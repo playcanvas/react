@@ -34,8 +34,7 @@ export const useScript = (scriptConstructor:  new (...args: any[]) => Script, pr
         properties: { ...props },
         preloading: false,
       });
-      // @ts-expect-error Override the super private `__name` instance
-      scriptInstance.__name = scriptName;
+
       scriptRef.current = scriptInstance;
       scriptComponentRef.current = scriptComponent;
     }
