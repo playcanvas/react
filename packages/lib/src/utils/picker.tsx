@@ -46,6 +46,8 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
 
      // Get canvas bounds
      const canvas = app.graphicsDevice.canvas;
+
+     if(!canvas || canvas.width === 0 || canvas.height === 0) return null;
      
      // Calculate position relative to canvas
      const x = e.clientX - rect.left;
@@ -65,6 +67,7 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
         if (!meshInstance) return null
     
         return meshInstance?.node as Entity;
+        return null
     } catch (e) {
         // The picker can fail if the camera is not active or the canvas is not visible
         return null;
