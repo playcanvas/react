@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
 import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
-import { ScriptConstructor } from '../components/Script';
+// import { ScriptConstructor } from '../components/Script';
 
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
@@ -10,10 +10,10 @@ interface Props {
   [key: string]: unknown;
 }
 
-export const useScript = (scriptConstructor: ScriptConstructor, props: Props) : void  => {
+export const useScript = (scriptConstructor:  new (...args: any[]) => Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
-  const scriptName: string = toLowerCamelCase(scriptConstructor.__name);
+  const scriptName: string = toLowerCamelCase(scriptConstructor.constructor.name);
   const scriptRef = useRef<Script | null>(null);
   const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
@@ -30,7 +30,7 @@ export const useScript = (scriptConstructor: ScriptConstructor, props: Props) : 
     if (!scriptRef.current) {
       // Create the script instance with the provided attributes
       const scriptComponent : ScriptComponent = parent.script as ScriptComponent;
-      const scriptInstance = scriptComponent.create(scriptConstructor as unknown as typeof Script, {
+      const scriptInstance = scriptComponent.create(scriptConstructor as typeof Script, {
         properties: { ...props },
         preloading: false,
       });
@@ -48,8 +48,7 @@ export const useScript = (scriptConstructor: ScriptConstructor, props: Props) : 
       scriptComponentRef.current = null;
 
       if (app && app.root && script && scriptComponent) {
-        // @ts-expect-error The type of `destroy` is wrong
-        scriptComponent.destroy(script);
+        scriptComponent.destroy(scriptName);
       } else if (script) {
         script.fire('destroy');
       }
