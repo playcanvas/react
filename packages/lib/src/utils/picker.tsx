@@ -56,15 +56,20 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
      const scaleY = canvas.height / rect.height;
  
      // prepare the picker and perform picking
-     picker.prepare(activeCamera, app.scene);
-     const [meshInstance] = await picker.getSelectionAsync(
-         x * scaleX,
-         y * scaleY
-     );
+     try {
+        picker.prepare(activeCamera, app.scene);
+        const [meshInstance] = await picker.getSelectionAsync(
+            x * scaleX,
+            y * scaleY
+        );
+        if (!meshInstance) return null
+    
+        return meshInstance?.node as Entity;
+    } catch (e) {
+        // The picker can fail if the camera is not active or the canvas is not visible
+        return null;
+    }
 
-    if (!meshInstance) return null
-
-    return meshInstance?.node as Entity;
 }
 
 export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
