@@ -11,8 +11,6 @@ const PostEffects: FC = () => {
 
     const postSettings = usePostControls();
 
-    console.log(postSettings);
-
     return <Script script={CameraFrame} {...postSettings} />
 }
 

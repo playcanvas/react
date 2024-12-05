@@ -4,7 +4,7 @@ import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import './globals.css'
-import { CodeXml } from 'lucide-react'
+import { Code } from 'lucide-react'
 
 export const { viewport } = Head
 
@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       logo={
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-zinc-800 p-2 inline-block">
-            <CodeXml size={24} strokeWidth={2} className="text-orange-400"/>
+            <Code size={24} strokeWidth={2} />
           </div>
           <span style={{ opacity: '60%' }}>Simple 3D for the Web</span>
         </div>
