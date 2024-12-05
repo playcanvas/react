@@ -14,22 +14,24 @@ import { Tabs } from 'nextra/components'
 
 <Tabs items={['Demo', 'Code']}>
   <Tabs.Tab>
-    <ReactQueryProvider>
-      <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-        <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
-        <Grid />
-        <Entity name='camera' position={[4, 1, 4]}>
-            <Camera clearColor='#090707' fov={28} />
-            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
-            <StaticPostEffects />
-            <AutoRotate />
-        </Entity>
+    <div className='w-full aspect-video'>
+      <ReactQueryProvider>
+        <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
+          <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
+          <Grid />
+          <Entity name='camera' position={[4, 1, 4]}>
+              <Camera clearColor='#090707' fov={28} />
+              <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+              <StaticPostEffects />
+              <AutoRotate />
+          </Entity>
 
-        <Entity>  
-            <GlbAsset src='/lamborghini_vision_gt.glb' width={5} depth={5} />
-        </Entity>
-      </Application>
-    </ReactQueryProvider>
+          <Entity>  
+              <GlbAsset src='/lamborghini_vision_gt.glb' width={5} depth={5} />
+          </Entity>
+        </Application>
+      </ReactQueryProvider>
+    </div>
   </Tabs.Tab>
   <Tabs.Tab>
     ```jsx copy
