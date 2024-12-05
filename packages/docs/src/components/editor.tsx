@@ -2,7 +2,7 @@ import { FC, useState, useEffect, createContext, useContext } from "react";
 import MonacoEditor from '@monaco-editor/react';
 import { defaultComponents } from "@/../mdx-components";
 import { serialize } from "next-mdx-remote-client/serialize";
-import { MDXClientAsync, type SerializeResult } from "next-mdx-remote-client/csr";
+import { MDXClient, type SerializeResult } from "next-mdx-remote-client/csr";
 import ActualMonacoEditor, { editor } from "monaco-editor";
 
 import * as pc from 'playcanvas';
@@ -109,10 +109,8 @@ const Preview: FC = () => {
     if (!mdxSource) return null;
     if ('error' in mdxSource) return <div>Error parsing MDX: {mdxSource.error.message}</div>;
 
-
-    // console.log('mdxSource', mdxSource)
     return (
-        <MDXClientAsync
+        <MDXClient
             {...mdxSource}
             components={components}
         />
