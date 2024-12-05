@@ -3,7 +3,9 @@ import { Entity, Script } from "playcanvas";
 const smoothStep = (x: number): number =>
   x <= 0 ? 0 : x >= 1 ? 1 : Math.sin((x - 0.5) * Math.PI) * 0.5 + 0.5;
 
+
 class AutoRotator extends Script {
+
   speed: number = 4;
   pitchSpeed: number = 0;
   pitchAmount: number = 1;

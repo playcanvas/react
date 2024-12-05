@@ -1,3 +1,5 @@
+"use client";
+
 import {
     CULLFACE_NONE,
     SEMANTIC_POSITION,
