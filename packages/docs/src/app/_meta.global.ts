@@ -31,12 +31,12 @@ export default {
     title: 'Playground',
     items: {
       'model-viewer' : '',
-    //   'animation' : '',
-    //   'hello-world' : '',
-    //   'scripting' : '',
-    //   'pointer-events' : '',
-    //   'physics' : '',
-    //   'shapes' : '',
+      // 'animation' : '',
+      // 'hello-world' : '',
+      // 'scripting' : '',
+      // 'pointer-events' : '',
+      'physics' : '',
+      // 'shapes' : '',
     },
   },  
   '---': {

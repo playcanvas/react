@@ -45,3 +45,12 @@ export const useSplat = (src : string, props = {}) => useAsset(src, 'gsplat', pr
  * @returns {{ data: Asset, isPending: boolean, release: Function }} - The GLB asset and its loading state.
  */
 export const useModel = (src : string, props = {}) => useAsset(src, 'container', props);
+
+
+/**
+ * Loads a texture asset
+ * 
+ * @param {string} src - The URL of the texture asset. 
+ * @param {Object} [props] - Additional properties to pass to the asset loader.
+ */
+export const useTexture = (src : string, props = {}) => useAsset(src, 'texture', props);

@@ -7,16 +7,31 @@ import { FC } from "react";
 
 import { usePostControls } from "./hooks/post-controls";
 
-const PostEffects: FC = () => {
+const deepMerge = (target: any, source: any) => {
+    if (!source) return target;
+    const result = { ...target };
+    for (const key in source) {
+        if (source[key] instanceof Object && key in target) {
+            result[key] = deepMerge(target[key], source[key]);
+        } else {
+            result[key] = source[key];
+        }
+    }
+    return result;
+};
+
+const PostEffects: FC = ({ overrides = {} }: { overrides?: Partial<typeof defaultPostSettings> }) => {
 
     const postSettings = usePostControls();
+    const settings = deepMerge(postSettings, overrides);
 
-    return <Script script={CameraFrame} {...postSettings} />
+    return <Script script={CameraFrame} {...settings} />
 }
 
-export const StaticPostEffects: FC = () => {
+export const StaticPostEffects: FC<Partial<typeof defaultPostSettings>> = (props) => {
 
-    return <Script script={CameraFrame} {...defaultPostSettings} />
+    const settings = deepMerge(defaultPostSettings, props);
+    return <Script script={CameraFrame} {...settings} />
 }
 
 const defaultPostSettings = {

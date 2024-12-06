@@ -12,7 +12,7 @@ type MaterialProps = Pick<StandardMaterial, WritableKeys<StandardMaterial>>;
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const propsWithColors = useColors(props, [
+  const colorProps = useColors(props, [
     'ambient', 
     'attenuation', 
     'diffuse', 
@@ -20,6 +20,8 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
     'sheen', 
     'specular'
   ]);
+
+  const propsWithColors = { ...props, ...colorProps };
 
   // Create the material instance only once when 'app' changes
   const material : StandardMaterial = useMemo(() => new StandardMaterial(), [app]);
@@ -32,7 +34,6 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
       const filteredProps = Object.fromEntries(
         Object.entries(propsWithColors).filter(([key]) => key in material)
       );
-
       Object.assign(material, filteredProps)
       material.update(); 
     }
