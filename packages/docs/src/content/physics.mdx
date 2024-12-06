@@ -1,48 +1,60 @@
-export const NUM_SHAPES = 20;
-export const SHAPES = new Array(NUM_SHAPES).fill(0).map(() => {
-    const scale = [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)] * 0.8 
-    return { 
-        scale: [scale, scale, scale]
-    }
-})
+export const NUM_SHAPES = 50;
+export const SHAPES = [...Array(NUM_SHAPES)].map(() => ({ scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)] * 2 }))
+export const randRange = range => range * (0.5 - Math.random())
 
-export const Shape = ({ children, material, type = 'sphere', hide = false, ...props }) => (
-    <Entity {...props}>
+export const ShapeCollider = ({ children, scale = 1, material, type = 'sphere', hide = false, ...props }) => (
+    <Entity {...props} scale={[scale, scale, scale]}>
         { children }
         { !hide && <Render type={type} material={material} /> }
-        <RigidBody type="dynamic" linearDamping={0.75} angularDamping={0.15} friction={0.5}/>
-        <Collision type={type} />
+        <Collision type={type} radius={scale * 0.5}/>
     </Entity>
 )
 
 export const Physics = () => {
 
-    const matA = useMaterial({ diffuse: '#F26BB5' });
-    const matB = useMaterial({ diffuse: '#4E74BF' });
-    const matC = useMaterial({ diffuse: '#E4E9F2' });
-    const matD = useMaterial({ diffuse: '#F28444' });
-    const matE = useMaterial({ diffuse: '#F26B5E' });
-    const materials = [matA, matB, matC, matD, matE];
+    const app = useApp();
+    const { data: diffuseMap } = useTexture('/materials/paint/diffuse.webp');
 
-    const SCALE = 0.05;
+
+    const matA = useMaterial({ diffuse: "#c0a0a0",emissive: "red" });
+    const matB = useMaterial({ diffuseMap: diffuseMap?.resource, gloss: 0.98});
+    const matC = useMaterial({ 
+        dispersion: 2 , 
+        refractionIndex: 2.42, 
+        dispersion: 3,
+        opacity: 0.5,
+        blendType: pc.BLEND_NORMAL,
+        useDynamicRefraction: true,
+
+    });
+    const materials = [matA, matB, matC];
+    
+    app.systems.rigidbody.gravity.set(0, 0, 0);
+
     const tmpVec = new pc.Vec3();
     const tmpVec2 = new pc.Vec3();
+    const swirl = new pc.Vec3();
 
     class MoverScript extends pc.Script {
         update(dt) {
-
-            const clampedDelta = Math.min(0.1, dt)
+            const delta = Math.min(0.1, dt)
+            
+            // Get the current position vector
+            tmpVec
+                .copy(this.entity.getLocalPosition())
+                .normalize()
+            
+            // Create a perpendicular vector for swirling (cross product with up vector)
+            swirl.cross(tmpVec, pc.Vec3.RIGHT).scale(0.4)
+            
+            // Combine radial and tangential forces
             tmpVec2.set(
-                -50 * clampedDelta * SCALE, 
-                -150 * clampedDelta * SCALE, 
-                -50 * clampedDelta * SCALE
+                (-20 * tmpVec.x + 40 * swirl.x) * delta * this.scale,
+                (-50 * tmpVec.y) * delta * this.scale,
+                (-20 * tmpVec.z + 40 * swirl.z) * delta * this.scale
             )
 
-            tmpVec.copy(this.entity.getLocalPosition())
-                .normalize()
-                .mul(tmpVec2);
-
-            this.entity.rigidbody?.applyImpulse(tmpVec)
+            this.entity.rigidbody?.applyImpulse(tmpVec2)
         }
     }
 
@@ -66,30 +78,36 @@ export const Physics = () => {
         }
 
         update(dt) {
-            this.entity.rigidbody?.teleport(this.pointer)
+            this.entity.setLocalPosition(this.pointer.x, this.pointer.y, this.pointer.z)
         }
     }
 
-    
     return (<Entity>
+        
         <EnvAtlasComponent src='/environment-map.png' />
 
         {/* Create a camera */}
-        <Entity name='camera' position={[0, 0, 4]} >
-            <Camera clearColor='#F26BB5'/>
-            <PostEffects />
+        <Entity name='camera' position={[0, 0, 20]} >
+            <Camera clearColor='#ffbfbf' fov={32.5}/>
+            <PostEffects overrides={{ ssao: { type: 'lighting' } }} />
         </Entity>
 
         {/* Create a sphere that follows the pointer */}
-        <Shape type='sphere' hide>
+        <ShapeCollider type='sphere' hide>
             <Script script={FollowPointerScript} />
-            <Light type='point' color='#F28444' />
-        </Shape>
+            <RigidBody type="kinematic"/>
+        </ShapeCollider>
 
         {/* Create the other spheres with a mover script */}
-        { SHAPES.map((props, i) => (<Shape key={i} {...props} material={materials[i % materials.length]}>
-            <Script script={MoverScript}/>
-        </Shape>)) }
+        { SHAPES.map(({ scale }, i) => (<ShapeCollider 
+            key={i} 
+            position={[randRange(40), randRange(40) - 50, randRange(40) - 20]}
+            scale={scale} 
+            material={materials[i % materials.length]}
+        >
+            <Script script={MoverScript} scale={scale * 0.3}/>
+            <RigidBody type="dynamic" linearDamping={0.75} angularDamping={0.15} friction={0.2}/>
+        </ShapeCollider>)) }
     </Entity>)
 }
 

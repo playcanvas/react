@@ -20,7 +20,7 @@
     "monaco-editor": "^0.52.0",
     "next": "^15.0.2",
     "next-mdx-remote-client": "^1.0.3",
-    "nextra": "^4.0.0-app-router.30",
+    "nextra": "^4.0.0-app-router.34",
     "nextra-theme-docs": "^4.0.0-app-router.30",
     "playcanvas": "^2.2.2",
     "react": "^18.3.1",
