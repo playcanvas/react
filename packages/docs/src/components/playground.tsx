@@ -1,6 +1,6 @@
 'use client'
 
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 import { Editor, EditorProvider, Preview } from './editor';
 import { Suspense } from 'react';
@@ -9,7 +9,7 @@ import { FILLMODE_NONE, RESOLUTION_AUTO } from "playcanvas";
 import { Application } from "@playcanvas/react";
 
 import { useApp } from "@playcanvas/react/hooks";
-import { TerminalIcon } from "lucide-react";
+import { CodeIcon, ExternalLinkIcon, Minimize2Icon, Terminal, TerminalIcon, TerminalSquareIcon } from "lucide-react";
 
 const ResizeHandler: FC<{ resizeRef: React.RefObject<HTMLDivElement> }> = ({ resizeRef }) => {
     const app = useApp();
@@ -44,9 +44,18 @@ const PlayGround: FC<PlaygroundProps> = ({
 }) => {
 
     const resizeRef = useRef<HTMLDivElement>(null);
+    const [showCodeEditor, setShowCodeEditor] = useState(false);
     
     return (
         <EditorProvider initialCode={code} >
+
+            <div className='absolute bottom-0 left-0' > 
+                {/* Button that toggles the code editor */}
+                { !showCodeEditor && <button onClick={() => setShowCodeEditor(true)} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-8 h-8 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
+                    <TerminalIcon className='w-full h-full' />
+                </button> }
+             
+            </div>
 
             <div id='leva-portal' className='h-0' onMouseMove={e => e.stopPropagation() } >
                 <Leva collapsed hidden/>
@@ -59,7 +68,7 @@ const PlayGround: FC<PlaygroundProps> = ({
                     </Suspense>
                 </Application>
             </div>
-            <Suspense>
+            { showCodeEditor && <Suspense>
                 <div 
                     className='absolute top-[var(--nextra-navbar-height)] h-[calc(100vh-var(--nextra-navbar-height))] flex mx-auto max-w-[90rem] p-8'
                     onMouseMove={e => e.stopPropagation() }
@@ -75,12 +84,13 @@ const PlayGround: FC<PlaygroundProps> = ({
                                 >
                                     {name}
                                 </a>
+                                <Minimize2Icon className='w-4 h-4 inline cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-300' onClick={() => setShowCodeEditor(false)}/>
                             </div>
                         </div>
                         <Editor />
                     </div>
                 </div>
-            </Suspense>
+            </Suspense> }
         </EditorProvider>
     )
 }
