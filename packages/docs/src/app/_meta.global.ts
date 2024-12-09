@@ -36,7 +36,7 @@ export default {
     //   'scripting' : '',
     //   'pointer-events' : '',
       'physics' : '',
-    //   'shapes' : '',
+      'motion' : '',
     },
   },  
   '---': {
