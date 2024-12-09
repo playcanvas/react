@@ -3,6 +3,7 @@ import fs from 'node:fs'
 import path from 'node:path'
 import Playground from '@/components/playground'
 import ReactQueryProvider from '@/components/react-query-provider'
+// import { useLayoutEffect } from 'react'
 
 export const generateStaticParams = generateStaticParamsFor('mdxPath')
 
@@ -27,6 +28,11 @@ export default async function Page(props: PageProps) {
     path.join(process.cwd(), 'src/content', `${params.mdxPath}.mdx`),
     'utf-8'
   )
+
+  // useLayoutEffect(() => {
+  //   // If the page is a playground, hide the footer
+    
+  // }, [])
 
   return (
     <ReactQueryProvider>

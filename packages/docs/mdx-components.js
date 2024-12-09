@@ -10,7 +10,7 @@ import PostEffects, { StaticPostEffects} from '@components/PostEffects'
 import ShadowCatcher from '@components/ShadowCatcher'
 import AutoRotate from '@components/AutoRotate'
 import ReactQueryProvider from '@/components/react-query-provider'
-
+import { MotionEntity, MotionLight } from '@components/MotionEntity'
 const docsComponents = getDocsMDXComponents()
 
 export const defaultComponents = {
@@ -26,6 +26,8 @@ export const defaultComponents = {
   PostEffects,
   StaticPostEffects,
   AutoRotate,
+  MotionEntity,
+  MotionLight
 }
 
 export function useMDXComponents(components) {
