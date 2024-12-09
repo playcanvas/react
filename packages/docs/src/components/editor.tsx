@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, createContext, useContext } from "react";
+import { FC, useState, useEffect, createContext, useContext, useMemo } from "react";
 import MonacoEditor from '@monaco-editor/react';
 import { defaultComponents } from "@/../mdx-components";
 import { serialize } from "next-mdx-remote-client/serialize";
@@ -6,8 +6,8 @@ import { MDXClient, type SerializeResult } from "next-mdx-remote-client/csr";
 import ActualMonacoEditor, { editor } from "monaco-editor";
 
 import * as pc from 'playcanvas';
-import { useModel, useSplat } from "./hooks/use-asset";
-import { useMaterial } from "@playcanvas/react/hooks";
+import { useModel, useSplat, useTexture } from "./hooks/use-asset";
+import { useApp, useMaterial, useParent } from "@playcanvas/react/hooks";
 
 interface EditorContextType {
     code: string;
@@ -97,8 +97,12 @@ const Preview: FC = () => {
             options: { 
                 scope: {
                     useState,
+                    useMemo,
                     useSplat,
                     useModel,
+                    useTexture,
+                    useApp,
+                    useParent,
                     useMaterial,
                     pc,
                 }
