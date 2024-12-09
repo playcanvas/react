@@ -18,6 +18,7 @@
     "leva": "^0.9.35",
     "lucide-react": "^0.465.0",
     "monaco-editor": "^0.52.0",
+    "motion": "^11.13.1",
     "next": "^15.0.2",
     "next-mdx-remote-client": "^1.0.3",
     "nextra": "^4.0.0-app-router.34",

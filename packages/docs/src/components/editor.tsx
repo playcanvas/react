@@ -4,7 +4,8 @@ import { defaultComponents } from "@/../mdx-components";
 import { serialize } from "next-mdx-remote-client/serialize";
 import { MDXClient, type SerializeResult } from "next-mdx-remote-client/csr";
 import ActualMonacoEditor, { editor } from "monaco-editor";
-
+import * as motion from 'motion/react';
+// Required by MDX
 import * as pc from 'playcanvas';
 import { useModel, useSplat, useTexture } from "./hooks/use-asset";
 import { useApp, useMaterial, useParent } from "@playcanvas/react/hooks";
@@ -98,13 +99,16 @@ const Preview: FC = () => {
                 scope: {
                     useState,
                     useMemo,
+                    useEffect,
                     useSplat,
                     useModel,
                     useTexture,
                     useApp,
                     useParent,
                     useMaterial,
+                    motion,
                     pc,
+
                 }
             }, 
         }).then(setMdxSource);
