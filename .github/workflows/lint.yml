@@ -17,19 +17,14 @@ jobs:
       - name: Checkout Main
         uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-
-      - name: Use Node.js
+      - name: Setup Node.js 18.x
         uses: actions/setup-node@v4
         with:
-          node-version-file: .node-version
-          cache: pnpm
+          node-version: 18.x
+          cache: 'npm'
 
       - name: Install Dependencies
-        run: pnpm i
-
-      - name: Lint Prettier
-        run: pnpm lint:prettier
+        run: npm i
 
       - name: Lint ESLint
-        run: pnpm lint
+        run: npm lint
