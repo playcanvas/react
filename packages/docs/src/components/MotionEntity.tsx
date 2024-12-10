@@ -1,10 +1,26 @@
 "use client"
 
-import React, { useEffect, useRef } from 'react';
+import React, { FC, useEffect, useRef } from 'react';
 import { useMotionValue, useMotionValueEvent, useTransform, animate, useSpring } from 'motion/react';
 import { Entity } from '@playcanvas/react';
 import { Light, Script } from '@playcanvas/react/components';
 import { Entity as PcEntity, Script as PcScript } from 'playcanvas';
+
+interface MotionLightProps {
+    intensity?: number;
+    type?: "directional" | "omni" | "spot";
+    transition?: { duration: number };
+    [key: string]: unknown;
+}
+
+type MotionEntityProps = {
+    children?: React.ReactNode;
+    animate?: {
+        position?: [number, number, number];
+        rotation?: [number, number, number, number];
+        scale?: [number, number, number];
+    };
+} & Omit<React.ComponentProps<typeof Entity>, 'animate'>;
 
 const useMotionVec3 = (initial: number[], defaultValue = 0) => {
     // Create three spring values directly (since we know we need xyz)
@@ -30,7 +46,7 @@ const useMotionVec3 = (initial: number[], defaultValue = 0) => {
     return { values: [x, y, z], array, animateArray };
 };
 
-export const MotionEntity = ({ children, animate: animateProps, ...props }) => {
+export const MotionEntity: FC<MotionEntityProps> = ({ children, animate: animateProps, ...props }) => {
     // Create motion arrays for each transform property
     const position = useMotionVec3(props.position, 0);
     const rotation = useMotionVec3(props.rotation, 0);
@@ -53,7 +69,7 @@ export const MotionEntity = ({ children, animate: animateProps, ...props }) => {
     })
 
     useMotionValueEvent(rotation.array, "change", (rotation: number[]) => {
-        entityRef.current?.setLocalEulerAngles(rotation[0], rotation[1], rotation[2], rotation[3]);
+        entityRef.current?.setLocalEulerAngles(rotation[0], rotation[1], rotation[2]);
     })
 
     useMotionValueEvent(scale.array, "change", (scale: number[]) => {
@@ -72,7 +88,7 @@ export const MotionEntity = ({ children, animate: animateProps, ...props }) => {
     );
 }
 
-export const MotionLight = ({ intensity = 1, transition = { duration: 0.2 }, ...props }) => {
+export const MotionLight: FC<MotionLightProps> = ({ intensity = 1, type = "directional", transition = { duration: 0.2 }, ...props }) => {
     /**
      * This is a motion value that animates the intensity of the light.
      * It uses a motion value to animate the intensity of the light, 
@@ -92,6 +108,6 @@ export const MotionLight = ({ intensity = 1, transition = { duration: 0.2 }, ...
 
     return <>
         <Script script={LightScript} />
-        <Light {...props}/>
+        <Light {...props} type={type}/>
     </>
 }
