@@ -1,23 +1,14 @@
-export const MotionLight = ({ intensity = 1, transition = { duration: 0.2 }, ...props }) => {
-    const intensityMV = motion.useMotionValue(intensity);
-
-    useEffect(() => {
-        motion.animate(intensityMV, intensity, transition);
-    }, [intensity]);
-
-    class LightScript extends pc.Script {
-        update() {
-            this.entity.light.intensity = intensityMV.get();
-        }
-    }
-
-    return <>
-        <Script script={LightScript} />
-        <Light {...props}/>
-    </>
+export const setMouseCursor = (cursor) => {
+    // Set the mouse cursor when hovering
+    document.body.style.cursor = cursor
 }
 
 export const MouseRotation = () => {
+    /**
+     * This is a script that rotates the entity based on the mouse position.
+     * It uses a motion value to animate the rotation of the entity, 
+     * and then uses an imperative script to update the rotation of the entity.
+     */
     class MouseRotatesEntity extends pc.Script {
         initialize() {
             this.t = new pc.Vec2()
@@ -38,18 +29,12 @@ export const MouseRotation = () => {
 export const Example = () => {
 
     const [hovered, setHovered] = useState(false);
+    
+    const onPointerOver = () => [setMouseCursor('pointer'), setHovered(true)]
+    const onPointerOut = () => [setMouseCursor('auto'), setHovered(false)]
 
-    const initial = {
-        position: [0, 0, 0],
-        rotation: [0, 0, 90],
-        scale: [1, 1, 1]
-    }
-
-    const hover = {
-        position: [0, 0, 0],
-        rotation: [0, 0, 90],
-        scale: [1.2, 1.2, 1.2]
-    }
+    const rotation = [0, 0, 90]
+    const scale = hovered ? [1.2, 1.2, 1.2] : [1, 1, 1]
 
     return (<Entity>
         <Entity name="camera" position={[0, 0, 5]}>
@@ -61,29 +46,29 @@ export const Example = () => {
         {/* Create some environment lighting */}
         <EnvAtlasComponent src='/environment-map.png' intensity={0.4}/>
 
+        {/* Create some additional lighting */}
         <Entity rotation={[0, -45, 23]}>
             <MotionLight intensity={hovered ? 1.3 : 0.3} color='red'/>
         </Entity>
-
         <Entity rotation={[0, -45, -23]}>
             <MotionLight intensity={hovered ? 1.3 : 0.3} color='blue'/>
         </Entity>
 
+        {/* Create a capsule buttons that animates when hovered */}
         <MotionEntity name="button"
-            onPointerOver={() => setHovered(true)}
-            onPointerOut={() => setHovered(false)}
-            {...initial}
-            animate={hovered ? hover : initial}
-            transition={{ duration: 0.45 }}
+            onPointerOver={onPointerOver}
+            onPointerOut={onPointerOut}
+            animate={{ rotation, scale }}
         >
             <Render type="capsule" />
+
+            {/* Create a decoration that animates when hovered */}
             <MotionEntity name="decoration"
                 scale={[0, 0, 0]}
                 animate={{ 
                     scale: hovered ? [.5, .5, .5] : [0, 0, 0],
                     position: hovered ? [0, 0, 0] : [0, 0, -1] 
                 }}
-                transition={{ duration: 0.25 }}
             >
                 <MouseRotation/>
                 <Entity position={[2, 1.9, -1]} rotation={[23, -34, 45]} scale={[.8, .8, .8]}>
@@ -105,11 +90,11 @@ export const Example = () => {
         <div className="pointer-events-none absolute inset-60 transition-opacity duration-500 " style={{
             opacity: hovered ? 1 : 0
         }}>
-            <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 blur-[100px] opacity-60" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-500 via-pink-500 to-orange-500 blur-[100px] opacity-50" />
         </div>
 
-        <div className="pointer-events-none absolute flex justify-center items-center top-0 left-0 w-full h-full right-0 top-0">
-            <h1 className="text-white font-bold text-8xl transition-all duration-300" style={{
+        <div className="playground-overlay flex justify-center items-center">
+            <h1 className="font-bold text-8xl transition-all duration-300" style={{
                 transform: `scale(${hovered ? 1.2 : 1})`,
                 opacity: hovered ? 0.8 : 1
             }}>Play</h1>

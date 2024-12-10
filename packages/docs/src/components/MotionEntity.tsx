@@ -3,9 +3,8 @@
 import React, { useEffect, useRef } from 'react';
 import { useMotionValue, useMotionValueEvent, useTransform, animate, useSpring } from 'motion/react';
 import { Entity } from '@playcanvas/react';
-import { Light } from '@playcanvas/react/components';
-import { Entity as PcEntity } from 'playcanvas';
-import { useParent } from '@playcanvas/react/hooks';
+import { Light, Script } from '@playcanvas/react/components';
+import { Entity as PcEntity, Script as PcScript } from 'playcanvas';
 
 const useMotionVec3 = (initial: number[], defaultValue = 0) => {
     // Create three spring values directly (since we know we need xyz)
@@ -20,18 +19,18 @@ const useMotionVec3 = (initial: number[], defaultValue = 0) => {
     );
     
     // Helper to animate all values
-    const animateArray = (target?: number[], options = {}) => {
+    const animateArray = (target?: number[]) => {
         if (!target) return;
         // For springs, we use set() instead of animate()
-        x.set(target[0] ?? x.get(), options);
-        y.set(target[1] ?? y.get(), options);
-        z.set(target[2] ?? z.get(), options);
+        x.set(target[0] ?? x.get());
+        y.set(target[1] ?? y.get());
+        z.set(target[2] ?? z.get());
     };
     
     return { values: [x, y, z], array, animateArray };
 };
 
-export const MotionEntity = ({ children, animate: animateProps, transition, ...props }) => {
+export const MotionEntity = ({ children, animate: animateProps, ...props }) => {
     // Create motion arrays for each transform property
     const position = useMotionVec3(props.position, 0);
     const rotation = useMotionVec3(props.rotation, 0);
@@ -42,11 +41,11 @@ export const MotionEntity = ({ children, animate: animateProps, transition, ...p
     // Handle animation updates
     useEffect(() => {
         if (animateProps) {
-            position.animateArray(animateProps.position, transition);
-            rotation.animateArray(animateProps.rotation, transition);
-            scale.animateArray(animateProps.scale, transition);
+            position.animateArray(animateProps.position);
+            rotation.animateArray(animateProps.rotation);
+            scale.animateArray(animateProps.scale);
         }
-    }, [animateProps, transition]);
+    }, [animateProps]);
 
 
     useMotionValueEvent(position.array, "change", (position: number[]) => {
@@ -73,19 +72,26 @@ export const MotionEntity = ({ children, animate: animateProps, transition, ...p
     );
 }
 
-export const MotionLight = ({ type='directional', animate : animateProps, transition, ...props }) => {
+export const MotionLight = ({ intensity = 1, transition = { duration: 0.2 }, ...props }) => {
+    /**
+     * This is a motion value that animates the intensity of the light.
+     * It uses a motion value to animate the intensity of the light, 
+     * and then uses an imperative script to update the intensity of the light.
+     */
+    const intensityMV = useMotionValue(intensity);
 
-    // Create a motion value for the light intensity
-    const intensity = useMotionValue(props.intensity ?? 1);
-
-    // Animate the intensity
     useEffect(() => {
-        animate(intensity, animateProps.intensity, transition);
-    }, [animateProps, transition]);
+        animate(intensityMV, intensity, transition);
+    }, [intensity]);
 
-    useMotionValueEvent(intensity, "change", (intensity: number) => {
-        console.log(intensity)
-    })
+    class LightScript extends PcScript {
+        update() {
+            this.entity.light.intensity = intensityMV.get();
+        }
+    }
 
-    return <Light {...props} type={type} intensity={intensity.get()} />
+    return <>
+        <Script script={LightScript} />
+        <Light {...props}/>
+    </>
 }
