@@ -1,4 +1,4 @@
-import { Script, Entity, Layer, StandardMaterial, BLEND_NORMAL, CHUNKAPI_1_65, SHADOW_VSM16, SHADOWUPDATE_REALTIME, CHUNKAPI_2_1 } from 'playcanvas';
+import { Script, Entity, Layer, StandardMaterial, BLEND_NORMAL, SHADOW_VSM16, SHADOWUPDATE_REALTIME, CHUNKAPI_2_1 } from 'playcanvas';
 
 const endPS = `
     litArgs_opacity = mix(light0_shadowIntensity, 0.0, shadow0);
