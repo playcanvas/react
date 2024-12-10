@@ -1,15 +1,25 @@
 import { generateStaticParamsFor, importPage } from 'nextra/pages'
-import fs from 'node:fs'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import Playground from '@/components/playground'
 import ReactQueryProvider from '@/components/react-query-provider'
+// import { useLayoutEffect } from 'react'
 
 export const generateStaticParams = generateStaticParamsFor('mdxPath')
 
 export async function generateMetadata(props: PageProps) {
   const params = await props.params
-  const { metadata } = await importPage(params.mdxPath)
-  return metadata
+
+  try {
+      // Try to import the meta file
+      const { default: metadata } = await import(`@/content/${params.mdxPath}.meta.tsx`)
+      return metadata;
+    } catch (error) {
+      // If the meta file is not found, use the default metadata
+      const { metadata } = await importPage(params.mdxPath)
+      console.log('error', error)
+    return metadata
+  }
 }
 
 interface PageProps {
@@ -20,30 +30,22 @@ interface PageProps {
 
 export default async function Page(props: PageProps) {
   const params = await props.params;
-  const result = await importPage(params.mdxPath)
-  const { metadata } = result;
+  const { metadata } = await importPage(params.mdxPath)
 
-  const source = fs.readFileSync(
+  const source = await readFile(
     path.join(process.cwd(), 'src/content', `${params.mdxPath}.mdx`),
     'utf-8'
   )
+
+  // useLayoutEffect(() => {
+  //   // If the page is a playground, hide the footer
+    
+  // }, [])
 
   return (
     <ReactQueryProvider>
       <div className='absolute top-0 left-0 w-screen h-screen'>
         <Playground name={`./${params.mdxPath}.tsx`} code={source} path={metadata.filePath}/>
-        {/* <div id='page-metadata' className='absolute w-full text-right top-[var(--nextra-navbar-height)] p-12 px-16 '>
-          <h1 className='text-lg font-semibold'>{metadata.title}</h1>
-          <p className='text-sm opacity-50'>{metadata.description}</p>
-          <p className='text-xs opacity-50'>{metadata.timestamp && new Date(metadata.timestamp).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</p>
-          <button 
-            title="View on GitHub"
-            className='w-9 h-9 inline-block mt-2 text-sm px-2 py-2 bg-transparent hover:bg-zinc-800 rounded-lg cursor-pointer transition-colors'>
-            <a href={`https://github.com/playcanvas/react/tree/main/packages/docs/${metadata.filePath}`} target="_blank" rel="noopener noreferrer">
-              <Icons.gitHub className='w-full h-full opacity-60' />
-            </a>
-          </button>
-        </div> */}
       </div>
     </ReactQueryProvider>
   )
