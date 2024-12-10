@@ -32,11 +32,11 @@ export default {
     items: {
       'model-viewer' : '',
       // 'animation' : '',
-      // 'hello-world' : '',
-      // 'scripting' : '',
-      // 'pointer-events' : '',
+    //   'hello-world' : '',
+    //   'scripting' : '',
+    //   'pointer-events' : '',
       'physics' : '',
-      // 'shapes' : '',
+      'motion' : '',
     },
   },  
   '---': {

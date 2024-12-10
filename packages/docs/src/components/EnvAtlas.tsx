@@ -8,9 +8,10 @@ import { useApp } from "@playcanvas/react/hooks";
 
 type EnvAtlasComponentsProps = {
     src: string;
+    intensity?: number;
 }
 
- const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ src, ...props }) => {
+ const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ src, intensity = 1, ...props }) => {
 
     const app = useApp();
 
@@ -19,11 +20,12 @@ type EnvAtlasComponentsProps = {
         if(layer){
             layer.enabled = false;
         }
+        app.scene.skyboxIntensity = intensity;
     }, [app]);
 
     const { data } = useEnvAtlas(src);
 
-    return <EnvAtlas asset={data as Asset} {...props} />
+    return <EnvAtlas asset={data as Asset} {...props}/>
 
 }
 
