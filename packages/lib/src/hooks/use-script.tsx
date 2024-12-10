@@ -10,7 +10,7 @@ interface Props {
   [key: string]: unknown;
 }
 
-export const useScript = (scriptConstructor:  new (...args: any[]) => Script, props: Props) : void  => {
+export const useScript = (scriptConstructor:  new (...args: unknown[]) => Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
   const scriptName: string = toLowerCamelCase(scriptConstructor.constructor.name);

@@ -17,7 +17,7 @@ export const defaultComponents = {
   ReactQueryProvider,
   Application,
   Entity,
-  Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Collision, Light,
+  Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
   OrbitControls,
   EnvAtlasComponent,
   GlbAsset,

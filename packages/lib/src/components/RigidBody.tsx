@@ -3,13 +3,14 @@ import { useComponent, useParent } from "../hooks";
 
 type RigidBodyProps = {
     [key: string]: unknown;
+    type?: string;
 }
 
 export const RigidBody: FC<RigidBodyProps> = (props) => {
 
     const entity = useParent();
 
-    // @ts-ignore Ammo is defined in the global scope in the browser
+    // @ts-expect-error Ammo is defined in the global scope in the browser
     if(!globalThis.Ammo && process.env.NODE_ENV !== 'production' ) {
         throw new Error('The `<RigidBody>` component requires `usePhysics` to be set on the Application. `<Application usePhysics/>` ')
     }

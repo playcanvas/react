@@ -4,7 +4,7 @@ import { FC, memo, useMemo } from "react";
 import { shallowEquals } from "../utils/shallow-equals";
 
 interface ScriptProps {
-    script: new (...args: any[]) => PcScript;
+    script: new (...args: unknown[]) => PcScript;
     [key: string]: unknown;
 }
 
