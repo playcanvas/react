@@ -35,7 +35,7 @@ export default {
       // 'hello-world' : '',
       // 'scripting' : '',
       // 'pointer-events' : '',
-      'physics' : '',
+      'physics' : ""
       // 'shapes' : '',
     },
   },  
