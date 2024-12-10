@@ -7,7 +7,7 @@ import { FC } from "react";
 
 import { usePostControls } from "./hooks/post-controls";
 
-const deepMerge = (target: any, source: any) => {
+const deepMerge = (target: Record<string, any>, source: Record<string, any>) => {
     if (!source) return target;
     const result = { ...target };
     for (const key in source) {
