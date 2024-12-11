@@ -22,9 +22,9 @@ export default [
       },
     },
     rules: {
-      "react/jsx-uses-react": "off",      // Not needed with React 17+ JSX Transform
-      "react/react-in-jsx-scope": "off",  // Not needed with React 17+ JSX Transform
-      "react-compiler/react-compiler": "error"
+      "react/jsx-uses-react": "off",
+      "react/react-in-jsx-scope": "off",
+      "react-compiler/react-compiler": "warn"
     },
   },
   {

@@ -68,7 +68,7 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
     
         return meshInstance?.node as Entity;
         return null
-    } catch (e) {
+    } catch {
         // The picker can fail if the camera is not active or the canvas is not visible
         return null;
     }

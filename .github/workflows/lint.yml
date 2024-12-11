@@ -1,0 +1,30 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.12.1
+        with:
+          access_token: ${{ github.token }}
+
+      - name: Checkout Main
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 18.x
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm i
+
+      - name: Lint ESLint
+        run: npm run lint

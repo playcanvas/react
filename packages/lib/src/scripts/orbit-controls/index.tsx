@@ -1,4 +1,4 @@
-import { Entity, Vec3 } from "playcanvas";
+import { Entity, Vec3, Script as PcScript } from "playcanvas";
 import { Script } from "../../components/Script";
 import { OrbitCamera, OrbitCameraInputMouse, OrbitCameraInputTouch } from "./orbit-camera";
 
@@ -24,6 +24,8 @@ type OrbitControls = OrbitCameraProps & {
     touch?: OrbitCameraInputProps;
 };
 
+type PcScriptType = new (...args: unknown[]) => PcScript
+
 export const OrbitControls = ({ 
     distanceMax = 20, distanceMin = 18, pitchAngleMax = 90, pitchAngleMin = 0, inertiaFactor = 0.0, focusEntity = null, pivotPoint = new Vec3(), frameOnStart = true, distance = 0,
     mouse = { orbitSensitivity: 0.3, distanceSensitivity: 0.15 }, 
@@ -33,8 +35,8 @@ export const OrbitControls = ({
     const orbitCameraProps : OrbitCameraProps = { distanceMax, distanceMin, pitchAngleMax, pitchAngleMin, inertiaFactor, focusEntity, pivotPoint, frameOnStart, distance }
     
     return <>
-        <Script script={OrbitCamera} {...orbitCameraProps}/>
-        <Script script={OrbitCameraInputMouse} {...mouse}/>
-        <Script script={OrbitCameraInputTouch} {...touch} />
+        <Script script={OrbitCamera as PcScriptType} {...orbitCameraProps}/>
+        <Script script={OrbitCameraInputMouse as PcScriptType} {...mouse}/>
+        <Script script={OrbitCameraInputTouch as PcScriptType} {...touch} />
     </>
 }
