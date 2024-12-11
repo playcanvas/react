@@ -5,6 +5,7 @@ import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 import { CodeXml } from 'lucide-react'
+import ReactQueryProvider from '@/components/react-query-provider'
 
 export const { viewport } = Head
 
@@ -62,7 +63,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
           pageMap={await getPageMap()}
         >
-          {children}
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
         </Layout>
       </body>
     </html>

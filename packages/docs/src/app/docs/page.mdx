@@ -4,16 +4,15 @@ title: Introduction
 
 import { Cards } from 'nextra/components'
 import { Icons } from '@/components/icons'
-import { CodeSandbox } from '@/utils/code-sandbox'
 import { Terminal, CodesandboxIcon } from 'lucide-react'
 import { HomePageExample } from '@/components/HomePageExample'
+import { PCReactCodeSandBoxButton } from '@/utils/code-sandbox'
 
 # `@playcanvas/react`
 
 A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
 
 import { Tabs, Code } from 'nextra/components'
-import CodeSandboxer from 'react-codesandboxer';
 import dedent from 'dedent';
 
 <Tabs items={['Demo', 'Code']}>
@@ -40,8 +39,7 @@ import dedent from 'dedent';
   />
 </Cards>
 
-
-
+<PCReactCodeSandBoxButton name="Basic Demo" examplePath="packages/docs/src/components/HomePageExample.tsx" />
 
 ## How does it work?
 
@@ -68,8 +66,6 @@ const App = (car) => {
   );
 }
 ```
-
-<CodeSandbox path="packages/docs/components/HomePageExample.tsx" />
 
 ## Features
 

@@ -23,7 +23,7 @@ export const HomePageExample = () => {
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
             <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
-            <StaticPostEffects />
+            {/* <StaticPostEffects /> */}
             <AutoRotate />
         </Entity>
 

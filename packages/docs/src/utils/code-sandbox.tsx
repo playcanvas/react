@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect, useCallback, ReactNode } from 'react';
+import React, { useState, useRef, useEffect, useCallback, ReactNode, FC, FC } from 'react';
 import isEqual from 'lodash.isequal';
 import pick from 'lodash.pick';
 
@@ -14,6 +14,7 @@ import {
   type GitInfo,
   type ImportReplacement,
 } from 'codesandboxer';
+import { useQuery } from '@tanstack/react-query';
 
 type ErrorType = {
   name: string,
@@ -29,242 +30,111 @@ type Props = {
   examplePath: string;
   name?: string;
   gitInfo: GitInfo;
-  example?: string | Promise<string>;
-  pkgJSON?: Package | string | Promise<Package | string>;
-  importReplacements?: Array<ImportReplacement>;
-  dependencies?: Record<string, string>;
-  skipRedirect?: boolean;
-  ignoreInternalImports?: boolean;
   preload?: boolean;
-  autoDeploy?: boolean;
-  onLoadComplete?: OnLoadComplete;
-  afterDeploy?: (sandboxUrl: string, sandboxId: string) => unknown;
-  afterDeployError?: (error: ErrorType) => unknown;
-  providedFiles?: Files;
-  children: (obj: {
-    isLoading: boolean;
-    isDeploying: boolean;
-    error?: ErrorType;
-    sandboxId?: string;
-    sandboxUrl?: string;
-    onClick: (e?: MouseEvent) => void;
-  }) => ReactNode;
-  style?: Record<string, unknown>;
+  // example?: string | Promise<string>;
+  // pkgJSON?: Package | string | Promise<Package | string>;
+  // importReplacements?: Array<ImportReplacement>;
+  // dependencies?: Record<string, string>;
+  // skipRedirect?: boolean;
+  // ignoreInternalImports?: boolean;
+  // preload?: boolean;
+  // autoDeploy?: boolean;
+  // onLoadComplete?: OnLoadComplete;
+  // afterDeploy?: (sandboxUrl: string, sandboxId: string) => unknown;
+  // afterDeployError?: (error: ErrorType) => unknown;
+  // providedFiles?: Files;
+  // children: (obj: {
+  //   isLoading: boolean;
+  //   isDeploying: boolean;
+  //   error?: ErrorType;
+  //   sandboxId?: string;
+  //   sandboxUrl?: string;
+  //   onClick: (e?: MouseEvent) => void;
+  // }) => ReactNode;
+  // style?: Record<string, unknown>;
   extensions?: string[];
   template?: 'create-react-app' | 'create-react-app-typescript' | 'vue-cli';
 };
 
-const CodeSandboxDeployer = (props: Props) => {
-  const {
-    children = ({ onClick }) => <button type="submit" onClick={onClick}>Deploy to CodeSandbox</button>,
-    pkgJSON = {},
-    dependencies = {},
-    providedFiles = {},
-    importReplacements = [],
-    extensions = [],
-    style = { display: 'inline-block' },
-    name,
-    skipRedirect,
-    autoDeploy,
-    preload,
-    onLoadComplete,
-    afterDeploy,
-    afterDeployError,
-    template,
-    gitInfo,
-    examplePath,
-  } = props;
 
-  const [parameters, setParameters] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeploying, setIsDeploying] = useState(false);
-  const [sandboxId, setSandboxId] = useState<string | undefined>(undefined);
-  const [sandboxUrl, setSandboxUrl] = useState<string | undefined>(undefined);
-  const [deployPromise, setDeployPromise] = useState<Promise<any> | null>(null);
-  const [files, setFiles] = useState<Files | undefined>(undefined);
-  const [error, setError] = useState<ErrorType | undefined>(undefined);
-  const [fileName, setFileName] = useState<string>('example');
+export const CodeSandBoxButton = ({ preload = false, ...props }: Props) => {
 
-  const shouldReload = useRef(false);
+  const [requestSubmit, setRequestSubmit] = useState(false);
 
-  // Store previous props for comparison
-  const prevProps = useRef(props);
+  const onClick = useCallback(() => {
+    setRequestSubmit(true);
+  }, []);
 
-  const compareKeys = [
-    'examplePath',
-    'gitInfo',
-    'importReplacements',
-    'dependencies',
-    'providedFiles',
-    'name',
-    'extensions',
-    'template',
-  ];
 
-  const loadFiles = useCallback(() => {
-    setIsLoading(true);
-    const dp = fetchFiles(props)
-      .then(fetchedInfo => {
-        const { parameters: newParameters } = finaliseCSB(fetchedInfo, {
-          extraFiles: providedFiles,
-          extraDependencies: dependencies,
-          name,
-        });
-        setParameters(newParameters);
-        setIsLoading(false);
-        setFiles(fetchedInfo.files);
-        setFileName(fetchedInfo.fileName);
+  console.log('enabled', requestSubmit || preload)
 
-        if (onLoadComplete) {
-          onLoadComplete({ parameters: newParameters, files: fetchedInfo.files });
-        }
-      })
-      .catch(err => {
-        setError(err);
-        setIsLoading(false);
-        if (onLoadComplete) onLoadComplete({ error: err });
-      });
-    setDeployPromise(dp);
-    return dp;
-  }, [props, providedFiles, dependencies, name, onLoadComplete]);
-
-  const deploy = useCallback(() => {
-    console.log('deployPromise');
-    if (error) return;
-    setIsDeploying(true);
-    sendFilesToCSB(parameters, { fileName })
-      .then(({ sandboxId: sId, sandboxUrl: sUrl }) => {
-        setSandboxId(sId);
-        setSandboxUrl(sUrl);
-        setIsDeploying(false);
-        setIsLoading(false);
-
-        if (!skipRedirect && sUrl) {
-          window.open(sUrl);
-        }
-        if (afterDeploy && sId) {
-          afterDeploy(getSandboxUrl(sId, 'embed'), sId);
-        }
-      })
-      .catch(errors => {
-        if (afterDeployError) {
-          afterDeployError({
-            name: 'error deploying to CodeSandbox',
-            content: errors,
-          });
-        }
-        setError({
-          name: 'error deploying to CodeSandbox',
-          content: errors,
-        });
-        setIsDeploying(false);
-      });
-  }, [error, parameters, fileName, skipRedirect, afterDeploy, afterDeployError]);
-
-  const deployToCSB = useCallback(
-    (e?: MouseEvent) => {
-      if (e) e.preventDefault();
-      if (isDeploying) return;
-      setIsDeploying(true);
-
-      if (!shouldReload.current && deployPromise) {
-        console.log('deployPromise');
-        deployPromise.then(deploy);
-      } else {
-        shouldReload.current = false;
-        loadFiles().then(deploy);
-      }
+  // Prepare the files
+  const { data: fileInfo, error : fileInfoError, isPending: fileInfoPending } = useQuery({
+    queryKey: ['fetchFiles', props.examplePath, props.gitInfo.repository, props.gitInfo.account, props.gitInfo.branch],
+    queryFn: () => {
+      console.log('loading files', props)
+      return fetchFiles(props)
     },
-    [isDeploying, deployPromise, deploy, loadFiles]
-  );
+    enabled: requestSubmit || preload,
+  });
+  
+  // Submit the files, but only when the files are ready and the request is submitted
+  const { data: sbInfo, error : sbInfoError, isPending: sbInfoPending } = useQuery({
+    queryKey: [JSON.stringify(props)],
+    queryFn: () => null,//sendFilesToCSB(props),
+    enabled: requestSubmit && !!fileInfo,
+  });
 
-  // Effect to handle prop changes and set shouldReload
+  // Open the link if availabvle
   useEffect(() => {
-    const prev = prevProps.current;
-
-    // Compare simple keys
-    if (!isEqual(pick(props, compareKeys), pick(prev, compareKeys))) {
-      shouldReload.current = true;
-    } else {
-      // Compare example and pkgJSON via promises
-      Promise.all([props.example, prev.example]).then(([ex, prevEx]) => {
-        if (ex !== prevEx) {
-          shouldReload.current = true;
-        } else {
-          Promise.all([props.pkgJSON, prev.pkgJSON]).then(([pkg, prevPkg]) => {
-            if (!isEqual(pkg, prevPkg)) {
-              shouldReload.current = true;
-            }
-          });
-        }
-      });
+    if (sbInfo && sbInfo.sandboxUrl && requestSubmit) {
+      window.open(sbInfo.sandboxUrl);
     }
+  }, [sbInfo]);
 
-    prevProps.current = props;
-  }, [props]);
+  // If there is an error, disable the button
+  if(fileInfoError || sbInfoError) {
+    console.log('error', fileInfoError, sbInfoError);
+    return <button onClick={onClick} disabled>Error creating sandbox</button>;
+  }
 
-  // On mount logic
-  useEffect(() => {
-    if (autoDeploy) {
-      deployToCSB();
-    } else if (preload) {
-      loadFiles();
-    }
-  }, [autoDeploy, preload, deployToCSB, loadFiles]);
+  // console.log('props', props);
+  // console.log('fileInfo', fileInfo);
+  console.log('fileInfo', fileInfo);
 
-  return (
-    <>
-      {children({
-        isLoading,
-        isDeploying,
-        error,
-        sandboxId,
-        sandboxUrl,
-        onClick: deployToCSB,
-      })}
-    </>
-  );
+  // if we are in a loading state, show a loading spinner
+  if((preload && fileInfoPending) || (requestSubmit && fileInfoPending)) {
+    return <button onClick={onClick} disabled>Loading...</button>;
+  }
+
+  // if we are in a deploying state, show a deploying spinner
+  if(requestSubmit && sbInfoPending) {
+    return <button onClick={onClick} disabled>Deploying...</button>;
+  }
+
+  
+
+  // Otherwise, show the button
+  return <button onClick={onClick}>Open in CodeSandbox</button>;
 }
 
-export const CodeSandbox = ({ examplePath }: { examplePath: string }) => {
-  return <CodeSandboxDeployer examplePath={examplePath}
+export type PCReactCodeSandBoxButton = { 
+  name: string;
+  preload: boolean;
+  examplePath: string
+}
+
+export const PCReactCodeSandBoxButton : FC<PCReactCodeSandBoxButton> = ({ name, examplePath }) => {
+  // extensions={['.tsx', '.ts']}
+  return <CodeSandBoxButton 
+    name={name}
+    preload
+    examplePath={examplePath}
     gitInfo={{
+      host: 'github',
       account: 'playcanvas',
       repository: 'react',
       branch: 'feat-codesandbox',
     }}
-  >
-    {({ onClick }) => (
-    <button
-      className="bg-blue-500 text-white px-4 py-2 rounded-md cursor-pointer"
-      type="button"
-      onClick={onClick} // Make sure to use the onClick passed in!
-    >
-      Upload to CodeSandbox
-    </button>
-  )}
-  </CodeSandboxDeployer>
+  />;
 }
-
-// Example usage converted to a functional component:
-// 
-// import React from 'react';
-// import CodeSandboxDeployer from './CodeSandboxDeployer';
-//
-// function CodeSandbox() {
-//   return (
-//     <CodeSandboxDeployer
-//       examplePath="packages/docs/components/HomePageExample.tsx"
-//       gitInfo={{
-//         account: 'playcanvas',
-//         repository: 'react',
-//         branch: 'feat-codesandbox',
-//         host: 'github',
-//       }}
-//     >
-//       {() => <button type="submit">Upload to CodeSandbox</button>}
-//     </CodeSandboxDeployer>
-//   );
-// }
-//
-// export default CodeSandbox;
