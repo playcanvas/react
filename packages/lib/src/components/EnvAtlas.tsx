@@ -6,12 +6,14 @@ import { Application, Asset } from "playcanvas";
 
 interface EnvAtlasProps {
     asset: Asset;
+    intensity?: number;
+    showSkybox?: boolean;
 }
 
 /**
  * An environment atlas is a texture for rendering a skybox and global reflections.
  */
-export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
+export const EnvAtlas: FC<EnvAtlasProps>= ({ asset, intensity = 1, showSkybox = true }) => {
 
     const app: Application = useApp();
     
@@ -28,6 +30,13 @@ export const EnvAtlas: FC<EnvAtlasProps>= ({ asset }) => {
         }
 
     }, [app, asset?.resource]);
+
+
+    useLayoutEffect(() => {
+        const layer = app?.scene?.layers?.getLayerByName('Skybox');
+        if(layer) layer.enabled = showSkybox;
+        app.scene.skyboxIntensity = intensity;
+    }, [app, showSkybox, intensity]);
 
     return null
 

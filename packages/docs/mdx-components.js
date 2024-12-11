@@ -4,7 +4,6 @@ import { OrbitControls } from '@playcanvas/react/scripts'
 import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
 
 import EnvAtlasComponent from '@components/EnvAtlas'
-import GlbAsset from '@components/GlbAsset'
 import Grid from '@components/Grid'
 import PostEffects, { StaticPostEffects} from '@components/PostEffects'
 import ShadowCatcher from '@components/ShadowCatcher'
@@ -20,7 +19,6 @@ export const defaultComponents = {
   Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
   OrbitControls,
   EnvAtlasComponent,
-  GlbAsset,
   Grid,
   ShadowCatcher,
   PostEffects,

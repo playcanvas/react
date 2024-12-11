@@ -4,55 +4,30 @@ title: Introduction
 
 import { Cards } from 'nextra/components'
 import { Icons } from '@/components/icons'
-import { Terminal } from 'lucide-react'
+import { CodeSandbox } from '@/utils/code-sandbox'
+import { Terminal, CodesandboxIcon } from 'lucide-react'
+import { HomePageExample } from '@/components/HomePageExample'
 
 # `@playcanvas/react`
 
 A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
 
-import { Tabs } from 'nextra/components'
+import { Tabs, Code } from 'nextra/components'
+import CodeSandboxer from 'react-codesandboxer';
+import dedent from 'dedent';
 
 <Tabs items={['Demo', 'Code']}>
   <Tabs.Tab>
     <div className='w-full aspect-video rounded-xl overflow-hidden'>
       <ReactQueryProvider>
         <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-          <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
-          <Grid />
-          <Entity name='camera' position={[4, 1, 4]}>
-              <Camera clearColor='#090707' fov={28} />
-              <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
-              <StaticPostEffects />
-              <AutoRotate />
-          </Entity>
-
-          <Entity>  
-              <GlbAsset src='/lamborghini_vision_gt.glb' width={5} depth={5} />
-          </Entity>
+          <HomePageExample />
         </Application>
       </ReactQueryProvider>
     </div>
   </Tabs.Tab>
   <Tabs.Tab>
-    ```jsx copy
-    <Application className='hover:cursor-grab active:cursor-grabbing'>
-      <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
-      <Grid />
-      <Entity name='camera' position={[4, 2, 4]}>
-          <Camera clearColor='#090707' fov={28} />
-          <OrbitControls 
-            inertiaFactor={0.07} 
-            distanceMin={6} distanceMax={10} 
-            pitchAngleMin={1} pitchAngleMax={90}
-          />
-          <StaticPostEffects />
-          <AutoRotate />
-      </Entity>
-      <Entity>  
-          <GlbAsset src='/lamborghini_vision_gt.glb' />
-      </Entity>
-    </Application>
-    ```
+    <Code data-language="jsx">{'sdf'}</Code>
   </Tabs.Tab>
 </Tabs>
 
@@ -64,6 +39,9 @@ import { Tabs } from 'nextra/components'
     arrow
   />
 </Cards>
+
+
+
 
 ## How does it work?
 
@@ -90,6 +68,8 @@ const App = (car) => {
   );
 }
 ```
+
+<CodeSandbox path="packages/docs/components/HomePageExample.tsx" />
 
 ## Features
 

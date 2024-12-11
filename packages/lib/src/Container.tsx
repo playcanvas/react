@@ -42,6 +42,7 @@ export const Container: FC<ContainerProps> = ({ asset, children, ...props }) => 
         };
     }, [app, parent, asset, asset?.resource]);
 
+    if(!asset?.resource) return null;
 
     return <Entity ref={entityRef} {...props}>
         { children }
