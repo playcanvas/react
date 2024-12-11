@@ -9,7 +9,7 @@ import { FILLMODE_NONE, RESOLUTION_AUTO } from "playcanvas";
 import { Application } from "@playcanvas/react";
 
 import { useApp } from "@playcanvas/react/hooks";
-import { EllipsisIcon, Minimize2Icon, TerminalIcon } from "lucide-react";
+import { Minimize2Icon, TerminalIcon } from "lucide-react";
 
 const ResizeHandler: FC<{ resizeRef: React.RefObject<HTMLDivElement> }> = ({ resizeRef }) => {
     const app = useApp();
