@@ -3,67 +3,44 @@ title: Introduction
 ---
 
 import { Cards } from 'nextra/components'
-import { Icons } from '@/components/icons'
+import { Icons } from '@/docs-components/Icons'
 import { Terminal } from 'lucide-react'
+import { OpenHomePageExampleInCodeSandbox } from '@/docs-components/utils/code-sandbox'
+
+import Example from '@/templates/HomePageExample'
 
 # `@playcanvas/react`
 
 A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
 
-import { Tabs } from 'nextra/components'
+import { Tabs, Code } from 'nextra/components'
 
 <Tabs items={['Demo', 'Code']}>
   <Tabs.Tab>
     <div className='w-full aspect-video rounded-xl overflow-hidden'>
       <ReactQueryProvider>
         <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-          <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
-          <Grid />
-          <Entity name='camera' position={[4, 1, 4]}>
-              <Camera clearColor='#090707' fov={28} />
-              <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
-              <StaticPostEffects />
-              <AutoRotate />
-          </Entity>
-
-          <Entity>  
-              <GlbAsset src='/lamborghini_vision_gt.glb' width={5} depth={5} />
-          </Entity>
+          <Example />
         </Application>
       </ReactQueryProvider>
     </div>
   </Tabs.Tab>
   <Tabs.Tab>
-    ```jsx copy
-    <Application className='hover:cursor-grab active:cursor-grabbing'>
-      <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
-      <Grid />
-      <Entity name='camera' position={[4, 2, 4]}>
-          <Camera clearColor='#090707' fov={28} />
-          <OrbitControls 
-            inertiaFactor={0.07} 
-            distanceMin={6} distanceMax={10} 
-            pitchAngleMin={1} pitchAngleMax={90}
-          />
-          <StaticPostEffects />
-          <AutoRotate />
-      </Entity>
-      <Entity>  
-          <GlbAsset src='/lamborghini_vision_gt.glb' />
-      </Entity>
-    </Application>
-    ```
+    <Code data-language="jsx">{'sdf'}</Code>
   </Tabs.Tab>
 </Tabs>
 
-<Cards>
+<Cards num={2}>
   <Cards.Card
     icon={<Terminal />}
     title="Open in Playground"
     href="/playground/model-viewer"
     arrow
   />
+  <OpenHomePageExampleInCodeSandbox />
 </Cards>
+
+
 
 ## How does it work?
 

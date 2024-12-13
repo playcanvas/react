@@ -6,7 +6,6 @@ import { useMemo } from "react";
 export const usePostControls = () => {
 
   const app = useApp();
-
   const tint = useMemo(() => new Color(), [app]);
   const fogColor = useMemo(() =>new Color(), [app]);
   

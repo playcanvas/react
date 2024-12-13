@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useRef, useState } from "react";
 
-import { Editor, EditorProvider, Preview } from './editor';
+import { Editor, EditorProvider, Preview } from './Editor';
 import { Suspense } from 'react';
 import { Leva } from "leva";
 import { FILLMODE_NONE, RESOLUTION_AUTO } from "playcanvas";

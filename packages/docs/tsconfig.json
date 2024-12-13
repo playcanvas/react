@@ -22,6 +22,8 @@
         "./src/*"
       ],
       "@components/*": ["./src/components/*"],
+      "@docs-components/*": ["./src/docs-components/*"],
+      "@templates/*": ["./src/templates/*"],
       "@content/*": ["./src/content/*"]
     },
     "plugins": [
