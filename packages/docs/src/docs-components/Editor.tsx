@@ -7,7 +7,7 @@ import ActualMonacoEditor, { editor } from "monaco-editor";
 import * as motion from 'motion/react';
 // Required by MDX
 import * as pc from 'playcanvas';
-import { useModel, useSplat, useTexture } from "./hooks/use-asset";
+import { useModel, useSplat, useTexture } from "../components/hooks/use-asset";
 import { useApp, useMaterial, useParent } from "@playcanvas/react/hooks";
 
 interface EditorContextType {

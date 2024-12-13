@@ -16,7 +16,6 @@
     "@monaco-editor/react": "^4.6.0",
     "@tanstack/react-query": "^5.61.5",
     "codesandbox": "^2.2.3",
-    "dedent": "^1.5.3",
     "leva": "^0.9.35",
     "lucide-react": "^0.465.0",
     "monaco-editor": "^0.52.0",

@@ -1,8 +1,7 @@
 import { generateStaticParamsFor, importPage } from 'nextra/pages'
 import { readFile } from 'node:fs/promises'
 import path from 'node:path'
-import Playground from '@/components/playground'
-// import { useLayoutEffect } from 'react'
+import Playground from '@/docs-components/Playground'
 
 export const generateStaticParams = generateStaticParamsFor('mdxPath')
 
@@ -13,11 +12,11 @@ export async function generateMetadata(props: PageProps) {
       // Try to import the meta file
       const { default: metadata } = await import(`@/content/${params.mdxPath}.meta.tsx`)
       return metadata;
-    } catch (error) {
+    } catch {
       // If the meta file is not found, use the default metadata
       const { metadata } = await importPage(params.mdxPath)
-    return metadata
-  }
+      return metadata
+    }
 }
 
 interface PageProps {

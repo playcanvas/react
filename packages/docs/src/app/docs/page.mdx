@@ -3,24 +3,24 @@ title: Introduction
 ---
 
 import { Cards } from 'nextra/components'
-import { Icons } from '@/components/icons'
-import { Terminal, CodesandboxIcon } from 'lucide-react'
-import { HomePageExample } from '@/components/HomePageExample'
-import { PCReactCodeSandBoxButton } from '@/utils/code-sandbox'
+import { Icons } from '@/docs-components/Icons'
+import { Terminal } from 'lucide-react'
+import { OpenHomePageExampleInCodeSandbox } from '@/docs-components/utils/code-sandbox'
+
+import Example from '@/templates/HomePageExample'
 
 # `@playcanvas/react`
 
 A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
 
 import { Tabs, Code } from 'nextra/components'
-import dedent from 'dedent';
 
 <Tabs items={['Demo', 'Code']}>
   <Tabs.Tab>
     <div className='w-full aspect-video rounded-xl overflow-hidden'>
       <ReactQueryProvider>
         <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-          <HomePageExample />
+          <Example />
         </Application>
       </ReactQueryProvider>
     </div>
@@ -30,16 +30,17 @@ import dedent from 'dedent';
   </Tabs.Tab>
 </Tabs>
 
-<Cards>
+<Cards num={2}>
   <Cards.Card
     icon={<Terminal />}
     title="Open in Playground"
     href="/playground/model-viewer"
     arrow
   />
+  <OpenHomePageExampleInCodeSandbox />
 </Cards>
 
-<PCReactCodeSandBoxButton name="Basic Demo" examplePath="packages/docs/src/components/HomePageExample.tsx" />
+
 
 ## How does it work?
 

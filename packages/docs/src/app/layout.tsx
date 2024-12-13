@@ -5,7 +5,7 @@ import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 import { CodeXml } from 'lucide-react'
-import ReactQueryProvider from '@/components/react-query-provider'
+import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
 
 export const { viewport } = Head
 
