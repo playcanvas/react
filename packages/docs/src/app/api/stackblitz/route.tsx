@@ -1,6 +1,6 @@
-import { readFiles } from "@/docs-components/utils/file-utils";
-import path from "path";
-
+import { readFiles, filePathRegex } from "@/docs-components/utils/file-utils";
+import fs from 'fs/promises';
+import path from 'path';
 
 export async function POST(request: Request) {
   try {
@@ -28,56 +28,39 @@ export async function POST(request: Request) {
     const componentDir = path.resolve(path.join(process.cwd(), 'src/components/'));
 
     // Get all files starting from the base directory
-    let files = await readFiles(baseDir);
-    const components = await readFiles(componentDir, 'src/components');
+    let files = await readFiles(baseDir, '', false);
+    const components = await readFiles(componentDir, 'src/components', false);
 
     // Merge the files and components
     files = { ...files, ...components };
 
-    files["/src/App.jsx"] = content 
-      ? { content } // If content is provided, use it
-      : { content : await fs.readFile(path.resolve(path.join(process.cwd(), entry)), 'utf-8') }; // If entry is provided, use it's content
+    files["src/App.jsx"] = content 
+      ? content // If content is provided, use it
+      : await fs.readFile(path.resolve(path.join(process.cwd(), entry)), 'utf-8'); // If entry is provided, use it's content
 
     // Replace the baseUrl in the content
     const baseUrl = process.env.VERCEL_URL ?? 'https://playcanvas-react.vercel.app';
-    files["/src/App.jsx"].content = files["/src/App.jsx"].content.replace(
+    files["src/App.jsx"] = files["src/App.jsx"].replace(
       filePathRegex, `$1${baseUrl}/$2`)
 
-    files["/jsconfig.json"] = {
-      content: {
+    files["jsconfig.json"] = JSON.stringify({
         "compilerOptions": {
-          "baseUrl": ".",
-          "paths": {
+            "baseUrl": ".",
+            "paths": {
             "@/*": ["src/*"],
             "@/components/*": ["src/components/*"],
-          }
+            }
         }
-      }
-    };
+    }, null, 2);
 
-    // Call the CodeSandbox Define API
-    const response = await fetch("https://codesandbox.io/api/v1/sandboxes/define?json=1", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({ files })
+    const pkJson = files["package.json"];
+    delete files["package.json"];
+
+    // return the files as json
+    return new Response(JSON.stringify({ files, pkJson }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
     });
-
-    if (!response.ok) {
-      throw new Error(`CodeSandbox API returned ${response.status}: ${await response.text()}`);
-    }
-
-    const data = await response.json();
-
-    if (!data.sandbox_id) {
-      throw new Error('Invalid response from CodeSandbox API');
-    }
-
-    return new Response(
-      `https://codesandbox.io/s/${data.sandbox_id}?file=%2Fsrc%2FApp.jsx`
-    );
 
   } catch (error) {
     return new Response(JSON.stringify({ error: error.message }), {
