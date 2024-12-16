@@ -11,8 +11,7 @@ import {
     BLENDMODE_ONE,
     BLENDMODE_ONE_MINUS_SRC_ALPHA,
     BLENDMODE_SRC_ALPHA,
-    BLENDEQUATION_ADD,
-    EVENT_PRERENDER_LAYER
+    BLENDEQUATION_ADD
 } from 'playcanvas';
 
 const vsCode = /* glsl*/ `
