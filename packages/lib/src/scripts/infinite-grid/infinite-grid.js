@@ -1,4 +1,3 @@
-"use client";
 
 import {
     CULLFACE_NONE,
@@ -12,11 +11,9 @@ import {
     BLENDMODE_ONE,
     BLENDMODE_ONE_MINUS_SRC_ALPHA,
     BLENDMODE_SRC_ALPHA,
-    BLENDEQUATION_ADD
+    BLENDEQUATION_ADD,
+    EVENT_PRERENDER_LAYER
 } from 'playcanvas';
-
-// import { Element, ElementType } from './element';
-// import { Serializer } from './serializer';
 
 const vsCode = /* glsl*/ `
     uniform mat4 camera_matrix;
@@ -182,94 +179,51 @@ const attributes = {
     vertex_position: SEMANTIC_POSITION
 };
 
-class InfiniteGrid {
-    // shader;
-    // quadRender;
-    // blendState = new BlendState(false);
-    // depthState = new DepthState(FUNC_LESSEQUAL, true);
+export class Grid extends Script {
 
-    visible = true;
+    initialize() {
 
-    /**
-     * @param {AppBase} app - The Application instance
-     * @param {string} layerName - The name of the layer to render into
-     */
-    constructor(app, layerName = 'World') {
-        this.app = app;
-        this.layerName = layerName;
+        const layerName = 'World';
 
-        this.device = this.app.graphicsDevice;
-        const shader = createShaderFromCode(this.device, vsCode, fsCode, 'infinite-grid', attributes);
+        const device = this.app.graphicsDevice;
+        const shader = createShaderFromCode(device, vsCode, fsCode, 'infinite-grid', attributes);
 
-        this.quadRender = new QuadRender(shader);
-        this.cameraMatrixId = this.device.scope.resolve('camera_matrix');
-        this.cameraParamsId = this.device.scope.resolve('camera_params');
-        this.cameraPositionId = this.device.scope.resolve('camera_position');
-        this.cameraViewProjectionId = this.device.scope.resolve('camera_viewProjection');
+        const quadRender = new QuadRender(shader);
+        const cameraMatrixId = device.scope.resolve('camera_matrix');
+        const cameraParamsId = device.scope.resolve('camera_params');
+        const cameraPositionId = device.scope.resolve('camera_position');
+        const cameraViewProjectionId = device.scope.resolve('camera_viewProjection');
 
-        this.blendState = new BlendState(
+        const blendState = new BlendState(
             true,
             BLENDEQUATION_ADD, BLENDMODE_SRC_ALPHA, BLENDMODE_ONE_MINUS_SRC_ALPHA,
             BLENDEQUATION_ADD, BLENDMODE_ONE, BLENDMODE_ONE_MINUS_SRC_ALPHA
         );
-    }
 
-    set camera(entity) {
-
-        const camera = entity?.camera;
-        if (!entity || !camera || this._camera === entity) return;
-
-        this._camera = entity;
-
-        camera.onPreRenderLayer = (layer, transparent) => {
-            if (this.visible && layer.name === this.layerName && !transparent) {
-                this.device.setBlendState(this.blendState);
-                this.device.setCullMode(CULLFACE_NONE);
-                this.device.setDepthState(DepthState.NODEPTH);
-                this.device.setStencilState(null, null);
+        const onPreRenderLayer = (camera, layer, transparent) => {
+            if (this.enabled && layer.name === layerName && !transparent) {
+                device.setBlendState(blendState);
+                device.setCullMode(CULLFACE_NONE);
+                device.setDepthState(DepthState.NODEPTH);
+                device.setStencilState(null, null);
 
                 // update viewProjectionInverse matrix
-                const cameraMatrix = this._camera.getWorldTransform().clone();
+                const cameraMatrix = camera.entity.getWorldTransform().clone();
                 const cameraParams = calcHalfSize(camera.fov, camera.aspectRatio, camera.horizontalFov);
                 const cameraPosition = cameraMatrix.getTranslation();
                 const cameraViewProjection = new Mat4().mul2(camera.projectionMatrix, camera.viewMatrix);
 
-                this.cameraMatrixId.setValue(cameraMatrix.data);
-                this.cameraParamsId.setValue(cameraParams);
-                this.cameraPositionId.setValue([cameraPosition.x, cameraPosition.y, cameraPosition.z]);
-                this.cameraViewProjectionId.setValue(cameraViewProjection.data);
+                cameraMatrixId.setValue(cameraMatrix.data);
+                cameraParamsId.setValue(cameraParams);
+                cameraPositionId.setValue([cameraPosition.x, cameraPosition.y, cameraPosition.z]);
+                cameraViewProjectionId.setValue(cameraViewProjection.data);
 
-                this.quadRender.render();
+                quadRender.render();
             }
+
         };
-    }
 
-    get camera() {
-        return this._camera;
-    }
-
-    destroy() {
-        const camera = this._camera?.camera;
-        if (camera?.onPreRenderLayer) camera.onPreRenderLayer = null;
-    }
-}
-
-/**
- * The {@link https://api.playcanvas.com/classes/Engine.Script.html | Script} class is
- * the base class for all PlayCanvas scripts. Learn more about writing scripts in the
- * {@link https://developer.playcanvas.com/user-manual/scripting/ | scripting guide}.
- */
-export class Grid extends Script {
-    /**
-     * Called when the script is about to run for the first time.
-     */
-    initialize() {
-        this.grid = new InfiniteGrid(this.app);
-        this.on('destroy', () => this.grid.destroy());
-    }
-
-    update() {
-        const camera = this.app.root.findOne(node => node.camera);
-        this.grid.camera = camera;
+        this.app.scene.on('prerender:layer', onPreRenderLayer);
+        this.on('destroy', () => this.app.scene.off('prerender:layer', onPreRenderLayer));
     }
 }
