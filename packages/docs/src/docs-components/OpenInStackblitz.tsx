@@ -1,7 +1,7 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, LoaderCircle, FileStackIcon as StackBlitzIcon} from 'lucide-react';
+import { AlertTriangle, LoaderCircle, FileStackIcon as StackBlitzIcon, Zap, ZapIcon, ZapOff} from 'lucide-react';
 import { Cards } from 'nextra/components';
 // If StackBlitzIcon is not available in lucide-react, you can create a custom icon or use an alternative
 // import { ReactComponent as StackBlitzIcon } from './path-to-your-stackblitz-icon.svg'; // Replace with your icon path
@@ -54,7 +54,7 @@ export const StackBlitzButton = ({ template, content, entry }) => {
 export const OpenHomePageExampleInStackBlitz = () => {
     // Adjust the template and entry as per your project structure
     const { data: project, error, isLoading } = useStackBlitz(
-        'vite-react',
+        'javascript',
         null, // Optional content for the entry file
         '/src/templates/HomePageExample.jsx' // Entry file path
     );
@@ -83,8 +83,6 @@ export const OpenHomePageExampleInStackBlitz = () => {
 
     const { files, pkJson } = project;
 
-    console.log(JSON.stringify(pkJson.dependencies, null, 2));
-
     return (
         <form 
             method="post"
@@ -112,22 +110,15 @@ export const OpenHomePageExampleInStackBlitz = () => {
                     />
                 ))
             }
-            <button type="submit" className="btn-primary">
-                {/* <StackBlitzIcon className="mr-2" />  */}
-                Open in StackBlitz
+            <button type="submit" className="btn-primary" onClick={(e) => {
+                    e.currentTarget.closest('form')?.submit();
+                }}>
+                <Cards.Card
+                    icon={<ZapIcon   />}
+                    title="Open in StackBlitz"
+                    href="#"
+                />
             </button>
         </form>
     );
-
-
-
-//   return (
-//     <Cards.Card
-//       icon={<StackBlitzIcon />}
-//       title="Open in StackBlitz"
-//       href={stackblitzUrl}
-//       target="_blank"
-//       rel="noopener noreferrer"
-//     />
-//   );
 };
