@@ -1,10 +1,8 @@
 'use client';
 
 import { useQuery } from '@tanstack/react-query';
-import { AlertTriangle, LoaderCircle, FileStackIcon as StackBlitzIcon, Zap, ZapIcon, ZapOff} from 'lucide-react';
+import { AlertTriangle, LoaderCircle, ZapIcon } from 'lucide-react';
 import { Cards } from 'nextra/components';
-// If StackBlitzIcon is not available in lucide-react, you can create a custom icon or use an alternative
-// import { ReactComponent as StackBlitzIcon } from './path-to-your-stackblitz-icon.svg'; // Replace with your icon path
 
 const useStackBlitz = (template: string, content?: string, entry?: string) => useQuery({
   queryKey: ['api/stackblitz', template],
@@ -14,41 +12,6 @@ const useStackBlitz = (template: string, content?: string, entry?: string) => us
     body: JSON.stringify({ template, content, entry })
   }).then(res => res.json())
 });
-
-
-// Button component to open the StackBlitz project
-export const StackBlitzButton = ({ template, content, entry }) => {
-  const { data: files, error, isLoading } = useStackBlitz(template, content, entry);
-
-
-  if (error) {
-    return (
-      <button disabled className="btn-error">
-        Error creating StackBlitz project
-      </button>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <button disabled className="btn-loading">
-        Loading...
-      </button>
-    );
-  }
-
-  return (
-    <form 
-        method="post"
-        action="https://stackblitz.com/run"
-        target="_blank"
-    >
-        <button type="submit" className="btn-primary">
-            <StackBlitzIcon className="mr-2" /> Open in StackBlitz
-        </button>
-    </form>
-  );
-};
 
 // Card component example to display project status
 export const OpenHomePageExampleInStackBlitz = () => {
