@@ -5,8 +5,8 @@ title: Introduction
 import { Cards } from 'nextra/components'
 import { Icons } from '@/docs-components/Icons'
 import { Terminal } from 'lucide-react'
-import { OpenHomePageExampleInCodeSandbox } from '@/docs-components/utils/code-sandbox'
-
+import { OpenHomePageExampleInCodeSandbox } from '@/docs-components/code-sandbox'
+import { OpenHomePageExampleInStackBlitz } from '@/docs-components/OpenInStackblitz'
 import Example from '@/templates/HomePageExample'
 
 # `@playcanvas/react`
@@ -30,7 +30,7 @@ import { Tabs, Code } from 'nextra/components'
   </Tabs.Tab>
 </Tabs>
 
-<Cards num={2}>
+<Cards num={3}>
   <Cards.Card
     icon={<Terminal />}
     title="Open in Playground"
@@ -38,6 +38,7 @@ import { Tabs, Code } from 'nextra/components'
     arrow
   />
   <OpenHomePageExampleInCodeSandbox />
+  <OpenHomePageExampleInStackBlitz />
 </Cards>
 
 
