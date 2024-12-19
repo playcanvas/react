@@ -25,7 +25,7 @@ Here's what it should look like...
 
         <Entity>
             {/* Load our asset */}
-            <GlbAsset src='/lamborghini_vision_gt.glb' />
+            <Glb src='/lamborghini_vision_gt.glb' />
             {/* Adds some ground plane shadowing */}
             <ShadowCatcher intensity={0.9} />
         </Entity>
@@ -152,13 +152,13 @@ export default function App() {
             </Entity>
         </Entity>
         <Entity name='model' scale={[4, 4, 4]}>
-            <GlbAsset src='/lamborghini_vision_gt.glb' />
+            <Glb src='/lamborghini_vision_gt.glb' />
         </Entity>
     </Application>
 }
 ```
 
-You should now see the Lamborghini model in the scene.  Note here that we've added the `GlbAsset` component to the `Entity` that contains the model. This isn't part of the `@playcanvas/react` library, but it's a simple component that wraps the `useModel` hook to make it easier to use in a React component. You can read more about [loading assets here](/docs/guide/loading-assets).
+You should now see the Lamborghini model in the scene.  Note here that we've added the `Glb` component to the `Entity` that contains the model. This isn't part of the `@playcanvas/react` library, but it's a simple component that wraps the `useModel` hook to make it easier to use in a React component. You can read more about [loading assets here](/docs/guide/loading-assets).
 
 ### Putting it all together
 
@@ -182,9 +182,9 @@ export default function App() {
             <AutoRotate />
         </Entity>
         <Entity name='model'>
-            <GlbAsset src='/lamborghini_vision_gt.glb' >
+            <Glb src='/lamborghini_vision_gt.glb' >
                 <ShadowCatcher intensity={0.9} />
-            </GlbAsset>
+            </Glb>
         </Entity>
     </Application>
 }

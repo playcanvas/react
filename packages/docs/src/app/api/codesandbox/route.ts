@@ -1,5 +1,6 @@
-import { readFiles } from "@/docs-components/utils/file-utils";
+import { filePathRegex, readFiles } from "@/docs-components/utils/file-utils";
 import path from "path";
+import fs from 'fs/promises';
 
 
 export async function POST(request: Request) {
