@@ -11,6 +11,7 @@ import PostEffects, { StaticPostEffects} from '@components/PostEffects'
 import ShadowCatcher from '@components/ShadowCatcher'
 import AutoRotate from '@components/AutoRotate'
 import { MotionEntity, MotionLight } from '@components/MotionEntity'
+import { Glb } from '@components/Glb'
 const docsComponents = getDocsMDXComponents()
 
 export const defaultComponents = {
@@ -26,7 +27,8 @@ export const defaultComponents = {
   StaticPostEffects,
   AutoRotate,
   MotionEntity,
-  MotionLight
+  MotionLight,
+  Glb
 }
 
 export function useMDXComponents(components) {
