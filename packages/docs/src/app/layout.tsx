@@ -41,7 +41,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </div>
       }
       // PlayCanvas discord server
-      chatLink="https://discord.gg/hEM84NMkRv"
+      chatLink="https://discord.gg/EJuENf4hFj"
 
       // PlayCanvas GitHub
       projectLink="https://github.com/playcanvas/react"

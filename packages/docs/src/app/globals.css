@@ -12,3 +12,12 @@
     pointer-events: none;
     color: white;
 }
+
+a[href=""] {
+    @apply text-xs font-bold text-white no-underline cursor-default pointer-events-none;
+}
+
+
+a[href=""]:not(:first-of-type) {
+    @apply pt-4;
+}

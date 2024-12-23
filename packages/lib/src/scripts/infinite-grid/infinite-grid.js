@@ -223,6 +223,6 @@ export class Grid extends Script {
         };
 
         this.app.scene.on('prerender:layer', onPreRenderLayer);
-        this.on('destroy', () => this.app.scene.off('prerender:layer', onPreRenderLayer));
+        this.on('destroy', () => this.app?.scene?.off('prerender:layer', onPreRenderLayer));
     }
 }
