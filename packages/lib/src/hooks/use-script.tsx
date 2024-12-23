@@ -48,8 +48,6 @@ export const useScript = (scriptConstructor:  new (...args: unknown[]) => Script
 
       if (app && app.root && script && scriptComponent) {
         scriptComponent.destroy(scriptName);
-      } else if (script) {
-        script.fire('destroy');
       }
     };
   }, [app, parent, scriptConstructor]);
