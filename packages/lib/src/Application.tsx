@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react';
+import React, { FC, PropsWithChildren, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import * as Ammo from 'sync-ammo';
 import {
   FILLMODE_NONE,
@@ -13,6 +13,7 @@ import {
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { usePicker } from './utils/picker';
+import { PointerEventsContext } from './contexts/pointer-events-context';
 
 interface GraphicsOptions {
   /** Boolean that indicates if the canvas contains an alpha buffer. */
@@ -120,6 +121,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   const appRef = useRef<PlayCanvasApplication | null>(null);
 
   usePicker(appRef.current, canvasRef.current);
+  const pointerEvents = useMemo(() => new Set<string>(), []);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -167,7 +169,9 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   return (
     <AppContext.Provider value={appRef.current}>
       <ParentContext.Provider value={appRef.current?.root as PcEntity}>
-        {children}
+        <PointerEventsContext.Provider value={pointerEvents}>
+          {children}
+        </PointerEventsContext.Provider>
       </ParentContext.Provider>
     </AppContext.Provider>
   );

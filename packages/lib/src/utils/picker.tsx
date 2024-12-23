@@ -1,6 +1,7 @@
 import { AppBase, CameraComponent, Entity, GraphNode, Picker } from "playcanvas"
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
 import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
+import { usePointerEventsContext } from "../contexts/pointer-events-context";
 
 // Utility to propagate events up the entity hierarchy
 const propagateEvent = (entity: Entity, event: SyntheticPointerEvent | SyntheticMouseEvent, stopAt: Entity | null = null): boolean => {
@@ -79,6 +80,10 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
     const activeEntity = useRef<Entity | null>(null);
     const pointerDetails = useRef<PointerEvent | null>(null);
     const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
+    const pointerEvents = usePointerEventsContext();
+  
+    // Only run picker if there are registered pointer events
+    const enabled = pointerEvents.size > 0;
 
     // Watch for the canvas to resize. Neccesary for correct picking
     useEffect(() => {
@@ -103,6 +108,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
     }, [picker])
 
     const onFrameUpdate = useCallback(async () => {
+        if (!enabled) return;
 
         const e : PointerEvent | null = pointerDetails.current;
         if (!picker || !app || !e) return null;
@@ -136,7 +142,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
         return null;
 
-    }, [picker] );
+    }, [picker, enabled] );
 
     // Construct a generic handler for pointer events
     const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
@@ -153,7 +159,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
         propagateEvent(entity, syntheticEvent);
 
-    }, [picker]);
+    }, [picker, enabled]);
 
     useLayoutEffect(() => {
         if (!picker || !el || !app) return;
@@ -172,5 +178,5 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
             el.removeEventListener('pointermove', onPointerMove);
             app.off('update', onFrameUpdate);
         };
-    }, [app, el, onInteractionEvent]);
+    }, [app, el, onInteractionEvent, enabled]);
 }

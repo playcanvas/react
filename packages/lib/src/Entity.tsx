@@ -4,6 +4,7 @@ import { Entity as PcEntity } from 'playcanvas';
 import { ReactNode, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
 import { useParent, ParentContext, useApp } from './hooks';
 import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
+import { usePointerEventsContext } from './contexts/pointer-events-context';
 
 type PointerEventCallback = (event: SyntheticPointerEvent) => void;
 type MouseEventCallback = (event: SyntheticMouseEvent) => void;
@@ -39,6 +40,10 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
 ) : React.ReactElement | null {
   const parent = useParent();
   const app = useApp();
+  const pointerEvents = usePointerEventsContext();
+
+  // Check if the entity has pointer events attached
+  const hasPointerEvents = !!(onPointerDown || onPointerUp || onPointerOver || onPointerOut || onClick);
 
   // Create the entity only when 'app' changes
   const entity = useMemo(() => new PcEntity(name, app), [app]) as PcEntity
@@ -59,6 +64,10 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   // PointerEvents
   useLayoutEffect(() => {
 
+    if (hasPointerEvents) {
+      pointerEvents.add(entity.getGuid());
+    }
+
     entity.on('pointerdown', onPointerDown);
     entity.on('pointerup', onPointerUp);
     entity.on('pointerover', onPointerOver);
@@ -66,6 +75,9 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
     entity.on('click', onClick);
     
     return () => {
+      if (hasPointerEvents) {
+        pointerEvents.delete(entity.getGuid());
+      }
       entity.off('pointerdown', onPointerDown);
       entity.off('pointerup', onPointerUp);
       entity.off('pointerover', onPointerOver);
