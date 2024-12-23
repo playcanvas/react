@@ -52,7 +52,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <Head faviconGlyph="✦" />
       <body>
         <Layout
-          banner={<Banner storageKey="Notif key">Notification Banner</Banner>}
           navbar={navbar}
           footer={<Footer />}
           editLink="Edit this page on GitHub"

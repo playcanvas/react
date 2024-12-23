@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
 import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
-// import { ScriptConstructor } from '../components/Script';
 
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
@@ -13,7 +12,7 @@ interface Props {
 export const useScript = (scriptConstructor:  new (...args: unknown[]) => Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
-  const scriptName: string = toLowerCamelCase(scriptConstructor.constructor.name);
+  const scriptName: string = toLowerCamelCase(scriptConstructor.name);
   const scriptRef = useRef<Script | null>(null);
   const scriptComponentRef = useRef<ScriptComponent | null>(null);
 

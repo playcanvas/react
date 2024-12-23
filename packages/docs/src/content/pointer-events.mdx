@@ -1,50 +1,47 @@
 export const PointerEvents = () => {
 
+    const HOVER_COLOR = 'rebeccapurple'
+    const LEAVE_COLOR = 'green'
+
     /**
      * This demo shows how to handle pointer events.
-     * Click on the left or right box to change the camera's clear color.
      */
-    const [leftColor, setLeftColor] = useState('green')
-    const [rightColor, setRightColor] = useState('rebeccapurple')
-    const [leftScale, setLeftScale] = useState(1)
-    const [rightScale, setRightScale] = useState(1)
+    const [diffuse, setDiffuse] = useState('green')
+    const [shape, setShape] = useState('box')
+    const material = useMaterial({ diffuse })
 
-    const leftMaterial = useMaterial({ diffuse: leftColor })
-    const rightMaterial = useMaterial({ diffuse: rightColor })
+    const onClick = () => setShape((shape) => shape === 'box' ? 'sphere' : 'box')
+    const onHover = () => setDiffuse(HOVER_COLOR)
+    const onLeave = () => setDiffuse(LEAVE_COLOR)
 
-    const onLeftClick = () => setLeftColor('rebeccapurple')
-    const onRightClick = () => setRightColor('red')
+    useEffect(() => {
+        document.body.style.cursor = diffuse === LEAVE_COLOR ? 'default' : 'pointer'
+    }, [diffuse])
 
     return <Entity>
 
         <EnvAtlasComponent src='/environment-map.png' />
 
-        {/* Create a camera */}
-        <Entity name='camera' position={[0, 0, 4]} >
-            <Camera />
-        </Entity>
+        {/* Render the background grid */}
+        <Grid />
 
-        {/* Create the left box entity */}
-        <Entity 
-            position={[-1, 0, 0]} 
-            scale={[leftScale, leftScale, leftScale]}
-            onClick={onLeftClick} 
-            onPointerOver={() => setLeftScale(1.1)} 
-            onPointerOut={() => setLeftScale(1)}
-        >
-            <Render type='sphere' material={leftMaterial} />
+        {/* Create a camera entity */}
+        <Entity name='camera' position={[4, 3, 4]}>
+            <Camera clearColor='#a8a8a8' fov={28} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <AutoRotate />
         </Entity>
 
         {/* Create the right box entity */}
-        <Entity 
-            position={[1, 0, 0]} 
-            scale={[rightScale, rightScale, rightScale]}
-            onClick={onRightClick} 
-            onPointerOver={() => setRightScale(1.1)} 
-            onPointerOut={() => setRightScale(1)}
+        <Entity position={[0, 0.5, 0]}
+            onClick={onClick}
+            onPointerOver={onHover}
+            onPointerOut={onLeave}
         >
-            <Render type='box' material={rightMaterial} />
+            <Render type={shape} material={material} />
+            <ShadowCatcher width={5} depth={5} />
         </Entity>
+        
     </Entity>
 }
 

@@ -23,9 +23,9 @@ export const ModelViewer = () => {
 
         <Entity>
             {/* Load our asset */}
-            <Render type='asset' asset={asset} >
+            <Container asset={asset} >
                 {asset && <ShadowCatcher width={5} depth={5} />}
-            </Render>
+            </Container>
         </Entity>
     </Entity>)
 }
