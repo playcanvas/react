@@ -1,7 +1,7 @@
 import { AppBase, CameraComponent, Entity, GraphNode, Picker } from "playcanvas"
-import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
+import { FC, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react"
 import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
-import { usePointerEventsContext } from "../contexts/pointer-events-context";
+import { PointerEventsContext, usePointerEventsContext } from "../contexts/pointer-events-context";
 
 // Utility to propagate events up the entity hierarchy
 const propagateEvent = (entity: Entity, event: SyntheticPointerEvent | SyntheticMouseEvent, stopAt: Entity | null = null): boolean => {
@@ -180,3 +180,24 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
         };
     }, [app, el, onInteractionEvent, enabled]);
 }
+
+export const PointerEventsProvider: FC<PointerEventsProviderProps> = ({ children, app, el }) => {
+    // Track registered pointer events
+    const [pointerEvents] = useState<Set<string>>(() => new Set<string>());
+    
+    // Only create picker if there are registered events
+    const enabled = pointerEvents.size > 0;
+    
+    const activeEntity = useRef<Entity | null>(null);
+    const pointerDetails = useRef<PointerEvent | null>(null);
+    const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
+
+    // Rest of the picker logic from current implementation...
+    // Including useLayoutEffect for event listeners, etc.
+
+    return (
+        <PointerEventsContext.Provider value={pointerEvents}>
+            {children}
+        </PointerEventsContext.Provider>
+    );
+};
