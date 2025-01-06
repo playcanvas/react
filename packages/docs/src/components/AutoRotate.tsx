@@ -3,7 +3,8 @@ import { AutoRotator } from "@playcanvas/react/scripts";
 import { FC } from "react";
 
 const AutoRotate: FC<Record<string, unknown>> = (props) => {
-    return <Script script={AutoRotator} {...props} />
+    // return <Script script={AutoRotator} {...props} />
+    return null
 }
 
 export default AutoRotate;

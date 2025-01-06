@@ -1,6 +1,6 @@
 "use client";
 
-import { Script } from "@playcanvas/react/components";
+// import { Script } from "@playcanvas/react/components";
 import { CameraFrame } from "playcanvas/scripts/utils/camera-frame.mjs";
 
 import { FC } from "react";
@@ -22,16 +22,18 @@ const deepMerge = (target: Record<string, unknown>, source: Record<string, unkno
 
 const PostEffects: FC = ({ overrides = {} }: { overrides?: Partial<typeof defaultPostSettings> }) => {
 
-    const postSettings = usePostControls();
-    const settings = deepMerge(postSettings, overrides);
+//     const postSettings = usePostControls();
+//     const settings = deepMerge(postSettings, overrides);
 
-    return <Script script={CameraFrame} {...settings} />
+//     return <Script script={CameraFrame} {...settings} />
+    return null
 }
 
 export const StaticPostEffects: FC<Partial<typeof defaultPostSettings>> = (props) => {
 
-    const settings = deepMerge(defaultPostSettings, props);
-    return <Script script={CameraFrame} {...settings} />
+    // const settings = deepMerge(defaultPostSettings, props);
+    // return <Script script={CameraFrame} {...settings} />
+    return null
 }
 
 const defaultPostSettings = {

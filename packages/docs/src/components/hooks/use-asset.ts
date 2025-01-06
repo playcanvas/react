@@ -1,9 +1,9 @@
 "use client";
 
-import { TEXTURETYPE_RGBP } from "playcanvas"
-import { useApp } from "@playcanvas/react/hooks"
+// import { TEXTURETYPE_RGBP } from "playcanvas"
+// import { useApp } from "@playcanvas/react/hooks"
 import { useQuery } from "@tanstack/react-query";
-import { fetchAsset } from "@playcanvas/react/utils"
+// import { fetchAsset } from "@playcanvas/react/utils"
 
 /**
  * Loads an asset using react-query
@@ -13,14 +13,16 @@ import { fetchAsset } from "@playcanvas/react/utils"
  * @returns {{ data: Asset, isPending: boolean }} - The texture asset and its loading state.
  */
 export const useAsset = (src, type, props) => {
-    const app = useApp();
-    const queryKey = [app.root?.getGuid(), src, type, props];
+    // const app = useApp();
+    // const queryKey = [app.root?.getGuid(), src, type, props];
 
     // Construct a query for the asset
-    return useQuery({ 
-        queryKey,
-        queryFn: () => app && fetchAsset(app, src, type, props)
-    })
+
+    return null
+    // return useQuery({ 
+    //     queryKey,
+    //     queryFn: () => app && fetchAsset(app, src, type, props)
+    // })
 }
 
 /**

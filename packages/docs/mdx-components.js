@@ -1,7 +1,8 @@
 import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
-import { Application, Entity } from '@playcanvas/react'
-import { OrbitControls } from '@playcanvas/react/scripts'
-import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
+// import { Application, Entity } from '@playcanvas/react'
+// import { OrbitControls } from '@playcanvas/react/scripts'
+// import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
+import { PlayCanvasCanvas } from '@playcanvas/react'
 
 import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
 
@@ -15,24 +16,25 @@ const docsComponents = getDocsMDXComponents()
 
 export const defaultComponents = {
   ReactQueryProvider,
-  Application,
-  Entity,
-  Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
-  OrbitControls,
-  EnvAtlasComponent,
-  Grid,
-  ShadowCatcher,
-  PostEffects,
-  StaticPostEffects,
-  AutoRotate,
-  MotionEntity,
-  MotionLight
+  // Application,
+  // Entity,
+  // Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
+  // OrbitControls,
+  // EnvAtlasComponent,
+  // Grid,
+  // ShadowCatcher,
+  // PostEffects,s
+  // StaticPostEffects,
+  // AutoRotate,
+  // MotionEntity,
+  // MotionLight,
+  PlayCanvasCanvas
 }
 
 export function useMDXComponents(components) {
   return {
     ...components,
     ...defaultComponents,
-    ...docsComponents
+    // ...docsComponents
   }
 }

@@ -18,11 +18,11 @@ const graphicsOptions = {
 }
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
+  // <StrictMode>
     <QueryClientProvider client={queryClient}>
       <Application graphicsOptions={graphicsOptions} high-resolution="true" stencil="false" fillMode={FILLMODE_FILL_WINDOW} resizeMode={RESOLUTION_AUTO}>
         <App />
       </Application>
     </QueryClientProvider>
-  </StrictMode>,
+  // </StrictMode>,
 )
