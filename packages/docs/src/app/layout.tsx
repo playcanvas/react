@@ -1,7 +1,7 @@
 
 /* eslint-env node */
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
-import { Banner, Head } from 'nextra/components'
+import { Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 import { CodeXml } from 'lucide-react'
@@ -52,7 +52,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <Head faviconGlyph="✦" />
       <body>
         <Layout
-          banner={<Banner storageKey="Notif key">Notification Banner</Banner>}
           navbar={navbar}
           footer={<Footer />}
           editLink="Edit this page on GitHub"
