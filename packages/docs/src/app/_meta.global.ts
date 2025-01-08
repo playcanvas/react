@@ -35,6 +35,7 @@ export default {
       },
       'hello-world' : '',
       'pointer-events' : '',
+      'glb-animation' : '',
       "Advanced" : {
         type: 'separator',
       },
