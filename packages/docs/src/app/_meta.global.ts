@@ -37,6 +37,7 @@ export default {
       'load-a-3D-model' : {
         'title' : 'Load a 3D model'
       },
+      'primitives' : '',
       'pointer-events' : '',
       "Advanced" : {
         type: 'separator',
