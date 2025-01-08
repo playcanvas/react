@@ -33,6 +33,7 @@ export default {
       "Basic" : {
         type: 'separator',
       },
+      'hello-world' : '',
       'pointer-events' : '',
       "Advanced" : {
         type: 'separator',
