@@ -33,12 +33,13 @@ export default {
       "Basic" : {
         type: 'separator',
       },
-      'model-viewer' : '',
-      'physics' : '',
-      'motion' : '',
+      'pointer-events' : '',
       "Advanced" : {
         type: 'separator',
       },
+      'model-viewer' : '',
+      'physics' : '',
+      'motion' : '',
     },
   },
   '---': {
