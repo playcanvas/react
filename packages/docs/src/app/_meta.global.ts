@@ -34,8 +34,10 @@ export default {
         type: 'separator',
       },
       'hello-world' : '',
+      'load-a-3D-model' : {
+        'title' : 'Load a 3D model'
+      },
       'pointer-events' : '',
-      'glb-animation' : '',
       "Advanced" : {
         type: 'separator',
       },
