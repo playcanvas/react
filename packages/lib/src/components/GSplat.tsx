@@ -21,7 +21,6 @@ export const GSplat: FC<GSplatProps> = ({ vertex, fragment, asset }) => {
         }
 
         return () => {
-
             if (!assetRef.current) return;
             parent.removeChild(assetRef.current);
         };
