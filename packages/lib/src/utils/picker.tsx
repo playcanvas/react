@@ -79,10 +79,6 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
     const activeEntity = useRef<Entity | null>(null);
     const pointerDetails = useRef<PointerEvent | null>(null);
     const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
-    // const pointerEvents = usePointerEventsContext();
-  
-    // Only run picker if there are registered pointer events
-    // const enabled = pointerEvents.size > 0;
 
     // Watch for the canvas to resize. Neccesary for correct picking
     useEffect(() => {
