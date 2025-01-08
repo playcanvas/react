@@ -1,13 +1,34 @@
-{/* 
-    This is a live playground. 
-    You can edit the code below and see livve changes, or try some other examples in the menu above.
-*/}
+export const HelloWorld = () => {
 
-<Entity>
-    <Entity position={[0, 0, 5]}>
-        <Camera clearColor='red' />
+    /**
+     * Your first pc/react example! 
+     * We're just going to render a box with a camera, some lighting and a shadow catcher
+     */
+
+    const material = useMaterial({ diffuse: 'gray' })
+
+    return <Entity>
+
+        <EnvAtlasComponent src='/environment-map.png' intensity={2}/>
+
+        {/* Render the background grid */}
+        <Grid />
+
+        {/* Create a camera entity */}
+        <Entity name='camera' position={[4, 3, 4]}>
+            <Camera clearColor='#111111' fov={28} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <AutoRotate />
+            <StaticPostEffects bloom={{ intensity: 0.02 }} vignette={false} fringing={{ intensity: 3 }}/>
+        </Entity>
+
+        {/* Create the right box entity */}
+        <Entity position={[0, 0.5, 0]}>
+            <Render type='box' material={material} />
+            <ShadowCatcher width={5} depth={5} />
+        </Entity>
+        
     </Entity>
-    <Entity>
-        <Render type="box" />
-    </Entity>
-</Entity>
+}
+
+<HelloWorld />
