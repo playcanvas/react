@@ -12,7 +12,7 @@ export const LoadingGLB = () => {
     // if the asset is not loaded yet, don't render anything
     if(!asset) return null;
 
-    return (<Entity>
+    return <Entity>
 
         <EnvAtlasComponent src='/environment-map.png' intensity={2}/>
 
@@ -33,8 +33,7 @@ export const LoadingGLB = () => {
             <ShadowCatcher width={5} depth={5} />
         </Render>
 
-        
-    </Entity>)
+    </Entity>
 }
 
 <LoadingGLB />
