@@ -30,11 +30,11 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
     position = [0, 0, 0], 
     scale = [1, 1, 1], 
     rotation = [0, 0, 0],
-    onPointerDown = () => null,
-    onPointerUp = () => null,
-    onPointerOver = () => null,
-    onPointerOut = () => null,
-    onClick = () => null
+    onPointerDown,
+    onPointerUp,
+    onPointerOver,
+    onPointerOut,
+    onClick,
   },
   ref
 ) : React.ReactElement | null {
@@ -68,21 +68,21 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
       pointerEvents.add(entity.getGuid());
     }
 
-    entity.on('pointerdown', onPointerDown);
-    entity.on('pointerup', onPointerUp);
-    entity.on('pointerover', onPointerOver);
-    entity.on('pointerout', onPointerOut);
-    entity.on('click', onClick);
+    if (onPointerDown) entity.on('pointerdown', onPointerDown);
+    if (onPointerUp) entity.on('pointerup', onPointerUp);
+    if (onPointerOver) entity.on('pointerover', onPointerOver);
+    if (onPointerOut) entity.on('pointerout', onPointerOut);
+    if (onClick) entity.on('click', onClick);
     
     return () => {
       if (hasPointerEvents) {
         pointerEvents.delete(entity.getGuid());
       }
-      entity.off('pointerdown', onPointerDown);
-      entity.off('pointerup', onPointerUp);
-      entity.off('pointerover', onPointerOver);
-      entity.off('pointerout', onPointerOut);
-      entity.off('click', onClick);
+      if (onPointerDown) entity.off('pointerdown', onPointerDown);
+      if (onPointerUp) entity.off('pointerup', onPointerUp);
+      if (onPointerOver) entity.off('pointerover', onPointerOver);
+      if (onPointerOut) entity.off('pointerout', onPointerOut);
+      if (onClick) entity.off('click', onClick);
     }
 
   }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);
