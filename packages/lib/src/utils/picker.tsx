@@ -75,7 +75,7 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
 
 }
 
-export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
+export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEvents: Set<string>) => {
     const activeEntity = useRef<Entity | null>(null);
     const pointerDetails = useRef<PointerEvent | null>(null);
     const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
@@ -103,6 +103,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
     }, [picker])
 
     const onFrameUpdate = useCallback(async () => {
+        if (pointerEvents.size === 0) return;
 
         const e : PointerEvent | null = pointerDetails.current;
         if (!picker || !app || !e) return null;
@@ -136,7 +137,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
         return null;
 
-    }, [picker] );
+    }, [picker, pointerEvents] );
 
     // Construct a generic handler for pointer events
     const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
@@ -153,7 +154,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
 
         propagateEvent(entity, syntheticEvent);
 
-    }, [picker]);
+    }, [picker, pointerEvents] );
 
     useLayoutEffect(() => {
         if (!picker || !el || !app) return;
@@ -172,5 +173,5 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null) => {
             el.removeEventListener('pointermove', onPointerMove);
             app.off('update', onFrameUpdate);
         };
-    }, [app, el, onInteractionEvent]);
+    }, [app, el, onInteractionEvent, pointerEvents]);
 }

@@ -1,4 +1,4 @@
-import React, { FC, PropsWithChildren, useLayoutEffect, useRef, useState } from 'react';
+import React, { FC, PropsWithChildren, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import * as Ammo from 'sync-ammo';
 import {
   FILLMODE_NONE,
@@ -12,6 +12,7 @@ import {
   RESOLUTION_FIXED,
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
+import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
 
 interface GraphicsOptions {
@@ -119,7 +120,8 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
 
-  usePicker(appRef.current, canvasRef.current);
+  const pointerEvents = useMemo(() => new Set<string>(), []);
+  usePicker(appRef.current, canvasRef.current, pointerEvents);
 
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
@@ -166,9 +168,11 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
 
   return (
     <AppContext.Provider value={appRef.current}>
-      <ParentContext.Provider value={appRef.current?.root as PcEntity}>
-        {children}
-      </ParentContext.Provider>
+      <PointerEventsContext.Provider value={pointerEvents}>
+        <ParentContext.Provider value={appRef.current?.root as PcEntity}>
+          {children}
+        </ParentContext.Provider>
+      </PointerEventsContext.Provider>
     </AppContext.Provider>
   );
 };
