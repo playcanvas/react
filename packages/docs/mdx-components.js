@@ -2,7 +2,7 @@ import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 // import { Application, Entity } from '@playcanvas/react'
 // import { OrbitControls } from '@playcanvas/react/scripts'
 // import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
-import { PlayCanvasCanvas } from '@playcanvas/react'
+import { Application } from '@playcanvas/react'
 
 import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
 
@@ -28,7 +28,7 @@ export const defaultComponents = {
   // AutoRotate,
   // MotionEntity,
   // MotionLight,
-  PlayCanvasCanvas
+  Application
 }
 
 export function useMDXComponents(components) {

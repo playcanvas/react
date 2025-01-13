@@ -16,7 +16,7 @@ const withNextra = nextra({
   contentDirBasePath: '/playground',
 })
 
-export default withNextra({
+const nextConfig = {
   reactStrictMode: true,
   transpilePackages: ['next-mdx-remote-client', 'playcanvas'],
   async headers() {
@@ -45,4 +45,7 @@ export default withNextra({
       permanent: true
     }
   ]
-})
+}
+
+export default nextConfig
+// export default withNextra(nextConfig)

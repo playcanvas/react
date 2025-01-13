@@ -6,7 +6,7 @@ import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 import { CodeXml } from 'lucide-react'
 import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
-import { PlayCanvasCanvas } from '@playcanvas/react'
+import { Application, PlayCanvasCanvas } from '@playcanvas/react'
 
 export const { viewport } = Head
 
@@ -64,14 +64,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
           pageMap={await getPageMap()}
         >
-          {/* <ReactQueryProvider> */}
-          <PlayCanvasCanvas className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-            <test name="test">
-              <abc name="abc"/>
-            </test>
-          </PlayCanvasCanvas>
-            {/* {children} */}
-          {/* </ReactQueryProvider> */}
+          <ReactQueryProvider>
+          {/* {className='hover:cursor-grab active:cursor-grabbing w-full'} */}
+            {children}
+          </ReactQueryProvider>
         </Layout>
       </body>
     </html>

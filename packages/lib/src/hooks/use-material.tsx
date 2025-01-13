@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
-import { useColors } from '../utils/color';
+// import { useColors } from '../utils/color';
 
 type WritableKeys<T> = {
   [K in keyof T]: T[K] extends { readonly [key: string]: unknown } ? never : K;
@@ -12,14 +12,16 @@ type MaterialProps = Pick<StandardMaterial, WritableKeys<StandardMaterial>>;
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const colorProps = useColors(props, [
-    'ambient', 
-    'attenuation', 
-    'diffuse', 
-    'emissive', 
-    'sheen', 
-    'specular'
-  ]);
+  // const colorProps = useColors(props, [
+  //   'ambient', 
+  //   'attenuation', 
+  //   'diffuse', 
+  //   'emissive', 
+  //   'sheen', 
+  //   'specular'
+  // ]);
+
+  const colorProps = props;
 
   const propsWithColors = { ...props, ...colorProps };
 

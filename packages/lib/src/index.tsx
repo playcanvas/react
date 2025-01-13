@@ -1,100 +1,215 @@
 "use client";
 
-import React, { useRef, useEffect } from 'react';
-import { reconciler } from './reconciler';
-import * as pc from 'playcanvas';
+import React, { useRef, useLayoutEffect } from 'react';
+import {
+  FILLMODE_NONE,
+  RESOLUTION_AUTO,
+  Application as PcApplication,
+  Mouse,
+  TouchDevice
+} from 'playcanvas';
 
-interface CanvasProps {
-  children?: React.ReactNode;
-  // onInitialize?: (app: pc.Application) => void;
+import { reconciler } from './reconciler';
+import { AppContext } from './hooks';
+import { FiberProvider, useContextBridge } from 'its-fine';
+
+import { type SyntheticMouseEvent, type SyntheticPointerEvent } from './utils/synthetic-event';
+import { type OptionalPublicMutableNoFunctions } from './types';
+// import type {ReadonlyKeysOf} from 'type-fest';
+
+interface GraphicsOptions extends OptionalPublicMutableNoFunctions<pc.GraphicsDevice> {}
+
+interface ApplicationProps extends OptionalPublicMutableNoFunctions<pc.Application> {
+    children?: React.ReactNode,
+    /** The class name to attach to the canvas component */
+    className?: string,
+    /** A style object added to the canvas component */
+    style?: Record<string, unknown>
+    /** Whether to use the PlayCanvas Physics system. */
+    usePhysics?: boolean,
+    /** Graphics Settings */
+    graphicsDeviceOptions?: GraphicsOptions
 }
 
-export const PlayCanvasCanvas: React.FC<CanvasProps> = ({ children }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+interface BaseApplicationProps extends ApplicationProps {
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
+}
 
-  /**
-   * This ref holds the "Fiber root" object returned by createContainer(...),
-   * NOT just the container data. We'll store that once we initialize.
-   */
+export const BaseApplication: React.FC<BaseApplicationProps> = ({
+  children, 
+  canvasRef,
+  className = 'pc-app', 
+  usePhysics = false,
+  style = { width: '100%', height: '100%' },
+  fillMode = FILLMODE_NONE,
+  resolutionMode = RESOLUTION_AUTO,
+  graphicsDeviceOptions,
+  ...rest
+}) => {
+
+  const appRef = useRef<pc.Application | null>(null);
   const fiberRootRef = useRef<any>(null);
+  const Bridge = useContextBridge();
 
-  useEffect(() => {
-    if (!canvasRef.current) return;
+  if (!canvasRef) {
+    throw new Error('Canvas ref is required');
+  }
 
-    // 1. Create the PlayCanvas app
-    const app = new pc.Application(canvasRef.current, {
-      mouse: new pc.Mouse(canvasRef.current),
-      touch: new pc.TouchDevice(canvasRef.current),
-      elementInput: new pc.ElementInput(canvasRef.current),
-      keyboard: new pc.Keyboard(window),
-    });
+  useLayoutEffect(() => {
+    const canvas = canvasRef.current;
 
-    app.start();
+    if (canvas && !appRef.current) {
 
-    window.pc = pc
+      const app = new PcApplication(canvas, {
+        mouse: new Mouse(canvas),
+        touch: new TouchDevice(canvas),
+        graphicsDeviceOptions
+      });
 
-    // Setup defaults if desired
-    app.scene.exposure = 1;
-    // app.scene.gammaCorrection = pc.GAMMA_SRGB;
-    // app.scene.toneMapping = pc.TONEMAP_ACES;
-    app.scene.ambientLight = new pc.Color(0.4, 0.4, 0.4);
+      // @ts-ignore
+      globalThis.app = app
 
-    // if (onInitialize) {
-    //   onInitialize(app);
-    // }
-
-    // 2. Create the container object (plain JS) that the reconciler uses.
-    const rootContainer = { app };
-
-    // 3. Create the Fiber root from that container object
-    // @ts-ignore
-    const fiberRoot = reconciler.createContainer(
-      rootContainer,
-      // 0,     // RootTag (0 = legacy, 1 = concurrent, etc.)
-      // null,  // hydration callbacks
-      // false, // isStrictMode
-      // null,  // concurrentUpdatesByDefaultOverride
-      // '',    // identifierPrefix
-      // (_) => _, // onRecoverableError
-      // null   // transitionCallbacks
-    );
-
-    // @ts-ignore
-    fiberRoot.onUncaughtError = (error) => {
-      console.error('Uncaught error in PlayCanvasCanvas:', error);
-    };
-
-    
-
-    // 4. Store the Fiber root in our ref for future updates
-    fiberRootRef.current = fiberRoot;
-
-    // element: ReactNode,
-    //         container: OpaqueRoot,
-    //         parentComponent?: Component<any, any> | null,
-    //         callback?: (() => void) | null,
-    // 5. Perform the initial render
-    // reconciler.updateContainer(children, fiberRoot, null);
-    reconciler.updateContainer(children, fiberRoot, null);
+      app.start();
+      
+      // @ts-ignore
+      const fiberRoot = reconciler.createContainer({ app });
+      fiberRoot.onUncaughtError = (error: Error) => {
+        console.error('Uncaught error in playcanvas-react:', error);
+      };
+      
+      fiberRootRef.current = fiberRoot;
+      appRef.current = app;
+    }
 
     // Cleanup when unmounting
     return () => {
-      app.destroy();
+      appRef.current?.destroy();
+      appRef.current = null;
       fiberRootRef.current = null;
     };
-  }, [children]);
 
-  // If `children` changes at runtime, we re-render onto the same Fiber root
-  // useEffect(() => {
-  //   if (fiberRootRef.current) {
-  //     reconciler.updateContainer(children, fiberRootRef.current, null);
-  //   }
-  // }, [children]);
+  }, [canvasRef, ...(graphicsDeviceOptions ? Object.values(graphicsDeviceOptions) : [])]);
+
+
+  // Update the container when the children change
+  useLayoutEffect(() => {
+    const app = appRef.current;
+    const fiberRoot = fiberRootRef.current;
+
+    if (!app) {
+      throw new Error('App not found');
+    }
+
+    if (!fiberRoot) {
+      throw new Error('Fiber root not found');
+    }
+    
+    reconciler.updateContainer(
+      <Bridge>
+        <AppContext.Provider value={app}>
+          { children }
+        </AppContext.Provider>
+      </Bridge>, fiberRoot, null);
+  }, [children, canvasRef]);
+
+
+  // Some props can be updated without re-creating the app
+  useLayoutEffect(() => {
+    if(!appRef.current) return;
+    const app : pc.Application = appRef.current;
+
+    app.setCanvasFillMode(fillMode);
+    app.setCanvasResolution(resolutionMode);
+  
+    Object.assign(app, rest);
+  }, [fillMode, resolutionMode, ...Object.values(rest)]);
+
+  return null;
+};
+
+export const ApplicationWithoutCanvas: React.FC<BaseApplicationProps> = ({
+  children,
+  canvasRef,
+  ...props
+}) => {
+  return <FiberProvider>
+    <BaseApplication {...props} canvasRef={canvasRef}>
+      {children}
+    </BaseApplication>
+  </FiberProvider>
+};
+
+/**
+ * The **Application** component is the root node of the PlayCanvas React api. It creates a canvas element
+*/
+export const Application: React.FC<ApplicationProps> = ({ 
+  children, 
+  className = 'pc-app', 
+  style = { width: '100%', height: '100%' },
+  ...props
+}) => {
+
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{ width: '800px', height: '600px' }}
-    />
+    <>
+      <canvas
+        className={className}
+        style={style}
+        ref={canvasRef}
+      />
+        <ApplicationWithoutCanvas canvasRef={canvasRef} {...props}>
+          {children}
+        </ApplicationWithoutCanvas>
+    </>
   );
 };
+
+// TYPES
+export type PointerEventCallback = (event: SyntheticPointerEvent) => void;
+export type MouseEventCallback = (event: SyntheticMouseEvent) => void;
+
+interface EntityProps {
+    // PlayCanvas specific props
+    name?: string;
+    position?: [number, number, number];
+    rotation?: [number, number, number];
+    scale?: [number, number, number];
+    enabled?: boolean;
+    
+    // React specific props
+    children?: React.ReactNode;
+    onPointerUp?: PointerEventCallback;
+    onPointerDown?: PointerEventCallback;
+    onPointerOver?: PointerEventCallback;
+    onPointerOut?: PointerEventCallback;
+    onClick?: MouseEventCallback;
+
+}
+
+
+/*
+ * The following type utility extracts the available components from the host ComponentSystemRegistry.
+ * This allows the types to reflect the available components in the host
+*/
+// type SystemKeys = Pick<pc.ComponentSystemRegistry, ReadonlyKeysOf<pc.ComponentSystemRegistry>>;
+// type AllSystemIntrinsics = {
+//   [K in keyof SystemKeys]:
+//     // @ts-ignore
+//     React.RefAttributes<SystemKeys[K]["ComponentType"]> & 
+//     // @ts-ignore
+//     OptionalPublicMutableNoFunctions<SystemKeys[K]["ComponentType"]>
+// };
+
+declare module "react" {
+  namespace JSX {
+    interface IntrinsicElements /*extends AllSystemIntrinsics*/ { 
+      entity: React.RefAttributes<pc.Entity> & EntityProps;
+      camera: React.RefAttributes<pc.CameraComponent>;
+      light: React.RefAttributes<pc.LightComponent>;
+      render: React.RefAttributes<pc.RenderComponent>;
+      pcscript: React.RefAttributes<pc.ScriptComponent>;
+      anim: React.RefAttributes<pc.AnimComponent>;
+    }
+  }
+}

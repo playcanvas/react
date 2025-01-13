@@ -19,6 +19,16 @@ import { Tabs, Code } from 'nextra/components'
   <Tabs.Tab>
     <div className='w-full aspect-video rounded-xl overflow-hidden'>
       <ReactQueryProvider>
+      {/* <Application fillMode="NONE" resolutionMode="AUTO">
+        <entity name='root'>
+          <entity name='camera' key='a' position={[0, 0, 20]}>
+            <camera/>
+          </entity>
+          <entity name='child' key='b'>
+            <render type='box' />
+          </entity>
+        </entity>
+      </Application> */}
         {/* <PlayCanvasCanvas className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
           <pcentity name="ParentEntity">
            <pcentity name="ChildEntity" />
