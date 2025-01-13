@@ -12,29 +12,15 @@ import PostEffects, { StaticPostEffects} from '@components/PostEffects'
 import ShadowCatcher from '@components/ShadowCatcher'
 import AutoRotate from '@components/AutoRotate'
 import { MotionEntity, MotionLight } from '@components/MotionEntity'
-const docsComponents = getDocsMDXComponents()
 
 export const defaultComponents = {
   ReactQueryProvider,
-  // Application,
-  // Entity,
-  // Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
-  // OrbitControls,
-  // EnvAtlasComponent,
-  // Grid,
-  // ShadowCatcher,
-  // PostEffects,s
-  // StaticPostEffects,
-  // AutoRotate,
-  // MotionEntity,
-  // MotionLight,
   Application
 }
 
 export function useMDXComponents(components) {
   return {
     ...components,
-    ...defaultComponents,
-    // ...docsComponents
+    ...defaultComponents
   }
 }
