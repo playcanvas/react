@@ -9,9 +9,9 @@ import { OpenHomePageExampleInCodeSandbox } from '@/docs-components/code-sandbox
 import { OpenHomePageExampleInStackBlitz } from '@/docs-components/OpenInStackblitz'
 import Example from '@/templates/HomePageExample'
 
-# `@playcanvas/react`
+## @playcanvas/react
 
-A react library for for creating 3D apps, with an extensible Entity-Component System supporting physics, interaction, and scripting.
+A thin react library for for creating 3D apps that suppports pointer events, physics, gaussian splats, and more straight out of the box.
 
 import { Tabs, Code } from 'nextra/components'
 
@@ -62,11 +62,9 @@ import { Tabs, Code } from 'nextra/components'
   <OpenHomePageExampleInStackBlitz />
 </Cards>
 
+### How does it work?
 
-
-## How does it work?
-
-The library provides a thin declarative layer around the PlayCanvas ECS. You create an `Application` and add `Entities` to it. Entities have position, rotation and scale. You add behaviour by attaching `Components` to entities.
+The library provides a thin declarative layer around the open source library [PlayCanvas](https://playcanvas.com). You create an `Application` and add `Entities` to it. Entities have position, rotation and scale. You add behaviour by attaching `Components` to entities.
 
 Here's a simple example rendering a simple 3D asset with orbit controls.
 
@@ -90,7 +88,7 @@ const App = (car) => {
 }
 ```
 
-## Features
+### Features
 
 PlayCanvas comes with a number of built in components and scripts that you can use. This makes it easy to get started building your app.
 

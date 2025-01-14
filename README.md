@@ -4,7 +4,9 @@
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=000000&colorB=000000&logo=twitter&logoColor=000000)](https://twitter.com/playcanvas)
 ![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=000000&colorB=000000)
 
-A lightweight, declarative library for for creating 3D apps, with an extensible Entity-Component System supporting Physics, Pointer Events, and a built-in Scripting API.
+A lightweight, declarative library for for creating 3D apps that supports Physics, Pointer Events, Gaussian Splats and a built-in Scripting API straight out of the box.
+
+View the docs at [playcanvas-react.vercel.app](https://playcanvas-react.vercel.app)
 
 <img width="1339" alt="image" src="https://github.com/user-attachments/assets/c07f915a-fae2-4aa8-a727-46ec7f300aa8"></img>
 
@@ -39,12 +41,12 @@ const App = (lambo) => {
 
 #### Features
 
-- [x] Simple nested Entities, Components and Assets.
-- [x] Suspend 3D Assets during loading with [`swr`](https://www.npmjs.com/package/swr) or [`react-query`](https://www.npmjs.com/package/@tanstack/react-query).
-- [x] Supports PointerEvents with event bubbling
-- [x] Supports [Ammo.js](https://github.com/kripken/ammo.js) physics out of the box
-- [x] Subscribe to frame updates with the `<Script/>` component
-- [x] Extensible Entity Component System that allows you to add new features.
+- Simple declarative API for creating 3D apps
+- Supports Asset loading with Suspense boundaries.
+- PointerEvents with event bubbling
+- Supports [Physics]((https://github.com/kripken/ammo.js)) out of the box
+- Imperative Scripting API for the `<Script/>` component for high performance updates.
+- Extensible Entity Component System that allows you to add new features.
 
 #### Learning more
 

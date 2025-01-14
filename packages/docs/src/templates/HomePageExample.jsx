@@ -9,6 +9,8 @@ import Grid from '@/components/Grid';
 import AutoRotate from '@/components/AutoRotate';
 import { StaticPostEffects } from '@/components/PostEffects';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
+import ShadowCatcher from '@/components/ShadowCatcher';
+
 const Example = () => {
 
     const { data: envMap } = useEnvAtlas('/environment-map.png');
@@ -17,7 +19,7 @@ const Example = () => {
     if(!envMap || !model) return <LoadingSpinner />;
 
     return (<Entity>
-        <EnvAtlas asset={envMap} intensity={0.5} showSkybox={false} />
+        <EnvAtlas asset={envMap} intensity={0.8} showSkybox={false} />
         <Grid />
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
@@ -26,7 +28,9 @@ const Example = () => {
             <AutoRotate />
         </Entity>
         <Entity>
-            <Container asset={model}/>
+            <Container asset={model}>
+                <ShadowCatcher width={5} depth={5}/>
+            </Container>
         </Entity>
     </Entity>)
 }

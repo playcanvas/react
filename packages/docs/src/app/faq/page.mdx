@@ -10,6 +10,7 @@ PlayCanvas is built on the concept of Entities and Components (ECS). Entities ar
 No, this is not a replacement for the PlayCanvas Editor. It's an alternative way to build projects using web tooling.
 
 ## How does this compare to react-three-fiber?
-Conceptually it's similar to [react-three-fiber](https://github.com/pmndrs/react-three-fiber). It's a declarative way to build 3D apps. However PlayCanvas has an ECS and a neccesarily wider set of features than three.js, such as an asset system and physics system.
+Conceptually it's similar to [react-three-fiber](https://github.com/pmndrs/react-three-fiber). However PlayCanvas has an ECS that include a wider set of features meaning features such as physics, gaussian splats, and more are available out of the box.
 
-Most importantly, react-three-fiber is a custom React renderer. This library is not.
+## Is this a react renderer?
+No, not currently, although work is underway to [implement a the react renderer](https://github.com/playcanvas/react/pull/35). At the moment, it's simply a thin wrapper around the PlayCanvas engine, surfacing the PlayCanvas API as a react component library.
