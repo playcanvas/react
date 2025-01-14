@@ -27,7 +27,7 @@ export default {
     },
   },
   playground: {
-    type: 'menu',
+    
     title: 'Playground',
     items: {
       "Basic" : {
