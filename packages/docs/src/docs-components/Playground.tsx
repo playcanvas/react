@@ -44,16 +44,16 @@ const PlayGround: FC<PlaygroundProps> = ({
 }) => {
 
     const resizeRef = useRef<HTMLDivElement>(null);
-    const [showCodeEditor, setShowCodeEditor] = useState(true);
+    const [showCodeEditor, setShowCodeEditor] = useState(false);
     
     return (
         <EditorProvider initialCode={code} >
 
             <div className='absolute bottom-0 left-0 shadow-lg' > 
                 {/* Button that toggles the code editor */}
-                {/* { !showCodeEditor && <button onClick={() => setShowCodeEditor(true)} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
+                { !showCodeEditor && <button onClick={() => setShowCodeEditor(true)} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
                     <TerminalIcon className='w-full h-full' />
-                </button> } */}
+                </button> }
 
                 {/* <button onClick={() => console.log('ss')} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
                     <EllipsisIcon className='w-full h-full' />
@@ -74,10 +74,10 @@ const PlayGround: FC<PlaygroundProps> = ({
             </div>
             { showCodeEditor && <Suspense>
                 <div 
-                    className='absolute top-[var(--nextra-navbar-height)] h-[calc(100vh-var(--nextra-navbar-height))] flex mx-auto max-w-[90rem] p-8'
+                    className='absolute top-[var(--nextra-navbar-height)] h-[calc(100vh-var(--nextra-navbar-height))] flex mx-auto max-w-[90rem] xl:p-8'
                     onMouseMove={e => e.stopPropagation() }
                 >
-                    <div className='w-xl overflow-hidden rounded-xl shadow-lg opacity-70 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
+                    <div className='w-screen xl:w-xl overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
                         <div id='code-editor-header' className='flex justify-between items-center p-2 bg-zinc-800 px-4'>
                             <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono opacity-80 w-full'>
                                 <TerminalIcon className='w-4 h-4' />
