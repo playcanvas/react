@@ -1,7 +1,7 @@
 
 /* eslint-env node */
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
-import { Head } from 'nextra/components'
+import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
 import './globals.css'
 import { CodeXml } from 'lucide-react'
@@ -32,12 +32,14 @@ export const metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const navbar = (
     <Navbar
+      
       logo={
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-zinc-800 p-2 inline-block">
             <CodeXml size={24} strokeWidth={2} />
           </div>
-          <span style={{ opacity: '60%' }}>Simple 3D for the Web</span>
+          <span className='font-bold'>@playcanvas/react</span>
+          <span style={{ opacity: '60%' }}>- Declarative 3D</span>
         </div>
       }
       // PlayCanvas discord server
@@ -52,8 +54,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <Head faviconGlyph="✦" />
       <body>
         <Layout
+          banner={<Banner storageKey="0.2.0-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.2.0" target="_blank">
+            🎉 <b>@playcanvas/react 0.2.0</b> is released. Read more →
+          </a></Banner>}
           navbar={navbar}
-          footer={<Footer />}
+          footer={<Footer>
+            MIT {new Date().getFullYear()} ©{' '} PlayCanvas.
+          </Footer>}
           editLink="Edit this page on GitHub"
           docsRepositoryBase="https://github.com/playcanvas/react/blob/main/examples/docs"
           sidebar={{ 
