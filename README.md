@@ -1,14 +1,14 @@
 ## @playcanvas/react
-[![Version](https://img.shields.io/npm/v/@playcanvas/react?style=flat&colorA=000000&colorB=000000)](https://www.npmjs.com/package/@playcanvas/react)
-[![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=000000&colorB=000000&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
-[![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=000000&colorB=000000&logo=twitter&logoColor=000000)](https://twitter.com/playcanvas)
-![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=000000&colorB=000000)
+[![Version](https://img.shields.io/npm/v/@playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://www.npmjs.com/package/@playcanvas/react)
+[![Discord](https://img.shields.io/discord/740090768164651008?style=flat&olorA=333333&colorB=444444&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
+[![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
+![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)
 
 A lightweight, declarative library for for creating 3D apps that supports Physics, Pointer Events, Gaussian Splats and a built-in Scripting API straight out of the box.
 
-View the docs at [playcanvas-react.vercel.app](https://playcanvas-react.vercel.app)
+<img width="1673" alt="image" src="https://github.com/user-attachments/assets/92053462-f39e-4f6d-94fc-b34e7b9ea266" />
 
-<img width="1339" alt="image" src="https://github.com/user-attachments/assets/c07f915a-fae2-4aa8-a727-46ec7f300aa8"></img>
+[Documentation](https://playcanvas-react.vercel.app)
 
 ### Getting Started
 
