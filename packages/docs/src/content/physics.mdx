@@ -1,32 +1,23 @@
-export const NUM_SHAPES = 50;
-export const SHAPES = [...Array(NUM_SHAPES)].map(() => ({ scale: [0.75, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)] * 2 }))
-export const randRange = range => range * (0.5 - Math.random())
+export const NUM_SHAPES = 60;
+export const SHAPES = [...Array(NUM_SHAPES)].map(() => ({ scale: [0.5, 0.75, 1, 1, 1.25][Math.floor(Math.random() * 5)] * 2 }))
+export const rand = range => range * (0.5 - Math.random())
 
 export const ShapeCollider = ({ children, scale = 1, material, type = 'sphere', hide = false, ...props }) => (
     <Entity {...props} scale={[scale, scale, scale]}>
         { children }
         { !hide && <Render type={type} material={material} /> }
-        <Collision type={type} radius={scale * 0.5}/>
+        <Collision type={type} radius={scale * 0.5} />
     </Entity>
 )
 
 export const Physics = () => {
 
+    // This is a simple physics example and close port of this awesome r3f example - https://codesandbox.io/p/sandbox/bestservedbold-christmas-baubles-forked-wqyzx5 
+
     const app = useApp();
-    const { data: diffuseMap } = useTexture('/materials/paint/diffuse.webp');
-
-
-    const matA = useMaterial({ diffuse: "#c0a0a0",emissive: "red" });
-    const matB = useMaterial({ diffuseMap: diffuseMap?.resource, gloss: 0.98});
-    const matC = useMaterial({ 
-        dispersion: 2 , 
-        refractionIndex: 2.42, 
-        dispersion: 3,
-        opacity: 0.5,
-        blendType: pc.BLEND_NORMAL,
-        useDynamicRefraction: true,
-
-    });
+    const matA = useMaterial({ diffuse: "#c0a0a0", emissive: "red" });
+    const matB = useMaterial({ });
+    const matC = useMaterial({});
     const materials = [matA, matB, matC];
     
     app.systems.rigidbody.gravity.set(0, 0, 0);
@@ -100,14 +91,16 @@ export const Physics = () => {
 
         {/* Create the other spheres with a mover script */}
         { SHAPES.map(({ scale }, i) => (<ShapeCollider 
-            key={i} 
-            position={[randRange(40), randRange(40) - 50, randRange(40) - 20]}
-            scale={scale} 
-            material={materials[i % materials.length]}
-        >
+                key={i} 
+                type={Math.random() > 0.2 ? 'sphere' : 'capsule'}
+                position={[rand(40), rand(40) - 50, rand(40) - 20]}
+                
+                scale={scale} 
+                material={materials[i % materials.length]}
+            >
             <Script script={MoverScript} scale={scale * 0.3}/>
-            <RigidBody type="dynamic" linearDamping={0.75} angularDamping={0.15} friction={0.2}/>
-        </ShapeCollider>)) }
+            <RigidBody type="dynamic" linearDamping={0.75} angularDamping={0.9} friction={0.9}/>
+        </ShapeCollider>))}
     </Entity>)
 }
 
