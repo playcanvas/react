@@ -44,7 +44,7 @@ const PlayGround: FC<PlaygroundProps> = ({
 }) => {
 
     const resizeRef = useRef<HTMLDivElement>(null);
-    const [showCodeEditor, setShowCodeEditor] = useState(false);
+    const [showCodeEditor, setShowCodeEditor] = useState(true);
     
     return (
         <EditorProvider initialCode={code} >
