@@ -52,7 +52,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <Head faviconGlyph="✦" />
       <body>
         <Layout
-          banner={<Banner storageKey="0.2.0-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.2.0" target="_blank" rel="noreferrer">
+          banner={<Banner storageKey="0.2.1-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.2.1" target="_blank" rel="noreferrer">
             🎉 <b>@playcanvas/react 0.2.0</b> is released. Read more →
           </a></Banner>}
           navbar={navbar}
