@@ -2,8 +2,7 @@ import { ReadonlyKeysOf } from "type-fest";
 import { EntityNode } from "./entity-config";
 import { PlayCanvasHostContext } from "../hostConfig";
 
-
-type SystemKeys = ReadonlyKeysOf<pc.ComponentSystemRegistry>;
+export type SystemKeys = Exclude<ReadonlyKeysOf<pc.ComponentSystemRegistry>, 'script'>;
 type ComponentProps = Record<string, unknown>;
 
 export type ComponentNode = {
@@ -32,38 +31,15 @@ export function createInstance(type: SystemKeys, props: ComponentProps, app: pc.
   
 export function commitUpdate(instance: ComponentNode, _type: string, _oldProps: ComponentProps, newProps: ComponentProps) {
     // console.log('commitUpdate', instance, _type, oldProps, newProps)
-
-    const { attachedTo: entity, componentType, componentProps } = instance;
+    const { attachedTo: entity, componentType } = instance;
 
     if (!entity) {
         throw new Error('Component is not attached to an entity');
     }
 
-    // if (!entity[componentType as string]) {
-    //     entity.addComponent(componentType, { ...componentProps });
-    // } 
-
     // @ts-ignore
     const comp = entity[componentType as string];
-
-    // If the component is a script, we need to create it
-    if(componentType === 'script' && componentProps.script) {
-        const { script, ...props } = newProps
-        comp.create(script, {
-            properties: props,//{ ...componentProps },
-            preloading: false,
-        })
-
-        const scriptInstance = comp[script]
-        Object.assign(scriptInstance, props)
-        console.log('script', scriptInstance)
-    } else {
-        Object.assign(comp, newProps);
-    }
-
-    // Quick assign update
     Object.assign(comp, newProps);
-
 }
   
 export function appendChild(parent: EntityNode, child: ComponentNode) {
@@ -77,6 +53,7 @@ export function appendChild(parent: EntityNode, child: ComponentNode) {
 
         child.attachedTo = parent.entity;
         commitUpdate(child, 'component', {}, child.componentProps); 
+
     }
 }
 

@@ -72,7 +72,6 @@ function removeChildFromContainer(container: PlayCanvasHostContext, child: Entit
 }
 
 export default {
-    name,
     createInstance,
     commitUpdate,
     appendChild,

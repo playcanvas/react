@@ -3,8 +3,9 @@ import { HostConfig } from 'react-reconciler';
 
 import entityConfig, { EntityProps } from './config/entity-config';
 import * as componentConfig from './config/component-config';
+import * as scriptConfig from './config/script-config';
 
-import type { ReadonlyKeysOf } from 'type-fest';
+// import type { ReadonlyKeysOf } from 'type-fest';
 
 // Add these types near the top of the file
 // type Vec3Arr = [number, number, number];
@@ -21,21 +22,22 @@ type EntityNode = {
   entity: pc.Entity;
 }
 
-type SystemKeys = ReadonlyKeysOf<pc.ComponentSystemRegistry>;
+// type SystemKeys = ReadonlyKeysOf<pc.ComponentSystemRegistry>;
 
-type ComponentNode = {
-  type: 'component';
-  componentType: SystemKeys;
-  componentData: Record<string, any>;
-  componentProps: Record<string, any>;
-  attachedTo: pc.Entity | null;
-}
+// type ComponentNode = {
+//   type: 'component';
+//   componentType: SystemKeys;
+//   componentData: Record<string, any>;
+//   componentProps: Record<string, any>;
+//   attachedTo: pc.Entity | null;
+// }
 
-type PlayCanvasNode = EntityNode | ComponentNode;
+type PlayCanvasNode = EntityNode | componentConfig.ComponentNode | scriptConfig.ScriptNode;
 
 const hosts: Record<string, any> = {
   entity: entityConfig,
   component: componentConfig,
+  // script: scriptConfig,
 }
 
 // const entityConfig = {
@@ -282,40 +284,78 @@ export const ReactPlayCanvasHostConfig: HostConfig<
 
     // return hosts[type].createInstance(type, props, app);
 
-    if (type === "entity") {
+    // If the type is not found, use the component host
 
-      // @ts-ignore
-      return entityConfig.createInstance(type, props, app);
-      
-    } else {
+    // let host;
 
-      // @ts-ignore
-      return componentConfig.createInstance(type, props, app);
-
+    switch(type) {
+      case 'entity':
+        return hosts['entity'].createInstance(type, props, app);
+      case 'pcscript':
+        return hosts['script'].createInstance(type, props, app);
+      default:
+        return hosts['component'].createInstance(type, props, app);
     }
+
+
+
+    // const host = type === 'entity' ? hosts['entity'] : hosts['component'];
+    // return host.createInstance(type, props, app);
+
+    // switch(type) {
+    //   case "entity":
+    //     return entityConfig.createInstance(type, props, app);
+    //   case "script":
+    //     return scriptConfig.createInstance(type, props);
+    //   default:
+    //     return componentConfig.createInstance(type as componentConfig.SystemKeys, props, app);
+    // }
+
+    // if (type === "entity") {
+
+    //   // @ts-ignore
+    //   return entityConfig.createInstance(type, props, app);
+      
+    // } else if (type === "script") {
+
+    //   return scriptConfig.createInstance(type, props);
+
+    // } else {
+
+    //   // @ts-ignore
+    //   return componentConfig.createInstance(type, props, app);
+
+    // }
   },
 
   appendInitialChild(parent, child) {
     console.log('appendInitialChild called with:', parent?.type, child?.type);
 
-    hosts[child.type].appendInitialChild(parent, child);
+    // const host = hosts[child.type];
+    // host.appendInitialChild(parent, child);
 
-    // if (parent.type === 'entity' && child.type === 'entity') {
-    //   // Append child entity to parent entity
-    //   console.log('appendInitialChild', parent, child)
-    //   entityConfig.appendInitialChild(parent, child);
+    if (parent.type === 'entity' && child.type === 'entity') {
+      // Append child entity to parent entity
+      // console.log('appendInitialChild', parent, child)
+      entityConfig.appendInitialChild(parent, child);
       
-    // } else if (parent.type === 'entity' && child.type === 'component') {
-    //   // Attach component to the parent entity
-    //   console.log('Append Component to Entity', parent, child)
-    //   componentConfig.appendInitialChild(parent, child);
+    } else if (parent.type === 'entity' && child.type === 'component') {
+      // Attach component to the parent entity
+      // console.log('Append Component to Entity', parent, child)
+      componentConfig.appendInitialChild(parent, child);
       
-    //   // applyComponent(parent.entity, child.componentType, child.componentData);
-    //   // child.attachedTo = parent.entity;
-    // } else {
-    //   // e.g. attaching entity to a component makes no sense, or component->component
-    //   // In a more advanced scenario, you might handle special rules, but for now we ignore it.
-    // }
+      // applyComponent(parent.entity, child.componentType, child.componentData);
+      // child.attachedTo = parent.entity;
+    } else if (parent.type === 'component' && child.type === 'script'){
+      
+      scriptConfig.appendInitialChild(parent, child);
+      
+    } else {
+
+      console.warn(`Cannot attach a ${child.type} directly to a ${parent.type}.`);
+      // e.g. attaching entity to a component makes no sense, or component->component
+      // In a more advanced scenario, you might handle special rules, but for now we ignore it.
+    }
   },
 
   finalizeInitialChildren() {
@@ -332,10 +372,10 @@ export const ReactPlayCanvasHostConfig: HostConfig<
 
   insertBefore() {},
 
-  commitUpdate(instance, type : string, oldProps, newProps) {
+  commitUpdate(instance,  type : string, oldProps, newProps) {
 
-    hosts[instance.type].commitUpdate(instance, type, oldProps, newProps);
-
+    const host = hosts[instance.type];
+    host.commitUpdate(instance, type, oldProps, newProps);
   },
 
   shouldSetTextContent(/*type, props*/) {
@@ -345,8 +385,36 @@ export const ReactPlayCanvasHostConfig: HostConfig<
 
   appendChild(parent, child) {
     console.log('appendChild', parent, child)
-    hosts[child.type].appendChild(parent, child);
+    // const host = hosts[child.type];
+    // host.appendChild(parent, child);
+
+    if (parent.type === 'entity' && child.type === 'entity') {
+      // Append child entity to parent entity
+      // console.log('appendChild', parent, child)
+      entityConfig.appendChild(parent, child);
+      
+    } else if (parent.type === 'entity' && child.type === 'component') {
+      // Attach component to the parent entity
+      // console.log('Append Component to Entity', parent, child)
+      componentConfig.appendChild(parent, child);
+      
+      // applyComponent(parent.entity, child.componentType, child.componentData);
+      // child.attachedTo = parent.entity;
+    } else if (parent.type === 'component' && child.type === 'script'){
+      scriptConfig.appendChild(parent, child);
+    } else {
+
+      console.warn(`Cannot attach a ${child.type} directly to a ${parent.type}.`);
+      // e.g. attaching entity to a component makes no sense, or component->component
+      // In a more advanced scenario, you might handle special rules, but for now we ignore it.
+    }
     
+
+    // if (child.type === 'entity') {
+    //   entityConfig.appendChild(parent, child);
+    // } else if (child.type === 'component') {
+    //   componentConfig.appendChild(parent, child);
+    // }
     // if (!parent || !child) {
     //   // console.warn('appendChild: parent or child is null');
     //   return;
@@ -364,8 +432,32 @@ export const ReactPlayCanvasHostConfig: HostConfig<
   },
 
   appendChildToContainer(container, child) {
-    console.log('appendChildToContainer', container, child)
-    hosts[child.type].appendChildToContainer(container, child);
+    // console.log('appendChildToContainer', container, child)
+    // const host = hosts[child.type];
+    // host.appendChildToContainer(container, child);
+
+    // if (child.type === 'entity') {
+    //   // console.log('Adding child entity to parent entity:');
+    //   // parent.entity.addChild(child.entity);
+    //   entityConfig.appendChildToContainer(container, child);
+    // } else if (child.type === 'component') {
+
+    //   componentConfig.appendChildToContainer(container, child);
+    //   // applyComponent(parent.entity, child.componentType, child.componentData);
+    //   // child.attachedTo = parent.entity;
+    // }
+
+    if (child.type === 'entity') {
+      // Append child entity to parent entity
+      console.log('appendInitialChild', child)
+      entityConfig.appendChildToContainer(container, child);
+      
+    } else {
+
+      console.warn(`Cannot attach a ${child.type} directly to the root.`);
+      // e.g. attaching entity to a component makes no sense, or component->component
+      // In a more advanced scenario, you might handle special rules, but for now we ignore it.
+    }
 
     // The container is the "root container": we can assume it’s a { app: pc.Application } object
     // For top-level Entities, you might automatically add them to app.root
@@ -381,7 +473,8 @@ export const ReactPlayCanvasHostConfig: HostConfig<
 
   removeChild(parent: PlayCanvasNode, child: PlayCanvasNode) {
     console.log('removeChild', parent, child)
-    hosts[child.type].removeChild(parent, child);
+    const host = hosts[child.type]
+    host.removeChild(parent, child);
 
     // if (parent.type === 'entity' && child.type === 'entity') {
     //   if (parent.entity.children.includes(child.entity)) {
@@ -396,7 +489,8 @@ export const ReactPlayCanvasHostConfig: HostConfig<
   removeChildFromContainer(container: PlayCanvasHostContext, child: PlayCanvasNode) {
     console.log('removeChildFromContainer', container, child)
 
-    hosts[child.type].removeChildFromContainer(container, child);
+    const host = hosts[child.type];
+    host.removeChildFromContainer(container, child);
     // if (child.type === 'entity') {
     //   // container.app.root.removeChild(child.entity);
     // } else if (child.type === 'component' && child.attachedTo) {

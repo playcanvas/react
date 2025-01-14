@@ -70,7 +70,7 @@ export const useTexture = (src : string, props = {}) => useAsset(src, 'texture',
 class Spinner extends Script {
     initialize() {
         // cnt++
-        this.seed = Math.round(Math.random() * 1000000)
+        this.seed = Math.round(Math.random() * 100)
         // console.log('initialize', cnt)
 
         // this.on('destroy', () => {
@@ -84,7 +84,7 @@ class Spinner extends Script {
     }
 }
 
-const Content = ({ fov, z, speed }: { fov: number, z: number, speed: number }) => {
+const Content = ({ fov, z, speed, runScript }: { fov: number, z: number, speed: number, runScript: boolean }) => {
 
     // const { data } = useModel('/t-rex.glb');
     
@@ -111,7 +111,7 @@ const Content = ({ fov, z, speed }: { fov: number, z: number, speed: number }) =
             </entity>
             <entity name="child" position={[1, 0, 0]} >
                 <render type="box" />
-                <script script={Spinner} speed={speed} />
+                { runScript && <script script={Spinner} speed={speed} /> }  
             </entity>
         </entity>
     </>
@@ -123,15 +123,17 @@ export default function Sandbox({ children }: { children: React.ReactNode }) {
     const [z, setZ] = useState(20)
     const [fov, setFov] = useState(20)
     const [speed, setSpeed] = useState(1)
+    const [runScript, setRunScript] = useState(true)
 
     console.log('sandbox',fov, z, speed)
 
     return <div>
         <button onClick={() => setZ(Math.random() * 10 + 4)}>Change Z</button>
         <button onClick={() => setFov(Math.random() * 10 + 30)}>Change FOV</button>
-        <button onClick={() => setSpeed(Math.random() * 10 + 30)}>Change Speed</button>
+        <button onClick={() => setSpeed(Math.random())}>Change Speed</button>
+        <button onClick={() => setRunScript(!runScript)}>{ runScript ? 'Disable Script' : 'Enable Script' }</button>
         <Application>
-            <Content fov={fov} z={z} speed={speed}/>
+            <Content fov={fov} z={z} speed={speed} runScript={runScript}/>
         </Application>
     </div>
 }
