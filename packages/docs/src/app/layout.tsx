@@ -7,8 +7,6 @@ import './globals.css'
 import { CodeXml } from 'lucide-react'
 import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
 
-export const { viewport } = Head
-
 export const metadata = {
   metadataBase: new URL('https://playcanvas.com'),
   title: {
