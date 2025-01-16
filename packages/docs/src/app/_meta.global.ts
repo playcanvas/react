@@ -29,6 +29,7 @@ export default {
   playground: {
     
     title: 'Playground',
+    theme: { footer: false },
     items: {
       "Basic" : {
         type: 'separator',
@@ -45,6 +46,9 @@ export default {
       'model-viewer' : '',
       'physics' : '',
       'motion' : '',
+      'splats': {
+        display: 'hidden'
+      }
     },
   },
   '---': {

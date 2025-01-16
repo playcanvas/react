@@ -64,7 +64,7 @@ const PlayGround: FC<PlaygroundProps> = ({
             <div id='leva-portal' className='h-0' onMouseMove={e => e.stopPropagation() } >
                 <Leva collapsed hidden/>
             </div>
-            <div className="w-screen h-screen" ref={resizeRef} >
+            <div className="absolute w-screen h-screen top-0 -z-10" ref={resizeRef} >
                 <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} >
                     <ResizeHandler resizeRef={resizeRef}/>
                     <Suspense >
@@ -74,10 +74,10 @@ const PlayGround: FC<PlaygroundProps> = ({
             </div>
             { showCodeEditor && <Suspense>
                 <div 
-                    className='absolute top-[var(--nextra-navbar-height)] h-[calc(100vh-var(--nextra-navbar-height))] flex mx-auto max-w-[90rem] xl:p-8'
+                    className='absolute p-0 lg:p-12 top-[calc(var(--nextra-navbar-height)+var(--nextra-banner-height))] h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-banner-height))] flex mx-auto max-w-[90rem] xl:p-8'
                     onMouseMove={e => e.stopPropagation() }
                 >
-                    <div className='w-screen xl:w-xl overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
+                    <div className='w-screen lg:w-lg overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
                         <div id='code-editor-header' className='flex justify-between items-center p-2 bg-zinc-800 px-4'>
                             <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono opacity-80 w-full'>
                                 <TerminalIcon className='w-4 h-4' />
