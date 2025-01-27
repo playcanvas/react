@@ -84,7 +84,7 @@
         "access": "public"
     },
     "devDependencies": {
-        "typescript": "^5.6.3"
+        "typescript": "5.7.3"
     },
     "dependencies": {
         "sync-ammo": "^0.1.2"
