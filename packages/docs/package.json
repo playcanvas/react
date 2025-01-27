@@ -19,15 +19,15 @@
     "leva": "^0.9.35 || ^0.10.0",
     "lucide-react": "^0.465.0 || ^0.474.0",
     "monaco-editor": "^0.52.0",
-    "motion": "^11.13.1",
+    "motion": "^11.13.1 || ^12.0.0",
     "next": "^15.0.2",
-    "next-mdx-remote-client": "^1.0.3",
+    "next-mdx-remote-client": "^1.0.3 || ^2.0.0",
     "nextra": "^4.0.0",
     "nextra-theme-docs": "^4.0.0",
     "playcanvas": "^2.3.3",
-    "react": "^18.3.1",
+    "react": "^18.3.1 || ^19.0.0",
     "react-codesandboxer": "^3.1.5",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1 || ^19.0.0"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.0.0",
