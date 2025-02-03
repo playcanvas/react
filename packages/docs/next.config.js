@@ -13,7 +13,7 @@ const withNextra = nextra({
   search: {
     codeblocks: false
   },
-  contentDirBasePath: '/playground',
+  contentDirBasePath: '/examples',
 })
 
 export default withNextra({
@@ -35,8 +35,8 @@ export default withNextra({
   },
   redirects: async () => [
     {
-        source: '/playground',
-        destination: '/playground/model-viewer',
+        source: '/examples',
+        destination: '/examples/model-viewer',
         permanent: true
     },
     {

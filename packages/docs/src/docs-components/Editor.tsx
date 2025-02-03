@@ -1,5 +1,6 @@
-import { FC, useState, useEffect, createContext, useContext, useMemo } from "react";
+import { FC, useState, useEffect, createContext, useContext, useMemo, useRef } from "react";
 import MonacoEditor from '@monaco-editor/react';
+import { ErrorBoundary } from "./code-error-boundary";
 import { defaultComponents } from "@/../mdx-components";
 import { serialize } from "next-mdx-remote-client/serialize";
 import { MDXClient, type SerializeResult } from "next-mdx-remote-client/csr";
@@ -89,6 +90,8 @@ const Editor: FC<EditorProps> = () => {
 
 const Preview: FC = () => {
     const { code } = useContext<EditorContextType>(EditorContext);
+    const resetKey = useRef(0);
+
     const components = defaultComponents;
     const [mdxSource, setMdxSource] = useState<SerializeResult | null>(null);
 
@@ -118,10 +121,12 @@ const Preview: FC = () => {
     if ('error' in mdxSource) return <div>Error parsing MDX: {mdxSource.error.message}</div>;
 
     return (
-        <MDXClient
-            {...mdxSource}
-            components={components}
-        />
+        <ErrorBoundary resetKey={resetKey.current++} >
+            <MDXClient
+                {...mdxSource}
+                components={components}
+            />
+        </ErrorBoundary>
     );
 }
 

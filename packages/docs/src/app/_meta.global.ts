@@ -1,3 +1,35 @@
+const examples = {
+  "Basic" : {
+    type: 'separator',
+  },
+  'hello-world': {
+    href: '/examples/hello-world'
+  },
+  'load-a-3D-model' : {
+    title : 'Load a 3D model',
+    href: '/examples/load-a-3D-model'
+  },
+  'primitives' : {
+    href: '/examples/primitives'
+  },
+  'pointer-events' : {
+    href: '/examples/pointer-events'
+  },
+  "Advanced" : {
+    type: 'separator',
+  },
+  'model-viewer' : {
+    href: '/examples/model-viewer'
+  },
+  'physics' : {
+    href: '/examples/physics'
+  },
+  'motion' : {
+    href: '/examples/motion'
+  },
+}
+
+
 export default {
   docs: {
     type: 'page',
@@ -26,26 +58,18 @@ export default {
       },
     },
   },
-  playground: {
-    
-    title: 'Playground',
-    theme: { footer: false },
+  menuExample: {
+    title: 'Examples',
+    type: 'menu',
+    items: examples
+  },
+  examples: {
+    title: 'Examples',
+    theme: {
+      footer: false
+    },
     items: {
-      "Basic" : {
-        type: 'separator',
-      },
-      'hello-world' : '',
-      'load-a-3D-model' : {
-        'title' : 'Load a 3D model'
-      },
-      'primitives' : '',
-      'pointer-events' : '',
-      "Advanced" : {
-        type: 'separator',
-      },
-      'model-viewer' : '',
-      'physics' : '',
-      'motion' : '',
+      ...examples,
       'splats': {
         display: 'hidden'
       }
