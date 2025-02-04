@@ -25,7 +25,7 @@
         "eslint-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
         "globals": "15.14.0",
         "type-fest": "4.33.0",
-        "typescript-eslint": "8.21.0"
+        "typescript-eslint": "8.23.0"
     },
     "dependencies": {
         "codesandbox": "^2.2.3"
