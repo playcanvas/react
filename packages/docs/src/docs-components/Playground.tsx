@@ -45,6 +45,12 @@ const PlayGround: FC<PlaygroundProps> = ({
 
     const resizeRef = useRef<HTMLDivElement>(null);
     const [showCodeEditor, setShowCodeEditor] = useState(true);
+
+    useEffect(() => {
+        const onRightClick = (event) => event.preventDefault();
+        document.addEventListener("contextmenu", onRightClick);
+        return () => document.removeEventListener("contextmenu", onRightClick);
+    }, [])
     
     return (
         <EditorProvider initialCode={code} >
