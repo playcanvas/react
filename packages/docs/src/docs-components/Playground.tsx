@@ -71,7 +71,7 @@ const PlayGround: FC<PlaygroundProps> = ({
                 <Leva collapsed hidden/>
             </div>
             <div className="absolute w-screen h-screen top-0 -z-10 pointer-events-none" ref={resizeRef} >
-                <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} >
+                <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} className="pointer-events-auto">
                     <ResizeHandler resizeRef={resizeRef}/>
                     <Suspense >
                         <Preview/>
