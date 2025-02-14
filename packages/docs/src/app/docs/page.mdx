@@ -11,7 +11,7 @@ import Example from '@/templates/HomePageExample'
 
 ## @playcanvas/react
 
-A thin react library for for creating 3D apps that suppports pointer events, physics, gaussian splats, and more straight out of the box.
+A thin react library for for creating 3D apps that supports pointer events, physics, gaussian splats, and more straight out of the box.
 
 import { Tabs, Code } from 'nextra/components'
 
@@ -49,14 +49,25 @@ import { Tabs, Code } from 'nextra/components'
   </Tabs.Tab>
 </Tabs>
 
-<Cards num={3}>
-  <Cards.Card
-    icon={<Terminal />}
-    title="Open in Examples"
-    href="/examples/model-viewer"
-    arrow
-  />
-</Cards>
+<div className="inline-buttons ">
+  
+  <a className='grayscale' href="https://codesandbox.io/p/sandbox/playcanvas-react-nwlrlm">
+    <img
+      alt="Open in CodeSandbox"
+      src="https://codesandbox.io/static/img/play-codesandbox.svg"
+    />
+  </a>
+  {/* <a href="https://stackblitz.com/github/___YOUR_PATH___">
+    <img
+      alt="Open in StackBlitz"
+      src="https://developer.stackblitz.com/img/open_in_stackblitz.svg"
+    />
+  </a> */}
+  <a className='example-button'href="/examples/model-viewer">
+    <Terminal/>
+    <span>Open in Playground</span>
+  </a>
+</div>
 
 ### How does it work?
 

@@ -22,9 +22,9 @@
     "motion": "^11.13.1",
     "next": "^15.0.2",
     "next-mdx-remote-client": "^1.0.3",
-    "nextra": "^4.0.0",
-    "nextra-theme-docs": "^4.0.0",
-    "playcanvas": "^2.3.3",
+    "nextra": "^4.2.10",
+    "nextra-theme-docs": "^4.2.10",
+    "playcanvas": "2.3.3",
     "react": "^18.3.1",
     "react-codesandboxer": "^3.1.5",
     "react-dom": "^18.3.1"

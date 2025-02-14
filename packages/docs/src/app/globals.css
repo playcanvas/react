@@ -13,6 +13,73 @@
     color: white;
 }
 
+.example-button {
+    background-color: #f0f2e5;
+    padding-left: .3rem;
+    padding-right: .3rem;
+    border-radius: 4px;
+    margin: 0;
+    font-size: .8rem;
+    font-weight: 500;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: nowrap;
+    color: black;
+}
+
+.example-button > svg {
+    padding: .3rem;
+    margin-right: .3rem;
+}
+
+.example-button > * {
+    padding-right: .3rem;
+    padding-left: .6rem;
+    align-items: center;
+    height: 100%;
+}
+.example-button > span {
+    border-left: 1px rgba(38, 38, 38, 0.183) solid;
+    display: grid;
+    place-items: center;
+}
+
+.inline-buttons {
+    padding-top: 1rem;
+    display: flex;
+}
+
+.inline-buttons > *:first-child {
+    margin-left: 0;
+}
+
+.inline-buttons a {
+    margin-right: .5rem;
+    margin-left: .5rem;
+}
+
+.grayscale {
+    filter: grayscale(90%);
+}
+
+.grayscale:hover {
+    filter: none;
+}
+
+.inline-buttons a:hover{
+    filter: none;
+    background: var(--x-color-primary-600);
+    color: white;
+}
+
+.inline-buttons a {
+    @apply cursor-pointer opacity-25
+}
+.inline-buttons a:hover {
+    @apply opacity-100
+}
+
 a[href=""] {
     @apply text-xs font-bold text-white no-underline cursor-default pointer-events-none;
 }
