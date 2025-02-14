@@ -16,8 +16,6 @@ const Example = () => {
     const { data: envMap } = useEnvAtlas('/environment-map.png');
     const { data: model } = useModel('/lamborghini_vision_gt.glb');
 
-    if(!envMap || !model) return <LoadingSpinner />;
-
     return (<Entity>
         <EnvAtlas asset={envMap} intensity={0.8} showSkybox={false} />
         <Grid />
@@ -28,9 +26,9 @@ const Example = () => {
             <AutoRotate />
         </Entity>
         <Entity>
-            <Container asset={model}>
+            { model && <Container asset={model}>
                 <ShadowCatcher width={5} depth={5}/>
-            </Container>
+            </Container> }
         </Entity>
     </Entity>)
 }

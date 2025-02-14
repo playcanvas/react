@@ -1,6 +1,7 @@
 {
     "name": "@playcanvas/react",
     "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
+    "homepage": "https://playcanvas-react.vercel.app",
     "version": "0.2.1",
     "type": "module",
     "sideEffects": false,
@@ -39,24 +40,24 @@
     ],
     "exports": {
         ".": {
-            "import": "./dist/index.js",
-            "types": "./dist/index.d.ts"
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
         },
         "./components": {
-            "import": "./dist/components/index.js",
-            "types": "./dist/components/index.d.ts"
+            "types": "./dist/components/index.d.ts",
+            "import": "./dist/components/index.js"
         },
         "./scripts": {
-            "import": "./dist/scripts/index.js",
-            "types": "./dist/scripts/index.d.ts"
+            "types": "./dist/scripts/index.d.ts",
+            "import": "./dist/scripts/index.js"
         },
         "./utils": {
-            "import": "./dist/utils/index.js",
-            "types": "./dist/utils/index.d.ts"
+            "types": "./dist/utils/index.d.ts",
+            "import": "./dist/utils/index.js"
         },
         "./hooks": {
-            "import": "./dist/hooks/index.js",
-            "types": "./dist/hooks/index.d.ts"
+            "types": "./dist/hooks/index.d.ts",
+            "import": "./dist/hooks/index.js"
         }
     },
     "typesVersions": {
