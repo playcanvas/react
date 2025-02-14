@@ -4,27 +4,27 @@
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
 ![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)
 
-A lightweight, declarative library for for creating 3D apps that supports Physics, Pointer Events, Gaussian Splats and a built-in Scripting API straight out of the box.
+[Docs](https://playcanvas-react.vercel.app) | [Guide](http://localhost:3001/docs/guide/getting-started) | [Examples](http://localhost:3001/examples/)
+
+A lightweight, library for for creating 3D apps in React that supports Physics, Pointer Events, Gaussian Splats and a built-in Scripts out of the box.
 
 <img width="1673" alt="image" src="https://github.com/user-attachments/assets/92053462-f39e-4f6d-94fc-b34e7b9ea266" />
 
-[Documentation](https://playcanvas-react.vercel.app)
-
 ### Getting Started
 
-Install the package via npm:
+Install with your favorite package manager...
 
 ```bash
-npm install @playcanvas/react react react-dom playcanvas --save
+npm install @playcanvas/react react react-dom playcanvas
 ```
-Then, in your React app...
+Create a sphere component
 
 ```jsx
 import { Application, Entity } from '@playcanvas/react'
 import { Camera } from "@playcanvas/react/components"
 import { OrbitControls } from "@playcanvas/react/scripts"
 
-const App = (lambo) => {
+const App = () => {
   return (
     <Application>
         <Entity position={[0, 2, 0]}>
@@ -32,34 +32,34 @@ const App = (lambo) => {
           <OrbitControls />
         </Entity>
         <Entity >
-          <Container asset={lambo} />
+          <Render type="sphere" />
         </Entity>
     </Application>
   );
 }
 ```
 
-#### Features
+Et voilà! ✨
 
-- Simple declarative API for creating 3D apps
-- Supports Asset loading with Suspense boundaries.
-- PointerEvents with event bubbling
-- Supports [Physics]((https://github.com/kripken/ammo.js)) out of the box
-- Imperative Scripting API for the `<Script/>` component for high performance updates.
-- Extensible Entity Component System that allows you to add new features.
+The library is built around the [PlayCanvas engine](https://github.com/playcanvas/engine) and comes with lots of features for creating more complex content including...
 
-#### Learning more
+- 🎭 Simple Scene API
+- ⏳ Suspenseful Asset loading
+- ️👆 Pointer Events
+- 🛠️ Physics out of the box
+- ⚡ Script component for high frequency updates
+- 🏗️ Entity Component System
 
-With @playcanvas/react you can add interactive 3D content directly within a React project using the same familiar JSX syntax as the rest of your app. The entire React ecosystem such as it's powerful state management and dev tools are available, so you can make live changes and preserve all of your 3D state.
+### Learn more
 
-`@playcanvas/react` is built around the popular PlayCanvas engine. If you're not familiar with it or React, it's worth checking out the docs for both. Much of the `@playcanvas/react` api is a thin wrapper around the Entity Component System (ECS) used in PlayCanvas, so even a basic understanding of this is helpful.
+To find out more, check the [Getting Started](https://playcanvas-react.vercel.app/docs/guide/getting-started) guide for a walk through, or see the [other examples](https://playcanvas-react.vercel.app/examples/) in the Playground.
 
-You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
+- [Hello World](http://localhost:3001/examples/hello-world)
+- [Loading a Model](http://localhost:3001/examples/load-a-3D-model)
+- [Interaction](http://localhost:3001/examples/pointer-events)
+- [Physics](http://localhost:3001/examples/physics)
 
-### Contributing
 
-We welcome contributions! Please read our [Contributing Guide](https://github.com/playcanvas/engine/blob/main/.github/CONTRIBUTING.md) to get started.
 
-### Support
 
-If you encounter any issues or have questions, please open an issue on our [GitHub repository](https://github.com/playcanvas/playcanvas-react/issues).
+
