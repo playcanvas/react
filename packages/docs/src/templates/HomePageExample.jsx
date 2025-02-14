@@ -8,7 +8,6 @@ import { useEnvAtlas, useModel } from '@/components/hooks/use-asset';
 import Grid from '@/components/Grid';
 import AutoRotate from '@/components/AutoRotate';
 import { StaticPostEffects } from '@/components/PostEffects';
-import { LoadingSpinner } from '@/components/LoadingSpinner';
 import ShadowCatcher from '@/components/ShadowCatcher';
 
 const Example = () => {
