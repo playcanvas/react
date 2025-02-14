@@ -55,7 +55,7 @@ The library is built around the [PlayCanvas engine](https://github.com/playcanva
 To find out more, check the [Getting Started](https://playcanvas-react.vercel.app/docs/guide/getting-started) guide for a walk through, or see the [other examples](https://playcanvas-react.vercel.app/examples/) in the Playground.
 
 - [Hello World](http://localhost:3001/examples/hello-world)
-- [Loading a Model](http://localhost:3001/examples/load-a-3D-model)
+- [Loading a 3d model](http://localhost:3001/examples/load-a-3D-model)
 - [Interaction](http://localhost:3001/examples/pointer-events)
 - [Physics](http://localhost:3001/examples/physics)
 
