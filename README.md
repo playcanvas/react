@@ -15,7 +15,7 @@ A lightweight, library for for creating 3D apps in React that supports Physics, 
 Install with your favorite package manager...
 
 ```bash
-npm install @playcanvas/react react react-dom playcanvas
+npm install @playcanvas/react playcanvas
 ```
 Create a sphere component
 
