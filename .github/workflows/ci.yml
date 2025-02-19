@@ -28,3 +28,6 @@ jobs:
 
       - name: Lint ESLint
         run: npm run lint
+
+      - name: Continuous Release
+        run: npx pkg-pr-new publish --compact
