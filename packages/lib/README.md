@@ -4,7 +4,7 @@
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
 ![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)
 
-[Docs](https://playcanvas-react.vercel.app) | [Guide](http://localhost:3001/docs/guide/getting-started) | [Examples](http://localhost:3001/examples/)
+[Docs](https://playcanvas-react.vercel.app) | [Guide](http://playcanvas-react.vercel.app/docs/guide/getting-started) | [Examples](https://playcanvas-react.vercel.app/examples/)
 
 A lightweight, library for for creating 3D apps in React that supports Physics, Pointer Events, Gaussian Splats and a built-in Scripts out of the box.
 
@@ -15,7 +15,7 @@ A lightweight, library for for creating 3D apps in React that supports Physics, 
 Install with your favorite package manager...
 
 ```bash
-npm install @playcanvas/react react react-dom playcanvas
+npm install @playcanvas/react playcanvas
 ```
 Create a sphere component
 
@@ -54,10 +54,10 @@ The library is built around the [PlayCanvas engine](https://github.com/playcanva
 
 To find out more, check the [Getting Started](https://playcanvas-react.vercel.app/docs/guide/getting-started) guide for a walk through, or see the [other examples](https://playcanvas-react.vercel.app/examples/) in the Playground.
 
-- [Hello World](http://localhost:3001/examples/hello-world)
-- [Loading a 3d model](http://localhost:3001/examples/load-a-3D-model)
-- [Interaction](http://localhost:3001/examples/pointer-events)
-- [Physics](http://localhost:3001/examples/physics)
+- [Hello World](http://playcanvas-react.vercel.app/examples/hello-world)
+- [Loading a 3d model](http://playcanvas-react.vercel.app/examples/load-a-3D-model)
+- [Interaction](http://playcanvas-react.vercel.app/examples/pointer-events)
+- [Physics](http://playcanvas-react.vercel.app/examples/physics)
 
 
 
