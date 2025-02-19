@@ -3,8 +3,12 @@ import { useScript } from "../hooks"
 import { FC, memo, useMemo } from "react";
 import { shallowEquals } from "../utils/shallow-equals";
 
+type PcScriptWithoutPrivateName = Omit<typeof PcScript, '__name'> & {
+    __name: string;
+};
+
 interface ScriptProps {
-    script: new (...args: unknown[]) => PcScript;
+    script: PcScriptWithoutPrivateName & { __name?: string, name: string };
     [key: string]: unknown;
 }
 
