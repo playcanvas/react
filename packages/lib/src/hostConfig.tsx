@@ -257,6 +257,7 @@ export const ReactPlayCanvasHostConfig: HostConfig<
   prepareScopeUpdate: () => console.log('prepareScopeUpdate'),
   // getInstanceFromScope: () => null,
   
+  prepareUpdate: () => console.log('prepareUpdate'),
 
   getRootHostContext(rootContainerInstance) {
     return { app: rootContainerInstance.app };
@@ -373,8 +374,8 @@ export const ReactPlayCanvasHostConfig: HostConfig<
   insertBefore() {},
 
   commitUpdate(instance,  type : string, oldProps, newProps) {
-
     const host = hosts[instance.type];
+    console.log('commitUpdate')
     host.commitUpdate(instance, type, oldProps, newProps);
   },
 

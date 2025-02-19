@@ -26,19 +26,19 @@ export default {
       },
     },
   },
-  playground: {
-    type: 'menu',
-    title: 'Playground',
-    items: {
-      "---" : {
-        title: 'Basic',
-        type: 'separator',
-      },
-      'model-viewer' : '',
-      'physics' : '',
-      'motion' : '',
-    },
-  },  
+  // playground: {
+  //   type: 'menu',
+  //   title: 'Playground',
+  //   items: {
+  //     "---" : {
+  //       title: 'Basic',
+  //       type: 'separator',
+  //     },
+  //     'model-viewer' : '',
+  //     'physics' : '',
+  //     'motion' : '',
+  //   },
+  // },  
   company: {
     title: 'Company',
     type: 'menu',

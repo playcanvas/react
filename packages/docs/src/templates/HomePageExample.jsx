@@ -1,5 +1,7 @@
 "use client";
 
+import { Script } from "playcanvas";
+
 // import { Container, Entity } from '@playcanvas/react';
 // import { Camera, EnvAtlas } from '@playcanvas/react/components';
 // import { OrbitControls } from '@playcanvas/react/scripts';
@@ -10,12 +12,26 @@
 // import { StaticPostEffects } from '@/components/PostEffects';
 // import { LoadingSpinner } from '@/components/LoadingSpinner';
 
+class ScriptTest extends Script {
+    update(){console.log('here')}
+}
+
 const Example = () => {
-    <entity/>
     // const { data: envMap } = useEnvAtlas('/environment-map.png');
     // const { data: model } = useModel('/lamborghini_vision_gt.glb');
 
     // if(!envMap || !model) return <LoadingSpinner />;
+
+    return <>
+        <entity name='root'>
+          <entity name='camera' key='a' position={[0, 0, 20]}>
+            <camera />
+          </entity>
+          <entity name='child' key='b'>
+            <render type='sphere' />
+          </entity>
+        </entity>
+    </>
 
     // return (<Entity>
     //     <EnvAtlas asset={envMap} intensity={0.5} showSkybox={false} />

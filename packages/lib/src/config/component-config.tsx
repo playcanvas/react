@@ -30,7 +30,7 @@ export function createInstance(type: SystemKeys, props: ComponentProps, app: pc.
 }
   
 export function commitUpdate(instance: ComponentNode, _type: string, _oldProps: ComponentProps, newProps: ComponentProps) {
-    // console.log('commitUpdate', instance, _type, oldProps, newProps)
+    console.log('commitUpdate', instance, _type, _oldProps, newProps)
     const { attachedTo: entity, componentType } = instance;
 
     if (!entity) {
