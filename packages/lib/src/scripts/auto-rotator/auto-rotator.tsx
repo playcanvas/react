@@ -5,7 +5,6 @@ const smoothStep = (x: number): number =>
 
 
 class AutoRotator extends Script {
-  __name = 'AutoRotator'
   speed: number = 4;
   pitchSpeed: number = 0;
   pitchAmount: number = 1;
