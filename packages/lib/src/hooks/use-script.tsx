@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
-import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
+import { AppBase, Application, Entity, Script, ScriptComponent } from 'playcanvas';
 
 const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
 
@@ -9,7 +9,19 @@ interface Props {
   [key: string]: unknown;
 }
 
-export const useScript = (scriptConstructor:  new (...args: unknown[]) => Script, props: Props) : void  => {
+// type PcScriptWithName = Omit<typeof Script, '__name'> & {
+//   __name: string;
+// } & { 
+//   __name: string, 
+//   name: string
+// };
+// type PcScriptWithName = {
+//   new (args: { app: AppBase; entity: Entity; }): Script
+//   __name: string;
+// }
+
+
+export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: Entity; }) => Script, props: Props) : void  => {
   const parent: Entity = useParent();
   const app: Application = useApp();
   const scriptName: string = toLowerCamelCase(scriptConstructor.name);
@@ -29,7 +41,7 @@ export const useScript = (scriptConstructor:  new (...args: unknown[]) => Script
     if (!scriptRef.current) {
       // Create the script instance with the provided attributes
       const scriptComponent : ScriptComponent = parent.script as ScriptComponent;
-      const scriptInstance = scriptComponent.create(scriptConstructor as typeof Script, {
+      const scriptInstance = scriptComponent.create(scriptConstructor as unknown as typeof Script, {
         properties: { ...props },
         preloading: false,
       });

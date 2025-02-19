@@ -1,10 +1,18 @@
-import { Script as PcScript } from "playcanvas";
+import { AppBase, Entity, Script as PcScript } from "playcanvas";
 import { useScript } from "../hooks"
 import { FC, memo, useMemo } from "react";
 import { shallowEquals } from "../utils/shallow-equals";
 
+// type PcScriptWithoutPrivateName = Omit<typeof PcScript, '__name'> & {
+//     __name: string;
+// };
+// type PcScriptWithoutPrivateName = {
+//     new (args: { app: AppBase; entity: Entity; }): PcScript
+//     __name: string;
+// };
+
 interface ScriptProps {
-    script: new (...args: unknown[]) => PcScript;
+    script: new (args: { app: AppBase; entity: Entity; }) => PcScript;
     [key: string]: unknown;
 }
 
