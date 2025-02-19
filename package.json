@@ -23,9 +23,9 @@
         "eslint": "9.20.1",
         "eslint-plugin-react": "7.37.4",
         "eslint-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
-        "globals": "15.14.0",
-        "type-fest": "4.34.1",
-        "typescript-eslint": "8.24.0"
+        "globals": "15.15.0",
+        "type-fest": "4.35.0",
+        "typescript-eslint": "8.24.1"
     },
     "dependencies": {
         "codesandbox": "^2.2.3"
