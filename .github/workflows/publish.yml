@@ -1,4 +1,4 @@
-name: Lint
+name: Publish
 
 on:
   pull_request:
@@ -25,6 +25,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm i
-
-      - name: Lint ESLint
-        run: npm run lint
+  
+      - name: Continuous Release
+        run: npx pkg-pr-new publish './packages/lib' --compact
