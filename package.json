@@ -2,6 +2,10 @@
     "name": "playcanvas-react-monorepo",
     "description": "A monorepo for PlayCanvas React renderer and examples. Please see the packages directory for more information.",
     "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/playcanvas/react/tree/main/packages/lib"
+    },
     "workspaces": [
         "packages/*"
     ],

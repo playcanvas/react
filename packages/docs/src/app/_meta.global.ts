@@ -21,6 +21,10 @@ const examples = {
   'model-viewer' : {
     href: '/examples/model-viewer'
   },
+  'splats' : {
+    title: "Splat Viewer",
+    href: '/examples/splats'
+  },
   'physics' : {
     href: '/examples/physics'
   },
@@ -71,7 +75,6 @@ export default {
     items: {
       ...examples,
       'splats': {
-        display: 'hidden'
       }
     },
   },
