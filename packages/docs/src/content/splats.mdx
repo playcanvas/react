@@ -1,0 +1,25 @@
+export const Example = () => {
+
+    /**
+     * Loading a Gaussian Splat ply
+     */
+
+    const splatURL = "https://6rpjo46zo7.ufs.sh/f/dTTBXSHFOX4z7irrg5DfZElT6yeQYKvdjgi5IsoB0cmu9OtF"
+    const { data: splat } = useSplat(splatURL);
+
+    return <Entity>
+        {/* Create a camera entity */}
+        <EnvAtlasComponent src='/environment-map.png' hideSkybox={false}/>
+
+        <Entity>
+            <Camera fov={30} />
+            { splat && <OrbitControls distanceMin={3} distanceMax={6} /> }
+        </Entity>
+        {/* Create the splat entity */}
+        <Entity rotation={[0, -40, 0]} position={[0.2, -1.7, -6]}>
+            { splat && <GSplat asset={splat}/> }
+        </Entity>
+    </Entity>
+}
+
+<Example />
