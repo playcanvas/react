@@ -80,10 +80,19 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
     const pointerDetails = useRef<PointerEvent | null>(null);
     const canvasRectRef = useRef<DOMRect | null>(app ? app.graphicsDevice.canvas.getBoundingClientRect() : null);
 
+    // Construct a Global Picker
+    const picker: Picker | null = useMemo((): Picker | null => {
+        if (!app || !app.graphicsDevice) return null;
+        return new Picker(app, app.graphicsDevice.width, app.graphicsDevice.height);
+    }, [app]);
+
     // Watch for the canvas to resize. Neccesary for correct picking
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
             canvasRectRef.current = app ? app.graphicsDevice.canvas.getBoundingClientRect() : null;
+            if(canvasRectRef.current) {
+                picker?.resize(canvasRectRef.current.width, canvasRectRef.current.height);
+            }
         });
 
         if(app) resizeObserver.observe(app.graphicsDevice.canvas);
@@ -91,11 +100,6 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
 
     }, [app]);
 
-    // Construct a Global Picker
-    const picker: Picker | null = useMemo((): Picker | null => {
-        if (!app || !app.graphicsDevice) return null;
-        return new Picker(app, app.graphicsDevice.width, app.graphicsDevice.height);
-    }, [app]);
 
     // Store pointer position
     const onPointerMove = useCallback((e: PointerEvent) => {
