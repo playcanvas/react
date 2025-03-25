@@ -50,8 +50,6 @@ const Editor: FC<EditorProps> = () => {
             
             if (!hasErrors) {
                 setCode(model.getValue());
-            } else {
-                console.log('errors')
             }
         }
     }
