@@ -60,10 +60,6 @@ const PlayGround: FC<PlaygroundProps> = ({
                 { !showCodeEditor && <button onClick={() => setShowCodeEditor(true)} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
                     <TerminalIcon className='w-full h-full' />
                 </button> }
-
-                {/* <button onClick={() => console.log('ss')} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
-                    <EllipsisIcon className='w-full h-full' />
-                </button> */}
              
             </div>
 

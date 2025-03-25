@@ -25,12 +25,8 @@ export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
 
         const anim : AnimComponent | undefined = entity.anim
 
-        if( asset?.resource ) console.log('anim', asset.resource);
-
         // Early out if component instantiation fails, or the asset contains no animations
         if(!anim || !asset?.resource?.animations || asset.resource.animations.length === 0) return;
-
-        console.log('animations', asset.resource.animations);
         
         // Filter out non animations, and assign animations to component
         asset.resource.animations
