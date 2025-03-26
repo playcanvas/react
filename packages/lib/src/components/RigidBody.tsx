@@ -22,7 +22,7 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
         if (physicsError) {
             throw new Error(
                 `Failed to initialize physics: ${physicsError.message}. ` +
-                'This might be due to network issues or browser compatibility problems.'
+                "Run `npm install sync-ammo` in your project, if you haven't done so already."
             );
         }
     }, [isPhysicsEnabled, physicsError]);
