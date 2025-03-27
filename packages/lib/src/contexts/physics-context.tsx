@@ -45,7 +45,7 @@ export const PhysicsProvider: React.FC<PhysicsProviderProps> = ({ children, enab
           globalThis.Ammo = Ammo.default;
         }
         
-        // Only inititialie the library if not already done so
+        // Only initialize the library if not already done so
         if(!app.systems.rigidbody?.dispatcher) {
           app.systems.rigidbody?.onLibraryLoaded();
         }
