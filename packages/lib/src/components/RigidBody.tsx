@@ -1,6 +1,7 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
+import { warnOnce } from "../utils/warn-once";
 
 type RigidBodyProps = {
     [key: string]: unknown;
@@ -13,27 +14,32 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
-            throw new Error(
+            warnOnce(
                 'The `<RigidBody>` component requires `usePhysics` to be set on the Application. ' +
-                'Please add `<Application usePhysics/>` to your root component.'
+                'Please add `<Application usePhysics/>` to your root component.',
+                false // Show in both dev and prod
             );
         }
 
         if (physicsError) {
-            throw new Error(
+            warnOnce(
                 `Failed to initialize physics: ${physicsError.message}. ` +
-                "Run `npm install sync-ammo` in your project, if you haven't done so already."
+                "Run `npm install sync-ammo` in your project, if you haven't done so already.",
+                false // Show in both dev and prod
             );
         }
     }, [isPhysicsEnabled, physicsError]);
 
+    // @ts-expect-error Ammo is defined in the global scope in the browser
+    if(isPhysicsLoaded && !globalThis.Ammo ) {
+        throw new Error('The `<RigidBody>` component requires `usePhysics` to be set on the Application. `<Application usePhysics/>` ')
+    }
+
     // If no type is defined, infer if possible from a render component
     const type = entity.render && props.type === undefined ? entity.render.type : props.type;
 
-    // Only create the component if physics is loaded
-    if (isPhysicsLoaded) {
-        useComponent("rigidbody", { ...props, type });
-    }
+    // Always call useComponent - it will handle component lifecycle internally
+    useComponent(isPhysicsLoaded ? "rigidbody" : null, { ...props, type });
 
     return null;
 }

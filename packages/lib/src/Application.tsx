@@ -157,7 +157,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   if (!app) return null;
 
   return (
-    <PhysicsProvider enabled={usePhysics}>
+    <PhysicsProvider enabled={usePhysics} app={app}>
       <AppContext.Provider value={appRef.current}>
         <PointerEventsContext.Provider value={pointerEvents}>
           <ParentContext.Provider value={appRef.current?.root as PcEntity}>
