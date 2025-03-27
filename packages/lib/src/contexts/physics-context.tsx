@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { useApp } from '../hooks';
 import { AppBase } from 'playcanvas';
 
 interface PhysicsContextType {
@@ -73,7 +72,7 @@ export const PhysicsProvider: React.FC<PhysicsProviderProps> = ({ children, enab
         }
       }
     };
-  }, [enabled]);
+  }, [enabled, app]);
 
   return (
     <PhysicsContext.Provider
