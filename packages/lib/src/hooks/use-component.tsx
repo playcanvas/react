@@ -3,7 +3,7 @@ import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
 import { Application, Component, Entity } from "playcanvas";
 
-type ComponentProps = {
+export type ComponentProps = {
   [key: string]: unknown;
 }
 

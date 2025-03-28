@@ -2,12 +2,13 @@
 
 import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
-import { Asset, Entity } from "playcanvas";
+import { Asset, Entity, GSplatComponent } from "playcanvas";
+import { PublicProps } from "../utils/types-utils";
 
-interface GSplatProps {
+interface GSplatProps extends Partial<PublicProps<GSplatComponent>> {
+    asset: Asset;
     vertex?: string;
     fragment?: string;
-    asset: Asset;
 }
 
 export const GSplat: FC<GSplatProps> = ({ vertex, fragment, asset }) => {
