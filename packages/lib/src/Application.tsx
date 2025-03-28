@@ -1,5 +1,4 @@
 import React, { FC, PropsWithChildren, useLayoutEffect, useMemo, useRef, useState } from 'react';
-import * as Ammo from 'sync-ammo';
 import {
   FILLMODE_NONE,
   FILLMODE_FILL_WINDOW,
@@ -14,6 +13,7 @@ import {
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
+import { PhysicsProvider } from './contexts/physics-context';
 
 interface GraphicsOptions {
   /** Boolean that indicates if the canvas contains an alpha buffer. */
@@ -102,7 +102,6 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   usePhysics = false,
   ...otherProps
 }) => {
-
   const graphicsDeviceOptions = {
     alpha: true,
     depth: true,
@@ -126,10 +125,6 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && !appRef.current) {
-
-      // @ts-expect-error The PC Physics system expects a global Ammo instance
-      if (usePhysics) globalThis.Ammo = Ammo.default
-
       const localApp = new PlayCanvasApplication(canvas, {
         mouse: new Mouse(canvas),
         touch: new TouchDevice(canvas),
@@ -146,13 +141,8 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
 
     return () => {
       if (!appRef.current) return;
-      
       appRef.current.destroy();
       appRef.current = null;
-
-      // @ts-expect-error Clean up the global Ammo instance
-      if (usePhysics && globalThis.Ammo) delete globalThis.Ammo;
-
       setApp(null);
     };
   }, [canvasRef, fillMode, resolutionMode, ...Object.values(graphicsDeviceOptions)]);
@@ -167,12 +157,14 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = ({
   if (!app) return null;
 
   return (
-    <AppContext.Provider value={appRef.current}>
-      <PointerEventsContext.Provider value={pointerEvents}>
-        <ParentContext.Provider value={appRef.current?.root as PcEntity}>
-          {children}
-        </ParentContext.Provider>
-      </PointerEventsContext.Provider>
-    </AppContext.Provider>
+    <PhysicsProvider enabled={usePhysics} app={app}>
+      <AppContext.Provider value={appRef.current}>
+        <PointerEventsContext.Provider value={pointerEvents}>
+          <ParentContext.Provider value={appRef.current?.root as PcEntity}>
+            {children}
+          </ParentContext.Provider>
+        </PointerEventsContext.Provider>
+      </AppContext.Provider>
+    </PhysicsProvider>
   );
 };

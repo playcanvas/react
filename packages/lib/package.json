@@ -79,7 +79,13 @@
     "peerDependencies": {
         "playcanvas": "^2.3.3",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "sync-ammo": "^0.1.2"
+    },
+    "peerDependenciesMeta": {
+        "sync-ammo":{
+            "optional": true
+        }
     },
     "publishConfig": {
         "access": "public"
@@ -87,8 +93,5 @@
     "devDependencies": {
         "pkg-pr-new": "^0.0.41",
         "typescript": "5.8.2"
-    },
-    "dependencies": {
-        "sync-ammo": "^0.1.2"
     }
 }

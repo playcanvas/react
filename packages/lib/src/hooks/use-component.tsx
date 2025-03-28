@@ -7,12 +7,16 @@ type ComponentProps = {
   [key: string]: unknown;
 }
 
-export const useComponent = (ctype: string, props: ComponentProps): void => {
+export const useComponent = (ctype: string | null, props: ComponentProps): void => {
   const componentRef = useRef<Component | null>();
   const parent : Entity = useParent();
   const app : Application = useApp();
 
   useLayoutEffect(() => {
+    if(!ctype) {
+      return;
+    }
+
     if (parent) {
       // Only add the component if it hasn't been added yet
       if (!componentRef.current) {
@@ -38,6 +42,10 @@ export const useComponent = (ctype: string, props: ComponentProps): void => {
   // Update component props
   useLayoutEffect(() => {
 
+    if(!ctype) {
+      return
+    }
+
     const comp: Component | null | undefined = componentRef.current
     // Ensure componentRef.current exists before updating props
     if (!comp) return;
@@ -48,5 +56,5 @@ export const useComponent = (ctype: string, props: ComponentProps): void => {
 
     Object.assign(comp, filteredProps)
 
-  }, [props]);
+  }, [props, ctype]);
 };
