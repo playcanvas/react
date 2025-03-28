@@ -91,7 +91,7 @@
         "access": "public"
     },
     "devDependencies": {
-        "pkg-pr-new": "^0.0.41",
+        "pkg-pr-new": "0.0.41",
         "typescript": "5.8.2"
     }
 }
