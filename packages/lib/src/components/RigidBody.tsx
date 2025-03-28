@@ -1,11 +1,18 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { warnOnce } from "../utils/warn-once";
+import { warnOnce } from "../utils/validation";
+import { PublicProps } from "../utils/types-utils";
+import { RigidBodyComponent } from "playcanvas";
 
-type RigidBodyProps = {
-    [key: string]: unknown;
-    type?: string;
+interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
+    type?: "box"
+        | "capsule"
+        | "compound"
+        | "cone"
+        | "cylinder"
+        | "mesh"
+        | "sphere"
 }
 
 export const RigidBody: FC<RigidBodyProps> = (props) => {

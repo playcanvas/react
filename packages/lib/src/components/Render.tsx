@@ -4,15 +4,20 @@ import { FC } from "react";
 import { useComponent } from "../hooks";
 import { Container } from "../Container";
 import { Asset } from "playcanvas";
+import { type RenderComponent as PcRenderComponent } from "playcanvas";
+import { PublicProps } from "../utils/types-utils";
+import { ComponentProps } from "../hooks/use-component";
 
-interface RenderProps {
+type RenderComponentType = Partial<PublicProps<PcRenderComponent>>;
+type RenderComponentTypeWithoutAsset = Omit<RenderComponentType, 'asset'>;
+
+interface RenderProps extends RenderComponentTypeWithoutAsset {
     type: string;
     asset?: Asset;
     children?: React.ReactNode;
-    [key: string]: unknown;
 }
 
-const RenderComponent: FC<RenderProps> = (props) => {
+const RenderComponent: FC<ComponentProps> = (props) => {
     useComponent("render", props);
     return null;
 }
@@ -22,7 +27,7 @@ const RenderComponent: FC<RenderProps> = (props) => {
  * it will be rendered as a container. Otherwise, it will be rendered as a 
  * render component.
  */
-export const Render: FC<RenderProps> = (props) => {
+export const Render: FC<RenderProps> = (props : RenderProps) => {
 
     // Render a container if the asset is a container
     if (props.asset?.type === 'container') {

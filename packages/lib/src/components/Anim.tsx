@@ -2,10 +2,12 @@
 
 import { FC, useLayoutEffect } from "react";
 import { useComponent, useParent } from "../hooks";
-import { AnimComponent, Asset, Entity } from "playcanvas";
+import { AnimComponent, Asset, Entity, LightComponent } from "playcanvas";
+import { PublicProps } from "../utils/types-utils";
+import { WithCssColors } from "../utils/color";
 
-interface AnimProps {
-    [key: string]: unknown;
+
+interface AnimProps extends Partial<WithCssColors<PublicProps<LightComponent>>> {
     asset : Asset
 }
 

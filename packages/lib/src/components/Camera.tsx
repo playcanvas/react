@@ -2,13 +2,11 @@
 
 import { FC } from "react";
 import { useComponent } from "../hooks";
-import { Color } from "playcanvas";
-import { useColors } from "../utils/color";
+import { CameraComponent } from "playcanvas";
+import { useColors, WithCssColors } from "../utils/color";
+import { PublicProps } from "../utils/types-utils";
 
-interface CameraProps {
-    [key: string]: unknown;
-    clearColor?: Color | string
-}
+type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
 
 /**
  * The Camera component is used to define the position and properties of a camera entity. 

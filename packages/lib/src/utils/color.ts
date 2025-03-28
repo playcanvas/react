@@ -1,5 +1,9 @@
 import { Color } from "playcanvas"
 import { useRef } from "react";
+import { validateAndSanitize } from "./validation";
+
+// Match 3, 4, 6 or 8 character hex strings with optional #
+const hexColorRegex = /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
 
 const cssColorNamesMap : Map<string, string> = new Map([ 
     ['aliceblue', '#F0F8FF'],
@@ -153,12 +157,32 @@ const cssColorNamesMap : Map<string, string> = new Map([
 ]);
 
 /**
+ * Convenience function that returns an array of property names that are instances of the PlayCanvas Color class
+ * @returns {string[]} - An array of property names
+ */
+export const getColorPropertyNames = <T extends object>(target: T): Array<keyof T & string> => {
+  const colorNames: string[] = Object.entries(target).reduce((arr: string[], [name, value]) => {
+    if (value instanceof Color ){
+      return [...arr, name]
+    } else{
+      return arr
+    }
+  }, []);
+
+  return colorNames as Array<keyof T & string>;
+};
+
+/**
  * Custom hook to process multiple color properties efficiently.
  * @param props The component props containing the color properties.
  * @param colorPropNames An array of prop names that are colors.
  * @returns An object mapping color prop names to their processed Color instances.
  */
-export const useColors = (props: Record<string, unknown>, colorPropNames: string[]): { [key: string]: Color } => {
+export const useColors = <T extends object>(
+  props: T, 
+  colorPropNames: Array<keyof T & string>
+): { [K in typeof colorPropNames[number]]: Color } => {
+
     const colorRefs = useRef<{ [key: string]: Color }>({});
   
     // Filter colorPropNames to include only those keys that exist in props
@@ -174,21 +198,36 @@ export const useColors = (props: Record<string, unknown>, colorPropNames: string
         colorInstance = new Color();
         colorRefs.current[propName] = colorInstance;
       }
-  
-      if (typeof value === "string") {
-        // Parse the color string and update the existing Color instance
-        const colorString = cssColorNamesMap.get(value) ?? value;
-        colorInstance.fromString(colorString);
-      } else if (value instanceof Color) {
-        // Copy the value into the existing Color instance
-        colorInstance.copy(value);
-      } else {
-        console.warn(`Invalid color value for prop ${propName}:`, value);
-      }
+
+      const validatedColorString = validateAndSanitize(value, {
+        validate: (val: unknown) => typeof val === 'string' && (hexColorRegex.test(val) || cssColorNamesMap.has(val)),
+        errorMsg: (val: unknown) => `Invalid color value for prop ${propName}: "${val}". ` +
+          `Valid formats include: hex (#FFFFF, #FFFFFF66), ` +
+          `or a css color name like "red", "blue", "rebeccapurple", etc.`,
+        default: '#ff00ff'
+      });
+
+      colorInstance.fromString(validatedColorString);
   
       acc[propName] = colorInstance;
       return acc;
     }, {} as { [key: string]: Color });
   
-    return processedColors;
+    return processedColors as { [K in typeof colorPropNames[number]]: Color };
   };
+
+  // Extract color names directly from your Map
+type CssColorName = keyof {
+  [K in string as K extends keyof typeof cssColorNamesMap ? K : never]: unknown
+};
+
+// Define valid CSS color formats
+type HexColor = `#${string}`;
+
+// Combine all valid CSS color types
+type CssColor = CssColorName | HexColor
+
+// Utility to replace pc.Color with CssColor
+export type WithCssColors<T> = {
+  [K in keyof T]: T[K] extends Color ? CssColor : T[K];
+};

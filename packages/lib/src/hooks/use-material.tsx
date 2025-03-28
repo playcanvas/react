@@ -1,25 +1,21 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
-import { useColors } from '../utils/color';
+import { getColorPropertyNames, useColors, WithCssColors } from '../utils/color';
+import { PublicProps } from '../utils/types-utils';
 
-type WritableKeys<T> = {
-  [K in keyof T]: T[K] extends { readonly [key: string]: unknown } ? never : K;
-}[keyof T];
+type MaterialProps = Partial<WithCssColors<PublicProps<StandardMaterial>>>;
 
-type MaterialProps = Pick<StandardMaterial, WritableKeys<StandardMaterial>>;
+// dynamically build a list of property names that are colors
+const tmpMaterial: StandardMaterial = new StandardMaterial();
+const colors = getColorPropertyNames(tmpMaterial);
+tmpMaterial.destroy();
 
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const colorProps = useColors(props, [
-    'ambient', 
-    'attenuation', 
-    'diffuse', 
-    'emissive', 
-    'sheen', 
-    'specular'
-  ]);
+  // Get color props with proper type checking
+  const colorProps = useColors(props, colors as Array<keyof typeof props & string>);
 
   const propsWithColors = { ...props, ...colorProps };
 

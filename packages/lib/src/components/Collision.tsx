@@ -3,11 +3,18 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { warnOnce } from "../utils/warn-once";
+import { warnOnce } from "../utils/validation";
+import { CollisionComponent } from "playcanvas";
+import { PublicProps } from "../utils/types-utils";
 
-type CollisionProps = {
-    [key: string]: unknown;
-    type?: string;
+interface CollisionProps extends Partial<PublicProps<CollisionComponent>> {
+    type?: "box"
+        | "capsule"
+        | "compound"
+        | "cone"
+        | "cylinder"
+        | "mesh"
+        | "sphere"
 }
 
 export const Collision: FC<CollisionProps> = (props) => {
