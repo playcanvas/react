@@ -12,25 +12,6 @@ export const warnOnce = (message: string, developmentOnly = false) => {
     }
 };
 
-// export function validateAndSanitize<T, K extends keyof T>(
-//     props: T,
-//     key: K,
-//     validator: (value: any) => boolean,
-//     defaultValue: any,
-//     errorMessage?: string
-// ): T[K] {
-//     const value = props[key];
-//     const isValid = validator(value);
-    
-//     // Log warning in development if invalid
-//     if (!isValid && process.env.NODE_ENV !== 'production' && errorMessage) {
-//       console.warn(errorMessage);
-//     }
-    
-//     // Return original value if valid, default if not
-//     return isValid ? value : defaultValue;
-// }
-
 export type PropSchemaDefinition<T> = {
     validate: (value: unknown) => boolean;
     errorMsg: (value: unknown) => string;
