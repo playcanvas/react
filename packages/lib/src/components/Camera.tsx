@@ -2,20 +2,36 @@
 
 import { FC } from "react";
 import { useComponent } from "../hooks";
-import { CameraComponent } from "playcanvas";
+import { CameraComponent, Entity } from "playcanvas";
 import { useColors, WithCssColors } from "../utils/color";
 import { PublicProps } from "../utils/types-utils";
-
-type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
+import { createSchema, validateAndSanitizeProps } from "../utils/validation";
 
 /**
- * The Camera component is used to define the position and properties of a camera entity. 
+ * The Camera component makes an entity behave like a camera and gives you a view into the scene.
+ * Moving the container entity will move the camera.
+ * 
+ * @param {CameraProps} props - The props to pass to the camera component.
+ * 
+ * @example
+ * <Entity>
+ *   <Camera fov={75} near={0.1} far={1000} />
+ * </Entity>
  */
 export const Camera: FC<CameraProps> = (props) => {
 
-    const colorProps = useColors(props, ['clearColor'])
+    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, schema, 'Camera');
 
-    useComponent("camera", { ...props, ...colorProps });
+    const colorProps = useColors(safeProps, ['clearColor'])
+
+    useComponent("camera", { ...safeProps, ...colorProps });
     return null;
 
 }
+
+type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
+
+const schema = createSchema(
+    () => new Entity().addComponent('camera') as CameraComponent,
+    (component) => (component as CameraComponent).system.destroy()
+)

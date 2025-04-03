@@ -23,9 +23,19 @@ const RenderComponent: FC<ComponentProps> = (props) => {
 }
 
 /**
- *  Create a render component on an entity. If the asset is a container, 
- * it will be rendered as a container. Otherwise, it will be rendered as a 
- * render component.
+ * A Render component allows an entity to render a 3D model. You can specify the type of model to render with the `type` prop,
+ * which can be a primitive shape, or a model asset.
+ * 
+ * @param {RenderProps} props - The props to pass to the render component.
+ * 
+ * @example
+ * const { data: asset } = useAsset('./statue.glb')
+ * <Entity name='Box'   >
+ *  <Render type="box" />
+ * </Entity>
+ * <Entity name='asset'>
+ *  <Render type="asset" asset={asset} />
+ * </Entity>
  */
 export const Render: FC<RenderProps> = (props : RenderProps) => {
 

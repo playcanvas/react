@@ -3,25 +3,18 @@ import { useParent } from './use-parent';
 import { useApp } from './use-app';
 import { AppBase, Application, Entity, Script, ScriptComponent } from 'playcanvas';
 
-const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
-
-interface Props {
-  [key: string]: unknown;
-}
-
-// type PcScriptWithName = Omit<typeof Script, '__name'> & {
-//   __name: string;
-// } & { 
-//   __name: string, 
-//   name: string
-// };
-// type PcScriptWithName = {
-//   new (args: { app: AppBase; entity: Entity; }): Script
-//   __name: string;
-// }
-
-
+/**
+ * This hook is used to create a script component on an entity. 
+ * @param scriptConstructor - The constructor for the script.
+ * @param props - The props for the script.
+ * 
+ * @example
+ * const script = useScript(MyScript, {
+ *   myProperty: 'value',
+ * });
+ */
 export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: Entity; }) => Script, props: Props) : void  => {
+  
   const parent: Entity = useParent();
   const app: Application = useApp();
   const scriptName: string = toLowerCamelCase(scriptConstructor.name);
@@ -77,3 +70,9 @@ export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: 
 
   }, [props]);
 };
+
+const toLowerCamelCase = (str: string) : string => str[0].toLowerCase() + str.substring(1);
+
+interface Props {
+  [key: string]: unknown;
+}

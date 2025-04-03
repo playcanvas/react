@@ -205,7 +205,7 @@ export const useColors = <T extends object>(
           `Valid formats include: hex (#FFFFF, #FFFFFF66), ` +
           `or a css color name like "red", "blue", "rebeccapurple", etc.`,
         default: '#ff00ff'
-      });
+      }, propName, 'useColors');
 
       colorInstance.fromString(validatedColorString);
   
