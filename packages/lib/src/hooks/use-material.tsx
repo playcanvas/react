@@ -1,27 +1,33 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
-import { useColors } from '../utils/color';
+import { getColorPropertyNames, useColors, WithCssColors } from '../utils/color';
+import { PublicProps } from '../utils/types-utils';
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from '../utils/validation';
 
-type WritableKeys<T> = {
-  [K in keyof T]: T[K] extends { readonly [key: string]: unknown } ? never : K;
-}[keyof T];
-
-type MaterialProps = Pick<StandardMaterial, WritableKeys<StandardMaterial>>;
-
+/**
+ * This hook is used to create a material instance and update its properties when the props change.
+ * @param {MaterialProps} props - The props to pass to the material.
+ * @returns {StandardMaterial} material - The material instance.
+ * @see https://api.playcanvas.com/engine/classes/StandardMaterial.html
+ * 
+ * @example
+ * const material = useMaterial({
+ *   diffuse: 'red',
+ *   opacity: 0.5,
+ * });
+ * 
+ * // use the material
+ * <Render type="box" material={material} />
+ */
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const colorProps = useColors(props, [
-    'ambient', 
-    'attenuation', 
-    'diffuse', 
-    'emissive', 
-    'sheen', 
-    'specular'
-  ]);
+  const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<MaterialProps>);
 
-  const propsWithColors = { ...props, ...colorProps };
+  // Get color props with proper type checking
+  const colorProps = useColors(props, colors as Array<keyof typeof props & string>);
+  const propsWithColors = { ...safeProps, ...colorProps };
 
   // Create the material instance only once when 'app' changes
   const material : StandardMaterial = useMemo(() => new StandardMaterial(), [app]);
@@ -34,10 +40,11 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
       const filteredProps = Object.fromEntries(
         Object.entries(propsWithColors).filter(([key]) => key in material)
       );
+
       Object.assign(material, filteredProps)
       material.update(); 
     }
-  }, [app, material, props]);
+  }, [app, material, propsWithColors]);
 
   // Clean up the material when the component unmounts
   useLayoutEffect(() => {
@@ -50,3 +57,19 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
 
   return material;
 };
+
+
+type MaterialProps = Partial<WithCssColors<PublicProps<StandardMaterial>>>;
+
+// dynamically build a list of property names that are colors
+const tmpMaterial: StandardMaterial = new StandardMaterial();
+const colors = getColorPropertyNames(tmpMaterial);
+tmpMaterial.destroy();
+
+// create a schema for the material props
+const componentDefinition = createComponentDefinition(
+    "Material",
+    () => new StandardMaterial(),
+    (material) => material.destroy(),
+    "StandardMaterial"
+)
