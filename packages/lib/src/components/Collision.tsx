@@ -3,7 +3,7 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { validateAndSanitizeProps, warnOnce, createComponentDefinition, ComponentDefinition } from "../utils/validation";
+import { validateAndSanitizeProps, warnOnce, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 import { CollisionComponent, Entity } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
 
@@ -21,10 +21,10 @@ import { PublicProps } from "../utils/types-utils";
  */
 export const Collision: FC<CollisionProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<CollisionProps>);
-
     const entity = useParent();
     const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
+
+    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<CollisionProps>);
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
@@ -77,7 +77,16 @@ interface CollisionProps extends Partial<PublicProps<CollisionComponent>> {
 
 const componentDefinition = createComponentDefinition(
     "Collision",
-    () => new Entity().addComponent('collision') as CollisionComponent,
+    () => new Entity("mock-collision", getStaticNullApplication()).addComponent('collision') as CollisionComponent,
     (component) => (component as CollisionComponent).system.destroy(),
     "CollisionComponent"
 )
+
+componentDefinition.schema = {
+    ...componentDefinition.schema,
+    type: {
+        validate: (value: unknown) => typeof value === 'string' && ['box', 'capsule', 'compound', 'cone', 'cylinder', 'mesh', 'sphere'].includes(value as string),
+        errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "box", "capsule", "compound", "cone", "cylinder", "mesh", "sphere".`,
+        default: "box"
+    }
+}

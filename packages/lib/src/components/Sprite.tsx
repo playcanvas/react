@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useComponent } from "../hooks";
 import { PublicProps } from "../utils/types-utils";
 import { Asset, Entity, SpriteComponent } from "playcanvas";
-import { createComponentDefinition, validateAndSanitizeProps, Schema, ComponentDefinition } from "../utils/validation";
+import { createComponentDefinition, validateAndSanitizeProps, Schema, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 import { ComponentProps } from "../hooks/use-component";
 
 /**
@@ -29,7 +29,7 @@ interface SpriteProps extends Partial<PublicProps<SpriteComponent>> {
 
 const componentDefinition = createComponentDefinition(
     "Sprite",
-    () => new Entity().addComponent('sprite') as SpriteComponent,
+    () => new Entity("mock-sprite", getStaticNullApplication()).addComponent('sprite') as SpriteComponent,
     (component) => (component as SpriteComponent).system.destroy(),
     "SpriteComponent"
 )

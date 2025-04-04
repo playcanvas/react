@@ -5,7 +5,7 @@ import { useComponent } from "../hooks";
 import { CameraComponent, Entity } from "playcanvas";
 import { useColors, WithCssColors } from "../utils/color";
 import { PublicProps } from "../utils/types-utils";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Camera component makes an entity behave like a camera and gives you a view into the scene.
@@ -33,7 +33,7 @@ type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
 
 const componentDefinition = createComponentDefinition(
     "Camera",
-    () => new Entity().addComponent('camera') as CameraComponent,
+    () => new Entity("mock-camera", getStaticNullApplication()).addComponent('camera') as CameraComponent,
     (component) => (component as CameraComponent).system.destroy(),
     "CameraComponent"
 )

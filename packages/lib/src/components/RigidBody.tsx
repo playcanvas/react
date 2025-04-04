@@ -1,19 +1,9 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { warnOnce } from "../utils/validation";
+import { createComponentDefinition, getStaticNullApplication, warnOnce, ComponentDefinition, validateAndSanitizeProps } from "../utils/validation";
 import { PublicProps } from "../utils/types-utils";
-import { RigidBodyComponent } from "playcanvas";
-
-interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
-    type?: "box"
-        | "capsule"
-        | "compound"
-        | "cone"
-        | "cylinder"
-        | "mesh"
-        | "sphere"
-}
+import { Entity, RigidBodyComponent } from "playcanvas";
 
 /**
  * Adding a RigidBody component to an entity allows it to participate in the physics simulation.
@@ -30,6 +20,8 @@ interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
 export const RigidBody: FC<RigidBodyProps> = (props) => {
     const entity = useParent();
     const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
+
+    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<RigidBodyProps>);
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
@@ -65,7 +57,33 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
     const type = entity.render && props.type === undefined ? entity.render.type : props.type;
 
     // Always call useComponent - it will handle component lifecycle internally
-    useComponent(isPhysicsLoaded ? "rigidbody" : null, { ...props, type });
+    useComponent(isPhysicsLoaded ? "rigidbody" : null, { ...safeProps, type });
 
     return null;
+}
+
+interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
+    type?: "box"
+        | "capsule"
+        | "compound"
+        | "cone"
+        | "cylinder"
+        | "mesh"
+        | "sphere"
+}
+
+const componentDefinition = createComponentDefinition(
+    "RigidBody",
+    () => new Entity("mock-rigidbody", getStaticNullApplication()).addComponent('rigidbody') as RigidBodyComponent,
+    (component) => (component as RigidBodyComponent).system.destroy(),
+    "RigidBodyComponent"
+)
+
+componentDefinition.schema = {
+    ...componentDefinition.schema,
+    type: {
+        validate: (value: unknown) => typeof value === 'string' && ['box', 'capsule', 'compound', 'cone', 'cylinder', 'mesh', 'sphere'].includes(value as string),
+        errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "box", "capsule", "compound", "cone", "cylinder", "mesh", "sphere".`,
+        default: "box"
+    }
 }

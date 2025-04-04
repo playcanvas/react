@@ -5,7 +5,7 @@ import { useComponent, useParent } from "../hooks";
 import { AnimComponent, Asset, Entity } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
 import { WithCssColors } from "../utils/color";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Anim component allows an entity to play animations.
@@ -58,6 +58,6 @@ interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
 
 const componentDefinition = createComponentDefinition(
     "Anim",
-    () => new Entity().addComponent('anim') as AnimComponent,
+    () => new Entity("mock-anim", getStaticNullApplication()).addComponent('anim') as AnimComponent,
     (component) => (component as AnimComponent).system.destroy()
 )

@@ -6,7 +6,7 @@ import { useParent, ParentContext, useApp } from './hooks';
 import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
 import { usePointerEventsContext } from './contexts/pointer-events-context';
 import { PublicProps } from './utils/types-utils';
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from './utils/validation';
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, Schema } from './utils/validation';
 
 /**
  * The Entity component is the fundamental building block of a PlayCanvas scene.
@@ -141,12 +141,14 @@ export interface EntityProps extends Partial<PublicProps<PcEntity>> {
   children?: ReactNode;
 }
 
-const componentDefinition = {
-  ...createComponentDefinition(
-    "Entity",
-    () => new PcEntity(),
-    (entity) => entity.destroy()
-  ),
+const componentDefinition = createComponentDefinition(
+  "Entity",
+  () => new PcEntity(),
+  (entity) => entity.destroy()
+)
+
+componentDefinition.schema = {
+  ...componentDefinition.schema,
   onPointerDown: {
     validate: (val: unknown) => typeof val === 'function',
     errorMsg: (val: unknown) => `Invalid value for prop "onPointerDown": "${val}". Expected a function.`,
@@ -172,4 +174,4 @@ const componentDefinition = {
     errorMsg: (val: unknown) => `Invalid value for prop "onClick": "${val}". Expected a function.`,
     default: undefined
   }
-}
+} as Schema<EntityProps>

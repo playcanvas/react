@@ -1,6 +1,6 @@
 import { Color } from "playcanvas"
 import { useRef } from "react";
-import { validateAndSanitize } from "./validation";
+import { getPseudoPublicProps, validateAndSanitize } from "./validation";
 
 // Match 3, 4, 6 or 8 character hex strings with optional #
 const hexColorRegex = /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
@@ -158,14 +158,15 @@ const cssColorNamesMap = {
 } as const;
 
 // Create a Map from the object for runtime use
-const cssColorMap = new Map(Object.entries(cssColorNamesMap));
+const cssColorNames = new Set(Object.keys(cssColorNamesMap));
 
 /**
  * Convenience function that returns an array of property names that are instances of the PlayCanvas Color class
  * @returns {string[]} - An array of property names
  */
 export const getColorPropertyNames = <T extends object>(target: T): Array<keyof T & string> => {
-  const colorNames: string[] = Object.entries(target).reduce((arr: string[], [name, value]) => {
+  const allPublicProps = getPseudoPublicProps(target as Record<string, unknown>);
+  const colorNames: string[] = Object.entries(allPublicProps).reduce((arr: string[], [name, value]) => {
     if (value instanceof Color ){
       return [...arr, name]
     } else{
@@ -204,14 +205,19 @@ export const useColors = <T extends object>(
       }
 
       const validatedColorString = validateAndSanitize(value, {
-        validate: (val: unknown) => typeof val === 'string' && (hexColorRegex.test(val) || cssColorMap.has(val)),
+        validate: (val: unknown) => typeof val === 'string' && (hexColorRegex.test(val) || cssColorNames.has(val as string)),
         errorMsg: (val: unknown) => `Invalid color value for prop ${propName}: "${val}". ` +
           `Valid formats include: hex (#FFFFF, #FFFFFF66), ` +
           `or a css color name like "red", "blue", "rebeccapurple", etc.`,
         default: '#ff00ff'
       }, propName, 'useColors');
 
-      colorInstance.fromString(validatedColorString as string);
+      // Convert CSS color name to hex if needed
+      const colorString = cssColorNames.has(validatedColorString as string) 
+        ? cssColorNamesMap[validatedColorString as keyof typeof cssColorNamesMap] 
+        : validatedColorString as string;
+
+      colorInstance.fromString(colorString);
   
       acc[propName] = colorInstance;
       return acc;

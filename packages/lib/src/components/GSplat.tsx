@@ -4,7 +4,7 @@ import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
-import { Schema, validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
+import { Schema, validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
@@ -54,7 +54,7 @@ interface GSplatProps extends Partial<PublicProps<GSplatComponent>> {
 
 const componentDefinition = createComponentDefinition(
     "GSplat",
-    () => new Entity().addComponent('gsplat') as GSplatComponent,
+    () => new Entity("mock-gsplat", getStaticNullApplication()).addComponent('gsplat') as GSplatComponent,
     (component) => (component as GSplatComponent).system.destroy(),
     "GSplatComponent"
 )

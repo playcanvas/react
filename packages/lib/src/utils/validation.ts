@@ -1,4 +1,4 @@
-import { Color, Quat, Vec2, Vec3, Vec4, Mat4 } from "playcanvas";
+import { Color, Quat, Vec2, Vec3, Vec4, Mat4, Application, NullGraphicsDevice, Material } from "playcanvas";
 
 // Limit the size of the warned set to prevent memory leaks
 const MAX_WARNED_SIZE = 1000;
@@ -266,6 +266,15 @@ export function createComponentDefinition<T extends object>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array.`
             };
         }
+
+        // Materials
+        else if (value instanceof Material) {
+            schema[key] = {
+                validate: (val) => val instanceof Material,
+                default: null,
+                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`
+            };
+        }
     });
 
     if (cleanup) cleanup(instance);
@@ -278,3 +287,17 @@ export function createComponentDefinition<T extends object>(
 
     return componentDef;
 }
+
+/**
+ * This is a mock application that is used to render the application without a canvas.
+ * @private
+ * @returns A mock application that is used to render the application without a canvas.
+ */
+export function getNullApplication() {
+    const mockCanvas = { id: 'pc-react-mock-canvas' };
+    // @ts-expect-error - Mock canvas is not a real canvas
+    return new Application(mockCanvas, { graphicsDevice: new NullGraphicsDevice(mockCanvas) });
+}
+
+const localApp = getNullApplication();
+export const getStaticNullApplication = () => localApp;

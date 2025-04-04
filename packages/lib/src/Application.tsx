@@ -10,13 +10,12 @@ import {
   Entity as PcEntity,
   RESOLUTION_FIXED,
   type GraphicsDevice,
-  NullGraphicsDevice,
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
 import { PhysicsProvider } from './contexts/physics-context';
-import { validateAndSanitizeProps, createComponentDefinition, Schema } from './utils/validation';
+import { validateAndSanitizeProps, createComponentDefinition, Schema, getNullApplication } from './utils/validation';
 import { PublicProps } from './utils/types-utils';
 
 /**
@@ -189,13 +188,8 @@ interface ApplicationWithoutCanvasProps extends ApplicationProps {
 
 const componentDefinition = createComponentDefinition(
   "Application",
-  () => {
-    const mockCanvas = { id: 'pc-react-mock-canvas' };
-    // @ts-expect-error - Mock canvas is not a real canvas
-    return new PlayCanvasApplication(mockCanvas, { graphicsDevice: new NullGraphicsDevice(mockCanvas) });
-  },
+  () => getNullApplication(),
   (app) => app.destroy()
-
 )
 
 componentDefinition.schema = {
