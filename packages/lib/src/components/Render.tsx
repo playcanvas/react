@@ -27,12 +27,15 @@ const RenderComponent: FC<ComponentProps> = (props) => {
  * which can be a primitive shape, or a model asset.
  * 
  * @param {RenderProps} props - The props to pass to the render component.
+ * @see https://api.playcanvas.com/engine/classes/RenderComponent.html
  * 
  * @example
  * const { data: asset } = useAsset('./statue.glb')
  * <Entity name='Box'   >
  *  <Render type="box" />
  * </Entity>
+ * 
+ * @example
  * <Entity name='asset'>
  *  <Render type="asset" asset={asset} />
  * </Entity>

@@ -4,19 +4,19 @@ import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
-import { createSchema, validateAndSanitizeProps } from "../utils/validation";
+import { Schema, validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
 
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
  * @param {GSplatProps} props - The props to pass to the GSplat component.
- * 
+ * @see https://api.playcanvas.com/engine/classes/GSplatComponent.html
  * @example
  * const { data: splat } = useSplat('./splat.ply')
  * <GSplat asset={splat} />
  */
 export const GSplat: FC<GSplatProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props, schema, 'GSplat');
+    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<GSplatProps>);
 
     const { asset, vertex, fragment } = safeProps;
     const parent: Entity = useParent();
@@ -52,11 +52,16 @@ interface GSplatProps extends Partial<PublicProps<GSplatComponent>> {
     fragment?: string;
 }
 
-const schema = {
-    ...createSchema(
-        () => new Entity().addComponent('gsplat') as GSplatComponent,
-        (component) => (component as GSplatComponent).system.destroy()
-    ),
+const componentDefinition = createComponentDefinition(
+    "GSplat",
+    () => new Entity().addComponent('gsplat') as GSplatComponent,
+    (component) => (component as GSplatComponent).system.destroy(),
+    "GSplatComponent"
+)
+
+// include additional props
+componentDefinition.schema = {
+    ...componentDefinition.schema,
     vertex: {
         validate: (value: unknown) => typeof value === 'string',
         errorMsg: (value: unknown) => `Vertex shader must be a string, received ${value}`,
@@ -67,4 +72,4 @@ const schema = {
         errorMsg: (value: unknown) => `Fragment shader must be a string, received ${value}`,
         default: null // Allows engine to handle the default shader
     }
-}
+} as Schema<GSplatProps>

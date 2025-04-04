@@ -5,7 +5,7 @@ import { useComponent, useParent } from "../hooks";
 import { AnimComponent, Asset, Entity } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
 import { WithCssColors } from "../utils/color";
-import { createSchema, validateAndSanitizeProps } from "../utils/validation";
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
 
 /**
  * The Anim component allows an entity to play animations.
@@ -13,6 +13,7 @@ import { createSchema, validateAndSanitizeProps } from "../utils/validation";
  * it will automatically animate them. You'll also need a Render component to display the entity.
  * 
  * @param {AnimProps} props - The props to pass to the animation component.
+ * @see https://api.playcanvas.com/engine/classes/AnimComponent.html
  * 
  * @example
  * <Entity>
@@ -22,7 +23,7 @@ import { createSchema, validateAndSanitizeProps } from "../utils/validation";
  */
 export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, schema, 'Anim');
+    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<AnimProps>);
 
     // Create the anim component
     useComponent("anim", safeProps as Partial<AnimComponent>);
@@ -55,7 +56,8 @@ interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
 }
 
 
-const schema = createSchema(
+const componentDefinition = createComponentDefinition(
+    "Anim",
     () => new Entity().addComponent('anim') as AnimComponent,
     (component) => (component as AnimComponent).system.destroy()
 )

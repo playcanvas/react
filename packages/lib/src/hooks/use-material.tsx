@@ -3,12 +3,13 @@ import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
 import { getColorPropertyNames, useColors, WithCssColors } from '../utils/color';
 import { PublicProps } from '../utils/types-utils';
-import { createSchema, validateAndSanitizeProps, Schema } from '../utils/validation';
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from '../utils/validation';
 
 /**
  * This hook is used to create a material instance and update its properties when the props change.
  * @param {MaterialProps} props - The props to pass to the material.
  * @returns {StandardMaterial} material - The material instance.
+ * @see https://api.playcanvas.com/engine/classes/StandardMaterial.html
  * 
  * @example
  * const material = useMaterial({
@@ -22,7 +23,7 @@ import { createSchema, validateAndSanitizeProps, Schema } from '../utils/validat
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const safeProps = validateAndSanitizeProps(props, schema, 'Material');
+  const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<MaterialProps>);
 
   // Get color props with proper type checking
   const colorProps = useColors(props, colors as Array<keyof typeof props & string>);
@@ -66,7 +67,9 @@ const colors = getColorPropertyNames(tmpMaterial);
 tmpMaterial.destroy();
 
 // create a schema for the material props
-const schema: Schema<MaterialProps> = createSchema(
-  () => new StandardMaterial(),
-  (material) => material.destroy()
-);
+const componentDefinition = createComponentDefinition(
+    "Material",
+    () => new StandardMaterial(),
+    (material) => material.destroy(),
+    "StandardMaterial"
+)

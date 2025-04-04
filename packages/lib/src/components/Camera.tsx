@@ -5,7 +5,7 @@ import { useComponent } from "../hooks";
 import { CameraComponent, Entity } from "playcanvas";
 import { useColors, WithCssColors } from "../utils/color";
 import { PublicProps } from "../utils/types-utils";
-import { createSchema, validateAndSanitizeProps } from "../utils/validation";
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from "../utils/validation";
 
 /**
  * The Camera component makes an entity behave like a camera and gives you a view into the scene.
@@ -20,7 +20,7 @@ import { createSchema, validateAndSanitizeProps } from "../utils/validation";
  */
 export const Camera: FC<CameraProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, schema, 'Camera');
+    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<CameraProps>);
 
     const colorProps = useColors(safeProps, ['clearColor'])
 
@@ -31,7 +31,9 @@ export const Camera: FC<CameraProps> = (props) => {
 
 type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
 
-const schema = createSchema(
+const componentDefinition = createComponentDefinition(
+    "Camera",
     () => new Entity().addComponent('camera') as CameraComponent,
-    (component) => (component as CameraComponent).system.destroy()
+    (component) => (component as CameraComponent).system.destroy(),
+    "CameraComponent"
 )

@@ -10,12 +10,13 @@ import {
   Entity as PcEntity,
   RESOLUTION_FIXED,
   type GraphicsDevice,
+  NullGraphicsDevice,
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
 import { PhysicsProvider } from './contexts/physics-context';
-import { validateAndSanitizeProps, createSchema } from './utils/validation';
+import { validateAndSanitizeProps, createComponentDefinition, Schema } from './utils/validation';
 import { PublicProps } from './utils/types-utils';
 
 /**
@@ -57,7 +58,7 @@ export const Application: React.FC<ApplicationProps> = ({
  * This allows you to create a canvas independently from PlayCanvas and pass it in as a ref.
  * 
  * @param {ApplicationWithoutCanvasProps} props - The props to pass to the application component.
- * @returns {React.ReactNode} - The application component.
+ * @returns {React.ReactNode} The application component.
  * 
  * @example
  * const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -73,10 +74,14 @@ export const Application: React.FC<ApplicationProps> = ({
  */
 export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (props) => {
   
-  const validatedProps = validateAndSanitizeProps<ApplicationWithoutCanvasProps>(props, schema, 'Application');
+  const { children, ...propsToValidate } = props;
+
+  const validatedProps = validateAndSanitizeProps<ApplicationWithoutCanvasProps>(
+    propsToValidate, 
+    componentDefinition
+  );
 
   const {
-    children,
     canvasRef,
     fillMode = FILLMODE_NONE,
     resolutionMode = RESOLUTION_AUTO,
@@ -182,14 +187,41 @@ interface ApplicationWithoutCanvasProps extends ApplicationProps {
   canvasRef: React.RefObject<HTMLCanvasElement>;
 }
 
-const schema = {
-  ...createSchema(
-    () => new PlayCanvasApplication(document.createElement('canvas')),
-    (app) => app.destroy()
-  ),
+const componentDefinition = createComponentDefinition(
+  "Application",
+  () => {
+    const mockCanvas = { id: 'pc-react-mock-canvas' };
+    // @ts-expect-error - Mock canvas is not a real canvas
+    return new PlayCanvasApplication(mockCanvas, { graphicsDevice: new NullGraphicsDevice(mockCanvas) });
+  },
+  (app) => app.destroy()
+
+)
+
+componentDefinition.schema = {
+  ...componentDefinition.schema,
+  canvasRef: {
+    validate: (value: unknown) => {
+      return value !== null && 
+             typeof value === 'object' && 
+             'current' in value;
+    },
+    errorMsg: (value: unknown) => `canvasRef must be a React ref object. Received: ${value}`,
+    default: null
+  },
   usePhysics: {
     validate: (value: unknown) => typeof value === 'boolean',
     errorMsg: (value: unknown) => `usePhysics must be a boolean. Received: ${value}`,
     default: false
+  },
+  fillMode: {
+    validate: (value: unknown) => typeof value === 'string' && [FILLMODE_NONE, FILLMODE_FILL_WINDOW, FILLMODE_KEEP_ASPECT].includes(value),
+    errorMsg: () => `"fillMode" must be one of: ${FILLMODE_NONE}, ${FILLMODE_FILL_WINDOW}, ${FILLMODE_KEEP_ASPECT}`,
+    default: FILLMODE_NONE
+  },
+  resolutionMode: {
+    validate: (value: unknown) => typeof value === 'string' && [RESOLUTION_AUTO, RESOLUTION_FIXED].includes(value),
+    errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
+    default: RESOLUTION_AUTO
   }
-}
+} as Schema<ApplicationProps>

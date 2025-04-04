@@ -21,7 +21,7 @@ interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
  * to use this component.
  * 
  * @param {RigidBodyProps} props - The props to pass to the rigid body component.   
- * 
+ * @see https://api.playcanvas.com/engine/classes/RigidBodyComponent.html
  * @example
  * <Entity>
  *  <RigidBody type="box" />

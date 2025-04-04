@@ -2,7 +2,7 @@ import { AppBase, Entity, Script as PcScript } from "playcanvas";
 import { useScript } from "../hooks"
 import { FC, memo, useMemo } from "react";
 import { shallowEquals } from "../utils/shallow-equals";
-import { validateAndSanitizeProps } from "../utils/validation";
+import { ComponentDefinition, validateAndSanitizeProps } from "../utils/validation";
 
 /**
  * The Script component allows you to hook into the entity's lifecycle. This allows you to
@@ -10,7 +10,7 @@ import { validateAndSanitizeProps } from "../utils/validation";
  * Use this for high-performance code that needs to run on every frame.
  * 
  * @param {ScriptProps} props - The props to pass to the script component.
- * 
+ * @see https://api.playcanvas.com/engine/classes/Script.html
  * @example
  * // A Rotator script that rotates the entity around the Y axis
  * class Rotator extends Script {
@@ -22,7 +22,7 @@ import { validateAndSanitizeProps } from "../utils/validation";
  */
 const ScriptComponent: FC<ScriptProps> = (props) => {
 
-    const validatedProps = validateAndSanitizeProps(props, schema, 'Script');
+    const validatedProps = validateAndSanitizeProps(props, componentDefinition, false);
 
     const { script, ...restProps } = validatedProps;
 
@@ -45,10 +45,14 @@ interface ScriptProps {
 
 class NullScript extends PcScript {}
 
-const schema = {
-    script: {
-      validate: (value: unknown): boolean => Boolean(value && value instanceof Function && value.prototype instanceof PcScript),
-      errorMsg: (value: unknown) => `Invalid value for prop "script": "${value}". Expected a subclass of Script.`,
-      default: NullScript
-    },
-}
+const componentDefinition = {
+    name: "Script",
+    apiName: "ScriptComponent",
+    schema : {
+        script: {
+            validate: (value: unknown): boolean => Boolean(value && value instanceof Function && value.prototype instanceof PcScript),
+            errorMsg: (value: unknown) => `Invalid value for prop "script": "${value}". Expected a subclass of Script.`,
+            default: NullScript
+        }
+    }
+} as ComponentDefinition<ScriptProps>

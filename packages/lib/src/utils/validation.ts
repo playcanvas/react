@@ -1,27 +1,41 @@
 import { Color, Quat, Vec2, Vec3, Vec4, Mat4 } from "playcanvas";
 
+// Limit the size of the warned set to prevent memory leaks
+const MAX_WARNED_SIZE = 1000;
 const warned = new Set<string>();
 
 export const warnOnce = (message: string) => {
     if (!warned.has(message)) {
         if (process.env.NODE_ENV === 'development') {
-            // Helpful warning in development
-            console.warn(
-                `[PlayCanvas React] Warning:\n` +
-                `${message}`
-            );
+            
+            // Use setTimeout to break the call stack
+            setTimeout(() => {
+                // Apply styling to make the warning stand out
+                console.warn(
+                    '%c[PlayCanvas React]:',
+                    'color: #ff9800; font-weight: bold; font-size: 12px;',
+                    message
+                );
+            }, 0);
         } else {
             // Error in production for critical issues
             console.error(
-                `[PlayCanvas React] Critical Error:\n` +
+                `[PlayCanvas React]:\n\n` +
                 `${message}`
             );
         }
         warned.add(message);
+        
+        // Prevent the warned set from growing too large
+        if (warned.size > MAX_WARNED_SIZE) {
+            // Remove oldest entries when the set gets too large
+            const entriesToRemove = Array.from(warned).slice(0, warned.size - MAX_WARNED_SIZE);
+            entriesToRemove.forEach(entry => warned.delete(entry));
+        }
     }
 };
 
-export type PropSchemaDefinition<T> = {
+export type PropValidator<T> = {
     validate: (value: unknown) => boolean;
     errorMsg: (value: unknown) => string;
     default: T | unknown;
@@ -29,23 +43,30 @@ export type PropSchemaDefinition<T> = {
 
 // A more generic schema type that works with both functions
 export type Schema<T> = {
-  [K in keyof T]?: PropSchemaDefinition<T[K]>;
+    [K in keyof T]?: PropValidator<T[K]>;
+};
+
+export type ComponentDefinition<T> = {
+    name: string;
+    apiName?: string;
+    schema: Schema<T>;
 };
 
 export function validateAndSanitize<T>(
     value: unknown, 
-    propDef: PropSchemaDefinition<T>,
+    propDef: PropValidator<T>,
     propName: string,
-    componentName: string
+    componentName: string,
+    apiName?: string
 ): T {
     const isValid = value !== undefined && propDef.validate(value);
     
     if (!isValid && value !== undefined && process.env.NODE_ENV !== 'production') {
-        console.warn(
-            `[PlayCanvas React] Invalid prop "${propName}" in "<${componentName}/>":\n` +
+        warnOnce(
+            `Invalid prop "${propName}" in \`<${componentName} ${propName}={${JSON.stringify(value)}} />\`\n` +
             `  ${propDef.errorMsg(value)}\n` +
-            `  Received: ${JSON.stringify(value)}\n` +
-            (propDef.default !== undefined ? `  Using default: ${JSON.stringify(propDef.default)}` : '')
+            (propDef.default !== undefined ? `  Using default: ${JSON.stringify(propDef.default)}` : '') +
+            `\n\nPlease see the documentation https://api.playcanvas.com/engine/classes/${apiName ?? componentName}.html.`
         );
     }
     
@@ -54,35 +75,107 @@ export function validateAndSanitize<T>(
 
 export function validateAndSanitizeProps<T extends object>(
     rawProps: Partial<T>, 
-    schema: Schema<T>,
-    componentName: string
+    componentDef: ComponentDefinition<T>,
+    warnUnknownProps: boolean = true
 ): T {
-    const result = {} as T;
-    const keys = Object.keys(schema);
-    keys.forEach((key) => {    
-        const propDef = schema[key as keyof T];
-        if (propDef) {
-            result[key as keyof T] = validateAndSanitize(rawProps[key as keyof T], propDef, key, componentName);
+    // Start with a copy of the raw props
+    const { schema, name, apiName } = componentDef;
+    const result = { ...rawProps } as T;
+    
+    // Track unknown props for warning
+    const unknownProps: string[] = [];
+    
+    // Process each prop once
+    Object.keys(rawProps).forEach((key) => {
+        // Skip 'children' as it's a special React prop
+        if (key === 'children') return;
+        
+        // Check if this prop is in the schema
+        if (key in schema) {
+            // Validate and sanitize props that are in the schema
+            const propDef = schema[key as keyof T];
+            if (propDef) {
+                result[key as keyof T] = validateAndSanitize(
+                    rawProps[key as keyof T], 
+                    propDef, 
+                    key, 
+                    name,
+                    apiName
+                );
+            }
+        } else {
+            // Collect unknown props for warning
+            unknownProps.push(key);
         }
     });
-
+    
+    // Warn about unknown props in development mode
+    if (process.env.NODE_ENV !== 'production' && warnUnknownProps && unknownProps.length > 0) {
+        warnOnce(
+            `Unknown props in "<${name}/>."\n` +
+            `The following props are invalid and will be ignored: "${unknownProps.join('", "')}"\n\n` +
+            `Please see the documentation https://api.playcanvas.com/engine/classes/${apiName ?? name}.html.`
+        );
+    }
+    
     return result;
 }
 
 
 export function getPseudoPublicProps(container: Record<string, unknown>) {
-    return Object.entries(container)
-        .filter(([key]) => !key.startsWith('_') && typeof container[key] !== 'function')
+    // Get regular enumerable properties
+    const entries = Object.entries(container)
+        .filter(([key]) => !key.startsWith('_') && typeof container[key] !== 'function');
+    
+    // Get getters and setters from the prototype
+    const prototype = Object.getPrototypeOf(container);
+    if (prototype && prototype !== Object.prototype) {
+        const descriptors = Object.getOwnPropertyDescriptors(prototype);
+        const getterSetterEntries = Object.entries(descriptors)
+            .filter(([key, descriptor]) => {
+                // Include properties that have setters (and optionally getters) and don't start with _
+                return (descriptor.get && descriptor.set) && 
+                       !key.startsWith('_') && 
+                       key !== 'constructor';
+            })
+            .map(([key, descriptor]) => {
+                // For properties with both getter and setter, try to get the value if possible
+                if (descriptor.get) {
+                    try {
+                        const value = descriptor.get.call(container);
+                        // Create a shallow copy of the value to avoid reference issues
+                        const safeValue = value !== null && typeof value === 'object' 
+                            ? value.clone ? value.clone() : { ...value } 
+                            : value;
+                        return [key, safeValue];
+                    } catch {
+                        // If we can't get the value, just use the key
+                        return [key, undefined];
+                    }
+                }
+                // For setters only, we can't get the value
+                return [key, undefined];
+            });
+        
+        // Combine regular properties with getter/setter properties
+        return Object.fromEntries([...entries, ...getterSetterEntries]);
+    }
+    
+    // If no prototype or it's just Object.prototype, just return the regular properties
+    return Object.fromEntries(entries);
 }
 
-export function createSchema<T extends object>(
+export function createComponentDefinition<T extends object>(
+    name: string,
     createInstance: () => T,
-    cleanup?: (instance: T) => void
-): Schema<T> {
+    cleanup?: (instance: T) => void,
+    apiName?: string,
+): ComponentDefinition<T> {
     const instance: T = createInstance();
     const schema: Schema<T> = {};
 
     const props = getPseudoPublicProps(instance as Record<string, unknown>);
+
     const entries = Object.entries(props) as [keyof T, unknown][];
     // Basic type detection 
     entries.forEach(([key, value]) => {
@@ -177,5 +270,11 @@ export function createSchema<T extends object>(
 
     if (cleanup) cleanup(instance);
 
-    return schema;
+    const componentDef: ComponentDefinition<T> = {
+        name,
+        apiName,
+        schema
+    };
+
+    return componentDef;
 }

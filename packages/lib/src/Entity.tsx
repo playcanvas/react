@@ -6,7 +6,7 @@ import { useParent, ParentContext, useApp } from './hooks';
 import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
 import { usePointerEventsContext } from './contexts/pointer-events-context';
 import { PublicProps } from './utils/types-utils';
-import { createSchema, validateAndSanitizeProps } from './utils/validation';
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from './utils/validation';
 
 /**
  * The Entity component is the fundamental building block of a PlayCanvas scene.
@@ -35,13 +35,15 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   ref
 ) : React.ReactElement | null {
 
-  const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, schema, 'Entity');
+  const { children, ...propsToValidate } = props;
+  const safeProps = validateAndSanitizeProps(
+    propsToValidate, 
+    componentDefinition as ComponentDefinition<EntityProps>
+  );
 
   const { 
     /** The name of the entity */
     name = 'Untitled', 
-    /** Child components */
-    children, 
     /** The local position of the entity */
     position = [0, 0, 0], 
     /** The local scale of the entity */
@@ -139,8 +141,9 @@ export interface EntityProps extends Partial<PublicProps<PcEntity>> {
   children?: ReactNode;
 }
 
-const schema = {
-  ...createSchema(
+const componentDefinition = {
+  ...createComponentDefinition(
+    "Entity",
     () => new PcEntity(),
     (entity) => entity.destroy()
   ),
