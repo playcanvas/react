@@ -32,6 +32,6 @@
         "typescript-eslint": "8.24.0"
     },
     "dependencies": {
-        "codesandbox": "^2.2.3"
+        "playcanvas": "2.3.3"
     }
 }
