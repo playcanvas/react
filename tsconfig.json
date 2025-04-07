@@ -8,10 +8,12 @@
       "jsx": "react-jsx",
       "moduleResolution": "bundler",
       "baseUrl": ".",
-      "resolveJsonModule": true,
+      "resolveJsonModule": true
     },
     "include": [
-      "packages/*"
+      "packages/**/*.ts",
+      "packages/**/*.tsx",
+      "packages/**/*.js"
     ],
     "exclude": [
       "node_modules",

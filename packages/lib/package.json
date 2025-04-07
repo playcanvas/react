@@ -83,7 +83,7 @@
         "sync-ammo": "^0.1.2"
     },
     "peerDependenciesMeta": {
-        "sync-ammo":{
+        "sync-ammo": {
             "optional": true
         }
     },
@@ -91,6 +91,7 @@
         "access": "public"
     },
     "devDependencies": {
+        "@types/node": "^22.14.0",
         "pkg-pr-new": "^0.0.41",
         "typescript": "5.8.2"
     }
