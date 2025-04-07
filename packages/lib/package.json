@@ -91,8 +91,8 @@
         "access": "public"
     },
     "devDependencies": {
-        "@types/node": "^22.14.0",
-        "pkg-pr-new": "^0.0.41",
-        "typescript": "5.8.2"
+        "@types/node": "22.14.0",
+        "pkg-pr-new": "0.0.41",
+        "typescript": "5.8.3"
     }
 }
