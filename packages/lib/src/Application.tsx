@@ -36,7 +36,7 @@ export const Application: React.FC<ApplicationProps> = ({
   style = { width: '100%', height: '100%' },
   ...props
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   return (
     <>
