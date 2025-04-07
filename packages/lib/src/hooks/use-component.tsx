@@ -8,7 +8,7 @@ type ComponentProps = {
 }
 
 export const useComponent = (ctype: string | null, props: ComponentProps): void => {
-  const componentRef = useRef<Component | null>();
+  const componentRef = useRef<Component | null>(null);
   const parent : Entity = useParent();
   const app : Application = useApp();
 

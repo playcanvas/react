@@ -60,7 +60,7 @@ interface ApplicationProps extends PropsWithChildren<unknown> {
 
 interface ApplicationWithoutCanvasProps extends ApplicationProps {
   /** A ref to a html canvas element */
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
 /**
@@ -72,7 +72,7 @@ export const Application: React.FC<ApplicationProps> = ({
   style = { width: '100%', height: '100%' },
   ...props
 }) => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   return (
     <>
@@ -81,6 +81,7 @@ export const Application: React.FC<ApplicationProps> = ({
         style={style}
         ref={canvasRef}
       />
+
       <ApplicationWithoutCanvas canvasRef={canvasRef} {...props}>
         {children}
       </ApplicationWithoutCanvas>
