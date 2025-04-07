@@ -5,39 +5,63 @@ import { ReactNode, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } 
 import { useParent, ParentContext, useApp } from './hooks';
 import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
 import { usePointerEventsContext } from './contexts/pointer-events-context';
+import { PublicProps } from './utils/types-utils';
+import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, Schema } from './utils/validation';
 
-type PointerEventCallback = (event: SyntheticPointerEvent) => void;
-type MouseEventCallback = (event: SyntheticMouseEvent) => void;
-
-interface EntityProps {
-  name?: string;
-  position?: number[];
-  scale?: number[];
-  rotation?: number[];
-  onPointerUp?: PointerEventCallback;
-  onPointerDown?: PointerEventCallback;
-  onPointerOver?: PointerEventCallback;
-  onPointerOut?: PointerEventCallback;
-  onClick?: MouseEventCallback;
-  children?: ReactNode
-}
-
-
+/**
+ * The Entity component is the fundamental building block of a PlayCanvas scene.
+ * It represents a node in the scene graph and can have components attached to it.
+ *
+ * @example
+ * // Basic usage
+ * <Entity name="myEntity" position={[0, 1, 0]}>
+ *   <Render type="box" />
+ * </Entity>
+ * 
+ * @example
+ * // With pointer events
+ * <Entity 
+ *   position={[0, 1, 0]}
+ *   onPointerDown={(e) => console.log('Clicked!')}
+ *   onClick={(e) => console.log('Mouse clicked!')}
+ * >
+ *   <Render type="sphere" />
+ * </Entity>
+ * 
+ * @param {EntityProps} props - Component props
+ */
 export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
-  { 
-    name = 'Untitled', 
-    children, 
-    position = [0, 0, 0], 
-    scale = [1, 1, 1], 
-    rotation = [0, 0, 0],
-    onPointerDown,
-    onPointerUp,
-    onPointerOver,
-    onPointerOut,
-    onClick,
-  },
+  props,
   ref
 ) : React.ReactElement | null {
+
+  const { children, ...propsToValidate } = props;
+  const safeProps = validateAndSanitizeProps(
+    propsToValidate, 
+    componentDefinition as ComponentDefinition<EntityProps>
+  );
+
+  const { 
+    /** The name of the entity */
+    name = 'Untitled', 
+    /** The local position of the entity */
+    position = [0, 0, 0], 
+    /** The local scale of the entity */
+    scale = [1, 1, 1], 
+    /** The local rotation of the entity */
+    rotation = [0, 0, 0],
+    /** The callback for the pointer down event */
+    onPointerDown,
+    /** The callback for the pointer up event */
+    onPointerUp,
+    /** The callback for the pointer over event */
+    onPointerOver,
+    /** The callback for the pointer out event */
+    onPointerOut,
+    /** The callback for the click event */
+    onClick,
+  } : EntityProps = safeProps;
+
   const parent = useParent();
   const app = useApp();
   const pointerEvents = usePointerEventsContext();
@@ -46,7 +70,7 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   const hasPointerEvents = !!(onPointerDown || onPointerUp || onPointerOver || onPointerOut || onClick);
 
   // Create the entity only when 'app' changes
-  const entity = useMemo(() => new PcEntity(name, app), [app]) as PcEntity
+  const entity = useMemo(() => new PcEntity(undefined, app), [app]) as PcEntity
 
   useImperativeHandle(ref, () => entity);
 
@@ -100,3 +124,54 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
     </ParentContext.Provider>
   </> );
 });
+
+type PointerEventCallback = (event: SyntheticPointerEvent) => void;
+type MouseEventCallback = (event: SyntheticMouseEvent) => void;
+
+export interface EntityProps extends Partial<PublicProps<PcEntity>> {
+  name?: string;
+  position?: [number, number, number];
+  scale?: [number, number, number];
+  rotation?: [number, number, number, number?];
+  onPointerUp?: PointerEventCallback;
+  onPointerDown?: PointerEventCallback;
+  onPointerOver?: PointerEventCallback;
+  onPointerOut?: PointerEventCallback;
+  onClick?: MouseEventCallback;
+  children?: ReactNode;
+}
+
+const componentDefinition = createComponentDefinition(
+  "Entity",
+  () => new PcEntity(),
+  (entity) => entity.destroy()
+)
+
+componentDefinition.schema = {
+  ...componentDefinition.schema,
+  onPointerDown: {
+    validate: (val: unknown) => typeof val === 'function',
+    errorMsg: (val: unknown) => `Invalid value for prop "onPointerDown": "${val}". Expected a function.`,
+    default: undefined
+  }, 
+  onPointerUp: {
+    validate: (val: unknown) => typeof val === 'function',
+    errorMsg: (val: unknown) => `Invalid value for prop "onPointerUp": "${val}". Expected a function.`,
+    default: undefined
+  },
+  onPointerOver: {
+    validate: (val: unknown) => typeof val === 'function',
+    errorMsg: (val: unknown) => `Invalid value for prop "onPointerOver": "${val}". Expected a function.`,
+    default: undefined
+  },
+  onPointerOut: {
+    validate: (val: unknown) => typeof val === 'function',
+    errorMsg: (val: unknown) => `Invalid value for prop "onPointerOut": "${val}". Expected a function.`,
+    default: undefined
+  },
+  onClick: {
+    validate: (val: unknown) => typeof val === 'function',
+    errorMsg: (val: unknown) => `Invalid value for prop "onClick": "${val}". Expected a function.`,
+    default: undefined
+  }
+} as Schema<EntityProps>
