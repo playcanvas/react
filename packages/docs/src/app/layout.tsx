@@ -1,9 +1,10 @@
 
 /* eslint-env node */
+import './globals.css'
+
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
-import './globals.css'
 import { CodeXml } from 'lucide-react'
 import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
 

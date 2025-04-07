@@ -1,7 +1,5 @@
-@import 'nextra-theme-docs/style.css';
-@import 'tailwindcss';
-
-@source "../components/";
+@import "tailwindcss";
+@import "nextra-theme-docs/style.css";
 
 .playground-overlay {
     position: absolute;
@@ -73,18 +71,10 @@
     color: white;
 }
 
-.inline-buttons a {
-    @apply cursor-pointer opacity-25
-}
-.inline-buttons a:hover {
-    @apply opacity-100
-}
-
 a[href=""] {
-    @apply text-xs font-bold text-white no-underline cursor-default pointer-events-none;
-}
-
-
-a[href=""]:not(:first-of-type) {
-    @apply pt-4;
+    pointer-events: none;
+    font-weight: bold;
+    text-decoration: underline;
+    opacity: .5;
+    font-size: .8rem;
 }
