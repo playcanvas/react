@@ -20,6 +20,12 @@
     {
       "matchDepTypes": ["dependencies"],
       "rangeStrategy": "widen"
+    },
+    {
+      "matchPackagePatterns": ["^playcanvas$"],
+      "groupName": "playcanvas",
+      "rangeStrategy": "pin",
+      "schedule": ["on the first day of the month"]
     }
   ]
 }
