@@ -3,9 +3,7 @@ import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
 import { Application, Component, Entity } from "playcanvas";
 
-type ComponentProps = {
-  [key: string]: unknown;
-}
+export type ComponentProps = Record<string, unknown>;
 
 export const useComponent = (ctype: string | null, props: ComponentProps): void => {
   const componentRef = useRef<Component | null>(null);
