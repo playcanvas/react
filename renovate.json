@@ -1,17 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
-  ],
+  "extends": ["config:recommended"],
   "packageRules": [
     {
-      "matchManagers": [
-        "npm"
-      ],
+      "matchManagers": ["npm"],
       "groupName": "all npm dependencies",
-      "schedule": [
-        "on monday at 10:00am"
-      ]
+      "schedule": ["on monday at 10:00am"]
     },
     {
       "matchDepTypes": ["devDependencies"],
@@ -22,10 +16,10 @@
       "rangeStrategy": "widen"
     },
     {
-      "matchPackagePatterns": ["^playcanvas$"],
+      "matchPackageNames": ["playcanvas"],
       "groupName": "playcanvas",
-      "rangeStrategy": "pin",
-      "schedule": ["on the first day of the month"]
+      "matchUpdateTypes": ["major", "minor"],
+      "labels": ["playcanvas"]
     }
   ]
 }
