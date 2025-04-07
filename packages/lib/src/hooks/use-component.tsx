@@ -6,7 +6,7 @@ import { Application, Component, Entity } from "playcanvas";
 export type ComponentProps = Record<string, unknown>;
 
 export const useComponent = (ctype: string | null, props: ComponentProps): void => {
-  const componentRef = useRef<Component | null>();
+  const componentRef = useRef<Component | null>(null);
   const parent : Entity = useParent();
   const app : Application = useApp();
 

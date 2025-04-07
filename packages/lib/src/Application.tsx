@@ -45,6 +45,7 @@ export const Application: React.FC<ApplicationProps> = ({
         style={style}
         ref={canvasRef}
       />
+
       <ApplicationWithoutCanvas canvasRef={canvasRef} {...props}>
         {children}
       </ApplicationWithoutCanvas>
@@ -183,7 +184,7 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>> {
 
 interface ApplicationWithoutCanvasProps extends ApplicationProps {
   /** A ref to a html canvas element */
-  canvasRef: React.RefObject<HTMLCanvasElement>;
+  canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
 const componentDefinition = createComponentDefinition(
