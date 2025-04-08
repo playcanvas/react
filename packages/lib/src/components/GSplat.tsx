@@ -4,7 +4,7 @@ import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
-import { Schema, validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { Schema, validatePropsWithDefaults, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
@@ -16,7 +16,7 @@ import { Schema, validateAndSanitizeProps, createComponentDefinition, ComponentD
  */
 export const GSplat: FC<GSplatProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<GSplatProps>);
+    const safeProps = validatePropsWithDefaults(props, componentDefinition as ComponentDefinition<GSplatProps>);
 
     const { asset, vertex, fragment } = safeProps;
     const parent: Entity = useParent();
@@ -62,14 +62,19 @@ const componentDefinition = createComponentDefinition(
 // include additional props
 componentDefinition.schema = {
     ...componentDefinition.schema,
+    asset: {
+        validate: (value: unknown) => value instanceof Asset,
+        errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
+        default: undefined
+    },
     vertex: {
-        validate: (value: unknown) => typeof value === 'string',
+        validate: (value: unknown) => !value || typeof value === 'string',
         errorMsg: (value: unknown) => `Vertex shader must be a string, received ${value}`,
         default: null // Allows engine to handle the default shader
     },
     fragment: {
-        validate: (value: unknown) => typeof value === 'string',
+        validate: (value: unknown) => !value || typeof value === 'string',    
         errorMsg: (value: unknown) => `Fragment shader must be a string, received ${value}`,
         default: null // Allows engine to handle the default shader
     }
-} as Schema<GSplatProps>
+} as Schema<GSplatComponent>

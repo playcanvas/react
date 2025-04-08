@@ -8,21 +8,21 @@ import { useApp } from "@playcanvas/react/hooks";
 
 type EnvAtlasComponentsProps = {
     src: string;
-    hideSkybox: boolean;
+    showSkybox: boolean;
     intensity?: number;
 }
 
- const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ src, intensity = 1, hideSkybox = true, ...props }) => {
+ const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ src, ...props }) => {
 
     const app = useApp();
 
-    useLayoutEffect(() => {
-        const layer = app?.scene?.layers?.getLayerByName('Skybox');
-        if(hideSkybox && layer){
-            layer.enabled = false;
-        }
-        app.scene.skyboxIntensity = intensity;
-    }, [app]);
+    // useLayoutEffect(() => {
+    //     const layer = app?.scene?.layers?.getLayerByName('Skybox');
+    //     if(hideSkybox && layer
+    //         layer.enabled = false;
+    //     }
+    //     app.scene.skyboxIntensity = intensity;
+    // }, [app]);
 
     const { data } = useEnvAtlas(src);
 

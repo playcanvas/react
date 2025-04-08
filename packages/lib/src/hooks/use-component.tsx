@@ -2,10 +2,13 @@ import { useLayoutEffect, useRef } from "react";
 import { useParent } from "./use-parent";
 import { useApp } from "./use-app";
 import { Application, Component, Entity } from "playcanvas";
+import { applyProps, Schema } from "../utils/validation";
 
-export type ComponentProps = Record<string, unknown>;
-
-export const useComponent = (ctype: string | null, props: ComponentProps): void => {
+export function useComponent<T>(
+  ctype: string | null, 
+  props: T, 
+  schema: Schema<T>
+): void {
   const componentRef = useRef<Component | null>(null);
   const parent : Entity = useParent();
   const app : Application = useApp();
@@ -19,7 +22,7 @@ export const useComponent = (ctype: string | null, props: ComponentProps): void 
       // Only add the component if it hasn't been added yet
       if (!componentRef.current) {
         const clonedOpts = { ...props };
-        componentRef.current = parent.addComponent(ctype, clonedOpts);
+        componentRef.current = parent.addComponent(ctype, clonedOpts as object);
       }
       // Do not throw an error if the component already exists
     }
@@ -49,10 +52,12 @@ export const useComponent = (ctype: string | null, props: ComponentProps): void 
     if (!comp) return;
 
     const filteredProps = Object.fromEntries(
-      Object.entries(props).filter(([key]) => key in comp)
+      Object.entries(props as Record<keyof Component, unknown>).filter(([key]) => key in comp)
     );
 
-    Object.assign(comp, filteredProps)
 
-  }, [props, ctype]);
+    // Object.assign(comp, filteredProps)
+    applyProps(comp, schema, filteredProps as Record<keyof Component, unknown>);
+
+  }/*, [props, ctype]*/);
 };

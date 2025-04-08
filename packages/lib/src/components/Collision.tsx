@@ -3,9 +3,9 @@
 import { FC, useEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { validateAndSanitizeProps, warnOnce, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { validatePropsPartial, warnOnce, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 import { CollisionComponent, Entity } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
+import { PublicProps, Serializable } from "../utils/types-utils";
 
 /**
  * The Collision component adds a collider to the entity. This enables the entity to collide with other entities.
@@ -24,7 +24,7 @@ export const Collision: FC<CollisionProps> = (props) => {
     const entity = useParent();
     const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
 
-    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<CollisionProps>);
+    const safeProps = validatePropsPartial(props, componentDefinition);
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
@@ -60,7 +60,7 @@ export const Collision: FC<CollisionProps> = (props) => {
     const type = entity.render && props.type === undefined ? entity.render.type : props.type;
 
     // Always call useComponent - it will handle component lifecycle internally
-    useComponent(isPhysicsLoaded ? "collision" : null, { ...safeProps, type });
+    useComponent(isPhysicsLoaded ? "collision" : null, { ...safeProps as Serializable<CollisionProps>, type }, componentDefinition.schema);
 
     return null;
 }

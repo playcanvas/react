@@ -1,9 +1,9 @@
 import { FC, useEffect } from "react";
-import { useComponent, useParent } from "../hooks";
+import { useComponent } from "../hooks";
 import { usePhysics } from "../contexts/physics-context";
-import { createComponentDefinition, getStaticNullApplication, warnOnce, ComponentDefinition, validateAndSanitizeProps } from "../utils/validation";
-import { PublicProps } from "../utils/types-utils";
-import { Entity, RigidBodyComponent } from "playcanvas";
+import { createComponentDefinition, getStaticNullApplication, warnOnce, ComponentDefinition, validatePropsPartial, Schema } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, Entity, RigidBodyComponent } from "playcanvas";
 
 /**
  * Adding a RigidBody component to an entity allows it to participate in the physics simulation.
@@ -18,10 +18,10 @@ import { Entity, RigidBodyComponent } from "playcanvas";
  * </Entity>
  */
 export const RigidBody: FC<RigidBodyProps> = (props) => {
-    const entity = useParent();
+
     const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
 
-    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<RigidBodyProps>);
+    const safeProps = validatePropsPartial(props, componentDefinition as ComponentDefinition<RigidBodyProps>);
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
@@ -53,23 +53,17 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
         }
     }, [isPhysicsEnabled, physicsError]);
 
-    // If no type is defined, infer if possible from a render component
-    const type = entity.render && props.type === undefined ? entity.render.type : props.type;
-
     // Always call useComponent - it will handle component lifecycle internally
-    useComponent(isPhysicsLoaded ? "rigidbody" : null, { ...safeProps, type });
+    useComponent(isPhysicsLoaded ? "rigidbody" : null, safeProps, componentDefinition.schema as Schema<RigidBodyProps> );
 
     return null;
 }
 
-interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
-    type?: "box"
-        | "capsule"
-        | "compound"
-        | "cone"
-        | "cylinder"
-        | "mesh"
-        | "sphere"
+const rigidBodyTypes = [BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC] as const;
+type RigidBodyType = typeof rigidBodyTypes[number];
+
+interface RigidBodyProps extends Partial<Serializable<PublicProps<RigidBodyComponent>>> {
+    type?: RigidBodyType
 }
 
 const componentDefinition = createComponentDefinition(
@@ -79,11 +73,12 @@ const componentDefinition = createComponentDefinition(
     "RigidBodyComponent"
 )
 
+
 componentDefinition.schema = {
     ...componentDefinition.schema,
     type: {
-        validate: (value: unknown) => typeof value === 'string' && ['box', 'capsule', 'compound', 'cone', 'cylinder', 'mesh', 'sphere'].includes(value as string),
-        errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "box", "capsule", "compound", "cone", "cylinder", "mesh", "sphere".`,
-        default: "box"
+        validate: (value: unknown) => typeof value === 'string' && rigidBodyTypes.includes(value as string),
+        errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "${rigidBodyTypes.join(", ")}".`,
+        default: "dynamic"
     }
 }

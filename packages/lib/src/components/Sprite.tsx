@@ -2,8 +2,7 @@ import { FC } from "react";
 import { useComponent } from "../hooks";
 import { PublicProps } from "../utils/types-utils";
 import { Asset, Entity, SpriteComponent } from "playcanvas";
-import { createComponentDefinition, validateAndSanitizeProps, Schema, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
-import { ComponentProps } from "../hooks/use-component";
+import { createComponentDefinition, validatePropsWithDefaults, Schema, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Sprite component allows an entity to render a 2D sprite.
@@ -17,9 +16,9 @@ import { ComponentProps } from "../hooks/use-component";
  */
 export const Sprite: FC<SpriteProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<SpriteProps>);
+    const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
-    useComponent("sprite", safeProps as unknown as ComponentProps);
+    useComponent("sprite", safeProps, componentDefinition.schema);
     return null;
 }
 
@@ -27,7 +26,7 @@ interface SpriteProps extends Partial<PublicProps<SpriteComponent>> {
     asset : Asset
 }
 
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<SpriteProps, SpriteComponent>(
     "Sprite",
     () => new Entity("mock-sprite", getStaticNullApplication()).addComponent('sprite') as SpriteComponent,
     (component) => (component as SpriteComponent).system.destroy(),

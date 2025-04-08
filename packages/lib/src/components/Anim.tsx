@@ -3,9 +3,8 @@
 import { FC, useLayoutEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { AnimComponent, Asset, Entity } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
-import { WithCssColors } from "../utils/color";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Anim component allows an entity to play animations.
@@ -21,12 +20,12 @@ import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinitio
  *   <Anim asset={asset} clip="Walk" loop />
  * </Entity>
  */
-export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
+export const Anim: FC<AnimProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<AnimProps>);
+    const { asset, ...safeProps } = validatePropsWithDefaults(props, componentDefinition);
 
     // Create the anim component
-    useComponent("anim", safeProps as Partial<AnimComponent>);
+    useComponent("anim", safeProps, componentDefinition.schema);
 
     // Get the associated Entity
     const entity : Entity = useParent();
@@ -51,12 +50,11 @@ export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
     return null;
 }
 
-interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
+interface AnimProps extends Partial<Serializable<PublicProps<AnimComponent>>> {
     asset : Asset
 }
 
-
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<AnimProps, AnimComponent>(
     "Anim",
     () => new Entity("mock-anim", getStaticNullApplication()).addComponent('anim') as AnimComponent,
     (component) => (component as AnimComponent).system.destroy()

@@ -1,9 +1,8 @@
 import { FC } from "react";
 import { useComponent } from "../hooks";
-import { useColors, WithCssColors } from "../utils/color";
 import { Entity, LightComponent } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation";
 
 /**
  * The Light component adds a light source to the entity. A light can be a directional, omni, or spot light.
@@ -19,19 +18,18 @@ import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinitio
  */
 export const Light: FC<LightProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Partial<LightComponent>, componentDefinition as ComponentDefinition<LightProps>);
-    const colorProps = useColors(safeProps, ['color'])
+    const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
-    useComponent("light", { ...safeProps, ...colorProps });
+    useComponent("light", safeProps, componentDefinition.schema);
     return null
 
 }
 
-interface LightProps extends Partial<WithCssColors<PublicProps<LightComponent>>> {
+interface LightProps extends Partial<Serializable<PublicProps<LightComponent>>> {
     type: "directional" | "omni" | "spot";
 }
 
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<LightProps, LightComponent>(
     "Light",
     () => new Entity('mock-light', getStaticNullApplication()).addComponent('light') as LightComponent,
     (component) => (component as LightComponent).system.destroy(),
