@@ -92,7 +92,7 @@
     },
     "devDependencies": {
         "@types/node": "22.14.0",
-        "pkg-pr-new": "0.0.41",
+        "pkg-pr-new": "0.0.42",
         "typescript": "5.8.3"
     }
 }
