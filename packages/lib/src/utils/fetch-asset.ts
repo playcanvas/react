@@ -1,11 +1,22 @@
 import { Application, Asset } from "playcanvas";
+import { warnOnce } from "./validation";
 
 export const fetchAsset = (app : Application, url : string, type : string, props = {}) => {
     return new Promise((resolve, reject) => {
-        let asset = app.assets.find(url);
+
+        let propsKey = url;
+        try {
+            propsKey += JSON.stringify(props, Object.keys(props).sort())
+        } catch {
+            const error = `Invalid props for "fetchAsset('${url}')". Props must be serializable to JSON.`;
+            warnOnce(error);
+            throw new Error(error);
+        }
+
+        let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(url, type, { url }, props);
+            asset = new Asset(propsKey, type, { url }, props);
             app.assets.add(asset);
         }
 
