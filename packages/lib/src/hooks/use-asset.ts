@@ -52,8 +52,24 @@ export const useAsset = (
   });
 
   const app = useApp();
+  let stablePropsKey = null;
+
+  try{
+    stablePropsKey = JSON.stringify(props, Object.keys(props).sort())
+  } catch {
+    let error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
+    warnOnce(error);
+    setResult({
+        asset: null,
+        loading: false,
+        error
+    });
+  }
 
   useEffect(() => {
+
+    if(stablePropsKey === null) return;
+
     // Reset state when inputs change
     setResult({
       asset: null,
@@ -103,13 +119,13 @@ export const useAsset = (
       })
       .catch((error) => {
         warnOnce(`Failed to load asset: ${src}`);
-        setResult({
+        setResult({ 
           asset: null,
           loading: false,
           error: error?.message || `Failed to load asset: ${src}`
         });
       });
-  }, [app, src, type, JSON.stringify(props)]);
+  }, [app, src, type, stablePropsKey]);
 
   return result;
 };
