@@ -29,6 +29,14 @@ export default function Scene() {
 
 ## Props
 
+<TSDoc
+  code={`
+  import { Application } from '@playcanvas/react'
+  type $ = React.ComponentProps<typeof Application>;
+  export default $;
+  `}
+/>
+
 ### `usePhysics`
 Enables physics for the application. Learn more about [Physics in Playcanvas](https://developer.playcanvas.com/user-manual/physics/). Entities will need to have a `RigidBody` and `Collisions` components to be affected by physics.
 

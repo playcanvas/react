@@ -59,11 +59,19 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
     return null;
 }
 
-const rigidBodyTypes = [BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC] as const;
-type RigidBodyType = typeof rigidBodyTypes[number];
-
-interface RigidBodyProps extends Partial<Serializable<PublicProps<RigidBodyComponent>>> {
-    type?: RigidBodyType
+interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
+    /**
+     * The shape of rigid body to create.
+     * A `<Render/>` component can have a different shape to the rigid body. This is useful if you want to have a visual representation of the rigid body.
+     * @default "box"
+     */
+    type?: "box"
+        | "capsule"
+        | "compound"
+        | "cone"
+        | "cylinder"
+        | "mesh"
+        | "sphere"
 }
 
 const componentDefinition = createComponentDefinition(

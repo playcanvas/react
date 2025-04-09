@@ -1,3 +1,7 @@
+---
+title: Hooks
+---
+
 # Hooks
 
 The are a a couple of hooks that are useful when working with `@playcanvas/react`. These can often be useful when creating custom components, hooks or utilities.
@@ -16,11 +20,17 @@ The `useParent` hook returns the parent `Entity` of the current component. This 
 
 ```jsx
 import { useParent } from '@playcanvas/react/hooks'
-```
 
-## `useMaterial`
+const ChildEntity = () => {
+    const parent = useParent();
+    console.log(parent);
 
-The `useMaterial` hook returns a [`StandardMaterial`](https://api.playcanvas.com/classes/Engine.StandardMaterial.html) instance. This is useful if you need to create materials and apply them to `Render` components.
-```jsx
-import { useMaterial } from '@playcanvas/react/hooks'
+    return <Entity>
+      <Render type="box" />
+    </Entity>
+};
+
+const ParentEntity = () => {
+  return <ChildEntity />;
+};
 ```

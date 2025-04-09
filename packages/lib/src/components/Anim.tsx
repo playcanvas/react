@@ -50,7 +50,11 @@ export const Anim: FC<AnimProps> = (props) => {
     return null;
 }
 
-interface AnimProps extends Partial<Serializable<PublicProps<AnimComponent>>> {
+interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
+    /**
+     * The asset containing the animations to play. Setting this prop will automatically assign the animations to the component.
+     * @type {Asset}
+     */
     asset : Asset
 }
 

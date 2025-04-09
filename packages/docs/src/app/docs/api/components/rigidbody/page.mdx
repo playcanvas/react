@@ -3,10 +3,10 @@
 import { Callout } from 'nextra/components'
 
 <Callout type="info" emoji="️💡">
-  Enable physics by installing `npm i sync-ammo` and enabling physics on the Application using`<Application usePhysics/>`.
+  Run `npm i sync-ammo` and use `<Application usePhysics/>` to enable physics.
 </Callout>
 
-The `Rigidbody` component enables physics for an [`Entity`](/api/entity), allowing it to interact with the global physics simulation. You can apply forces, torques, and other physics behaviours to an entity with a `Rigidbody` component and it will respond accordingly.
+The `Rigidbody` component enables physics for an [`Entity`](/docs/api/entity), allowing it to interact with the global physics simulation. You can apply forces, torques, and other physics behaviours to an entity with a `Rigidbody` component and it will respond accordingly.
 
 You can learn more about how physics work in PlayCanvas in the [Physics docs](https://developer.playcanvas.com/user-manual/physics/).
 
@@ -24,19 +24,10 @@ import { Rigidbody } from '@playcanvas/react/components'
 
 ## Props
 
-### type
-The type of rigidbody to attach to the Entity.
+The following props are based on the [RigidBody Component](https://api.playcanvas.com/engine/classes/RenderComponent.html) from PlayCanvas version **<PcVersion />**. This documentation is automatically generated from the TypeScript types of the installed PlayCanvas package.
 
-Type: `"dynamic" | "kinematic" | "static"`
-Default: `"dynamic"`
-
-### mass
-The mass of the rigidbody.
-
-Type: `number`
-Default: `1`
-
-### Additional Props
-
-Any additional props will be passed to the PlayCanvas Rigidbody class directly. See the [PlayCanvas documentation](https://api.playcanvas.com/classes/Engine.RigidBodyComponent.html) for more information.
-
+<TSDoc
+  code={`import type { RigidBody } from '@playcanvas/react/components'
+type $ = React.ComponentProps<typeof RigidBody>
+export default $`}
+/>

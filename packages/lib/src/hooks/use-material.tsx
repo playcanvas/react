@@ -6,7 +6,7 @@ import { validatePropsWithDefaults, createComponentDefinition, applyProps } from
 
 /**
  * This hook is used to create a material instance and update its properties when the props change.
- * @param {MaterialProps} props - The props to pass to the material.
+ * @param {Materialrops} props - The props to pass to the material.
  * @returns {StandardMaterial} material - The material instance.
  * @see https://api.playcanvas.com/engine/classes/StandardMaterial.html
  * 

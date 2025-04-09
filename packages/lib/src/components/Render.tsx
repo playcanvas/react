@@ -53,7 +53,14 @@ const primitiveTypes = ["asset", "box", "capsule", "cone", "cylinder", "plane", 
 type PrimitiveType = typeof primitiveTypes[number];
 
 interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'asset'> {
+    /**
+     * The type of primitive shape to render.
+     * @default "box"
+     */
     type: PrimitiveType;
+    /**
+     * The asset to render.
+     */
     asset?: Asset;
     children?: React.ReactNode;
 }

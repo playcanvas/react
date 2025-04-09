@@ -27,7 +27,6 @@ export type PublicProps<T> = {
   [K in keyof T as
     K extends `_${string}` ? never :
     K extends `#${string}` ? never :
-    K extends `c` ? never :
     T[K] extends (...args: unknown[]) => unknown ? never :
     K extends BuiltInKeys ? never :
     K extends ReadonlyKeys<T> ? never :
