@@ -17,7 +17,7 @@ import { version } from 'playcanvas';
 const PcVersion = () => <span>{version}</span>;
 
 const docsComponents = getDocsMDXComponents({
-  TSDoc(props) {
+  CustomTSDoc(props) {
     return (
       <TSDoc
         {...props}
