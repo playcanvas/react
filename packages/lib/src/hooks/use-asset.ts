@@ -57,7 +57,7 @@ export const useAsset = (
   try{
     stablePropsKey = JSON.stringify(props, Object.keys(props).sort())
   } catch {
-    let error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
+    const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
     warnOnce(error);
     setResult({
         asset: null,

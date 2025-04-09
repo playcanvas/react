@@ -7,9 +7,10 @@ export const fetchAsset = (app : Application, url : string, type : string, props
         let propsKey = url;
         try {
             propsKey += JSON.stringify(props, Object.keys(props).sort())
-        } catch (error) {
-            warnOnce(`Invalid props for "fetchAsset('${url}')". Props must be serializable to JSON.`);
-            throw new Error("Invalid props");
+        } catch {
+            const error = `Invalid props for "fetchAsset('${url}')". Props must be serializable to JSON.`;
+            warnOnce(error);
+            throw new Error(error);
         }
 
         let asset = app.assets.find(propsKey, type);
