@@ -179,7 +179,7 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>> {
    */
   fillMode?: typeof FILLMODE_NONE | typeof FILLMODE_FILL_WINDOW | typeof FILLMODE_KEEP_ASPECT
 
-  /*
+  /**
    * Change the resolution of the canvas, and set the way it behaves when the window is resized.
    * @default RESOLUTION_AUTO
    */
