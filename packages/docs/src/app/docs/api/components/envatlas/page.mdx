@@ -14,23 +14,27 @@ This example will load an environment atlas asset and apply it to the scene. An 
 import { EnvAtlas } from '@playcanvas/react/components'
 
 // Load the environment atlas asset
-const { data : envAtlas } = useEnvAtlas('/env_atlas_1k.png')
+export const EnvAtlasExample = () => {
+  const { data : envAtlas } = useEnvAtlas('/env_atlas_1k.png')
 
-<Entity>
+  return <Entity>
     <EnvAtlas asset={envAtlas} />
     <Entity>
-        <Render type="box" />
+      <Render type="box" />
     </Entity>
-</Entity>
+  </Entity>
 }
 ```
 
 ## Props
 
-### asset
-The asset to use for the environment atlas.
+The following props are based on the [EnvAtlas Component](https://api.playcanvas.com/engine/classes/EnvAtlasComponent.html) from PlayCanvas version **<PcVersion />**. This documentation is automatically generated from the TypeScript types of the installed PlayCanvas package.
 
-Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
+<TSDoc
+  code={`import type { EnvAtlas } from '@playcanvas/react/components'
+type $ = React.ComponentProps<typeof EnvAtlas>
+export default $`}
+/>
 
 
 

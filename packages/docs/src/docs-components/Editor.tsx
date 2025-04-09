@@ -1,7 +1,7 @@
 import { FC, useState, useEffect, createContext, useContext, useMemo, useRef } from "react";
 import MonacoEditor from '@monaco-editor/react';
 import { ErrorBoundary } from "./code-error-boundary";
-import { defaultComponents } from "@/../mdx-components";
+import { defaultComponents } from "@/../client-mdx-components";
 import { serialize } from "next-mdx-remote-client/serialize";
 import { MDXClient, type SerializeResult } from "next-mdx-remote-client/csr";
 import ActualMonacoEditor, { editor } from "monaco-editor";

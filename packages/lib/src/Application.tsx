@@ -161,19 +161,34 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
 type GraphicsOptions = Partial<PublicProps<GraphicsDevice>>
 
 interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>> {
-  /** The class name to attach to the canvas component */
+  /** 
+   * The class name to attach to the canvas component
+   * @default pc-app
+   */
   className?: string,
-  /** A style object added to the canvas component */
+
+  /** 
+   * A style object added to the canvas component 
+   * @default { width: '100%', height: '100%' }
+   */
   style?: Record<string, unknown>
-  /** Controls how the canvas fills the window and resizes when the window changes. */
+
+  /** 
+   * Controls how the canvas fills the window and resizes when the window changes.
+   * @default FILLMODE_NONE
+   */
   fillMode?: typeof FILLMODE_NONE | typeof FILLMODE_FILL_WINDOW | typeof FILLMODE_KEEP_ASPECT
-  /** Change the resolution of the canvas, and set the way it behaves when the window is resized. */
+
+  /**
+   * Change the resolution of the canvas, and set the way it behaves when the window is resized.
+   * @default RESOLUTION_AUTO
+   */
   resolutionMode?: typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED
-  // /** Clamps per-frame delta time to an upper bound. Useful since returning from a tab deactivation can generate huge values for dt, which can adversely affect game state. */
-  maxDeltaTime?: number
-  // /** Scales the global time delta. */
-  timeScale?: number,
-  /** Whether to use the PlayCanvas Physics system. */
+
+  /** 
+   * When `true`, the PlayCanvas Physics system will be enabled.
+   * @default false
+   */
   usePhysics?: boolean,
   /** Graphics Settings */
   graphicsDeviceOptions?: GraphicsOptions,

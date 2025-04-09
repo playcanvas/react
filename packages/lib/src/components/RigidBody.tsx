@@ -63,6 +63,11 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
 }
 
 interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
+    /**
+     * The shape of rigid body to create.
+     * A `<Render/>` component can have a different shape to the rigid body. This is useful if you want to have a visual representation of the rigid body.
+     * @default "box"
+     */
     type?: "box"
         | "capsule"
         | "compound"

@@ -1,20 +1,10 @@
 # Render
 
-The `Render` component allows an [`Entity`](/api/entity) to render a 3D model or primitive. You can provide an [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html) or one of the [primitive type](https://api.playcanvas.com/classes/Engine.Asset.html#type). The parent entity transforms the rendered object.
+The `Render` component allows an [`Entity`](/docs/api/entity) to render a 3D model or primitive. You can provide an [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html) or one of the [primitive type](https://api.playcanvas.com/classes/Engine.Asset.html#type). The parent entity transforms the rendered object.
 
 ## Usage
 
-This will render a simple box primitive transformed by the parent entity.
-
-```jsx copy
-import { Render } from '@playcanvas/react/components'
-
-Entity>
-    <Render type="box" />
-</Entity>
-```
-
-### Rendering an Asset
+#### Rendering an Asset
 
 To render a 3D model loaded from a URL, you can use the asset type and pass the asset directly to the `asset` prop.
 
@@ -25,3 +15,24 @@ import { Render } from '@playcanvas/react/components'
     <Render type="asset" asset={asset} />
 </Entity>
 ```
+
+#### Rendering a primitive shape
+This will render a simple box primitive transformed by the parent entity.
+
+```jsx copy
+import { Render } from '@playcanvas/react/components'
+
+Entity>
+    <Render type="box" />
+</Entity>
+```
+
+## Props
+
+The following props are based on the [Render Component](https://api.playcanvas.com/engine/classes/RenderComponent.html) from PlayCanvas version **<PcVersion />**. This documentation is automatically generated from the TypeScript types of the installed PlayCanvas package.
+
+<TSDoc
+  code={`import type { Render } from '@playcanvas/react/components'
+type $ = React.ComponentProps<typeof Render>
+export default $`}
+/>

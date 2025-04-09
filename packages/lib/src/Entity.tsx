@@ -129,15 +129,68 @@ type PointerEventCallback = (event: SyntheticPointerEvent) => void;
 type MouseEventCallback = (event: SyntheticMouseEvent) => void;
 
 export interface EntityProps extends Partial<PublicProps<PcEntity>> {
+  /**
+   * The name of the entity
+   * @default "Untitled"
+   */
   name?: string;
+
+  /** 
+   * The local position of the entity relative to its parent.
+   * You can use the `position` prop to set the position of the entity.
+   * @default [0, 0, 0]
+   */
   position?: [number, number, number];
+
+  /**
+   * The local scale of the entity relative to its parent.
+   * You can use the `scale` prop to set the scale of the entity.
+   * @default [1, 1, 1]
+   */
   scale?: [number, number, number];
+
+  /**
+   * The local rotation of the entity relative to its parent.
+   * The rotation is specified as a quaternion or euler angles.
+   * @default [0, 0, 0]
+   */
   rotation?: [number, number, number, number?];
+
+  /** 
+   * The callback for the pointer up event
+   * @param {SyntheticPointerEvent} event - The pointer up event
+   * @default null
+   */
   onPointerUp?: PointerEventCallback;
+
+  /** 
+   * The callback for the pointer down event
+   * @param {SyntheticPointerEvent} event - The pointer down event
+   * @default null
+   */
   onPointerDown?: PointerEventCallback;
+
+  /** 
+   * The callback for the pointer over event
+   * @param {SyntheticPointerEvent} event - The pointer over event
+   * @default null
+   */
   onPointerOver?: PointerEventCallback;
+
+  /** 
+   * The callback for the pointer out event
+   * @param {SyntheticPointerEvent} event - The pointer out event
+   * @default null
+   */
   onPointerOut?: PointerEventCallback;
+
+  /** 
+   * The callback for the click event
+   * @param {SyntheticMouseEvent} event - The click event
+   * @default null
+   */
   onClick?: MouseEventCallback;
+
   children?: ReactNode;
 }
 
