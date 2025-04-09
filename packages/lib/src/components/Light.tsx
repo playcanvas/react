@@ -28,6 +28,10 @@ export const Light: FC<LightProps> = (props) => {
 }
 
 interface LightProps extends Partial<WithCssColors<PublicProps<LightComponent>>> {
+    /**
+     * The type of the light.
+     * @default "directional"
+     */
     type: "directional" | "omni" | "spot";
 }
 

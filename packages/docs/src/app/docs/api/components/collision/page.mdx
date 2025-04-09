@@ -6,9 +6,9 @@ import { Callout } from 'nextra/components'
   Enable physics by installing `npm i sync-ammo` and enabling physics on the Application using`<Application usePhysics/>`.
 </Callout>
 
-The `Collision` component attaches a PlayCanvas [Collision Component](https://api.playcanvas.com/classes/Engine.CollisionComponent.html) to an [`Entity`](/api/entity).
+The `Collision` component attaches a PlayCanvas [Collision Component](https://api.playcanvas.com/classes/Engine.CollisionComponent.html) to an [`Entity`](/docs/api/entity).
 
-It allows an [`Entity`](/api/entity) to participate in collision detection with other entities that have collision components. This is useful for physics simulations, trigger zones, and other gameplay mechanics that require detecting when objects intersect.
+It allows an [`Entity`](/docs/api/entity) to participate in collision detection with other entities that have collision components. This is useful for physics simulations, trigger zones, and other gameplay mechanics that require detecting when objects intersect.
 
 Learn more about Collision components in the [PlayCanvas documentation](https://api.playcanvas.com/classes/Engine.CollisionComponent.html). Also see the [Rigidbody](/api/components/rigidbody) component for more information on how to use collision components with physics.
 
@@ -29,17 +29,10 @@ import { Collision, Rigidbody } from '@playcanvas/react/components'
 
 ## Props
 
-### type
-The type of collision shape to attach to the Entity.
+The following props are based on the [Collision API](https://developer.playcanvas.com/en/api/pc.CollisionComponent.html) from PlayCanvas version **<PcVersion />**. This documentation is automatically generated from the TypeScript types of the installed PlayCanvas package.
 
-Type: `"box" | "sphere" | "capsule" | "mesh" | "compound" | "cone" | "cylinder"`
-Default: `"box"`
-
-### asset
-The asset to use for the collision shape.
-
-Type: [`Asset`](https://api.playcanvas.com/classes/Engine.Asset.html)
-
-### Additional Props
-
-Any additional props will be passed to the CollisionComponent class directly. See the [documentation](https://api.playcanvas.com/classes/Engine.CollisionComponent.html) for more information.
+<TSDoc
+  code={`import type { Collision } from '@playcanvas/react/components'
+type $ = React.ComponentProps<typeof Collision>
+export default $`}
+/>

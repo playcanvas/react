@@ -1,12 +1,12 @@
 # Camera
 
-In order to view a scene, you need a camera. The `Camera` component enables an [Entity](/api/entity) to render a scene. You can use the entity's position and rotation to control the camera.
+In order to view a scene, you need a camera. The `Camera` component enables an [Entity](/docs/api/entity) to render a scene. You can use the entity's position and rotation to control the camera.
 
 A scene can have multiple cameras, for example to render from different points of view.
 
 ## Usage
 
-A `Camera` is a component, so you attach it to an `Entity` in the same way you would attach a `Render` component.
+A `Camera` is a component, so you attach it to an `Entity` and the camera will render the scene from the entity's position and rotation.
 
 ```jsx copy
 import { Camera } from '@playcanvas/react/components'
@@ -18,50 +18,12 @@ import { Camera } from '@playcanvas/react/components'
 
 Learn more about the [Camera Component](https://api.playcanvas.com/classes/Engine.CameraComponent.html) in the PlayCanvas documentation.
 
+## Props
 
-### `type`
-The `type` prop determines the type of camera. It accepts one of the following values from PlayCanvas:
+The following props are based on PlayCanvas version **<PcVersion />**. This documentation is automatically generated from the TypeScript types of the installed PlayCanvas package.
 
-- `PERSPECTIVE` - The camera will use a perspective projection
-- `ORTHOGRAPHIC` - The camera will use an orthographic projection
-
-Default: `PERSPECTIVE`
-
-### `fov`
-The `fov` prop determines the field of view of the camera. This is the angle between the camera's forward direction and the top/bottom of the screen.
-
-Type: `number`
-Default: `60`
-
-### `near`
-The `near` prop determines the near clipping plane of the camera. This is the distance from the camera to the near clipping plane.
-
-Type: `number`
-Default: `0.1`
-
-### `far`
-The `far` prop determines the far clipping plane of the camera. This is the distance from the camera to the far clipping plane.
-
-Type: `number`
-Default: `1000`
-
-### aspectRatio
-The `aspectRatio` prop determines the aspect ratio of the camera. This is the ratio of the width to the height of the screen.
-
-Type: `number`
-Default: `16 / 9`
-
-
-### Additional Props
-
-Any additional props will be passed to the PlayCanvas `CameraComponent` class directly. See the [docs](https://api.playcanvas.com/classes/Engine.CameraComponent.html) for more information.
-
-
-
-
-
-
-
-
-
-
+<TSDoc
+  code={`import type { Camera } from '@playcanvas/react/components'
+type $ = React.ComponentProps<typeof Camera>
+export default $`}
+/>
