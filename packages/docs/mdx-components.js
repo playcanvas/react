@@ -3,9 +3,6 @@ import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 import { unstable_TSDoc as TSDoc } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
 
-import { version } from 'playcanvas';
-const PcVersion = () => <span>{version}</span>;
-
 const docsComponents = getDocsMDXComponents({
   TSDoc(props) {
     return (
