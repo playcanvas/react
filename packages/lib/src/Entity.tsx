@@ -6,7 +6,7 @@ import { useParent, ParentContext, useApp } from './hooks';
 import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
 import { usePointerEventsContext } from './contexts/pointer-events-context';
 import { PublicProps } from './utils/types-utils';
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, Schema } from './utils/validation';
+import { validatePropsWithDefaults, ComponentDefinition } from './utils/validation';
 
 /**
  * The Entity component is the fundamental building block of a PlayCanvas scene.
@@ -36,9 +36,9 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
 ) : React.ReactElement | null {
 
   const { children, ...propsToValidate } = props;
-  const safeProps = validateAndSanitizeProps(
+  const safeProps = validatePropsWithDefaults(
     propsToValidate, 
-    componentDefinition as ComponentDefinition<EntityProps>
+    componentDefinition as ComponentDefinition<EntityProps, PcEntity>
   );
 
   const { 
@@ -194,37 +194,54 @@ export interface EntityProps extends Partial<PublicProps<PcEntity>> {
   children?: ReactNode;
 }
 
-const componentDefinition = createComponentDefinition(
-  "Entity",
-  () => new PcEntity(),
-  (entity) => entity.destroy()
-)
-
-componentDefinition.schema = {
-  ...componentDefinition.schema,
-  onPointerDown: {
-    validate: (val: unknown) => typeof val === 'function',
-    errorMsg: (val: unknown) => `Invalid value for prop "onPointerDown": "${val}". Expected a function.`,
-    default: undefined
-  }, 
-  onPointerUp: {
-    validate: (val: unknown) => typeof val === 'function',
-    errorMsg: (val: unknown) => `Invalid value for prop "onPointerUp": "${val}". Expected a function.`,
-    default: undefined
-  },
-  onPointerOver: {
-    validate: (val: unknown) => typeof val === 'function',
-    errorMsg: (val: unknown) => `Invalid value for prop "onPointerOver": "${val}". Expected a function.`,
-    default: undefined
-  },
-  onPointerOut: {
-    validate: (val: unknown) => typeof val === 'function',
-    errorMsg: (val: unknown) => `Invalid value for prop "onPointerOut": "${val}". Expected a function.`,
-    default: undefined
-  },
-  onClick: {
-    validate: (val: unknown) => typeof val === 'function',
-    errorMsg: (val: unknown) => `Invalid value for prop "onClick": "${val}". Expected a function.`,
-    default: undefined
+const componentDefinition = {
+  name: "Entity",
+  apiName: "Entity",
+  schema: {
+    name: {
+      validate: (val: unknown) => !val || typeof val === 'string',
+      errorMsg: (val: unknown) => `Invalid value for prop "name": "${val}". Expected a string or undefined.`,
+      default: 'Untitled'
+    },
+    position: {
+      validate: (val: unknown) => Array.isArray(val) && val.length === 3,
+      errorMsg: (val: unknown) => `Invalid value for prop "position": "${val}". Expected an array of 3 numbers.`,
+      default: [0, 0, 0]
+    },
+    scale: {
+      validate: (val: unknown) => Array.isArray(val) && val.length === 3,
+      errorMsg: (val: unknown) => `Invalid value for prop "scale": "${val}". Expected an array of 3 numbers.`,
+      default: [1, 1, 1]
+    },
+    rotation: {
+      validate: (val: unknown) => Array.isArray(val) && val.length === 3,
+      errorMsg: (val: unknown) => `Invalid value for prop "rotation": "${val}". Expected an array of 3 numbers.`,
+      default: [0, 0, 0]
+    },
+    onPointerDown: {
+      validate: (val: unknown) => typeof val === 'function',
+      errorMsg: (val: unknown) => `Invalid value for prop "onPointerDown": "${val}". Expected a function.`,
+      default: undefined
+    },
+    onPointerUp: {
+      validate: (val: unknown) => typeof val === 'function',
+      errorMsg: (val: unknown) => `Invalid value for prop "onPointerUp": "${val}". Expected a function.`,
+      default: undefined
+    },
+    onPointerOver: {
+      validate: (val: unknown) => typeof val === 'function',
+      errorMsg: (val: unknown) => `Invalid value for prop "onPointerOver": "${val}". Expected a function.`,
+      default: undefined
+    },
+    onPointerOut: {
+      validate: (val: unknown) => typeof val === 'function',
+      errorMsg: (val: unknown) => `Invalid value for prop "onPointerOut": "${val}". Expected a function.`,
+      default: undefined
+    },
+    onClick: {
+      validate: (val: unknown) => typeof val === 'function',
+      errorMsg: (val: unknown) => `Invalid value for prop "onClick": "${val}". Expected a function.`,
+      default: undefined
+    }
   }
-} as Schema<EntityProps>
+}

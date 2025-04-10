@@ -1,30 +1,50 @@
 "use client"
 
-import { FC, useLayoutEffect } from "react";
+import { FC, useEffect, useLayoutEffect } from "react";
 import { useApp } from "../hooks";
 import { Application, Asset } from "playcanvas";
+import { validatePropsWithDefaults } from "../utils/validation";
 
 interface EnvAtlasProps {
+    /**
+     * The asset to use for the environment atlas.
+     */
     asset: Asset;
-    intensity?: number;
+    /**
+     * The intensity of the skybox.
+     * @default 1
+     */
+    skyboxIntensity?: number;
+    /**
+     * The luminance of the skybox.
+     * @default 1
+     */
+    skyboxLuminance?: number;
+    /**
+     * Whether to show the skybox.
+     * @default true
+     */
     showSkybox?: boolean;
 }
 
 /**
  * An environment atlas is a texture for rendering a skybox and global reflections.
  */
-export const EnvAtlas: FC<EnvAtlasProps>= ({ asset, intensity = 1, showSkybox = true }) => {
+export const EnvAtlas: FC<EnvAtlasProps>= (props) => {
 
+    const safeProps = validatePropsWithDefaults(props, componentDefinition);
+    const { asset, skyboxIntensity = 1, skyboxLuminance = 1, showSkybox = true } = safeProps;
     const app: Application = useApp();
-    
-    useLayoutEffect(() => {
+    const layer = app?.scene?.layers?.getLayerByName('Skybox');
+
+    useEffect(() => {
         if (!asset?.resource) return;
-        
         app.scene.envAtlas = asset.resource;
+    
 
         return () => {
             if(app && app.scene) {
-                // @ts-expect-error `envAtlas` has an incorrect type ot @type {Texture}
+                // @ts-expect-error `envAtlas` should support @type {Texture | null}
                 app.scene.envAtlas = null;
             }
         }
@@ -33,11 +53,44 @@ export const EnvAtlas: FC<EnvAtlasProps>= ({ asset, intensity = 1, showSkybox = 
 
 
     useLayoutEffect(() => {
-        const layer = app?.scene?.layers?.getLayerByName('Skybox');
-        if(layer) layer.enabled = showSkybox;
-        app.scene.skyboxIntensity = intensity;
-    }, [app, showSkybox, intensity]);
+        if (!asset?.resource || !layer) return;
+        
+        
+        if(layer) {
+            layer.enabled = showSkybox;
+        }
+    
+        app.scene.skyboxIntensity = skyboxIntensity;
+        app.scene.skyboxLuminance = skyboxLuminance;
+
+    }, [asset?.resource, layer, skyboxIntensity, skyboxLuminance, showSkybox]);
 
     return null
 
+}
+
+const componentDefinition = {
+    name: "EnvAtlas",
+    schema: {
+        asset: {
+            validate: (value: unknown) => !value || value instanceof Asset,
+            errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
+            default: null
+        },
+        skyboxIntensity: {
+            validate: (value: unknown) => typeof value === "number",
+            errorMsg: (value: unknown) => `Invalid value for prop "skyboxIntensity": ${value}. Expected a number.`,
+            default: 1
+        },
+        skyboxLuminance: {
+            validate: (value: unknown) => typeof value === "number",
+            errorMsg: (value: unknown) => `Invalid value for prop "skyboxLuminance": ${value}. Expected a number.`,
+            default: 1
+        },
+        showSkybox: {
+            validate: (value: unknown) => typeof value === "boolean",
+            errorMsg: (value: unknown) => `Invalid value for prop "showSkybox": ${value}. Expected a boolean.`,
+            default: true
+        }
+    }
 }

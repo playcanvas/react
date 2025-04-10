@@ -1,9 +1,8 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
-import { getColorPropertyNames, useColors, WithCssColors } from '../utils/color';
-import { PublicProps } from '../utils/types-utils';
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition } from '../utils/validation';
+import { PublicProps, Serializable } from '../utils/types-utils';
+import { validatePropsWithDefaults, createComponentDefinition, applyProps } from '../utils/validation';
 
 /**
  * This hook is used to create a material instance and update its properties when the props change.
@@ -23,11 +22,7 @@ import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinitio
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<MaterialProps>);
-
-  // Get color props with proper type checking
-  const colorProps = useColors(props, colors as Array<keyof typeof props & string>);
-  const propsWithColors = { ...safeProps, ...colorProps };
+  const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
   // Create the material instance only once when 'app' changes
   const material : StandardMaterial = useMemo(() => new StandardMaterial(), [app]);
@@ -36,15 +31,10 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
   useLayoutEffect(() => {
     if (material) {
 
-      // Filter the props to only include those in the standard material
-      const filteredProps = Object.fromEntries(
-        Object.entries(propsWithColors).filter(([key]) => key in material)
-      );
-
-      Object.assign(material, filteredProps)
+      applyProps(material, componentDefinition.schema, safeProps);
       material.update(); 
     }
-  }, [app, material, propsWithColors]);
+  });
 
   // Clean up the material when the component unmounts
   useLayoutEffect(() => {
@@ -59,15 +49,10 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
 };
 
 
-type MaterialProps = Partial<WithCssColors<PublicProps<StandardMaterial>>>;
-
-// dynamically build a list of property names that are colors
-const tmpMaterial: StandardMaterial = new StandardMaterial();
-const colors = getColorPropertyNames(tmpMaterial);
-tmpMaterial.destroy();
+type MaterialProps = Partial<Serializable<PublicProps<StandardMaterial>>>;
 
 // create a schema for the material props
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<MaterialProps, StandardMaterial>(
     "Material",
     () => new StandardMaterial(),
     (material) => material.destroy(),

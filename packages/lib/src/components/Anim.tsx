@@ -3,9 +3,8 @@
 import { FC, useLayoutEffect } from "react";
 import { useComponent, useParent } from "../hooks";
 import { AnimComponent, Asset, Entity } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
-import { WithCssColors } from "../utils/color";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Anim component allows an entity to play animations.
@@ -21,12 +20,11 @@ import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinitio
  *   <Anim asset={asset} clip="Walk" loop />
  * </Entity>
  */
-export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
+export const Anim: FC<AnimProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<AnimProps>);
-
+    const { asset, ...safeProps } = validatePropsWithDefaults(props, componentDefinition);
     // Create the anim component
-    useComponent("anim", safeProps as Partial<AnimComponent>);
+    useComponent("anim", safeProps, componentDefinition.schema);
 
     // Get the associated Entity
     const entity : Entity = useParent();
@@ -46,12 +44,12 @@ export const Anim: FC<AnimProps> = ({ asset, ...props }) => {
                 anim.assignAnimation('animation', animation.resource)
             });
 
-    }, [asset?.id, entity.getGuid()])
+    }, [asset, asset?.id, asset?.resource, entity.getGuid()])
 
     return null;
 }
 
-interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
+interface AnimProps extends Partial<Serializable<PublicProps<AnimComponent>>> {
     /**
      * The asset containing the animations to play. Setting this prop will automatically assign the animations to the component.
      * @type {Asset}
@@ -59,9 +57,17 @@ interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
     asset : Asset
 }
 
-
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<AnimProps, AnimComponent>(
     "Anim",
     () => new Entity("mock-anim", getStaticNullApplication()).addComponent('anim') as AnimComponent,
     (component) => (component as AnimComponent).system.destroy()
 )
+
+componentDefinition.schema = {
+    ...componentDefinition.schema,
+    asset: {
+        validate: (value: unknown) => !value || value instanceof Asset,
+        errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
+        default: undefined
+    }
+}

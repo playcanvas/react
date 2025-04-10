@@ -4,13 +4,12 @@ import { FC } from "react";
 import { useComponent } from "../hooks";
 import { Container } from "../Container";
 import { Asset, Entity, type RenderComponent as PcRenderComponent } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
-import { ComponentProps } from "../hooks/use-component";
-import { getStaticNullApplication, validateAndSanitizeProps, ComponentDefinition } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { getStaticNullApplication, validatePropsWithDefaults, Schema } from "../utils/validation";
 import { createComponentDefinition } from "../utils/validation";
 
-const RenderComponent: FC<ComponentProps> = (props) => {
-    useComponent("render", props);
+const RenderComponent: FC<RenderProps> = (props) => {
+    useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
     return null;
 }
 
@@ -32,9 +31,14 @@ const RenderComponent: FC<ComponentProps> = (props) => {
  *  <Render type="asset" asset={asset} />
  * </Entity>
  */
-export const Render: FC<RenderProps> = (props : RenderProps) => {
+export const Render: FC<RenderProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props, componentDefinition as ComponentDefinition<RenderProps>);
+    const safeProps = validatePropsWithDefaults(props, componentDefinition);
+
+    // Don't render if the type is asset and the asset is not provided
+    if(safeProps.type === "asset" && !safeProps.asset) return null;
+
+    
 
     // Render a container if the asset is a container
     if (safeProps.asset?.type === 'container') {
@@ -44,7 +48,7 @@ export const Render: FC<RenderProps> = (props : RenderProps) => {
     }
 
     // Otherwise, render the component
-    return <RenderComponent {...safeProps} />;
+    return <RenderComponent {...safeProps as Serializable<RenderProps>} />;
 }
 
 
@@ -64,7 +68,7 @@ interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'ass
     children?: React.ReactNode;
 }
 
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<RenderProps, PcRenderComponent>(
     "Render",
     () => new Entity('mock-render', getStaticNullApplication()).addComponent('render') as PcRenderComponent,
     (component) => (component as PcRenderComponent).system.destroy(),
@@ -73,8 +77,13 @@ const componentDefinition = createComponentDefinition(
 
 componentDefinition.schema = {
     ...componentDefinition.schema,
+    children: {
+        validate: (value: unknown) => typeof value === 'object' && value !== null,
+        errorMsg: (value: unknown) => `Invalid value for prop "children": ${value}. Expected an object.`,
+        default: undefined
+    },
     asset: {
-        validate: (value: unknown) => value instanceof Asset,
+        validate: (value: unknown) => !value || value instanceof Asset,
         errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
         default: undefined
     },

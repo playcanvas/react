@@ -1,32 +1,26 @@
 "use client";
 
-import { FC, useLayoutEffect } from "react";
+import { FC/*, useLayoutEffect */ } from "react";
 import { useEnvAtlas } from "./hooks/use-asset";
 import type { Asset } from "playcanvas";
 import { EnvAtlas } from "@playcanvas/react/components";
-import { useApp } from "@playcanvas/react/hooks";
+// import { useApp } from "@playcanvas/react/hooks";
 
 type EnvAtlasComponentsProps = {
     src: string;
-    hideSkybox: boolean;
+    showSkybox?: boolean;
     intensity?: number;
 }
 
- const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ src, intensity = 1, hideSkybox = true, ...props }) => {
-
-    const app = useApp();
-
-    useLayoutEffect(() => {
-        const layer = app?.scene?.layers?.getLayerByName('Skybox');
-        if(hideSkybox && layer){
-            layer.enabled = false;
-        }
-        app.scene.skyboxIntensity = intensity;
-    }, [app]);
+ const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ 
+    src, 
+    intensity = 1, 
+    ...props 
+}) => {
 
     const { data } = useEnvAtlas(src);
 
-    return <EnvAtlas asset={data as Asset} {...props}/>
+    return <EnvAtlas asset={data as Asset} {...props} skyboxIntensity={intensity} showSkybox={false}/>
 
 }
 

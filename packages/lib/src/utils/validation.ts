@@ -1,4 +1,6 @@
 import { Color, Quat, Vec2, Vec3, Vec4, Mat4, Application, NullGraphicsDevice, Material } from "playcanvas";
+import { getColorFromName } from "./color";
+import { Serializable } from "./types-utils";
 
 // Limit the size of the warned set to prevent memory leaks
 const MAX_WARNED_SIZE = 1000;
@@ -35,26 +37,36 @@ export const warnOnce = (message: string) => {
     }
 };
 
-export type PropValidator<T> = {
+export type PropValidator<T, InstanceType> = {
     validate: (value: unknown) => boolean;
     errorMsg: (value: unknown) => string;
     default: T | unknown;
+    apply?: (container: InstanceType, props: Record<string, unknown>, key: string) => void;
 }
 
 // A more generic schema type that works with both functions
-export type Schema<T> = {
-    [K in keyof T]?: PropValidator<T[K]>;
+export type Schema<T, InstanceType> = {
+    [K in keyof T]?: PropValidator<T[K], InstanceType>;
 };
 
-export type ComponentDefinition<T> = {
+export type ComponentDefinition<T, InstanceType> = {
     name: string;
     apiName?: string;
-    schema: Schema<T>;
+    schema: Schema<T, InstanceType>;
 };
 
-export function validateAndSanitize<T>(
+/**
+ * Validate and sanitize a prop. This will validate the prop and return the default value if the prop is invalid.
+ * 
+ * @param value The value to validate.
+ * @param propDef The prop definition.
+ * @param propName The name of the prop.
+ * @param componentName The name of the component.
+ * @param apiName The API name of the component. eg `<Render/>`. Use for logging.
+ */
+export function validateAndSanitize<T, InstanceType>(
     value: unknown, 
-    propDef: PropValidator<T>,
+    propDef: PropValidator<T, InstanceType>,
     propName: string,
     componentName: string,
     apiName?: string
@@ -66,16 +78,25 @@ export function validateAndSanitize<T>(
             `Invalid prop "${propName}" in \`<${componentName} ${propName}={${JSON.stringify(value)}} />\`\n` +
             `  ${propDef.errorMsg(value)}\n` +
             (propDef.default !== undefined ? `  Using default: ${JSON.stringify(propDef.default)}` : '') +
-            `\n\nPlease see the documentation https://api.playcanvas.com/engine/classes/${apiName ?? componentName}.html.`
+            `\n\n  See the docs https://api.playcanvas.com/engine/classes/${apiName ?? componentName}.html.`
         );
     }
     
     return isValid ? (value as T) : propDef.default as T;
 }
 
-export function validateAndSanitizeProps<T extends object>(
-    rawProps: Partial<T>, 
-    componentDef: ComponentDefinition<T>,
+/**
+ * Validate props partially. This iterates over props and validates them against the schema. 
+ * If a prop is not in the schema, it will be ignored. This will not return default values for missing props.
+ * 
+ * @param rawProps The raw props to validate.
+ * @param componentDef The component definition.
+ * @param warnUnknownProps Whether to warn about unknown props.
+ * @returns The validated props.
+ */
+export function validatePropsPartial<T, InstanceType>(
+    rawProps: Serializable<T>, 
+    componentDef: ComponentDefinition<T, InstanceType>,
     warnUnknownProps: boolean = true
 ): T {
     // Start with a copy of the raw props
@@ -121,7 +142,102 @@ export function validateAndSanitizeProps<T extends object>(
     return result;
 }
 
+/**
+ * Validate props returning defaults. This iterates over a schema and uses the default value if the prop is not defined.
+ * 
+ * @param rawProps The raw props to validate.
+ * @param componentDef The component definition.
+ * @param warnUnknownProps Whether to warn about unknown props.
+ * @returns The validated props.
+ */
+export function validatePropsWithDefaults<T extends object, InstanceType>(
+    rawProps: Serializable<T>,
+    componentDef: ComponentDefinition<T, InstanceType>,
+    warnUnknownProps: boolean = true
+  ): T {
+    const { schema, name, apiName } = componentDef;
+  
+    // Start with an empty object (so we can control all keys)
+    const result = {} as T;
+  
+    // Track unknown props for warning
+    const unknownProps: string[] = [];
+  
+    // Iterate over the schema keys — these are the "valid" props
+    for (const key in schema) {
+      const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
+      const rawValue = rawProps[key as keyof T];
+  
+      // Use raw value if defined, otherwise fall back to default
+      const valueToValidate =
+        rawValue !== undefined ? rawValue : propDef?.default;
+  
+      result[key as keyof T] = validateAndSanitize(
+        valueToValidate,
+        propDef,
+        key,
+        name,
+        apiName
+      );
+    }
+  
+    // Optionally warn about unknown props
+    if (
+      process.env.NODE_ENV !== 'production' &&
+      warnUnknownProps &&
+      rawProps
+    ) {
+      for (const key in rawProps) {
+        if (key === 'children') continue;
+        if (!(key in schema)) {
+          unknownProps.push(key);
+        }
+      }
+  
+      if (unknownProps.length > 0) {
+        warnOnce(
+          `Unknown props in "<${name}/>."\n` +
+            `The following props are invalid and will be ignored: "${unknownProps.join('", "')}"\n\n` +
+            `Please see the documentation https://api.playcanvas.com/engine/classes/${
+              apiName ?? name
+            }.html.`
+        );
+      }
+    }
+  
+    return result;
+}
 
+/**
+ * Apply props to an instance in a safe way. It will use the apply function if it exists, otherwise it will assign the value directly.
+ * This is useful for components that need to map props to instance properties. eg [0, 1] => Vec2(0, 1).
+ * 
+ * @param container The container to apply the props to
+ * @param schema The schema of the container
+ * @param props The props to apply
+ */
+export function applyProps<T extends Record<string, unknown>, InstanceType>(instance: InstanceType, schema: Schema<T, InstanceType>, props: T) {
+    Object.entries(props as Record<keyof T, unknown>).forEach(([key, value]) => {
+        if (key in schema) {
+            const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
+            if (propDef) {
+                if (propDef.apply) {
+                    // Use type assertion to satisfy the type checker
+                    propDef.apply(instance, props, key as string);
+                } else {
+                    (instance as Record<string, unknown>)[key] = value;
+                }
+            }
+        }   
+    });
+}
+
+
+/**
+ * Get the pseudo public props of an instance. This is useful for creating a component definition from an instance.
+ * @param container The container to get the pseudo public props from.
+ * @returns The pseudo public props of the container.
+ */
 export function getPseudoPublicProps(container: Record<string, unknown>) {
     // Get regular enumerable properties
     const entries = Object.entries(container)
@@ -165,18 +281,26 @@ export function getPseudoPublicProps(container: Record<string, unknown>) {
     return Object.fromEntries(entries);
 }
 
-export function createComponentDefinition<T extends object>(
+/**
+ * Create a component definition from an instance. A component definition is a schema that describes the props of a component,
+ * and can be used to validate and apply props to an instance.
+ * 
+ * @param name The name of the component.
+ * @param createInstance A function that creates an instance of the component.
+ * @param cleanup A function that cleans up the instance.
+ * @param apiName The API name of the component.
+ */
+export function createComponentDefinition<T, InstanceType>(
     name: string,
-    createInstance: () => T,
-    cleanup?: (instance: T) => void,
+    createInstance: () => InstanceType,
+    cleanup?: (instance: InstanceType) => void,
     apiName?: string,
-): ComponentDefinition<T> {
-    const instance: T = createInstance();
-    const schema: Schema<T> = {};
-
+): ComponentDefinition<T, InstanceType> {
+    const instance: InstanceType = createInstance();
+    const schema: Schema<T, InstanceType> = {};
     const props = getPseudoPublicProps(instance as Record<string, unknown>);
-
     const entries = Object.entries(props) as [keyof T, unknown][];
+
     // Basic type detection 
     entries.forEach(([key, value]) => {
         
@@ -186,7 +310,11 @@ export function createComponentDefinition<T extends object>(
                 validate: (val) => val instanceof Color || typeof val === 'string',
                 default: (value as Color).toString(true),
                 errorMsg: (val: unknown) => `Invalid value for prop "${String(key)}": "${val}". ` +
-                    `Expected a hex like "#FF0000" or CSS color name like "red").`
+                    `Expected a hex like "#FF0000" or CSS color name like "red").`,
+                apply: (instance, props, key) => {
+                    const color = getColorFromName(props[key] as string) || props[key] as string;
+                    (instance[key as keyof InstanceType] as Color).fromString(color);
+                }
             };
         }
         // Vec2
@@ -195,7 +323,10 @@ export function createComponentDefinition<T extends object>(
                 validate: (val) => Array.isArray(val) && val.length === 2,
                 default: [value.x, value.y],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
-                    `Expected an array of 2 numbers.`
+                    `Expected an array of 2 numbers.`,
+                apply: (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
+                }
             };
         }
         // Vec3
@@ -204,7 +335,10 @@ export function createComponentDefinition<T extends object>(
                 validate: (val) => Array.isArray(val) && val.length === 3,
                 default: [value.x, value.y, value.z],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
-                    `Expected an array of 3 numbers.`
+                    `Expected an array of 3 numbers.`,
+                apply: (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
+                }
             };
         }
         // Vec4
@@ -212,26 +346,32 @@ export function createComponentDefinition<T extends object>(
             schema[key] = {
                 validate: (val) => Array.isArray(val) && val.length === 4,
                 default: [value.x, value.y, value.z, value.w],
-                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
-                    `Expected an array of 4 numbers.`
+                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
+                apply: (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
+                }
             };
         }
-        // Quaternions
-        else if (value instanceof Quat) {
+
+         // Quaternions
+         else if (value instanceof Quat) {
             schema[key] = {
-                validate: (val) => Array.isArray(val) && val.length === 4,
+                validate: (val) => Array.isArray(val) && (val.length === 4 || val.length === 3),
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
-                    `Expected an array of 4 numbers.`
+                    `Expected an array of 4 numbers.`,
+                apply: (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
+                }
             };
         }
         // Mat4
         else if (value instanceof Mat4) {
             schema[key] = {
-                validate: (val) => val instanceof Mat4 || (Array.isArray(val) && val.length === 16),
-                default: (value as Mat4).toString(),
+                validate: (val) => Array.isArray(val) && val.length === 16,
+                default: Array.from((value.data)),
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
-                    `Expected an array of 16 numbers.`
+                    `Expected an array of 16 numbers.`,
             };
         }
         // Numbers
@@ -258,12 +398,24 @@ export function createComponentDefinition<T extends object>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${val}". Expected a boolean.`
             };
         }
+
         // Arrays
         else if (Array.isArray(value)) {
             schema[key] = {
                 validate: (val) => Array.isArray(val),
                 default: value,
-                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array.`
+                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array.`,
+                apply: (instance, props, key) => {
+                    // For arrays, use a different approach to avoid spread operator issues
+                    const values = props[key] as unknown[];
+
+                    // mutate the instance
+                    if (Array.isArray(values)) {
+                        const target = instance[key as keyof InstanceType] as unknown[];
+                        target.length = 0;
+                        target.push(...values);
+                    }
+                }
             };
         }
 
@@ -271,15 +423,15 @@ export function createComponentDefinition<T extends object>(
         else if (value instanceof Material) {
             schema[key] = {
                 validate: (val) => val instanceof Material,
-                default: null,
-                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`
+                default: value,
+                errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`,
             };
         }
     });
 
     if (cleanup) cleanup(instance);
 
-    const componentDef: ComponentDefinition<T> = {
+    const componentDef: ComponentDefinition<T, InstanceType> = {
         name,
         apiName,
         schema

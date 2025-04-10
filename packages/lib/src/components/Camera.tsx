@@ -3,9 +3,8 @@
 import { FC } from "react";
 import { useComponent } from "../hooks";
 import { CameraComponent, Entity } from "playcanvas";
-import { useColors, WithCssColors } from "../utils/color";
-import { PublicProps } from "../utils/types-utils";
-import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils";
+import { validatePropsPartial, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The Camera component makes an entity behave like a camera and gives you a view into the scene.
@@ -20,18 +19,16 @@ import { validateAndSanitizeProps, createComponentDefinition, ComponentDefinitio
  */
 export const Camera: FC<CameraProps> = (props) => {
 
-    const safeProps = validateAndSanitizeProps(props as Record<string, unknown>, componentDefinition as ComponentDefinition<CameraProps>);
+    const safeProps = validatePropsPartial(props, componentDefinition);
 
-    const colorProps = useColors(safeProps, ['clearColor'])
-
-    useComponent("camera", { ...safeProps, ...colorProps });
+    useComponent("camera", safeProps, componentDefinition.schema);
     return null;
 
 }
 
-type CameraProps = Partial<WithCssColors<PublicProps<CameraComponent>>>;
+type CameraProps = Partial<Serializable<PublicProps<CameraComponent>>>;
 
-const componentDefinition = createComponentDefinition(
+const componentDefinition = createComponentDefinition<CameraProps, CameraComponent>(
     "Camera",
     () => new Entity("mock-camera", getStaticNullApplication()).addComponent('camera') as CameraComponent,
     (component) => (component as CameraComponent).system.destroy(),

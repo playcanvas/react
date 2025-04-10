@@ -1,8 +1,8 @@
 import { AppBase, Entity, Script as PcScript } from "playcanvas";
 import { useScript } from "../hooks"
 import { FC, memo, useMemo } from "react";
-import { shallowEquals } from "../utils/shallow-equals";
-import { ComponentDefinition, validateAndSanitizeProps } from "../utils/validation";
+import { ComponentDefinition, validatePropsPartial } from "../utils/validation";
+import { shallowEquals } from "../utils/compare";
 
 /**
  * The Script component allows you to hook into the entity's lifecycle. This allows you to
@@ -22,7 +22,7 @@ import { ComponentDefinition, validateAndSanitizeProps } from "../utils/validati
  */
 const ScriptComponent: FC<ScriptProps> = (props) => {
 
-    const validatedProps = validateAndSanitizeProps(props, componentDefinition, false);
+    const validatedProps = validatePropsPartial(props, componentDefinition, false);
 
     const { script, ...restProps } = validatedProps;
 
@@ -55,4 +55,4 @@ const componentDefinition = {
             default: NullScript
         }
     }
-} as ComponentDefinition<ScriptProps>
+} as ComponentDefinition<ScriptProps, PcScript>

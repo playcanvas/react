@@ -1,4 +1,4 @@
-import React, { FC, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import React, { FC, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   FILLMODE_NONE,
   FILLMODE_FILL_WINDOW,
@@ -15,7 +15,7 @@ import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
 import { PhysicsProvider } from './contexts/physics-context';
-import { validateAndSanitizeProps, createComponentDefinition, Schema, getNullApplication } from './utils/validation';
+import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation';
 import { PublicProps } from './utils/types-utils';
 
 /**
@@ -40,11 +40,12 @@ export const Application: React.FC<ApplicationProps> = ({
 
   return (
     <>
-      <canvas
+      <Canvas
         className={className}
         style={style}
         ref={canvasRef}
       />
+
 
       <ApplicationWithoutCanvas canvasRef={canvasRef} {...props}>
         {children}
@@ -52,6 +53,15 @@ export const Application: React.FC<ApplicationProps> = ({
     </>
   );
 };
+
+const Canvas = React.memo(
+  React.forwardRef<HTMLCanvasElement, CanvasProps>(
+    (props : CanvasProps, ref) => {
+      const { className, style } = props;
+      return <canvas ref={ref} className={className} style={style} />;
+    }
+  )
+);
 
 /**
  * An alternative Application component that does not create a canvas element. 
@@ -76,7 +86,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   
   const { children, ...propsToValidate } = props;
 
-  const validatedProps = validateAndSanitizeProps<ApplicationWithoutCanvasProps>(
+  const validatedProps = validatePropsWithDefaults<ApplicationWithoutCanvasProps, PlayCanvasApplication>(
     propsToValidate, 
     componentDefinition
   );
@@ -85,13 +95,12 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     canvasRef,
     fillMode = FILLMODE_NONE,
     resolutionMode = RESOLUTION_AUTO,
-    maxDeltaTime = 0.1,
-    timeScale = 1,
     usePhysics = false,
+    graphicsDeviceOptions,
     ...otherProps
   } = validatedProps;
 
-  const graphicsDeviceOptions = {
+  const localGraphicsDeviceOptions = {
     alpha: true,
     depth: true,
     stencil: true,
@@ -102,7 +111,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     failIfMajorPerformanceCaveat: false,
     desynchronized: false,
     xrCompatible: false,
-    ...otherProps.graphicsDeviceOptions
+    ...graphicsDeviceOptions
   }
 
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
@@ -117,12 +126,10 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
       const localApp = new PlayCanvasApplication(canvas, {
         mouse: new Mouse(canvas),
         touch: new TouchDevice(canvas),
-        graphicsDeviceOptions
+        graphicsDeviceOptions: localGraphicsDeviceOptions
       });
 
       localApp.start();
-      localApp.setCanvasFillMode(fillMode);
-      localApp.setCanvasResolution(resolutionMode);
 
       appRef.current = localApp;
       setApp(localApp);
@@ -134,14 +141,20 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
       appRef.current = null;
       setApp(null);
     };
-  }, [canvasRef, fillMode, resolutionMode, ...Object.values(graphicsDeviceOptions)]);
+  }, [canvasRef, ...Object.values(localGraphicsDeviceOptions)]);
 
+  // Separate useEffect for these props to avoid re-rendering
+  useEffect(() => {
+    if (!app) return;
+    app.setCanvasFillMode(fillMode);
+    app.setCanvasResolution(resolutionMode);
+  }, [app, fillMode, resolutionMode]);
+  
   // These app properties can be updated without re-rendering
   useLayoutEffect(() => {
     if (!app) return;
-    app.maxDeltaTime = maxDeltaTime;
-    app.timeScale = timeScale;
-  }, [app, maxDeltaTime, timeScale])
+    applyProps(app, componentDefinition.schema, otherProps as Record<keyof PlayCanvasApplication, unknown>);
+  });
 
   if (!app) return null;
 
@@ -160,18 +173,21 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
 
 type GraphicsOptions = Partial<PublicProps<GraphicsDevice>>
 
-interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>> {
+type CanvasProps = {
   /** 
    * The class name to attach to the canvas component
    * @default pc-app
    */
   className?: string,
-
+  
   /** 
    * A style object added to the canvas component 
    * @default { width: '100%', height: '100%' }
    */
   style?: Record<string, unknown>
+}
+
+interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, CanvasProps {
 
   /** 
    * Controls how the canvas fills the window and resizes when the window changes.
@@ -210,12 +226,20 @@ const componentDefinition = createComponentDefinition(
 
 componentDefinition.schema = {
   ...componentDefinition.schema,
+  className: {
+    validate: (value: unknown) => typeof value === 'string',
+    errorMsg: (value: unknown) => `className must be a string. Received: ${value}`,
+    default: 'pc-app'
+  },
+  style: {
+    validate: (value: unknown) => typeof value === 'object' && value !== null,
+    errorMsg: (value: unknown) => `style must be an object. Received: ${value}`,
+    default: { width: '100%', height: '100%' }
+  },
   canvasRef: {
-    validate: (value: unknown) => {
-      return value !== null && 
+    validate: (value: unknown) => value !== null && 
              typeof value === 'object' && 
-             'current' in value;
-    },
+             'current' in value,
     errorMsg: (value: unknown) => `canvasRef must be a React ref object. Received: ${value}`,
     default: null
   },
@@ -234,4 +258,4 @@ componentDefinition.schema = {
     errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
     default: RESOLUTION_AUTO
   }
-} as Schema<ApplicationProps>
+} as Schema<ApplicationWithoutCanvasProps, PlayCanvasApplication>

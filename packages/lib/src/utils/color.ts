@@ -161,6 +161,15 @@ const cssColorNamesMap = {
 const cssColorNames = new Set(Object.keys(cssColorNamesMap));
 
 /**
+ * Get a color from a css color name
+ * @param name The name of the color
+ * @returns {string | undefined} The color if it exists, otherwise undefined
+ */
+export const getColorFromName = (name: string) => {
+  return cssColorNames.has(name as string) && cssColorNamesMap[name as keyof typeof cssColorNamesMap];
+}
+
+/**
  * Convenience function that returns an array of property names that are instances of the PlayCanvas Color class
  * @returns {string[]} - An array of property names
  */
@@ -233,9 +242,9 @@ type CssColorName = keyof typeof cssColorNamesMap;
 type HexColor = `#${string}`;
 
 // Combine all valid CSS color types
-type CssColor = CssColorName | HexColor
+export type CssColor = CssColorName | HexColor
 
-// Utility to replace pc.Color with CssColor
-export type WithCssColors<T> = {
-  [K in keyof T]: T[K] extends Color ? CssColor : T[K];
-};
+// // Utility to replace pc.Color with CssColor
+// export type WithCssColors<T> = {
+//   [K in keyof T]: T[K] extends Color ? CssColor : T[K];
+// };
