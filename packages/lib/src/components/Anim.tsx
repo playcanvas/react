@@ -23,7 +23,6 @@ import { validatePropsWithDefaults, createComponentDefinition, getStaticNullAppl
 export const Anim: FC<AnimProps> = (props) => {
 
     const { asset, ...safeProps } = validatePropsWithDefaults(props, componentDefinition);
-
     // Create the anim component
     useComponent("anim", safeProps, componentDefinition.schema);
 
@@ -45,12 +44,12 @@ export const Anim: FC<AnimProps> = (props) => {
                 anim.assignAnimation('animation', animation.resource)
             });
 
-    }, [asset?.id, entity.getGuid()])
+    }, [asset, asset?.id, asset?.resource, entity.getGuid()])
 
     return null;
 }
 
-interface AnimProps extends Partial<WithCssColors<PublicProps<AnimComponent>>> {
+interface AnimProps extends Partial<Serializable<PublicProps<AnimComponent>>> {
     /**
      * The asset containing the animations to play. Setting this prop will automatically assign the animations to the component.
      * @type {Asset}
@@ -63,3 +62,12 @@ const componentDefinition = createComponentDefinition<AnimProps, AnimComponent>(
     () => new Entity("mock-anim", getStaticNullApplication()).addComponent('anim') as AnimComponent,
     (component) => (component as AnimComponent).system.destroy()
 )
+
+componentDefinition.schema = {
+    ...componentDefinition.schema,
+    asset: {
+        validate: (value: unknown) => !value || value instanceof Asset,
+        errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
+        default: undefined
+    }
+}

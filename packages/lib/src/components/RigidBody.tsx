@@ -21,7 +21,7 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
 
     const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
 
-    const safeProps = validatePropsPartial(props, componentDefinition as ComponentDefinition<RigidBodyProps>);
+    const safeProps = validatePropsPartial(props, componentDefinition as ComponentDefinition<RigidBodyProps, RigidBodyComponent>);
 
     useEffect(() => {
         if (!isPhysicsEnabled) {
@@ -54,24 +54,21 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
     }, [isPhysicsEnabled, physicsError]);
 
     // Always call useComponent - it will handle component lifecycle internally
-    useComponent(isPhysicsLoaded ? "rigidbody" : null, safeProps, componentDefinition.schema as Schema<RigidBodyProps> );
+    useComponent(isPhysicsLoaded ? "rigidbody" : null, safeProps, componentDefinition.schema as Schema<RigidBodyProps, RigidBodyComponent> );
 
     return null;
 }
 
-interface RigidBodyProps extends Partial<PublicProps<RigidBodyComponent>> {
+const rigidBodyTypes = [BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC] as const;
+type RigidBodyType = typeof rigidBodyTypes[number];
+
+interface RigidBodyProps extends Partial<Serializable<PublicProps<RigidBodyComponent>>> {
     /**
      * The shape of rigid body to create.
      * A `<Render/>` component can have a different shape to the rigid body. This is useful if you want to have a visual representation of the rigid body.
      * @default "box"
      */
-    type?: "box"
-        | "capsule"
-        | "compound"
-        | "cone"
-        | "cylinder"
-        | "mesh"
-        | "sphere"
+    type?: RigidBodyType
 }
 
 const componentDefinition = createComponentDefinition(

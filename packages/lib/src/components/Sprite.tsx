@@ -40,4 +40,4 @@ componentDefinition.schema = {
         errorMsg: (value: unknown) => `Invalid value for prop "asset": "${value}". Expected an Asset.`,
         default: null
     }
-} as Schema<SpriteProps>
+} as Schema<SpriteProps, SpriteComponent>

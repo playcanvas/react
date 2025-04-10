@@ -15,7 +15,7 @@ import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
 import { usePicker } from './utils/picker';
 import { PhysicsProvider } from './contexts/physics-context';
-import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, ComponentDefinition, applyProps } from './utils/validation';
+import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation';
 import { PublicProps } from './utils/types-utils';
 
 /**
@@ -55,8 +55,9 @@ export const Application: React.FC<ApplicationProps> = ({
 };
 
 const Canvas = React.memo(
-  React.forwardRef<HTMLCanvasElement, { className: string; style: React.CSSProperties }>(
-    ({ className, style }, ref) => {
+  React.forwardRef<HTMLCanvasElement, CanvasProps>(
+    (props : CanvasProps, ref) => {
+      const { className, style } = props;
       return <canvas ref={ref} className={className} style={style} />;
     }
   )
@@ -85,9 +86,9 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   
   const { children, ...propsToValidate } = props;
 
-  const validatedProps = validatePropsWithDefaults<ApplicationWithoutCanvasProps>(
+  const validatedProps = validatePropsWithDefaults<ApplicationWithoutCanvasProps, PlayCanvasApplication>(
     propsToValidate, 
-    componentDefinition as ComponentDefinition<ApplicationWithoutCanvasProps>
+    componentDefinition
   );
 
   const {
@@ -122,7 +123,6 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   useLayoutEffect(() => {
     const canvas = canvasRef.current;
     if (canvas && !appRef.current) {
-      console.log("Creating new app");
       const localApp = new PlayCanvasApplication(canvas, {
         mouse: new Mouse(canvas),
         touch: new TouchDevice(canvas),
@@ -173,18 +173,21 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
 
 type GraphicsOptions = Partial<PublicProps<GraphicsDevice>>
 
-interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>> {
+type CanvasProps = {
   /** 
    * The class name to attach to the canvas component
    * @default pc-app
    */
   className?: string,
-
+  
   /** 
    * A style object added to the canvas component 
    * @default { width: '100%', height: '100%' }
    */
   style?: Record<string, unknown>
+}
+
+interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, CanvasProps {
 
   /** 
    * Controls how the canvas fills the window and resizes when the window changes.
@@ -223,6 +226,16 @@ const componentDefinition = createComponentDefinition(
 
 componentDefinition.schema = {
   ...componentDefinition.schema,
+  className: {
+    validate: (value: unknown) => typeof value === 'string',
+    errorMsg: (value: unknown) => `className must be a string. Received: ${value}`,
+    default: 'pc-app'
+  },
+  style: {
+    validate: (value: unknown) => typeof value === 'object' && value !== null,
+    errorMsg: (value: unknown) => `style must be an object. Received: ${value}`,
+    default: { width: '100%', height: '100%' }
+  },
   canvasRef: {
     validate: (value: unknown) => {
       return value !== null && 
@@ -247,4 +260,4 @@ componentDefinition.schema = {
     errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
     default: RESOLUTION_AUTO
   }
-} as Schema<PlayCanvasApplication>
+} as Schema<ApplicationWithoutCanvasProps, PlayCanvasApplication>

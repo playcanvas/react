@@ -25,7 +25,7 @@ export const Light: FC<LightProps> = (props) => {
 
 }
 
-interface LightProps extends Partial<WithCssColors<PublicProps<LightComponent>>> {
+interface LightProps extends Partial<Serializable<PublicProps<LightComponent>>> {
     /**
      * The type of the light.
      * @default "directional"
@@ -47,4 +47,4 @@ componentDefinition.schema = {
         errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "directional", "omni", "spot".`,
         default: "directional"
     }
-} as Schema<LightProps>
+} as Schema<LightProps, LightComponent>

@@ -5,7 +5,7 @@
  * @param {Record<string, unknown>} b - The second object
  * @returns {boolean} True if the objects are equal, false otherwise
  */
-export function deepEqual(a: any, b: any): boolean {
+export function deepEqual(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
     if (a === b) return true;
     if (typeof a !== 'object' || typeof b !== 'object' || a == null || b == null) return false;
   
@@ -13,7 +13,7 @@ export function deepEqual(a: any, b: any): boolean {
     const bKeys = Object.keys(b);
     if (aKeys.length !== bKeys.length) return false;
   
-    return aKeys.every(key => deepEqual(a[key], b[key]));
+    return aKeys.every(key => deepEqual(a[key] as Record<string, unknown>, b[key] as Record<string, unknown>));
 }
 
 type Equalable = {

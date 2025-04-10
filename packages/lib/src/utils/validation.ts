@@ -37,22 +37,22 @@ export const warnOnce = (message: string) => {
     }
 };
 
-export type PropValidator<T> = {
+export type PropValidator<T, InstanceType> = {
     validate: (value: unknown) => boolean;
     errorMsg: (value: unknown) => string;
     default: T | unknown;
-    apply?: (container: T, props: Record<keyof T, unknown>, key: keyof T) => void;
+    apply?: (container: InstanceType, props: Record<string, unknown>, key: string) => void;
 }
 
 // A more generic schema type that works with both functions
-export type Schema<T> = {
-    [K in keyof T]?: PropValidator<T[K]>;
+export type Schema<T, InstanceType> = {
+    [K in keyof T]?: PropValidator<T[K], InstanceType>;
 };
 
-export type ComponentDefinition<T> = {
+export type ComponentDefinition<T, InstanceType> = {
     name: string;
     apiName?: string;
-    schema: Schema<T>;
+    schema: Schema<T, InstanceType>;
 };
 
 /**
@@ -64,9 +64,9 @@ export type ComponentDefinition<T> = {
  * @param componentName The name of the component.
  * @param apiName The API name of the component. eg `<Render/>`. Use for logging.
  */
-export function validateAndSanitize<T>(
+export function validateAndSanitize<T, InstanceType>(
     value: unknown, 
-    propDef: PropValidator<T>,
+    propDef: PropValidator<T, InstanceType>,
     propName: string,
     componentName: string,
     apiName?: string
@@ -94,9 +94,9 @@ export function validateAndSanitize<T>(
  * @param warnUnknownProps Whether to warn about unknown props.
  * @returns The validated props.
  */
-export function validatePropsPartial<T>(
+export function validatePropsPartial<T, InstanceType>(
     rawProps: Serializable<T>, 
-    componentDef: ComponentDefinition<T>,
+    componentDef: ComponentDefinition<T, InstanceType>,
     warnUnknownProps: boolean = true
 ): T {
     // Start with a copy of the raw props
@@ -150,9 +150,9 @@ export function validatePropsPartial<T>(
  * @param warnUnknownProps Whether to warn about unknown props.
  * @returns The validated props.
  */
-export function validatePropsWithDefaults<T extends object>(
+export function validatePropsWithDefaults<T extends object, InstanceType>(
     rawProps: Serializable<T>,
-    componentDef: ComponentDefinition<T>,
+    componentDef: ComponentDefinition<T, InstanceType>,
     warnUnknownProps: boolean = true
   ): T {
     const { schema, name, apiName } = componentDef;
@@ -165,7 +165,7 @@ export function validatePropsWithDefaults<T extends object>(
   
     // Iterate over the schema keys — these are the "valid" props
     for (const key in schema) {
-      const propDef = schema[key as keyof T] as PropValidator<T[keyof T]>;
+      const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
       const rawValue = rawProps[key as keyof T];
   
       // Use raw value if defined, otherwise fall back to default
@@ -216,16 +216,16 @@ export function validatePropsWithDefaults<T extends object>(
  * @param schema The schema of the container
  * @param props The props to apply
  */
-export function applyProps<T extends object, InstanceType>(instance: InstanceType, schema: Schema<T>, props: T) {
-    Object.entries(props).forEach(([key, value]) => {
+export function applyProps<T extends Record<string, unknown>, InstanceType>(instance: InstanceType, schema: Schema<T, InstanceType>, props: T) {
+    Object.entries(props as Record<keyof T, unknown>).forEach(([key, value]) => {
         if (key in schema) {
-            const propDef = schema[key as keyof T] as PropValidator<T[keyof T]>;
+            const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
             if (propDef) {
                 if (propDef.apply) {
                     // Use type assertion to satisfy the type checker
-                    (propDef.apply as any)(instance, props, key as keyof T);
+                    propDef.apply(instance, props, key as string);
                 } else {
-                    (instance as any)[key] = value;
+                    (instance as Record<string, unknown>)[key] = value;
                 }
             }
         }   
@@ -295,9 +295,9 @@ export function createComponentDefinition<T, InstanceType>(
     createInstance: () => InstanceType,
     cleanup?: (instance: InstanceType) => void,
     apiName?: string,
-): ComponentDefinition<T> {
+): ComponentDefinition<T, InstanceType> {
     const instance: InstanceType = createInstance();
-    const schema: Schema<T> = {};
+    const schema: Schema<T, InstanceType> = {};
     const props = getPseudoPublicProps(instance as Record<string, unknown>);
     const entries = Object.entries(props) as [keyof T, unknown][];
 
@@ -313,7 +313,7 @@ export function createComponentDefinition<T, InstanceType>(
                     `Expected a hex like "#FF0000" or CSS color name like "red").`,
                 apply: (instance, props, key) => {
                     const color = getColorFromName(props[key] as string) || props[key] as string;
-                    (instance[key] as Color).fromString(color);
+                    (instance[key as keyof InstanceType] as Color).fromString(color);
                 }
             };
         }
@@ -325,7 +325,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 2 numbers.`,
                 apply: (instance, props, key) => {
-                    (instance[key] as Vec2).set(...props[key] as [number, number]);
+                    (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
                 }
             };
         }
@@ -337,7 +337,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 3 numbers.`,
                 apply: (instance, props, key) => {
-                    (instance[key] as Vec3).set(...props[key] as [number, number, number]);
+                    (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
                 }
             };
         }
@@ -348,7 +348,7 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
                 apply: (instance, props, key) => {
-                    (instance[key] as Vec4).set(...props[key] as [number, number, number, number]);
+                    (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
                 }
             };
         }
@@ -361,7 +361,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 4 numbers.`,
                 apply: (instance, props, key) => {
-                    (instance[key] as Quat).set(...props[key] as [number, number, number, number]);
+                    (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
                 }
             };
         }
@@ -407,11 +407,11 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array.`,
                 apply: (instance, props, key) => {
                     // For arrays, use a different approach to avoid spread operator issues
-                    const values = props[key] as any[];
+                    const values = props[key] as unknown[];
 
                     // mutate the instance
                     if (Array.isArray(values)) {
-                        const target = instance[key] as any[];
+                        const target = instance[key as keyof InstanceType] as unknown[];
                         target.length = 0;
                         target.push(...values);
                     }
@@ -431,7 +431,7 @@ export function createComponentDefinition<T, InstanceType>(
 
     if (cleanup) cleanup(instance);
 
-    const componentDef: ComponentDefinition<T> = {
+    const componentDef: ComponentDefinition<T, InstanceType> = {
         name,
         apiName,
         schema

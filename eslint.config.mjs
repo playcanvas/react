@@ -22,6 +22,7 @@ export default [
       },
     },
     rules: {
+      'react/prop-types': 'off',
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
       "react-compiler/react-compiler": "warn"

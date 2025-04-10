@@ -4,7 +4,7 @@ import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
 import { Asset, Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
-import { Schema, validatePropsWithDefaults, createComponentDefinition, ComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { Schema, validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
@@ -16,7 +16,7 @@ import { Schema, validatePropsWithDefaults, createComponentDefinition, Component
  */
 export const GSplat: FC<GSplatProps> = (props) => {
 
-    const safeProps = validatePropsWithDefaults(props, componentDefinition as ComponentDefinition<GSplatProps>);
+    const safeProps = validatePropsWithDefaults<GSplatProps, GSplatComponent>(props, componentDefinition);
 
     const { asset, vertex, fragment } = safeProps;
     const parent: Entity = useParent();
@@ -77,4 +77,4 @@ componentDefinition.schema = {
         errorMsg: (value: unknown) => `Fragment shader must be a string, received ${value}`,
         default: null // Allows engine to handle the default shader
     }
-} as Schema<GSplatComponent>
+} as Schema<GSplatComponent, GSplatComponent>

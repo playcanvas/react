@@ -38,7 +38,7 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   const { children, ...propsToValidate } = props;
   const safeProps = validatePropsWithDefaults(
     propsToValidate, 
-    componentDefinition as ComponentDefinition<EntityProps>
+    componentDefinition as ComponentDefinition<EntityProps, PcEntity>
   );
 
   const { 

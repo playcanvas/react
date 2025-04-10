@@ -9,7 +9,7 @@ import { getStaticNullApplication, validatePropsWithDefaults, Schema } from "../
 import { createComponentDefinition } from "../utils/validation";
 
 const RenderComponent: FC<RenderProps> = (props) => {
-    useComponent("render", props, componentDefinition.schema as Schema<RenderProps>);
+    useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
     return null;
 }
 
@@ -35,7 +35,10 @@ export const Render: FC<RenderProps> = (props) => {
 
     const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
-    if(!safeProps.asset) return null;
+    // Don't render if the type is asset and the asset is not provided
+    if(safeProps.type === "asset" && !safeProps.asset) return null;
+
+    console.log("safeProps asset", safeProps.children);
 
     // Render a container if the asset is a container
     if (safeProps.asset?.type === 'container') {
@@ -72,10 +75,13 @@ const componentDefinition = createComponentDefinition<RenderProps, PcRenderCompo
     "RenderComponent"   
 )
 
-console.log(componentDefinition.schema);
-
 componentDefinition.schema = {
     ...componentDefinition.schema,
+    children: {
+        validate: (value: unknown) => typeof value === 'object' && value !== null,
+        errorMsg: (value: unknown) => `Invalid value for prop "children": ${value}. Expected an object.`,
+        default: undefined
+    },
     asset: {
         validate: (value: unknown) => !value || value instanceof Asset,
         errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,

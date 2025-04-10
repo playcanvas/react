@@ -55,4 +55,4 @@ const componentDefinition = {
             default: NullScript
         }
     }
-} as ComponentDefinition<ScriptProps>
+} as ComponentDefinition<ScriptProps, PcScript>

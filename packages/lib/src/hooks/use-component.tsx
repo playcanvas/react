@@ -4,10 +4,10 @@ import { useApp } from "./use-app";
 import { Application, Component, Entity } from "playcanvas";
 import { applyProps, Schema } from "../utils/validation";
 
-export function useComponent<T>(
+export function useComponent<T, InstanceType>(
   ctype: string | null, 
   props: T, 
-  schema: Schema<T>
+  schema: Schema<T, InstanceType>
 ): void {
   const componentRef = useRef<Component | null>(null);
   const parent : Entity = useParent();
@@ -57,7 +57,7 @@ export function useComponent<T>(
 
 
     // Object.assign(comp, filteredProps)
-    applyProps(comp, schema, filteredProps as Record<keyof Component, unknown>);
+    applyProps(comp as InstanceType, schema, filteredProps as Record<keyof Component, unknown>);
 
   }/*, [props, ctype]*/);
 };

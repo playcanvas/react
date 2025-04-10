@@ -3,11 +3,27 @@
 import { FC, useEffect, useLayoutEffect } from "react";
 import { useApp } from "../hooks";
 import { Application, Asset } from "playcanvas";
-import { createComponentDefinition, getStaticNullApplication, validatePropsWithDefaults } from "../utils/validation";
+import { validatePropsWithDefaults } from "../utils/validation";
 
 interface EnvAtlasProps {
+    /**
+     * The asset to use for the environment atlas.
+     */
     asset: Asset;
-    intensity?: number;
+    /**
+     * The intensity of the skybox.
+     * @default 1
+     */
+    skyboxIntensity?: number;
+    /**
+     * The luminance of the skybox.
+     * @default 1
+     */
+    skyboxLuminance?: number;
+    /**
+     * Whether to show the skybox.
+     * @default true
+     */
     showSkybox?: boolean;
 }
 
@@ -17,43 +33,37 @@ interface EnvAtlasProps {
 export const EnvAtlas: FC<EnvAtlasProps>= (props) => {
 
     const safeProps = validatePropsWithDefaults(props, componentDefinition);
-    const { asset, intensity } = safeProps;
-
+    const { asset, skyboxIntensity = 1, skyboxLuminance = 1, showSkybox = true } = safeProps;
     const app: Application = useApp();
-    
+    const layer = app?.scene?.layers?.getLayerByName('Skybox');
+
     useEffect(() => {
         if (!asset?.resource) return;
-        console.log(asset.loaded);
-        console.log('updating env atlas', !!asset.resource);
         app.scene.envAtlas = asset.resource;
-        
-        // const layer = app?.scene?.layers?.getLayerByName('Skybox');
-        
-        // if(layer) {
-        //     layer.enabled = showSkybox ?? true;
-        // }
     
-        app.scene.skyboxIntensity = intensity ?? 1;
-        app.scene.skyboxLuminance = intensity ?? 1;
 
-        // return () => {
-        //     if(app && app.scene) {
-        //         // @ts-expect-error `envAtlas` should support @type {Texture | null}
-        //         app.scene.envAtlas = null;
-        //     }
-        // }
+        return () => {
+            if(app && app.scene) {
+                // @ts-expect-error `envAtlas` should support @type {Texture | null}
+                app.scene.envAtlas = null;
+            }
+        }
 
     }, [app, asset?.resource]);
 
 
-    // useLayoutEffect(() => {
-    //     if (!asset?.resource) return;
-    //     // console.log('updating intensity', intensity);
+    useLayoutEffect(() => {
+        if (!asset?.resource || !layer) return;
         
-    //     console.log(app)
+        
+        if(layer) {
+            layer.enabled = showSkybox;
+        }
+    
+        app.scene.skyboxIntensity = skyboxIntensity;
+        app.scene.skyboxLuminance = skyboxLuminance;
 
-    //     console.log("intensity", app.scene.skyboxIntensity, intensity);
-    // }, [app, showSkybox, intensity, asset?.resource]);
+    }, [asset?.resource, layer, skyboxIntensity, skyboxLuminance, showSkybox]);
 
     return null
 
@@ -63,16 +73,18 @@ const componentDefinition = {
     name: "EnvAtlas",
     schema: {
         asset: {
-            validate: (value: unknown) => {
-                console.warn('asset', value, value instanceof Asset);
-                return !value || value instanceof Asset;
-            },
+            validate: (value: unknown) => !value || value instanceof Asset,
             errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
             default: null
         },
-        intensity: {
+        skyboxIntensity: {
             validate: (value: unknown) => typeof value === "number",
-            errorMsg: (value: unknown) => `Invalid value for prop "intensity": ${value}. Expected a number.`,
+            errorMsg: (value: unknown) => `Invalid value for prop "skyboxIntensity": ${value}. Expected a number.`,
+            default: 1
+        },
+        skyBoxLuminance: {
+            validate: (value: unknown) => typeof value === "number",
+            errorMsg: (value: unknown) => `Invalid value for prop "skyBoxLuminance": ${value}. Expected a number.`,
             default: 1
         },
         showSkybox: {

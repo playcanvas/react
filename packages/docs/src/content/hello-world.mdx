@@ -5,7 +5,7 @@ export const HelloWorld = () => {
      * We're just going to render a box with a camera, some lighting and a shadow catcher
      */
 
-    const material = useMaterial({ diffuse: 'gray' })
+    // const material = useMaterial({ diffuse: 'gray' })
 
     return <Entity>
 
@@ -24,7 +24,7 @@ export const HelloWorld = () => {
 
         {/* Create the right box entity */}
         <Entity position={[0, 0.5, 0]}>
-            <Render type='box' material={material} />
+            <Render type='box'  />
             <ShadowCatcher width={5} depth={5} />
         </Entity>
         
