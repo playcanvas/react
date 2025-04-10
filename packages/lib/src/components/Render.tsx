@@ -38,7 +38,7 @@ export const Render: FC<RenderProps> = (props) => {
     // Don't render if the type is asset and the asset is not provided
     if(safeProps.type === "asset" && !safeProps.asset) return null;
 
-    console.log("safeProps asset", safeProps.children);
+    
 
     // Render a container if the asset is a container
     if (safeProps.asset?.type === 'container') {
