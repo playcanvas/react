@@ -59,5 +59,5 @@ export function useComponent<T, InstanceType>(
     // Object.assign(comp, filteredProps)
     applyProps(comp as InstanceType, schema, filteredProps as Record<keyof Component, unknown>);
 
-  }/*, [props, ctype]*/);
+  });
 };
