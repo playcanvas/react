@@ -34,7 +34,7 @@ export const useMaterial = (props: MaterialProps): StandardMaterial => {
       applyProps(material, componentDefinition.schema, safeProps);
       material.update(); 
     }
-  }/*, [app, material, ...Object.values(safeProps)]*/);
+  });
 
   // Clean up the material when the component unmounts
   useLayoutEffect(() => {

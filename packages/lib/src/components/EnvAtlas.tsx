@@ -82,9 +82,9 @@ const componentDefinition = {
             errorMsg: (value: unknown) => `Invalid value for prop "skyboxIntensity": ${value}. Expected a number.`,
             default: 1
         },
-        skyBoxLuminance: {
+        skyboxLuminance: {
             validate: (value: unknown) => typeof value === "number",
-            errorMsg: (value: unknown) => `Invalid value for prop "skyBoxLuminance": ${value}. Expected a number.`,
+            errorMsg: (value: unknown) => `Invalid value for prop "skyboxLuminance": ${value}. Expected a number.`,
             default: 1
         },
         showSkybox: {

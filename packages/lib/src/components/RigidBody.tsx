@@ -64,9 +64,8 @@ type RigidBodyType = typeof rigidBodyTypes[number];
 
 interface RigidBodyProps extends Partial<Serializable<PublicProps<RigidBodyComponent>>> {
     /**
-     * The shape of rigid body to create.
-     * A `<Render/>` component can have a different shape to the rigid body. This is useful if you want to have a visual representation of the rigid body.
-     * @default "box"
+     * Sets the rigid body type determines how the body is simulated.
+     * @default "static"
      */
     type?: RigidBodyType
 }
@@ -84,6 +83,6 @@ componentDefinition.schema = {
     type: {
         validate: (value: unknown) => typeof value === 'string' && rigidBodyTypes.includes(value as string),
         errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "${rigidBodyTypes.join(", ")}".`,
-        default: "dynamic"
+        default: "static"
     }
 }

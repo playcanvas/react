@@ -154,7 +154,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   useLayoutEffect(() => {
     if (!app) return;
     applyProps(app, componentDefinition.schema, otherProps as Record<keyof PlayCanvasApplication, unknown>);
-  }/*, [app, ...Object.values(otherProps)]*/);
+  });
 
   if (!app) return null;
 
@@ -237,11 +237,9 @@ componentDefinition.schema = {
     default: { width: '100%', height: '100%' }
   },
   canvasRef: {
-    validate: (value: unknown) => {
-      return value !== null && 
+    validate: (value: unknown) => value !== null && 
              typeof value === 'object' && 
-             'current' in value;
-    },
+             'current' in value,
     errorMsg: (value: unknown) => `canvasRef must be a React ref object. Received: ${value}`,
     default: null
   },
