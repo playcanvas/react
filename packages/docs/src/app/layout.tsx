@@ -24,7 +24,7 @@ export const metadata = {
     'msapplication-TileColor': '#fff'
   },
   twitter: {
-    site: 'https://playcanvas.com'
+    site: 'https://twitter.com/playcanvas'
   }
 }
 
