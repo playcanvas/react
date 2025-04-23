@@ -20,15 +20,18 @@ The EnvAtlas component requires a Textures Atlas Asset. There are many sources a
 
 This example will load an environment atlas asset and apply it to the scene. An `<EnvAtlas>` component can be added to any entity in the scene, but it will have affect all entities in the scene.
 
-```jsx
+```jsx copy filename="env-atlas.jsx"
 import { EnvAtlas } from '@playcanvas/react/components'
+import { useEnvAtlas } from '@playcanvas/react/hooks'
 
 // Load the environment atlas asset
 export const EnvAtlasExample = () => {
-  const { data : envAtlas } = useEnvAtlas('/env_atlas_1k.png')
+  const { asset } = useEnvAtlas('/env_atlas_1k.png')
+
+  if (!asset) return null
 
   return <Entity>
-    <EnvAtlas asset={envAtlas} />
+    <EnvAtlas asset={asset} />
     <Entity>
       <Render type="box" />
     </Entity>

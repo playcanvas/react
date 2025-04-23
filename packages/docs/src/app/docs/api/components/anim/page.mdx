@@ -35,17 +35,20 @@ Any additional props will be passed to the PlayCanvas AnimComponent class direct
 
 ## Usage
 
-```jsx
+```jsx copy filename="anim.jsx"
 import { Entity } from '@playcanvas/react'
 import { Anim, Render } from '@playcanvas/react/components'
+import { useAsset } from '@playcanvas/react/hooks'
 
 const AnimatingDinosaur = (props) => {
 
-    const { data } = useAsset('/dinosaur.glb')
+    const { asset } = useAsset('/dinosaur.glb')
+
+    if (!asset) return null
 
     return (<Entity {...props}>
-        <Render type="asset" asset={data} />
-        <Anim asset={data} clip="Walk" loop />
+        <Render type="asset" asset={asset} />
+        <Anim asset={asset} clip="Walk" loop />
     </Entity>)
 }
 ```

@@ -12,223 +12,156 @@ openGraph:
 
 # Asset Hooks
 
-PlayCanvas React provides several hooks for loading and managing assets in your 3D applications. These hooks simplify the process of loading textures, models, splats, and other assets.
+PlayCanvas React provides hooks for loading and managing different assets. These hooks simplify the process of loading assets and allow you to handle loading and error states.
 
-## Available Hooks
-
-### useAsset
-
-The base hook for loading any type of asset.
-
-```tsx
-const { asset, loading, error } = useAsset(src, type, props);
-```
-
-#### Parameters
-
-<TSDoc
-  code={`
-  import { Asset } from 'playcanvas';
-  type Asset {
-    resource: any;
-    name: string;
-    type: string;
-  }
-  `}
-/>  
-- `src` (string): The source URL of the asset
-- `type` (string): The type of asset to load. Must be one of: 'texture', 'gsplat', 'container', 'model'
-- `props` (object, optional): Additional properties to pass to the asset loader
-
-#### Returns
-
-- `asset` (Asset | null): The loaded asset, or null if not loaded or failed
-- `loading` (boolean): Whether the asset is currently loading
-- `error` (string | null): Error message if loading failed, or null if successful
-
-#### Example
-
-```tsx
-const { asset, loading, error } = useAsset('model.glb', 'container');
-
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
-
-return <Render asset={asset} />;
-```
-
-### useSplat
-
-A specialized hook for loading Gaussian Splat assets.
-
-```tsx
-const { asset, loading, error } = useSplat(src, props);
-```
-
-#### Parameters
-
-- `src` (string): The source URL of the splat asset
-- `props` (object, optional): Additional properties to pass to the asset loader
-
-#### Returns
-
-Same as `useAsset`
-
-#### Example
-
-```tsx
-const { asset, loading, error } = useSplat('splat.ply');
-
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
-
-return <GSplat asset={asset} />;
-```
-
-### useTexture
-
-A specialized hook for loading texture assets.
-
-```tsx
-const { asset, loading, error } = useTexture(src, props);
-```
-
-#### Parameters
-
-- `src` (string): The source URL of the texture asset
-- `props` (object, optional): Additional properties to pass to the asset loader
-
-#### Returns
-
-Same as `useAsset`
-
-#### Example
-
-```tsx
-const { asset, loading, error } = useTexture('texture.jpg');
-
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
-
-return <Material map={asset.resource} />;
-```
-
-### useEnvAtlas
-
-A specialized hook for loading environment atlas textures.
-
-```tsx
-const { asset, loading, error } = useEnvAtlas(src, props);
-```
-
-#### Parameters
-
-- `src` (string): The source URL of the environment atlas texture
-- `props` (object, optional): Additional properties to pass to the asset loader
-
-#### Returns
-
-Same as `useAsset`
-
-#### Example
-
-```tsx
-const { asset, loading, error } = useEnvAtlas('env.jpg');
-
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
-
-return <EnvAtlas asset={asset} />;
-```
-
-### useModel
-
-A specialized hook for loading 3D model assets (GLB/GLTF).
+The general signature of the hooks is:
 
 ```tsx
 const { asset, loading, error } = useModel(src, props);
 ```
 
-#### Parameters
+Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader.
 
-- `src` (string): The source URL of the 3D model
-- `props` (object, optional): Additional properties to pass to the asset loader
+```tsx copy filename="render-glb.tsx"
+import { useModel } from '@playcanvas/react/hooks';
 
-#### Returns
+export function RenderAsset() {
+    const { asset, loading, error } = useModel('model.glb');
 
-Same as `useAsset`
+    if (loading) return <LoadingSpinner />;
+    if (error) return <ErrorMessage message={error} />;
+    if (!asset) return null;
 
-#### Example
-
-```tsx
-const { asset, loading, error } = useModel('model.glb');
-
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
-
-return <Container asset={asset} />;
+    return <Render asset={asset} />;
+}
 ```
 
-## Advanced Usage
+Every hooks returns an `AssetResult` with the following properties
 
-### Loading Multiple Assets
+<TSDoc
+  code={`
+    import { useAsset } from '@playcanvas/react/hooks';
+    type $ = ReturnType<typeof useAsset>;
+    export default $;
+  `}
+/>
 
-You can load multiple assets in parallel:
+### All Hooks
 
-```tsx
-const modelResult = useModel('character.glb');
-const textureResult = useTexture('character-texture.jpg');
+The following hooks are available:
 
-// Check if any asset is still loading
-if (modelResult.loading || textureResult.loading) return <LoadingSpinner />;
+- [`useModel`](/docs/api/hooks/assets#usemodel) - Load a 3D model asset
+- [`useSplat`](/docs/api/hooks/assets#usesplat) - Load a Gaussian Splat asset
+- [`useTexture`](/docs/api/hooks/assets#usetexture) - Load a texture asset
+- [`useEnvAtlas`](/docs/api/hooks/assets#useenvatlas) - Load an environment atlas texture
+- [`useAsset`](/docs/api/hooks/assets#useasset) - Generic hook for loading any type of asset
 
-// Check for errors
-if (modelResult.error) return <ErrorMessage message={modelResult.error} />;
-if (textureResult.error) return <ErrorMessage message={textureResult.error} />;
+## useModel
 
-// Use the assets
-return (
-    <Container asset={modelResult.asset}>
-        <Material map={textureResult.asset.resource} />
-    </Container>
-);
+A specialized hook for loading 3D model assets (GLB/GLTF). Pass the source URL of the model file and any additional properties to pass to the asset loader and use the resulting asset in the `<Container/>` component.
+
+```tsx copy filename="render-model.tsx"
+import { useModel } from '@playcanvas/react/hooks';
+
+export function RenderModel() {
+  const { asset, loading, error } = useModel('model.glb');
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return <Render asset={asset} />;
+}
 ```
 
-### Asset Props
+## useSplat
 
-You can pass additional properties to customize how assets are loaded:
+A specialized hook for loading Gaussian Splat assets. Pass the source URL of the splat file and any additional properties to pass to the asset loader and use the resulting asset in the [`<GSplat/>`](/docs/api/components/GSplat) component.
 
-```tsx
-// Load a texture with specific settings
-const { asset } = useTexture('texture.jpg', {
-    mipmaps: true,
-    anisotropy: 16,
-    type: 'rgba'
-});
+```tsx copy filename="render-splat.tsx"
+import { useSplat } from '@playcanvas/react/hooks';
 
-// Load a model with specific settings
-const { asset } = useModel('model.glb', {
-    useMorphTargets: true,
-    useInstancing: false
-});
+export function RenderSplat() {
+  const { asset, loading, error } = useSplat('splat.ply');
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return (<Entity>
+    <GSplat asset={asset} />
+  </Entity>);
+}
 ```
 
-## Error Handling
+See the [`<GSplat/>`](/docs/api/components/splat) component for more information, and the [Gaussian Splat demo](/examples/splats) for a working example.
 
-All asset hooks return an `error` property that will contain an error message if the asset fails to load. You should always check for errors before using the asset:
+## useTexture
 
-```tsx
-const { asset, loading, error } = useModel('model.glb');
+A specialized hook for loading texture assets. Pass the source URL of the texture file and any additional properties to pass to the asset loader and use the resulting asset in any component that accepts a texture.
 
-if (loading) return <LoadingSpinner />;
-if (error) return <ErrorMessage message={error} />;
-if (!asset) return null;
+```tsx copy filename="render-texture.tsx"
+import { useTexture } from '@playcanvas/react/hooks';
+import { useMaterial } from '@playcanvas/react/hooks';
 
-// Safe to use the asset here
-return <Container asset={asset} />;
-``` 
+export function RenderTexture() {
+  const { asset, loading, error } = useTexture('texture.jpg');
+  const material = useMaterial({ map: asset.resource });
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return <Render type="box" material={material} />;
+}
+```
+
+See the [useMaterial](/docs/api/hooks/assets/useMaterial) hook and [Render](/docs/api/components/Render) component for more information.
+
+## useEnvAtlas
+
+A specialized hook for loading environment atlas textures. Pass the source URL of the texture file and any additional properties to pass to the asset loader and use the resulting asset in the [`<EnvAtlas/>`](/docs/api/components/EnvAtlas) component.
+
+```tsx copy filename="render-env-atlas.tsx"
+import { useEnvAtlas } from '@playcanvas/react/hooks';
+
+export function RenderEnvAtlas() {
+  const { asset, loading, error } = useEnvAtlas('env.jpg');
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return <EnvAtlas asset={asset} />;
+}
+```
+
+See the [EnvAtlas](/docs/api/components/EnvAtlas) component for more information.
+
+
+## useAsset
+
+This is a generic hook for loading any type of asset. You can use it to load any asset type that PlayCanvas supports which is sometimes useful if you need to load an asset dynamically.
+
+```tsx copy filename="use-dynamic-asset.tsx"
+import { useAsset } from '@playcanvas/react/hooks';
+
+const assetTypeToLoadType = {
+    'ply': useSplat,
+    'jpg': useTexture,
+    'png': useTexture,
+    'glb': useModel,
+    'gltf': useModel,
+}
+
+export function useDynamicAsset(src: string, props: Record<string, unknown> = {}) {
+
+  const mimeType = src.split('.').pop();
+  const loadType = assetTypeToLoadType[mimeType];
+
+  if (!loadType) {
+    throw new Error(`Unsupported asset type: ${mimeType}`);
+  }
+
+  return useAsset(src, loadType, props);
+}
+```
