@@ -21,10 +21,8 @@ export function useComponent<T, InstanceType>(
     if (parent) {
       // Only add the component if it hasn't been added yet
       if (!componentRef.current) {
-        const clonedOpts = { ...props };
-        componentRef.current = parent.addComponent(ctype, clonedOpts as object);
+        componentRef.current = parent.addComponent(ctype);
       }
-      // Do not throw an error if the component already exists
     }
 
     return () => {
