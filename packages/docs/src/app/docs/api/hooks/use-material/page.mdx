@@ -12,8 +12,11 @@ openGraph:
 
 ## `useMaterial`
 
+Materials are a fundamental part of 3D graphics. They define the appearance of 3D objects and are used to create realistic lighting effects. Materials can be applied to `Render` components to change the appearance of 3D objects. They accept a wide range of properties to control the appearance of the material.
+
 The `useMaterial` hook returns a [`StandardMaterial`](https://api.playcanvas.com/classes/Engine.StandardMaterial.html) instance. This is useful if you need to create materials and apply them to `Render` components.
-```jsx
+
+```jsx copy filename="use-material.jsx"
 import { useMaterial } from '@playcanvas/react/hooks'
 
 /**
@@ -41,7 +44,7 @@ const RedGlowingBox = () => {
 
 ## Props
 
-The `StandardMaterial` accepts a many different props which can be found [here](https://api.playcanvas.com/classes/Engine.StandardMaterial.html).
+The `StandardMaterial` accepts many different props which can be found [here](https://api.playcanvas.com/classes/Engine.StandardMaterial.html).
 
 {/* The following is the type definition for the StandardMaterial class. It's statically copied from the PlayCanvas engine. */}
 <TSDoc

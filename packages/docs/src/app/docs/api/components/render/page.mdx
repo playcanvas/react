@@ -18,23 +18,32 @@ openGraph:
 
 To render a 3D model loaded from a URL, you can use the asset type and pass the asset directly to the `asset` prop.
 
-```jsx copy
+```jsx copy filename="render-asset.jsx"
 import { Render } from '@playcanvas/react/components'
+import { useModel } from '@playcanvas/react/hooks'
 
-<Entity>
-    <Render type="asset" asset={asset} />
-</Entity>
+const RenderModel = () => {
+    const { asset } = useModel('model.glb')
+
+    if (!asset) return null
+
+    return <Entity>
+        <Render type="asset" asset={asset} />
+    </Entity>
+}
 ```
 
 #### Rendering a primitive shape
 This will render a simple box primitive transformed by the parent entity.
 
-```jsx copy
+```jsx copy filename="render-box.jsx"
 import { Render } from '@playcanvas/react/components'
 
-Entity>
-    <Render type="box" />
-</Entity>
+const RenderBox = () => {
+    return <Entity>
+        <Render type="box" />
+    </Entity>
+}
 ```
 
 ## Props

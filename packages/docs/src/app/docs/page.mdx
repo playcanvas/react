@@ -83,21 +83,24 @@ The library provides a thin declarative layer around the open source library [Pl
 
 Here's a simple example rendering a simple 3D asset with orbit controls.
 
-```jsx copy
+```jsx copy filename="simple-example.jsx"
 import { Application, Entity } from '@playcanvas/react'
 import { Camera } from "@playcanvas/react/components"
 import { OrbitControls } from "@playcanvas/react/scripts"
 
 const App = (car) => {
+
+  const { asset } = useModel('/lamborghini_vision_gt.glb')
+
+  if (!asset) return null
+
   return (
     <Application>
         <Entity position={[0, 2, 0]}>
           <Camera clearColor="blue"/>
           <OrbitControls />
         </Entity>
-        <Entity >
-          <Container asset={car} />
-        </Entity>
+        <Render type="asset" asset={asset} />
     </Application>
   );
 }
@@ -130,8 +133,8 @@ Currently used in the following apps:
 
 ## First steps
 
-If you're familiar with React but new to PlayCanvas and 3D in general, the best place to start is the [Getting Started Guide](/docs/getting-started). It will walk you through creating a simple app and explain the core concepts.
+If you're familiar with React but new to PlayCanvas and 3D in general, the best place to start is the [Getting Started Guide](/docs/guide/getting-started). It will walk you through creating a simple app and explain the core concepts.
 
-If you're already using PlayCanvas, but new to React, it's worth checking out the [React docs](https://react.dev/learn) first, which provide a great introduction to the React ecosystem. From then you can jump into the [API Reference](/docs/api-reference).
+If you're already using PlayCanvas, but new to React, it's worth checking out the [React docs](https://react.dev/learn) first, which provide a great introduction to the React ecosystem. From then you can jump into the [API Reference](/docs/api/entity/).
 
 You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)

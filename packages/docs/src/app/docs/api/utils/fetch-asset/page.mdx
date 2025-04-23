@@ -1,4 +1,5 @@
 # Fetch Asset
+import { Callout } from 'nextra/components'
 
 `fetchAsset` is a simple function that loads an asset from a url and returns a corresponding `Asset`. It returns a promise that resolves when the asset loads meaning you can use it with libraries such as `SWR` or `react-query` which suspend whilst the asset loads.
 
@@ -6,9 +7,13 @@ We recommend reading more about assets in the [Loading Assets](/docs/guide/loadi
 
 ## Usage
 
+<Callout type="info" emoji="️💡">
+You do not need to use `fetchAsset` directly, the `useAsset` hook is recommended for most use cases.
+</Callout>
+
 If you just want a simple loading hook, you can simply wrap `fetchAsset` in a custom hook.
 
-```jsx
+```jsx copy filename="use-asset.jsx"
 import { fetchAsset } from '@playcanvas/react/utils'
 
 const useAsset = (src, type) => {

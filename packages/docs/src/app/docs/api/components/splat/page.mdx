@@ -12,21 +12,24 @@ openGraph:
 
 # GSplat
 
-**Gaussian Splats** are a new way of capturing and rendering high quality 3D content. They capture the shape and lighting of a scene in a way that produces incredibly high quality results. You can read more about Gaussian Splats in the [PlayCanvas docs](https://developer.playcanvas.com/user-manual/graphics/gaussian-splatting/) or view this [Youtube video](https://www.youtube.com/watch?v=HVv_IQKlafQ).
+**Gaussian Splats** are a new way of capturing and rendering high quality 3D content. They capture the shape and lighting of a scene in a way that produces incredibly high quality results. See the [Splat demo](/examples/splats) for a working example.
 
 ## Usage
 
 Once you load a Gaussian Splat model, you can use the `GSplat` component to render it.
 
-```jsx
+```jsx copy filename="splat.jsx"
 import { GSplat } from '@playcanvas/react/components'
+import { useSplat } from '@playcanvas/react/hooks'
 
 const Splat = (( src, ...props )) => {
 
-    const { data } = useGSplat(src)
+    const { asset } = useSplat(src)
+
+    if (!asset) return null
 
     return (<Entity {...props}>
-        <GSplat asset={data} />
+        <GSplat asset={asset} />
     </Entity>)
 }
 ```

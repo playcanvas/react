@@ -26,12 +26,13 @@ Learn more about Collision components in the [PlayCanvas documentation](https://
 
 You attach a Collision component to an Entity in the same way you would attach a Render component. To work with physics, you should also attach a `Rigidbody` component to the same `Entity`, and probably a `Render` component too.
 
-```jsx copy
+```jsx copy filename="collision.jsx"
 import { Collision, Rigidbody } from '@playcanvas/react/components'
 
-<Entity>
-    <Collision type="box" />
-    <RigidBody type="dynamic" mass={12} />
+const CollisionExample = () => {
+    return <Entity>
+        <Collision type="box" />
+        <RigidBody type="dynamic" mass={12} />
     <Render type="box" />
 </Entity>
 }

@@ -22,13 +22,14 @@ You can learn more about how physics work in PlayCanvas in the [Physics docs](ht
 
 ## Usage
 
-```jsx
+```jsx copy filename="rigidbody.jsx"
 import { Rigidbody } from '@playcanvas/react/components'
 
-<Entity>
+const RigidbodyExample = () => {
+  return <Entity>
     <Rigidbody type="dynamic" mass={12} />
     <Render type="box" />
-</Entity>
+  </Entity>
 }
 ```
 

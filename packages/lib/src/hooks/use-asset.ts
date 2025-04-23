@@ -15,7 +15,7 @@ const supportedTypes = ['texture', 'gsplat', 'container', 'model'];
 export interface AssetResult {
   /** The loaded asset, or null if not loaded or failed */
   asset: Asset | null;
-  /** Whether the asset is currently loading */
+  /** Whether the asset is currently loading, or false if it has loaded or failed */
   loading: boolean;
   /** Error message if loading failed, or null if successful */
   error: string | null;
