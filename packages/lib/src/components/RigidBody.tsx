@@ -81,7 +81,7 @@ const componentDefinition = createComponentDefinition(
 componentDefinition.schema = {
     ...componentDefinition.schema,
     type: {
-        validate: (value: unknown) => typeof value === 'string' && rigidBodyTypes.includes(value as string),
+        validate: (value: unknown) => typeof value === 'string' && rigidBodyTypes.includes(value as RigidBodyType),
         errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "${rigidBodyTypes.join(", ")}".`,
         default: "static"
     }

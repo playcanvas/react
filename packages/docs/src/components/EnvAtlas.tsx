@@ -8,7 +8,6 @@ import { EnvAtlas } from "@playcanvas/react/components";
 
 type EnvAtlasComponentsProps = {
     src: string;
-    showSkybox?: boolean;
     intensity?: number;
 }
 

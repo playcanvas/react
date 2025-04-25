@@ -19,6 +19,9 @@ export const LoadingGLB = () => {
         {/* Render the background grid */}
         <Grid />
 
+        {/* Add a shadow catcher to catch the shadows from the model */}
+        <ShadowCatcher width={5} depth={5} />
+
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 3, 4]}>
             <Camera clearColor='#111111' fov={28} />
@@ -30,7 +33,6 @@ export const LoadingGLB = () => {
         {/* render the asset */}
         <Render type='asset' asset={asset} >
             <Anim asset={asset} />
-            <ShadowCatcher width={5} depth={5} />
         </Render>
 
     </Entity>

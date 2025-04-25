@@ -13,6 +13,9 @@ export const ModelViewer = () => {
         {/* Render the background grid */}
         <Grid />
 
+        {/* Add a shadow catcher to catch the shadows from the model */}
+        <ShadowCatcher width={5} depth={5} />
+
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
@@ -21,12 +24,8 @@ export const ModelViewer = () => {
             <AutoRotate />
         </Entity>
 
-        <Entity>
-            {/* Load our asset */}
-            <Render asset={asset} >
-                {asset && <ShadowCatcher width={5} depth={5} />}
-            </Render>
-        </Entity>
+        {/* Load our asset */}
+        <Render asset={asset} />
     </Entity>)
 }
 

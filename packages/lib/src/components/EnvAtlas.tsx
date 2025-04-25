@@ -2,7 +2,7 @@
 
 import { FC, useEffect, useLayoutEffect } from "react";
 import { useApp } from "../hooks";
-import { Application, Asset } from "playcanvas";
+import { Application, Asset, Texture } from "playcanvas";
 import { validatePropsWithDefaults } from "../utils/validation";
 
 interface EnvAtlasProps {
@@ -39,12 +39,10 @@ export const EnvAtlas: FC<EnvAtlasProps>= (props) => {
 
     useEffect(() => {
         if (!asset?.resource) return;
-        app.scene.envAtlas = asset.resource;
+        app.scene.envAtlas = asset.resource as Texture;
     
-
         return () => {
             if(app && app.scene) {
-                // @ts-expect-error `envAtlas` should support @type {Texture | null}
                 app.scene.envAtlas = null;
             }
         }

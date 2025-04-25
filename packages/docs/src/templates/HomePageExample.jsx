@@ -16,8 +16,9 @@ const Example = () => {
     const { data: model } = useModel('/lamborghini_vision_gt.glb');
 
     return (<Entity>
-        <EnvAtlas asset={envMap} intensity={0.8} showSkybox={false} />
+        <EnvAtlas asset={envMap} skyboxIntensity={1.2} showSkybox={false} />
         <Grid />
+        <ShadowCatcher width={5} depth={5} />
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
             <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
@@ -25,9 +26,7 @@ const Example = () => {
             <AutoRotate />
         </Entity>
         <Entity>
-            { model && <Container asset={model}>
-                <ShadowCatcher width={5} depth={5}/>
-            </Container> }
+            { model && <Container asset={model}/> }
         </Entity>
     </Entity>)
 }

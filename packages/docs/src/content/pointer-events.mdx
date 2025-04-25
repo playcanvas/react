@@ -6,7 +6,7 @@ export const PointerEvents = () => {
      */
 
     const HOVER_COLOR = 'rebeccapurple'
-    const LEAVE_COLOR = 'gray'
+    const LEAVE_COLOR = 'orange'
 
     const [diffuse, setDiffuse] = useState(LEAVE_COLOR)
     const [shape, setShape] = useState('box')
@@ -27,6 +27,8 @@ export const PointerEvents = () => {
         {/* Render the background grid */}
         <Grid />
 
+        <ShadowCatcher width={5} depth={5} />
+
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 3, 4]}>
             <Camera clearColor='#111111' fov={28} />
@@ -42,7 +44,7 @@ export const PointerEvents = () => {
             onPointerOut={onLeave}
         >
             <Render type={shape} material={material} />
-            <ShadowCatcher width={5} depth={5} />
+            
         </Entity>
         
     </Entity>

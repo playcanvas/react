@@ -1,6 +1,8 @@
 import { Application, Asset } from "playcanvas";
 import { warnOnce } from "./validation";
 
+type AssetType = ConstructorParameters<typeof Asset>[1];
+
 export const fetchAsset = (app : Application, url : string, type : string, props = {}) => {
     return new Promise((resolve, reject) => {
 
@@ -16,7 +18,7 @@ export const fetchAsset = (app : Application, url : string, type : string, props
         let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(propsKey, type, { url }, props);
+            asset = new Asset(propsKey, type as AssetType, { url }, props);
             app.assets.add(asset);
         }
 

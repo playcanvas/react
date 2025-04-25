@@ -8,8 +8,7 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsc",
-        "prepare": "npm run build"
+        "build": "tsc"
     },
     "keywords": [
         "2d",
@@ -77,7 +76,7 @@
         }
     },
     "peerDependencies": {
-        "playcanvas": "~2.3.3",
+        "playcanvas": "~2.7.1",
         "react": "^18.3.1 || ^19.1.0",
         "react-dom": "^18.3.1 || ^19.1.0",
         "sync-ammo": "^0.1.2"
