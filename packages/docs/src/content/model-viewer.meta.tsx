@@ -1,4 +1,15 @@
 export default {
     title: 'Model Viewer 🚀',
     description: 'Learn how to load and render a simple 3D model.',
+    openGraph: {
+        title: 'Model Viewer Example 🚀',
+        description: 'Learn how to load and render a simple 3D model in @playcanvas/react',
+        images: [
+            { 
+                url: 'https://playcanvas-react.vercel.app/pc_react-og.png',
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
 }

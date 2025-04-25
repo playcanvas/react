@@ -1,4 +1,15 @@
 export default {
-    title: 'Physics 🚀',
-    description: 'Easily add declarative physics to your 3D models.'
+    title: 'Physics Example ⚡',
+    description: 'Easily add declarative physics to your 3D models.',
+    openGraph: {
+        title: 'Physics Example ⚡',
+        description: 'Easily add declarative physics to your 3D models in @playcanvas/react',
+        images: [
+            { 
+                url: 'https://playcanvas-react.vercel.app/pc_react-og.png',
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
 }

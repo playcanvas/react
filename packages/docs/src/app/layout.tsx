@@ -61,7 +61,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             MIT {new Date().getFullYear()} ©{' '} PlayCanvas.
           </Footer>}
           editLink="Edit this page on GitHub"
-          docsRepositoryBase="https://github.com/playcanvas/react/blob/main/examples/docs"
+          docsRepositoryBase="https://github.com/playcanvas/react/tree/main/packages/docs/"
           sidebar={{ 
             defaultMenuCollapseLevel: 1,
             toggleButton: true

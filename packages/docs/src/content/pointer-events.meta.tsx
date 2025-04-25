@@ -1,4 +1,15 @@
 export default {
-    title: 'Pointer Events 🚀',
+    title: 'Pointer Events Example 👆🏼',
     description: 'Learn how to handle pointer events in your scene.',
+    openGraph: {
+        title: 'Pointer Events Example 👆🏼',
+        description: 'Learn how to handle pointer events in your scene in @playcanvas/react',
+        images: [
+            { 
+                url: 'https://playcanvas-react.vercel.app/pc_react-og.png',
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
 }

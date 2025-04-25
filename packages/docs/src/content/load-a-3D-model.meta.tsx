@@ -1,4 +1,15 @@
 export default {
     title: 'Animation 🚀',
     description: 'Learn how to play animations in 3D models.',
+    openGraph: {
+        title: 'Animation Example 🚀',
+        description: 'Learn how to play animations in 3D models in @playcanvas/react',
+        images: [
+            { 
+                url: 'https://playcanvas-react.vercel.app/pc_react-og.png',
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
 }
