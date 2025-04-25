@@ -35,6 +35,9 @@ export const Primitives = () => {
         {/* Render the background grid */}
         <Grid />
 
+        {/* Add a shadow catcher to catch the shadows from the model */}
+        <ShadowCatcher width={5} depth={5} />
+
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 3, 4]}>
             <Camera clearColor='#111111' fov={28} />
@@ -46,7 +49,6 @@ export const Primitives = () => {
         {/* Create the right box entity */}
         <Entity position={[0, 0.5, 0]}>
             <Render type={primitive} material={material} />
-            <ShadowCatcher width={5} depth={5} />
         </Entity>
 
         <div className='pointer-events-auto absolute bottom-0 top-22 right-0 p-18'>

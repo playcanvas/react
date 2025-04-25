@@ -5,10 +5,11 @@ import { useComponent } from "../hooks";
 import { Container } from "../Container";
 import { Asset, Entity, type RenderComponent as PcRenderComponent } from "playcanvas";
 import { PublicProps, Serializable } from "../utils/types-utils";
-import { getStaticNullApplication, validatePropsWithDefaults, Schema } from "../utils/validation";
+import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation";
 import { createComponentDefinition } from "../utils/validation";
 
 const RenderComponent: FC<RenderProps> = (props) => {
+    // console.log('RenderComponent', props.material.diffuse);
     useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
     return null;
 }
@@ -32,13 +33,11 @@ const RenderComponent: FC<RenderProps> = (props) => {
  * </Entity>
  */
 export const Render: FC<RenderProps> = (props) => {
-
-    const safeProps = validatePropsWithDefaults(props, componentDefinition);
+    // console.log('Render', props.material.diffuse);
+    const safeProps = validatePropsPartial(props, componentDefinition);
 
     // Don't render if the type is asset and the asset is not provided
     if(safeProps.type === "asset" && !safeProps.asset) return null;
-
-    
 
     // Render a container if the asset is a container
     if (safeProps.asset?.type === 'container') {
@@ -46,6 +45,8 @@ export const Render: FC<RenderProps> = (props) => {
             { safeProps.children }
         </Container>
     }
+
+    // console.log('safeProps', safeProps);
 
     // Otherwise, render the component
     return <RenderComponent {...safeProps as Serializable<RenderProps>} />;

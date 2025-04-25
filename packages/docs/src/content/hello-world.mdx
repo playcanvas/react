@@ -9,10 +9,14 @@ export const HelloWorld = () => {
 
     return <Entity>
 
-        <EnvAtlasComponent src='/environment-map.png' intensity={2} showSkybox={true}/>
+        {/* Add an environment atlas to the scene */}
+        <EnvAtlasComponent src='/environment-map.png'/>
 
         {/* Render the background grid */}
         <Grid />
+
+        {/* Add a shadow catcher to catch the shadows from the box */}
+        <ShadowCatcher width={5} depth={5} />
 
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 3, 4]}>
@@ -25,7 +29,6 @@ export const HelloWorld = () => {
         {/* Create the right box entity */}
         <Entity position={[0, 0.5, 0]}>
             <Render type='box'  />
-            <ShadowCatcher width={5} depth={5} />
         </Entity>
         
     </Entity>

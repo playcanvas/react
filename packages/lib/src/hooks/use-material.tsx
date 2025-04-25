@@ -2,7 +2,7 @@ import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
 import { useApp } from './use-app';
 import { PublicProps, Serializable } from '../utils/types-utils';
-import { validatePropsWithDefaults, createComponentDefinition, applyProps } from '../utils/validation';
+import { createComponentDefinition, applyProps, validatePropsPartial } from '../utils/validation';
 
 /**
  * This hook is used to create a material instance and update its properties when the props change.
@@ -22,7 +22,7 @@ import { validatePropsWithDefaults, createComponentDefinition, applyProps } from
 export const useMaterial = (props: MaterialProps): StandardMaterial => {
   const app = useApp();
 
-  const safeProps = validatePropsWithDefaults(props, componentDefinition);
+  const safeProps = validatePropsPartial(props, componentDefinition);
 
   // Create the material instance only once when 'app' changes
   const material : StandardMaterial = useMemo(() => new StandardMaterial(), [app]);

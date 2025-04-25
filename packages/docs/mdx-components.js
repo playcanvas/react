@@ -1,6 +1,6 @@
 import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
-import { unstable_TSDoc as TSDoc } from 'nextra/tsdoc'
+import { TSDoc } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
 
 const docsComponents = getDocsMDXComponents({

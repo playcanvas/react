@@ -2,10 +2,9 @@
 
 import { FC, useLayoutEffect, useRef } from "react";
 import { useParent } from "../hooks";
-import { Asset, Entity, GSplatComponent } from "playcanvas";
+import { Asset, Entity, GSplatComponent, GSplatResource } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
 import { Schema, validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
-
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
  * @param {GSplatProps} props - The props to pass to the GSplat component.
@@ -24,7 +23,8 @@ export const GSplat: FC<GSplatProps> = (props) => {
 
     useLayoutEffect(() => {
         if (asset) {
-            assetRef.current = asset.resource.instantiate({ vertex, fragment });
+            const resource = asset.resource as GSplatResource;
+            assetRef.current = resource.instantiate({ vertex, fragment });
             if (assetRef.current) parent.addChild(assetRef.current);
         }
 

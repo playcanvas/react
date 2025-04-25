@@ -1,7 +1,7 @@
 "use client";
 
 import { Script } from "@playcanvas/react/components";
-import { CameraFrame } from "playcanvas/scripts/utils/camera-frame.mjs";
+import { CameraFrame } from "playcanvas/scripts/esm/camera-frame.mjs";
 
 import { FC } from "react";
 

@@ -15,6 +15,8 @@ Here's what it should look like...
         <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
         {/* Render the background grid */}
         <Grid />
+        {/* Add a shadow catcher to catch the shadows from the model */}
+        <ShadowCatcher intensity={0.9} />
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
@@ -23,12 +25,8 @@ Here's what it should look like...
             <AutoRotate />
         </Entity>
 
-        <Entity>
-            {/* Load our asset */}
-            <Glb src='/lamborghini_vision_gt.glb' />
-            {/* Adds some ground plane shadowing */}
-            <ShadowCatcher intensity={0.9} />
-        </Entity>
+        {/* Load our asset */}
+        <Glb src='/lamborghini_vision_gt.glb' />
     </Application>
 </ReactQueryProvider>
 
@@ -176,15 +174,15 @@ export default function App() {
         <EnvAtlasComponent src='/environment-map.png' />
         {/* Render the background grid */}
         <Grid />
+        {/* Add a shadow catcher to catch the shadows from the model */}
+        <ShadowCatcher intensity={0.9} />
         <Entity name='camera' position={[0, 0, 2]}>
             <Camera/>
             <OrbitControls/>
             <AutoRotate />
         </Entity>
         <Entity name='model'>
-            <Glb src='/lamborghini_vision_gt.glb' >
-                <ShadowCatcher intensity={0.9} />
-            </Glb>
+            <Glb src='/lamborghini_vision_gt.glb' />
         </Entity>
     </Application>
 }

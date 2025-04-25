@@ -2,7 +2,7 @@ import { FC, useLayoutEffect, useRef } from "react";
 import { useApp } from "./hooks";
 import { Asset, Entity as PcEntity } from "playcanvas";
 import { Entity } from ".";
-
+import { GlbContainerResource } from "playcanvas/build/playcanvas/src/framework/parsers/glb-container-resource.js";
 interface ContainerProps {
     asset: Asset;
     children?: React.ReactNode;
@@ -24,7 +24,8 @@ export const Container: FC<ContainerProps> = ({ asset, children, ...props }) => 
 
     useLayoutEffect(() => {
         if (app && asset?.resource && entityRef.current) {
-            const assetEntity = asset.resource.instantiateRenderEntity();
+            const resource = asset.resource as GlbContainerResource;
+            const assetEntity = resource.instantiateRenderEntity(null);
             entityRef.current.addChild(assetEntity);
             assetEntityRef.current = assetEntity;
         }

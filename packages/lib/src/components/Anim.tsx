@@ -2,9 +2,10 @@
 
 import { FC, useLayoutEffect } from "react";
 import { useComponent, useParent } from "../hooks";
-import { AnimComponent, Asset, Entity } from "playcanvas";
+import { AnimComponent, AnimTrack, Entity, Asset } from "playcanvas";
 import { PublicProps, Serializable } from "../utils/types-utils";
 import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { GlbContainerResource } from "playcanvas/build/playcanvas/src/framework/parsers/glb-container-resource.js";
 
 /**
  * The Anim component allows an entity to play animations.
@@ -34,14 +35,18 @@ export const Anim: FC<AnimProps> = (props) => {
 
         const anim : AnimComponent | undefined = entity.anim
 
+        if(!asset?.resource) return;
+
+        const resource = asset.resource as GlbContainerResource;
+
         // Early out if component instantiation fails, or the asset contains no animations
-        if(!anim || !asset?.resource?.animations || asset.resource.animations.length === 0) return;
+        if(!anim || !resource?.animations || resource.animations.length === 0) return;
         
         // Filter out non animations, and assign animations to component
-        asset.resource.animations
-            .filter((animation: Asset) => animation.type ==='animation')
-            .forEach((animation: Asset) => {
-                anim.assignAnimation('animation', animation.resource)
+        resource.animations
+            .filter(animation => animation.type === 'animation')
+            .forEach(animation => {
+                anim.assignAnimation('animation', animation.resource as AnimTrack)
             });
 
     }, [asset, asset?.id, asset?.resource, entity.getGuid()])
