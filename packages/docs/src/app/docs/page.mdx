@@ -22,16 +22,16 @@ A thin react library for for creating 3D apps that supports pointer events, phys
 import { Tabs, Code } from 'nextra/components'
 
 <Tabs items={['Demo']}>
-  <Tabs.Tab>
+  <Tabs.Tab title='Demo'>
     <div className='w-full aspect-video rounded-xl overflow-hidden'>
       <ReactQueryProvider>
         <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-          <Example />
+          <Example/>
         </Application>
       </ReactQueryProvider>
     </div>
   </Tabs.Tab>
-  <Tabs.Tab>
+  <Tabs.Tab title='Code'>
     ```tsx
       const { data: envMap } = useEnvAtlas('/environment-map.png');
       const { data: model } = useModel('/lamborghini_vision_gt.glb');

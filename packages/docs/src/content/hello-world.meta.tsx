@@ -1,4 +1,15 @@
 export default {
-    title: 'Hello World 🚀',
-    description: 'Learn how to create a simple 3D scene.',
+    title: 'Hello World Example 🚀',
+    description: 'Learn how to create a simple 3D scene in @playcanvas/react',
+    openGraph: {
+        title: 'Hello World Example 🚀',
+        description: 'Learn how to create a simple 3D scene in @playcanvas/react',
+        images: [
+            { 
+                url: 'https://playcanvas-react.vercel.app/pc_react-og.png',
+                width: 1200,
+                height: 630,
+            },
+        ],
+    },
 }
