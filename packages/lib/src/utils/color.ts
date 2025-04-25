@@ -1,9 +1,5 @@
 import { Color } from "playcanvas"
-import { useRef } from "react";
-import { getPseudoPublicProps, validateAndSanitize } from "./validation";
-
-// Match 3, 4, 6 or 8 character hex strings with optional #
-const hexColorRegex = /^#?([0-9A-Fa-f]{3}|[0-9A-Fa-f]{4}|[0-9A-Fa-f]{6}|[0-9A-Fa-f]{8})$/;
+import { getPseudoPublicProps } from "./validation";
 
 // Define as a const object instead of a Map to allow TypeScript to extract keys
 const cssColorNamesMap = { 
@@ -186,63 +182,11 @@ export const getColorPropertyNames = <T extends object>(target: T): Array<keyof 
   return colorNames as Array<keyof T & string>;
 };
 
-/**
- * Custom hook to process multiple color properties efficiently.
- * @param props The component props containing the color properties.
- * @param colorPropNames An array of prop names that are colors.
- * @returns An object mapping color prop names to their processed Color instances.
- */
-export const useColors = <T extends object>(
-  props: T, 
-  colorPropNames: Array<keyof T & string>
-): { [K in typeof colorPropNames[number]]: Color } => {
-
-    const colorRefs = useRef<{ [key: string]: Color }>({});
-  
-    // Filter colorPropNames to include only those keys that exist in props
-    const existingColorProps = colorPropNames.filter((propName) => props[propName] !== undefined);
-  
-    // Process colors synchronously
-    const processedColors = existingColorProps.reduce((acc, propName) => {
-      const value = props[propName];
-      let colorInstance = colorRefs.current[propName];
-  
-      if (!colorInstance) {
-        // Create a new Color instance if it doesn't exist
-        colorInstance = new Color();
-        colorRefs.current[propName] = colorInstance;
-      }
-
-      const validatedColorString = validateAndSanitize(value, {
-        validate: (val: unknown) => typeof val === 'string' && (hexColorRegex.test(val) || cssColorNames.has(val as string)),
-        errorMsg: (val: unknown) => `Invalid color value for prop ${propName}: "${val}". ` +
-          `Valid formats include: hex (#FFFFF, #FFFFFF66), ` +
-          `or a css color name like "red", "blue", "rebeccapurple", etc.`,
-        default: '#ff00ff'
-      }, propName, 'useColors');
-
-      // Convert CSS color name to hex if needed
-      const colorString = cssColorNames.has(validatedColorString as string) 
-        ? cssColorNamesMap[validatedColorString as keyof typeof cssColorNamesMap] 
-        : validatedColorString as string;
-
-      colorInstance.fromString(colorString);
-  
-      acc[propName] = colorInstance;
-      return acc;
-    }, {} as { [key: string]: Color });
-  
-    return processedColors as { [K in typeof colorPropNames[number]]: Color };
-  };
-
 // Extract color names directly from the object
 type CssColorName = keyof typeof cssColorNamesMap;
 
-// Define valid CSS color formats
-type HexColor = `#${string}`;
-
 // Combine all valid CSS color types
-export type CssColor = CssColorName | HexColor
+export type CssColor = CssColorName | `#${string}`
 
 // // Utility to replace pc.Color with CssColor
 // export type WithCssColors<T> = {
