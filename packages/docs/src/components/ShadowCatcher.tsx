@@ -29,6 +29,7 @@ const ShadowCatcherComponent: FC<ShadowCatcherProps> = (props) => {
             intensity={0} />
 
         <Script script={ShadowCatcher} intensity={intensity} scale={scale} />
+    </Entity>
 }
 
 export default ShadowCatcherComponent;
