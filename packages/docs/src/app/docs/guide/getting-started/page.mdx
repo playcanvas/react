@@ -12,11 +12,11 @@ Here's what it should look like...
 <ReactQueryProvider>
     <Application >
         {/* Create some environment lighting */}
-        <EnvAtlasComponent src='/environment-map.png' intensity={0.5}/>
+        <EnvAtlasComponent src='/environment-map.png' intensity={0.8}/>
         {/* Render the background grid */}
         <Grid />
         {/* Add a shadow catcher to catch the shadows from the model */}
-        <ShadowCatcher intensity={0.9} />
+        <ShadowCatcher intensity={1} width={5} depth={5}  />
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} />
@@ -177,7 +177,7 @@ export default function App() {
         {/* Add a shadow catcher to catch the shadows from the model */}
         <ShadowCatcher intensity={0.9} />
         <Entity name='camera' position={[0, 0, 2]}>
-            <Camera/>
+            <Camera />
             <OrbitControls/>
             <AutoRotate />
         </Entity>

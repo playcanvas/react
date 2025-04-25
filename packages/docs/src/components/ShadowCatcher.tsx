@@ -1,3 +1,5 @@
+"use client";
+
 import { Entity } from "@playcanvas/react";
 import { Light, Script } from "@playcanvas/react/components";
 import { SHADOW_VSM_16F, SHADOWUPDATE_REALTIME, Vec3 } from "playcanvas";
