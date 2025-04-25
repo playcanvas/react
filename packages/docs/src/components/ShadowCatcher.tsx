@@ -27,9 +27,11 @@ const ShadowCatcherComponent: FC<ShadowCatcherProps> = (props) => {
             shadowIntensity={intensity} 
             intensity={0} />
 
-        { /* We should avoid the new Vec3(width, 1, depth) here to avoid memory thrashing */}
-        <Script script={ShadowCatcher} intensity={intensity} scale={new Vec3(width, 1, depth)} />
-    </Entity>
+        { /* Memoize the Vec3 instance to avoid memory thrashing */}
+        { 
+            const scale = useMemo(() => new Vec3(width, 1, depth), [width, depth]);
+            return <Script script={ShadowCatcher} intensity={intensity} scale={scale} />;
+        }
 }
 
 export default ShadowCatcherComponent;
