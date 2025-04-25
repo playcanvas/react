@@ -1,13 +1,13 @@
 import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
-import { TSDoc } from 'nextra/tsdoc'
+import { TSDoc, generateDocumentation } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
 
 const docsComponents = getDocsMDXComponents({
   TSDoc(props) {
     return (
       <TSDoc
-        {...props}
+        definition={generateDocumentation(props)}
         typeLinkMap={{
           ReactNode:
             'https://github.com/DefinitelyTyped/DefinitelyTyped/blob/51fcf2a1c5da6da885c1f8c11224917bbc011493/types/react/index.d.ts#L426-L439',
