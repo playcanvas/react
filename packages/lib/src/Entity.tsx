@@ -151,10 +151,10 @@ export interface EntityProps extends Partial<PublicProps<PcEntity>> {
 
   /**
    * The local rotation of the entity relative to its parent.
-   * The rotation is specified as a quaternion or euler angles.
+   * The rotation is specified as euler angles in degrees.
    * @default [0, 0, 0]
    */
-  rotation?: [number, number, number, number?];
+  rotation?: [number, number, number];
 
   /** 
    * The callback for the pointer up event

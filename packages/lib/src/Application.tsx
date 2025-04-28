@@ -9,7 +9,7 @@ import {
   TouchDevice,
   Entity as PcEntity,
   RESOLUTION_FIXED,
-  type GraphicsDevice,
+  NullGraphicsDevice
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
@@ -17,6 +17,7 @@ import { usePicker } from './utils/picker';
 import { PhysicsProvider } from './contexts/physics-context';
 import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation';
 import { PublicProps } from './utils/types-utils';
+import { GraphicsDeviceOptions, defaultGraphicsDeviceOptions } from './types/graphics-device-options';
 
 /**
  * The **Application** component is the root node of the PlayCanvas React API. It creates a canvas element
@@ -58,7 +59,7 @@ const Canvas = React.memo(
   React.forwardRef<HTMLCanvasElement, CanvasProps>(
     (props : CanvasProps, ref) => {
       const { className, style } = props;
-      return <canvas ref={ref} className={className} style={style} />;
+      return <canvas ref={ref} className={className} style={style} aria-label="Interactive 3D Scene"/>;
     }
   )
 );
@@ -101,18 +102,9 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   } = validatedProps;
 
   const localGraphicsDeviceOptions = {
-    alpha: true,
-    depth: true,
-    stencil: true,
-    antialias: true,
-    premultipliedAlpha: true,
-    preserveDrawingBuffer: false,
-    powerPreference: 'default',
-    failIfMajorPerformanceCaveat: false,
-    desynchronized: false,
-    xrCompatible: false,
+    ...defaultGraphicsDeviceOptions,
     ...graphicsDeviceOptions
-  }
+  };
 
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
@@ -126,6 +118,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
       const localApp = new PlayCanvasApplication(canvas, {
         mouse: new Mouse(canvas),
         touch: new TouchDevice(canvas),
+        graphicsDevice: process.env.NODE_ENV === 'test' ? new NullGraphicsDevice(canvas) : undefined,
         graphicsDeviceOptions: localGraphicsDeviceOptions
       });
 
@@ -171,8 +164,6 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   );
 };
 
-type GraphicsOptions = Partial<PublicProps<GraphicsDevice>>
-
 type CanvasProps = {
   /** 
    * The class name to attach to the canvas component
@@ -207,7 +198,7 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, 
    */
   usePhysics?: boolean,
   /** Graphics Settings */
-  graphicsDeviceOptions?: GraphicsOptions,
+  graphicsDeviceOptions?: GraphicsDeviceOptions,
   /** The children of the application */
   children?: React.ReactNode,
 }
@@ -257,5 +248,10 @@ componentDefinition.schema = {
     validate: (value: unknown) => typeof value === 'string' && [RESOLUTION_AUTO, RESOLUTION_FIXED].includes(value as typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED),
     errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
     default: RESOLUTION_AUTO
+  },
+  graphicsDeviceOptions: {
+    validate: (value: unknown) => value === undefined || (typeof value === 'object' && value !== null),
+    errorMsg: (value: unknown) => `graphicsDeviceOptions must be an object. Received: ${value}`,
+    default: undefined
   }
 } as Schema<ApplicationWithoutCanvasProps, PlayCanvasApplication>

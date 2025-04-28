@@ -80,7 +80,7 @@ export const MotionEntity: FC<MotionEntityProps> = ({ children, animate: animate
         <Entity ref={entityRef}
             {...props}
             position={position.array.get() as [number, number, number]}
-            rotation={rotation.array.get() as [number, number, number, number?]}
+            rotation={rotation.array.get() as [number, number, number]}
             scale={scale.array.get() as [number, number, number]}
         >
             {children}
