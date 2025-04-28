@@ -17,13 +17,13 @@
         "build": "npm run build:docs",
         "start": "npm run start --workspace=docs",
         "lint": "npx eslint",
+        "test": "npm run test --workspaces --if-present",
+        "test:lib": "npm run test --workspace=@playcanvas/react",
         "version": "npm version --workspace=@playcanvas/react",
         "publish": "npm publish --workspace=@playcanvas/react"
     },
     "devDependencies": {
         "@eslint/js": "9.24.0",
-        "@types/react": "^19.1.0",
-        "@types/react-dom": "19.1.1",
         "eslint": "9.24.0",
         "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-e993439-20250405",
