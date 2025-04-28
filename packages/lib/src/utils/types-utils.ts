@@ -4,7 +4,6 @@ import { Color } from "playcanvas";
 import { Vec4 } from "playcanvas";
 import { Quat } from "playcanvas";
 import { Vec3 } from "playcanvas";
-import { CssColor } from "./color";
 
 type BuiltInKeys =
   | 'constructor' | 'prototype' | 'length' | 'name'
@@ -36,7 +35,7 @@ export type PublicProps<T> = {
 
 
 export type Serializable<T> = {
-  [K in keyof T]: T[K] extends Color ? CssColor :
+  [K in keyof T]: T[K] extends Color ? string :
                   T[K] extends Vec2 ? [number, number] :
                   T[K] extends Vec3 ? [number, number, number] :
                   T[K] extends Vec4 ? [number, number, number, number] :

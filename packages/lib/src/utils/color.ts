@@ -181,14 +181,3 @@ export const getColorPropertyNames = <T extends object>(target: T): Array<keyof 
 
   return colorNames as Array<keyof T & string>;
 };
-
-// Extract color names directly from the object
-type CssColorName = keyof typeof cssColorNamesMap;
-
-// Combine all valid CSS color types
-export type CssColor = CssColorName | `#${string}`
-
-// // Utility to replace pc.Color with CssColor
-// export type WithCssColors<T> = {
-//   [K in keyof T]: T[K] extends Color ? CssColor : T[K];
-// };
