@@ -39,7 +39,7 @@ afterEach(() => {
 // Set NODE_ENV to test
 vi.stubEnv('NODE_ENV', 'test');
 
-// Create test application with spi `es
+// Create test application with spies
 const createTestApp = (actual: typeof playcanvas) => {
 
   const canvas = document.createElement('canvas');
