@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchAsset } from "@playcanvas/react/utils";
+import { fetchAsset } from "../utils/fetch-asset";
 import { useApp } from "./use-app";
 import { Asset, TEXTURETYPE_RGBP } from "playcanvas";
 import { warnOnce } from "../utils/validation";
