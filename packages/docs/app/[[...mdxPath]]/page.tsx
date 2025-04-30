@@ -21,7 +21,7 @@ export async function generateMetadata(props) {
       'utf-8'
     )
 
-    // we can't dynamically import withy the full path - an error gets thrown as the import is too dynamic??!
+    // We can't dynamically import with the full path. An error is thrown because the import is too dynamic.
     // const metaPath = path.join('@content', 'examples', `${fileName}.meta.tsx`)
     // const { default: metadata } = await import(metaPath);
     return JSON.parse(source);
