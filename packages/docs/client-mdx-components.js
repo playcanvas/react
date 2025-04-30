@@ -2,7 +2,7 @@ import { Application, Entity } from '@playcanvas/react'
 import { OrbitControls } from '@playcanvas/react/scripts'
 import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
 
-import ReactQueryProvider from '@/docs-components/ReactQueryProvider'
+import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
 import EnvAtlasComponent from '@components/EnvAtlas'
 import Grid from '@components/Grid'

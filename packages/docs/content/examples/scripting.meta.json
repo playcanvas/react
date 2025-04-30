@@ -1,0 +1,15 @@
+{
+    "title": "Scripting Example 🎮",
+    "description": "Learn how to add custom scripts to your 3D models.",
+    "openGraph": {
+        "title": "Scripting Example 🎮",
+        "description": "Learn how to add custom scripts to your 3D models in @playcanvas/react",
+        "images": [
+            { 
+                "url": "https://playcanvas-react.vercel.app/pc_react-og.png",
+                "width": 1200,
+                "height": 630
+            }
+        ]
+    }
+} 

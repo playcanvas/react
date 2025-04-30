@@ -1,0 +1,35 @@
+export const HelloWorld = () => {
+
+    /**
+     * Your first pc/react example! 
+     * We're just going to render a box with a camera, some lighting and a shadow catcher
+     */
+
+    return <Entity>
+
+        {/* Add an environment atlas to the scene */}
+        <EnvAtlasComponent src='/environment-map.png'/>
+
+        {/* Render the background grid */}
+        <Grid />
+
+        {/* Add a shadow catcher to catch the shadows from the box */}
+        <ShadowCatcher width={5} depth={5} />
+
+        {/* Create a camera entity */}
+        <Entity name='camera' position={[4, 3, 4]}>
+            <Camera clearColor='#111111' fov={28} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <AutoRotate />
+            <StaticPostEffects bloom={{ intensity: 0.02 }} vignette={false} fringing={{ intensity: 3 }}/>
+        </Entity>
+
+        {/* Create the right box entity */}
+        <Entity position={[0, 0.5, 0]}>
+            <Render type='box' />
+        </Entity>
+        
+    </Entity>
+}
+
+<HelloWorld />

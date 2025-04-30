@@ -21,10 +21,11 @@
       "@/*": [
         "./src/*"
       ],
-      "@components/*": ["./src/components/*"],
-      "@docs-components/*": ["./src/docs-components/*"],
-      "@templates/*": ["./src/templates/*"],
-      "@content/*": ["./src/content/*"]
+      "@components/*": ["./components/*"],
+      "@docs-components/*": ["./docs-components/*"],
+      "@templates/*": ["./templates/*"],
+      "@content/*": ["./content/*"],
+      "@client-mdx-components": ["./client-mdx-components.js"]
     },
     "plugins": [
       {
