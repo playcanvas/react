@@ -14,6 +14,7 @@ const examplesList = {
     href: '/examples/load-a-3D-model'
   },
   'primitives' : {
+    title: 'Primitives',
     href: '/examples/primitives'
   },
   'pointer-events' : {
