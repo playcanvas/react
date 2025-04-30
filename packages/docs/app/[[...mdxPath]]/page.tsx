@@ -49,7 +49,7 @@ export default async function Page(props) {
     )
 
     return (
-        <div className='absolute top-0 left-0 w-screen h-screen absolute top-0 left-0 w-screen h-screen pointer-events-none'>
+        <div className='absolute top-0 left-0 w-screen h-screen pointer-events-none'>
             <Playground name={`./${params.mdxPath}.tsx`} code={source} path={metadata.filePath}/>
         </div>
     )
