@@ -35,6 +35,7 @@
         "typescript-eslint": "8.31.0"
     },
     "dependencies": {
+        "@radix-ui/themes": "^3.2.1",
         "playcanvas": "2.7.3"
     }
 }

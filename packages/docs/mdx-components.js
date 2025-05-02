@@ -2,6 +2,9 @@ import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
 import { TSDoc, generateDocumentation } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
+import { registryComponents } from './registry-mdx-components';
+import { Badge } from '@/components/ui/badge';
+import { OpenInV0Button } from './components/ui/open-in-v0-button';
 
 const docsComponents = getDocsMDXComponents({
   TSDoc(props) {
@@ -21,8 +24,11 @@ const docsComponents = getDocsMDXComponents({
 
 export function useMDXComponents(components) {
   return {
+    Badge,
+    OpenInV0Button,
     ...components,
     ...defaultComponents,
-    ...docsComponents
+    ...docsComponents,
+    ...registryComponents,
   }
 }
