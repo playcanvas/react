@@ -11,14 +11,14 @@ function MenuButton() {
 
     return (
         <DropdownMenu>
-            <DropdownMenuLabel>Settings</DropdownMenuLabel>
-            <DropdownMenuSeparator />
             <DropdownMenuTrigger asChild>
                 <Button className="cursor-pointer pointer-events-auto" variant="ghost" size="icon">
                     <EllipsisVerticalIcon />
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56">
+                <DropdownMenuLabel>Settings</DropdownMenuLabel>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     Fullscreen
                     <DropdownMenuShortcut>⇧⌘F</DropdownMenuShortcut>
