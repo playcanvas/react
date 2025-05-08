@@ -53,9 +53,9 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
      const x = e.clientX - rect.left;
      const y = e.clientY - rect.top;
      
-     // Account for canvas scaling
-     const scaleX = canvas.width / rect.width;
-     const scaleY = canvas.height / rect.height;
+     // Scale calculation using PlayCanvas's DPR
+     const scaleX = canvas.width / (rect.width * app.graphicsDevice.maxPixelRatio);
+     const scaleY = canvas.height / (rect.height * app.graphicsDevice.maxPixelRatio);
  
      // prepare the picker and perform picking
      try {
