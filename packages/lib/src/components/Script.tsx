@@ -1,8 +1,9 @@
-import { AppBase, Entity, Script as PcScript } from "playcanvas";
+import { Script as PcScript } from "playcanvas";
 import { useScript } from "../hooks"
-import { FC, memo, useMemo } from "react";
+import { forwardRef, memo, useMemo } from "react";
 import { ComponentDefinition, validatePropsPartial } from "../utils/validation";
 import { shallowEquals } from "../utils/compare";
+import { SubclassOf } from "../utils/types-utils";
 
 /**
  * The Script component allows you to hook into the entity's lifecycle. This allows you to
@@ -20,18 +21,21 @@ import { shallowEquals } from "../utils/compare";
  * }
  * <Script script={Rotator} />
  */
-const ScriptComponent: FC<ScriptProps> = (props) => {
 
-    const validatedProps = validatePropsPartial(props, componentDefinition, false);
-
+const ScriptComponent = forwardRef<PcScript, ScriptProps>(function ScriptComponent(
+    props,
+    ref
+  ): React.ReactElement | null {
+    const validatedProps = validatePropsPartial(props as ScriptProps, componentDefinition, false);
+  
     const { script, ...restProps } = validatedProps;
-
-    // Memoize props so that the same object reference is passed if props haven't changed
+  
     const memoizedProps = useMemo(() => restProps, [restProps]);
-
-    useScript(script as new (args: { app: AppBase; entity: Entity; }) => PcScript, memoizedProps);
+  
+    useScript(script as SubclassOf<PcScript>, memoizedProps, ref);
+  
     return null;
-};
+  });
 
 // Memoize the component to prevent re-rendering if `script` or `props` are the same
 export const Script = memo(ScriptComponent, (prevProps, nextProps) => {
@@ -39,7 +43,7 @@ export const Script = memo(ScriptComponent, (prevProps, nextProps) => {
 });
 
 interface ScriptProps {
-    script: new (args: { app: AppBase; entity: Entity; }) => PcScript;
+    script: SubclassOf<PcScript>;
     [key: string]: unknown;
 }
 
