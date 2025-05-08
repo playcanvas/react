@@ -33,6 +33,7 @@ export type PublicProps<T> = {
   ]: T[K];
 };
 
+export type SubclassOf<T> = new () => T;
 
 export type Serializable<T> = {
   [K in keyof T]: T[K] extends Color ? string :

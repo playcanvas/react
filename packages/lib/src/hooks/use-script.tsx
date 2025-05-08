@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react';
+import { ForwardedRef, useEffect, useRef } from 'react';
 import { useParent } from './use-parent';
 import { useApp } from './use-app';
-import { AppBase, Application, Entity, Script, ScriptComponent } from 'playcanvas';
+import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
+import { SubclassOf } from '../utils/types-utils';
 
 /**
  * This hook is used to create a script component on an entity. 
@@ -13,7 +14,11 @@ import { AppBase, Application, Entity, Script, ScriptComponent } from 'playcanva
  *   myProperty: 'value',
  * });
  */
-export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: Entity; }) => Script, props: Props) : void  => {
+export const useScript = (
+  scriptConstructor: SubclassOf<Script>, 
+  props: Props, 
+  ref: ForwardedRef<Script>
+) : void  => {
   
   const parent: Entity = useParent();
   const app: Application = useApp();
@@ -37,7 +42,15 @@ export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: 
       const scriptInstance = scriptComponent.create(scriptConstructor as unknown as typeof Script, {
         properties: { ...props },
         preloading: false,
-      });
+      }) as Script;
+
+      if (ref) {
+        if (typeof ref === 'function') {
+          ref(scriptInstance);
+        } else {
+          ref.current = scriptInstance;
+        }
+      }
 
       scriptRef.current = scriptInstance;
       scriptComponentRef.current = scriptComponent;
@@ -52,6 +65,14 @@ export const useScript = (scriptConstructor: new (args: { app: AppBase; entity: 
 
       if (app && app.root && script && scriptComponent) {
         scriptComponent.destroy(scriptName);
+
+        if (ref) {
+          if (typeof ref === 'function') {
+            ref(null);
+          } else {
+            ref.current = null;
+          }
+        }
       }
     };
   }, [app, parent, scriptConstructor]);
