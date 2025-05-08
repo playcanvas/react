@@ -3,19 +3,23 @@
 import { Application, Entity } from "@playcanvas/react"
 import { useApp, useParent, useSplat } from "@playcanvas/react/hooks"
 import { Camera, GSplat, Script } from "@playcanvas/react/components"
-import { Suspense, useEffect, useRef, useState } from "react"
-import { Script as PcScript } from 'playcanvas'
-
+import { Suspense, useEffect, useMemo, useRef, useState } from "react"
+import { Entity as PcEntity } from "playcanvas"
 import { CameraControls } from 'playcanvas/scripts/esm/camera-controls.mjs';
-import { BoundingBox, GSplatComponent, Vec3 } from "playcanvas"
-import { AssetViewerProvider } from "./splat-viewer-context"
+import { GSplatComponent, Vec3 } from "playcanvas"
+import { AssetViewerProvider, useTimeline } from "./splat-viewer-context"
 import { TooltipProvider } from "../tooltip"
 import { cn } from "@/lib/utils"
 import { StaticPostEffects } from "@/components/PostEffects"
+import { AnimationTrack, AnimCamera } from "./utils/animation"
+import { computeStartingPose, Pose } from "./utils/pose"
+
+// mock anim track
+import { mockAnimTrack } from "./utils/mock-anim-track"
 
 type CameraControlsProps = {
     /* The type of camera controls to use */
-    type?: 'auto' | 'orbit' | 'fly',
+    type?: 'animation' | 'orbit' | 'fly',
 }
 
 type SplatViewerComponentProps = CameraControlsProps & {
@@ -23,6 +27,8 @@ type SplatViewerComponentProps = CameraControlsProps & {
     src: string,
     /* The url of the poster image */
     poster?: string,
+    /* The track to use for the animation */
+    track?: AnimationTrack,
 }
 
 type PosterComponentProps = {
@@ -37,28 +43,27 @@ type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps & {
     children?: React.ReactNode,
 }
 
-class AutoRotate extends PcScript {
-    update() {
-
-        // @ts-expect-error CameraControls is not defined in the script
-        const cameraControls = this.entity.script?.cameraControls as CameraControls;
-
-        if (!cameraControls) {
-            return
-        }
-    }
-}
-
-function SplatComponent({ src, type }: SplatViewerComponentProps) {
+function SplatComponent({ src, type, track }: SplatViewerComponentProps) {
 
     const { asset, error } = useSplat(src)
+
+    // unload the asset when the component is unmounted
+    useEffect(() => {
+        return () => {
+            asset?.unload();
+        }
+    }, [asset]);
     
     if (error) throw new Error(error);
     if (!asset) return null;
 
     return (
         <>
-            <InteractiveCamera type={type} />
+            { 
+                type === 'animation' ? <AnimationCamera fov={30} track={track} /> : 
+                type === 'orbit' ? <InteractiveCamera fov={30} /> :
+                <InteractiveCamera fov={30} /> 
+            }
             <GSplat asset={asset} />
         </>
     )
@@ -71,8 +76,6 @@ function PosterComponent({ src }: PosterComponentProps) {
 }
 
 type CameraControlsProps2 = {
-    /* The type of camera controls to use */
-    type?: 'auto' | 'orbit' | 'fly',
     /* The focus point of the camera */
     focus?: [number, number, number]
 }
@@ -91,7 +94,6 @@ function CameraController({ focus = [0, 0, 0] }: CameraControlsProps2) {
 
     return (<>
         <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985}/*enableFly={type === 'fly'} */ />
-        <Script script={AutoRotate} />
     </>);
 }
 
@@ -174,29 +176,15 @@ const stylized = {
     }
 }
 
-function InteractiveCamera({ fov = 30 }: { type?: 'auto' | 'orbit' | 'fly', fov?: number }) {
+function InteractiveCamera({ fov = 30 }: { fov: number }) {
 
     const app = useApp();
     const [pose, setPose] = useState<Pose>(null);
 
     useEffect(() => {
-        // get the gsplat
         const gsplat = app.root.findComponent('gsplat') as GSplatComponent;
-
-        // calculate scene bounding box
-        const bbox = gsplat?.instance?.meshInstance?.aabb ?? new BoundingBox();
-        const sceneSize = bbox.halfExtents.length() * 0.8;
-        const distance = sceneSize / Math.sin(fov / 180 * Math.PI * 0.5);
-
-        const position = new Vec3(2, 1, 2).normalize().mulScalar(distance).add(bbox.center);
-        const target = bbox.center;
-
-        // const inferIsObjectExperience = !bbox.containsPoint(position);
-
-        setPose({
-            position: [position.x, position.y, position.z],
-            target: [target.x, target.y, target.z]
-        });
+        const initialPose = computeStartingPose(gsplat, fov);
+        setPose(initialPose);
 
     }, [app]);
 
@@ -211,6 +199,41 @@ function InteractiveCamera({ fov = 30 }: { type?: 'auto' | 'orbit' | 'fly', fov?
     )
 }
 
+function AnimationCamera({ fov = 30, track }: { fov: number, track: AnimationTrack }) {
+
+    const entityRef = useRef<PcEntity>(null);
+    const { subscribe } = useTimeline();
+    const animation = AnimCamera.fromTrack(track);
+
+    useEffect(() => {
+        const pose = new Pose();
+        
+        const unsubscribe = subscribe((t: number) => {
+            if (!animation) return;
+            console.log(t, track.frameRate, track.duration);
+            animation.cursor.value = t * track.frameRate;
+            animation.update();
+            animation.getPose(pose);
+            const entity = entityRef.current;
+            entity.setPosition(animation.position);
+            entity.setRotation(pose.rotation);
+        });
+
+        return unsubscribe;
+        
+    }, [subscribe]);
+
+    if (!track) {
+        console.warn('No track provided');
+        return null;
+    }
+
+    return (
+        <Entity name='camera' ref={entityRef}>
+            <Camera fov={fov} clearColor='#f3e8ff'/>
+        </Entity>
+    )
+}
 
 /**
  * The SplatViewer is a component that displays a Gaussian Splat.
@@ -224,7 +247,7 @@ export function SplatViewer( { src, poster, children, className, ...props } : Sp
             <AssetViewerProvider targetRef={containerRef} src={src}>
                 <Suspense fallback={<PosterComponent src={poster} />} >
                     <Application fillMode="NONE" resolutionMode="AUTO">
-                        <SplatComponent src={src} {...props} />
+                        <SplatComponent src={src} {...props} track={mockAnimTrack[0]}/>
                     </Application>
                     <div className="absolute w-full h-full top-0 left-0 pointer-events-none flex items-end justify-start p-2 gap-2">
                         <TooltipProvider>
