@@ -18,12 +18,14 @@ const examplesList = {
     href: '/examples/primitives'
   },
   'pointer-events' : {
+    title: 'Pointer Events',
     href: '/examples/pointer-events'
   },
   // "Advanced" : {
   //   type: 'separator',
   // },
   'model-viewer' : {
+    title: "Model Viewer",
     href: '/examples/model-viewer'
   },
   'splats' : {
@@ -31,9 +33,11 @@ const examplesList = {
     href: '/examples/splats'
   },
   'physics' : {
+    title: "Physics",
     href: '/examples/physics'
   },
   'motion' : {
+    title: "Motion",
     href: '/examples/motion'
   },
 }
