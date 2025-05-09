@@ -1,0 +1,62 @@
+{
+    "$schema": "https://ui.shadcn.com/schema/registry.json",
+    "name": "3d-blocks",
+    "homepage": "https://playcanvas-react.vercel.app/blocks",
+    "items": [
+      {
+        "name": "SplatViewer",
+        "title": "Splat Viewer",
+        "description": "A responsive and composable component for displaying Gaussian splats.",
+        "type": "registry:block",
+        "author": "Mark Lundin",
+        "category": ["3d", "viewer", "asset"],
+        "homepage": "https://playcanvas-react.vercel.app/blocks/splat-viewer",
+        "registryDependencies": [
+            "button",
+            "dropdown-menu"
+        ],
+        "files": [
+            {
+                "path": "registry/splat-viewer/download-button.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/full-screen-button.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/index.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/menu-button.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/splat-viewer.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/splat-viewer-context.tsx",
+                "type": "registry:component"
+            },
+            {
+                "path": "registry/splat-viewer/utils/animation.ts",
+                "type": "registry:lib"
+            },
+            {
+                "path": "registry/splat-viewer/utils/pose.ts",
+                "type": "registry:lib"
+            },
+            {
+                "path": "registry/splat-viewer/utils/math.ts",
+                "type": "registry:lib"
+            },
+            {
+                "path": "registry/splat-viewer/utils/spline.ts",
+                "type": "registry:lib"
+            }
+        ]
+      }
+    ]
+  }

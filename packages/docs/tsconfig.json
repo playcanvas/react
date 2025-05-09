@@ -19,13 +19,16 @@
     "jsx": "preserve",
     "paths": {
       "@/*": [
-        "./src/*"
+        "./*"
       ],
       "@components/*": ["./components/*"],
       "@docs-components/*": ["./docs-components/*"],
       "@templates/*": ["./templates/*"],
       "@content/*": ["./content/*"],
-      "@client-mdx-components": ["./client-mdx-components.js"]
+      "@client-mdx-components": ["./client-mdx-components.js"],
+      "@utils/*": ["./utils/*"],
+      "@lib/*": ["./lib/*"],
+      "@registry/*": ["./registry/*"]
     },
     "plugins": [
       {

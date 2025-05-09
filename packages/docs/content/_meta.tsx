@@ -43,6 +43,11 @@ const examplesList = {
 }
 
 const meta: MetaRecord = {
+  blocks: {
+    title: 'Blocks',
+    type: 'page',
+    display: 'hidden'
+  },
   docs: {
     title: 'Docs',
     type: 'page',

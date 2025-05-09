@@ -1,0 +1,112 @@
+---
+title: Blocks
+description: Clean, modern building blocks. Copy and paste into your apps. Works with all React frameworks. Open Source. Free forever.
+asIndexPage: true
+openGraph:
+    title: playcanvas/react docs - Blocks
+    description: Documentation for @playcanvas/react
+    images:
+        - url: https://playcanvas-react.vercel.app/pc_react-og.png
+          width: 1200
+          height: 630
+---
+import { Tabs, Card, Code } from 'nextra/components'
+import { ArrowRight, Hexagon, Box } from 'lucide-react'
+
+<a className="flex items-center mb-8 mt-4 -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="/docs/guide/getting-started">
+  <Box size={14} className="text-muted-foreground" />
+  <div className="text-xs font-medium text-muted-foreground">Build your first scene in minutes</div>
+  <ArrowRight size={14} className="text-muted-foreground" />
+</a>
+#  Building Blocks for 3D
+
+A set of high-level 3D building blocks for React — interactive viewers, spatial layouts, and controls—designed to help you compose immersive scenes with minimal setup.
+
+## Splat Viewer <Badge variant="secondary" className="-mt-2">beta</Badge>
+
+A responsive and composable component for displaying Gaussian splats.
+
+Includes built-in camera controls, loading states, and optional UI slots for overlays or actions.  
+Supports large assets with lazy loading and automatic framing. Use it in modals, pages, or full-screen scenes.  
+
+<Badge variant="secondary" className="-mt-2">
+  [View Source](https://github.com/playcanvas/react-playcanvas/blob/main/packages/docs/content/blocks.mdx)
+</Badge>
+
+<Badge variant="secondary" className="-mt-2">
+  [Report an Issue](https://github.com/playcanvas/react-playcanvas/issues)
+</Badge>
+
+<div className="outline p-28 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-violet-600 to-purple-600 relative">
+  <OpenInV0Button url={`https://v0.dev/chat/api/open?url=${encodeURIComponent("http://playcanvas-react.vercel.app/r/splatviewer.json")}`} className="absolute top-4 right-4" />
+  <SplatViewer src='./skull.compressed.ply' type='orbit' className="bg-purple-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <div className="flex gap-2 pointer-events-auto flex-grow">
+          <FullScreenButton />
+          <DownloadButton />
+      </div>
+      <div className="pointer-events-auto">
+          <MenuButton />
+      </div>
+  </SplatViewer>
+</div>
+<div className="border rounded-b-lg demo overflow-hidden">
+    <Tabs items={['index.tsx', 'viewer.css']} className="!mt-0" tabClassName="!mt-2">
+        <Tabs.Tab title='index.tsx' className="!mt-0 !rounded-t-none !rounded-b-xl">
+            ```tsx copy
+            import { SplatViewer } from '@components/ui/splat-viewer';
+            import './viewer.css';
+
+            export function SplatViewerDemo() {
+              return (
+                <SplatViewer className="splat-viewer" src='./skull.ply'>
+                  <FullScreenButton />
+                  <DownloadButton />
+                  <MenuButton />
+                </SplatViewer>
+              )
+            }
+            ```
+        </Tabs.Tab>
+        <Tabs.Tab title='viewer.css' className="!mt-0 !rounded-t-none !rounded-b-xl">
+            ```css copy
+            .splat-viewer {
+                background-color: #f0f2e5;
+                padding-left: .3rem;
+                padding-right: .3rem;
+                border-radius: .3rem;
+            }
+            ```
+        </Tabs.Tab>
+    </Tabs>
+</div>
+
+
+
+### Installation
+
+Install the component from your command line.
+
+```bash copy
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/splatviewer.json
+```
+
+### Anatomy
+
+Import the component.
+
+```jsx
+import { SplatViewer } from "@components/ui/splat-viewer";
+export default () => <SplatViewer />;
+```
+
+### Props
+
+<TSDoc
+  code={`
+    import { SplatViewer } from '@registry/splat-viewer/splat-viewer';
+    type $ = React.ComponentProps<typeof SplatViewer>;
+    export default $;
+  `}
+/>
+
+
