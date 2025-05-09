@@ -85,6 +85,12 @@ class MyQuat extends Quat {
 }
 
 class SmoothDamp {
+    dims: number;
+    value: number[];
+    target: number[];
+    velocity: number[];
+    smoothTime: number;
+
     constructor(value, smoothTime = 0.05) {
         this.dims = value.length;
         this.value = value;
