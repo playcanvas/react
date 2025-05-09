@@ -34,8 +34,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       
       logo={
         <div className="flex items-center gap-2">
-          <div className="rounded-full bg-zinc-800 p-2 inline-block">
-            <CodeXml size={24} strokeWidth={2} />
+          <div className="rounded-full bg-background p-2 inline-block">
+            <CodeXml size={24} strokeWidth={2} className='text-foreground'/>
           </div>
           <span className='font-bold'>@playcanvas/react</span>
           <span style={{ opacity: '60%' }}>- Declarative 3D</span>

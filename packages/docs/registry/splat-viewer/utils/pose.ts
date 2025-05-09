@@ -44,18 +44,23 @@ class Pose {
     }
 }
 
-const computeStartingPose = (gsplat: GSplatComponent, fov: number) => {
+export type PoseType = {
+    position: [number, number, number],
+    target: [number, number, number]
+}
+
+const computeStartingPose = (gsplat: GSplatComponent, fov: number) : PoseType => {
     const bbox = gsplat?.instance?.meshInstance?.aabb ?? new BoundingBox();
-    const sceneSize = bbox.halfExtents.length() * 0.8;
+    const sceneSize = bbox.halfExtents.length();
     const distance = sceneSize / Math.sin(fov / 180 * Math.PI * 0.5);
 
-    const position = new Vec3(2, 1, 2).normalize().mulScalar(distance).add(bbox.center);
-    const target = bbox.center;
+    const position = new Vec3(2, 1, 2).normalize().mulScalar(distance).add(bbox.center).toArray();
+    const target = bbox.center.toArray();
 
     return {
         position,
         target
-    }
+    } as PoseType;
 }
 
 export { Pose, computeStartingPose };

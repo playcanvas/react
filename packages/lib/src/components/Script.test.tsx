@@ -5,7 +5,6 @@ import { Script } from './Script';
 import { Entity } from '../Entity';
 import { Script as PcScript } from 'playcanvas';
 import { Application } from '../Application';
-import { SubclassOf } from '../utils/types-utils';
 
 const renderWithProviders = (ui: ReactNode) => {
     return render(
@@ -52,7 +51,7 @@ describe('Script Component', () => {
         class TestScript extends PcScript {}
 
         const TestComponent = () => {
-            const scriptRef = useRef<SubclassOf<PcScript>>(null);
+            const scriptRef = useRef<TestScript>(null);
 
             useEffect(() => {
                 // Ensure the script instance is created

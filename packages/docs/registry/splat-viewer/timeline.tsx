@@ -2,34 +2,31 @@
 
 import { Slider } from "@/components/ui/slider";
 import { useTimeline } from "./splat-viewer-context";
-import { Button } from "../button";
+import { Button } from "@components/ui/button";
 import { PauseIcon, PlayIcon } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../tooltip";
-import { TooltipProvider } from "../tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@components/ui/tooltip";
 
 function PlayButton() {
 
     const { setIsPlaying, isPlaying } = useTimeline();
 
     return (
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button size='icon' variant='ghost' className="cursor-pointer" onClick={() => setIsPlaying(!isPlaying)}>
-                        { isPlaying ? <PauseIcon /> : <PlayIcon /> }
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    { isPlaying ? "Pause" : "Play" }
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <Button size='icon' variant='ghost' className="cursor-pointer" onClick={() => setIsPlaying(!isPlaying)}>
+                    { isPlaying ? <PauseIcon /> : <PlayIcon /> }
+                </Button>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={4}>
+                { isPlaying ? "Pause" : "Play" }
+            </TooltipContent>
+        </Tooltip>
     )
 }
 
 function Timeline() {
     
-    const { getTime, setTime, setIsPlaying, onCommit, subscribe } = useTimeline();
+    const { getTime, setTime, setIsPlaying, onCommit } = useTimeline();
 
     const onValueChange = ([val]: number[]) => {
         setIsPlaying(false);

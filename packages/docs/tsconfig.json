@@ -26,7 +26,9 @@
       "@templates/*": ["./templates/*"],
       "@content/*": ["./content/*"],
       "@client-mdx-components": ["./client-mdx-components.js"],
-      "@utils/*": ["./utils/*"]
+      "@utils/*": ["./utils/*"],
+      "@lib/*": ["./lib/*"],
+      "@registry/*": ["./registry/*"]
     },
     "plugins": [
       {

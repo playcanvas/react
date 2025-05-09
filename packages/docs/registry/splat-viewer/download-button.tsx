@@ -37,7 +37,7 @@ function DownloadButton({ variant = "ghost" }: DownloadButtonProps) {
                 <DownloadIcon />
             </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent sideOffset={4}>
             Download
         </TooltipContent>
     </Tooltip>

@@ -22,7 +22,7 @@ function FullScreenButton({ variant = "ghost" }: FullScreenButtonProps) {
                 <FullScreenToggleIcon isFullscreen={isFullscreen} />
             </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent sideOffset={4}>
             {isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
         </TooltipContent>
     </Tooltip>);

@@ -8,7 +8,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind"
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind",
+    "registry:build": "shadcn registry:build"
   },
   "author": "",
   "license": "ISC",
@@ -47,6 +48,7 @@
     "nextra-theme-docs": "4.3.0-alpha.21",
     "pagefind": "1.3.0",
     "postcss": "8.5.3",
+    "shadcn": "^2.6.0-canary.2",
     "tailwindcss": "4.1.4",
     "tw-animate-css": "^1.2.8"
   }
