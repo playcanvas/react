@@ -1,4 +1,4 @@
-import { BoundingBox, GSplat, GSplatComponent, Vec3 } from 'playcanvas';
+import { BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
 
 import { lerp, MyQuat } from './math';
 

@@ -113,10 +113,7 @@ class AnimCamera {
     }
 
     update() {
-        const { cursor, result, spline, frameRate, position, target, rotateSpeed, rotation } = this;
-
-        // update the animation cursor
-        // cursor.update(deltaTime);
+        const { cursor, result, spline, frameRate, position, target } = this;
 
         // evaluate the spline
         spline.evaluate(cursor.value * frameRate, result);
