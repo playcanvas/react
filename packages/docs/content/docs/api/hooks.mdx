@@ -42,3 +42,21 @@ const ParentEntity = () => {
   return <ChildEntity />;
 };
 ```
+
+## `useFrame`
+
+The `useFrame` hook ties into the event loop and will be called on every frame whilst the component is mounted. Use this when you need to update a value or perform a calculation on every frame. This is better for performance than using react state updates.
+
+```jsx
+import { useFrame } from '@playcanvas/react/hooks'
+
+const MyComponent = () => {
+  const entityRef = useRef(null);
+
+  useFrame((dt) => {
+    entityRef.current.rotate(0, dt, 0);
+  })
+
+  return <Entity ref={entityRef}>>
+}
+```
