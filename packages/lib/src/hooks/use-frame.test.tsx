@@ -3,7 +3,6 @@ import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useFrame } from './use-frame';
 import { Application } from '../Application';
-import { app, Application as PcApplication } from 'playcanvas';
 
 async function nextFrame(ms = 16) {
     vi.advanceTimersByTime(ms);
