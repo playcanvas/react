@@ -45,4 +45,11 @@ describe('useFrame', () => {
 
   });
 
+  it('should throw error if app is not available', () => {
+    const mockCallback = vi.fn();
+    expect(() => {
+      renderHook(() => useFrame(mockCallback));
+    }).toThrow('`useApp` must be used within an Application component');
+  });
+
 }); 
