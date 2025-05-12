@@ -38,7 +38,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             <CodeXml size={24} strokeWidth={2} className='text-foreground'/>
           </div>
           <span className='font-bold'>@playcanvas/react</span>
-          <span style={{ opacity: '60%' }}>- Declarative 3D</span>
+          <span className='text-muted-foreground hidden sm:inline' style={{ opacity: '60%' }}>- Build 3D apps with React</span>
         </div>
       }
       // PlayCanvas discord server
@@ -54,7 +54,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <Layout
           banner={<Banner storageKey="0.3.2-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.3.2" target="_blank" rel="noreferrer">
-            🚀 <b>@playcanvas/react 0.3.2!</b> released! Find out more.
+            🚀 <b>@playcanvas/react 0.3.2</b> released! Find out more.
           </a></Banner>}
           navbar={navbar}
           footer={<Footer>

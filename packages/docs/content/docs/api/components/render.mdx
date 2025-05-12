@@ -12,6 +12,8 @@ openGraph:
 
 # Render
 
+The `Render` component allows an `Entity` to display a 3D asset or primitive shape. You can use the `type` prop to render a primitive shape or pass an asset to the `asset` prop to render a 3D model.
+
 ## Usage
 
 #### Rendering an Asset
@@ -35,6 +37,7 @@ const RenderModel = () => {
 
 #### Rendering a primitive shape
 This will render a simple box primitive transformed by the parent entity.
+
 
 ```jsx copy filename="render-box.jsx"
 import { Render } from '@playcanvas/react/components'
