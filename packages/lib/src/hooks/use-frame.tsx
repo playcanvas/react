@@ -17,7 +17,9 @@ export const useFrame = (callback: (dt: number) => void) => {
   );
 
   useEffect(() => {
-    if (!app) return;
+    if (!app) {
+      throw new Error("`useApp` must be used within an Application component");
+    }
 
     app.on("update", handler);
     return () => {
