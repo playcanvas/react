@@ -10,15 +10,18 @@ openGraph:
           width: 1200
           height: 630
 ---
-import { Tabs, Card, Code } from 'nextra/components'
+import { Tabs, Card, Code, Bleed, Steps } from 'nextra/components'
 import { ArrowRight, Hexagon, Box } from 'lucide-react'
+import registry from '../registry.json'
+export const splatUrl = process.env.NEXT_PUBLIC_SAMPLE_SPLAT
+export const splatVersion = registry.items.find(item => item.name === 'splat-viewer')?.meta?.version
 
 <a className="flex items-center mb-8 mt-4 -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="/docs/guide/getting-started">
   <Box size={14} className="text-muted-foreground" />
   <div className="text-xs font-medium text-muted-foreground">Build your first scene in minutes</div>
   <ArrowRight size={14} className="text-muted-foreground" />
 </a>
-#  Building Blocks for 3D
+#  Building Blocks for 3D <Badge variant="secondary" className="-mt-2">new</Badge>
 
 A set of high-level 3D building blocks for React — interactive viewers, spatial layouts, and controls—designed to help you compose immersive scenes with minimal setup.
 
@@ -29,27 +32,22 @@ A responsive and composable component for displaying Gaussian splats.
 Includes built-in camera controls, loading states, and optional UI slots for overlays or actions.  
 Supports large assets with lazy loading and automatic framing. Use it in modals, pages, or full-screen scenes.  
 
-<Badge variant="secondary" className="-mt-2">
-  [View Source](https://github.com/playcanvas/react-playcanvas/blob/main/packages/docs/content/blocks.mdx)
-</Badge>
 
-<Badge variant="secondary" className="-mt-2">
-  [Report an Issue](https://github.com/playcanvas/react-playcanvas/issues)
-</Badge>
-
-<div className="outline p-28 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-violet-600 to-purple-600 relative">
+<div className="outline p-28 -mx-6 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-violet-600 to-purple-600 relative">
   <OpenInV0Button url={`https://v0.dev/chat/api/open?url=${encodeURIComponent("http://playcanvas-react.vercel.app/r/splatviewer.json")}`} className="absolute top-4 right-4" />
-  <SplatViewer src='./skull.compressed.ply' type='orbit' className="bg-purple-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
-      <div className="flex gap-2 pointer-events-auto flex-grow">
-          <FullScreenButton />
-          <DownloadButton />
-      </div>
-      <div className="pointer-events-auto">
-          <MenuButton />
-      </div>
+  <SplatViewer src={splatUrl} autoPlay className="bg-purple-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <Controls autoHide >
+        <div className="flex gap-2 pointer-events-auto flex-grow">
+            <FullScreenButton />
+            <DownloadButton />
+        </div>
+        <div className="pointer-events-auto">
+            <MenuButton />
+        </div>
+      </Controls>
   </SplatViewer>
 </div>
-<div className="border rounded-b-lg demo overflow-hidden">
+<div className="border rounded-b-lg -mx-6 demo overflow-hidden">
     <Tabs items={['index.tsx', 'viewer.css']} className="!mt-0" tabClassName="!mt-2">
         <Tabs.Tab title='index.tsx' className="!mt-0 !rounded-t-none !rounded-b-xl">
             ```tsx copy
@@ -58,10 +56,14 @@ Supports large assets with lazy loading and automatic framing. Use it in modals,
 
             export function SplatViewerDemo() {
               return (
-                <SplatViewer className="splat-viewer" src='./skull.ply'>
-                  <FullScreenButton />
-                  <DownloadButton />
-                  <MenuButton />
+                <SplatViewer src={splatUrl} autoPlay >
+                  <div className="flex gap-2 pointer-events-auto flex-grow">
+                      <FullScreenButton />
+                      <DownloadButton />
+                  </div>
+                  <div className="pointer-events-auto">
+                      <MenuButton />
+                  </div>
                 </SplatViewer>
               )
             }
@@ -81,6 +83,35 @@ Supports large assets with lazy loading and automatic framing. Use it in modals,
 </div>
 
 
+### Features
+<div className="flex flex-row gap-4">
+  <div className="flex flex-col gap-4 py-4 items-start flex-grow">
+    <Check>Orbit and fly controls.</Check>
+    <Check>Keyboard and mouse controls.</Check>
+    <Check>Controlled and uncontrolled mode.</Check>
+    <Check>Suspenseful loading.</Check>
+    <Dash>Camera animations. (coming soon)</Dash>
+    <Dash>Way points. (coming soon)</Dash>
+  </div>
+  <div>
+    <span>Version {splatVersion}</span>
+    <div className="flex flex-col gap-4 -ml-2 mt-4">
+      <a href="https://github.com/playcanvas/react-playcanvas/blob/main/packages/docs/content/blocks.mdx" target="_blank" rel="noopener noreferrer">
+        <Badge variant="secondary" className="rounded-full px-4 py-0 text-muted-foreground hover:text-foreground transition-colors">
+          View Source
+          <ArrowRight size={14} className="text-muted-foreground" />
+        </Badge>
+      </a>
+
+      <a href="https://github.com/playcanvas/react-playcanvas/issues" target="_blank" rel="noopener noreferrer">
+        <Badge variant="secondary" className="rounded-full px-4 py-0 text-muted-foreground hover:text-foreground transition-colors">
+          Report an Issue
+          <ArrowRight size={14} className="text-muted-foreground" />
+        </Badge>
+      </a>
+    </div>
+  </div>
+</div>
 
 ### Installation
 
@@ -92,14 +123,29 @@ npx shadcn@latest add https://playcanvas-react.vercel.app/r/splatviewer.json
 
 ### Anatomy
 
-Import the component.
+Import all parts and piece them together.
 
 ```jsx
-import { SplatViewer } from "@components/ui/splat-viewer";
-export default () => <SplatViewer />;
+import { 
+  SplatViewer, 
+  FullScreenButton, 
+  DownloadButton, 
+  MenuButton, 
+  Controls 
+} from "@components/ui/splat-viewer";
+
+export default () => (
+  <SplatViewer src={splatUrl} >
+    <Controls >
+      <FullScreenButton />
+      <DownloadButton />
+      <MenuButton />
+    </Controls>
+  </SplatViewer>
+)
 ```
 
-### Props
+### API Reference
 
 <TSDoc
   code={`

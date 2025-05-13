@@ -1,9 +1,28 @@
+"use client";
+
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
 
 type AssetViewerContextValue = {
+  /**
+   * Whether the viewer is in fullscreen mode.
+   */
   isFullscreen: boolean;
+  /**
+   * Toggles the fullscreen mode.
+   */
   toggleFullscreen: () => void;
+  /**
+   * The source of the asset.
+   */
   src: string;
+  /**
+   * Whether the viewer is interacting with the asset.
+   */
+  isInteracting: boolean;
+  /**
+   * The type of camera to use.
+   */
+  cameraType: 'orbit' | 'fly';
 };
 
 export const AssetViewerContext = createContext<AssetViewerContextValue | undefined>(undefined);
@@ -16,14 +35,17 @@ export function useAssetViewer() {
 
 export function AssetViewerProvider({
   children,
+  autoPlay = false,
   targetRef,
   src,
 }: {
   children: React.ReactNode;
+  autoPlay?: boolean;
   targetRef: React.RefObject<HTMLElement>;
   src: string;
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [cameraType] = useState<'orbit' | 'fly'>('orbit');
 
   const toggleFullscreen = useCallback(() => {
     const el = targetRef.current;
@@ -42,16 +64,53 @@ export function AssetViewerProvider({
     return () => document.removeEventListener("fullscreenchange", handler);
   }, []);
 
+  // handle interaction state
+  const [isInteracting, setIsInteracting] = useState(false);
+  const isInteractingRef = useRef(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    const el = targetRef.current;
+    if (!el) return;
+
+    const onInteract = () => {
+      if (!isInteractingRef.current) {
+        isInteractingRef.current = true;
+        setIsInteracting(true);
+      }
+
+      clearTimeout(timeoutRef.current!);
+      timeoutRef.current = setTimeout(() => {
+        isInteractingRef.current = false;
+        setIsInteracting(false);
+      }, 2000);
+    };
+
+    el.addEventListener("mousemove", onInteract);
+    el.addEventListener("keydown", onInteract);
+    el.addEventListener("pointerdown", onInteract);
+
+    return () => {
+      clearTimeout(timeoutRef.current!);
+      timeoutRef.current = null;
+      el.removeEventListener("mousemove", onInteract);
+      el.removeEventListener("keydown", onInteract);
+      el.removeEventListener("pointerdown", onInteract);
+    };
+  }, [targetRef]);
+
   return (
     <AssetViewerContext.Provider
       value={{
         isFullscreen,
+        isInteracting,
         toggleFullscreen,
         src,
+        cameraType
       }}
     >
-      <TimelineProvider>
-          {children}
+      <TimelineProvider autoPlay={autoPlay}>
+        {children}
       </TimelineProvider>
     </AssetViewerContext.Provider>
   );
@@ -76,11 +135,13 @@ export function useTimeline() {
 
 export function TimelineProvider({
   children,
+  autoPlay = false,
 }: {
   children: ReactNode;
+  autoPlay?: boolean;
 }) {
   const [time, _setTime] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(autoPlay);
   const timeRef = useRef(time);
   const rafIdRef = useRef<number | null>(null);
   const subscribers = useRef(new Set<(v: number) => void>());
