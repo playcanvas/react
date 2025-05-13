@@ -9,7 +9,7 @@ import { Camera, Script } from "@playcanvas/react/components";
 // import { StaticPostEffects } from "@/components/visual-effects";
 // import { CameraController } from "./CameraControllerScript"; // wraps the <Script> with camera controls
 import { useTimeline } from "./splat-viewer-context";
-import { Vec3, Quat, Entity as PcEntity, app, GSplatComponent } from "playcanvas";
+import { Vec3, Entity as PcEntity, GSplatComponent } from "playcanvas";
 
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
@@ -55,7 +55,6 @@ export function SmartCamera({
 }) {
   const entityRef = useRef<PcEntity>(null);
   const { subscribe, isPlaying } = useTimeline();
-  console.log('isPlaying', isPlaying);
   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
 

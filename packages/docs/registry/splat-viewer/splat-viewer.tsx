@@ -1,18 +1,13 @@
 "use client"
 
-import { Application, Entity } from "@playcanvas/react"
-import { useApp, useParent, useSplat } from "@playcanvas/react/hooks"
-import { Camera, GSplat, Script } from "@playcanvas/react/components"
-import { Suspense, useEffect, useRef, useState } from "react"
-import { CameraControls } from 'playcanvas/scripts/esm/camera-controls.mjs';
-import { GSplatComponent, Vec3 } from "playcanvas"
+import { Application } from "@playcanvas/react"
+import { useApp, useSplat } from "@playcanvas/react/hooks"
+import { GSplat } from "@playcanvas/react/components"
+import { Suspense, useEffect, useRef } from "react"
 import { AssetViewerProvider, useAssetViewer, useTimeline } from "./splat-viewer-context"
 import { TooltipProvider } from "@components/ui/tooltip"
 import { cn } from "@lib/utils"
-import { StaticPostEffects } from "@components/PostEffects"
 import { AnimationTrack } from "./utils/animation"
-import { computeStartingPose } from "./utils/pose"
-import style from "./utils/style"
 import { SmartCamera } from "./smart-camera"
 
 // mock anim track
@@ -67,18 +62,11 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
      * The children of the component 
      */
     children?: React.ReactNode,
-
-    /**
-     * Whether to automatically play the animation
-     */
-    autoPlay?: boolean,
 }
 
 function SplatComponent({ 
     src, 
     type = 'orbit',
-    autoPlay = true, 
-    track = null 
 }: SplatViewerComponentProps) {
 
     const { asset, error } = useSplat(src)
@@ -122,109 +110,6 @@ function PosterComponent({ poster }: PosterComponentProps) {
         <img src={poster} alt="poster" />
     )
 }
-
-type CameraControlsProps2 = {
-    /* The focus point of the camera */
-    focus?: [number, number, number]
-    enablePan: boolean,
-    enableFly: boolean,
-    enableOrbit: boolean,
-}
-
-function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps2) {
-
-    const entity = useParent();
-
-    useEffect(() => {
-        // @ts-expect-error CameraControls is not defined in the script
-        const controls = entity.script?.cameraControls as CameraControls;
-        if (controls) {
-            controls.focus(new Vec3().fromArray(focus));
-        }
-    }, [...focus]);
-
-    return (<>
-        <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
-    </>);
-}
-
-type PoseType = {
-    position: [number, number, number],
-    target: [number, number, number]
-}
-
-
-
-function InteractiveCamera({ 
-    fov = 30, 
-    type = 'orbit' 
-}: { fov: number, type?: 'orbit' | 'fly' }) {
-
-    const app = useApp();
-    const [pose, setPose] = useState<PoseType>({
-        position: [2, 1, 2],
-        target: [0, 0, 0]
-    });
-
-    useEffect(() => {
-        const gsplat = app.root.findComponent('gsplat') as GSplatComponent;
-        const initialPose = computeStartingPose(gsplat, fov);
-
-        console.log('interactive camera', initialPose);
-        setPose(initialPose);
-
-    }, [app]);
-
-    if (!pose) return null;
-
-    return (
-        <Entity name='camera' position={pose.position} >
-            <Camera fov={fov} clearColor='#f3e8ff'/>
-            <CameraController focus={pose.target} 
-                enablePan={type === 'fly'}
-                enableFly={type === 'fly'}
-                enableOrbit={type === 'orbit'}
-            />
-            <StaticPostEffects {...style.paris}/>
-        </Entity>
-    )
-}
-
-// function AnimationCamera({ fov = 30, track }: { fov: number, track: AnimationTrack }) {
-
-//     const entityRef = useRef<PcEntity>(null);
-//     const { subscribe } = useTimeline();
-//     const animation = AnimCamera.fromTrack(track);
-
-//     useEffect(() => {
-//         const pose = new Pose();
-        
-//         const unsubscribe = subscribe((t: number) => {
-//             if (!animation) return;
-//             console.log(t, track.frameRate, track.duration);
-//             animation.cursor.value = t * track.frameRate;
-//             animation.update();
-//             animation.getPose(pose);
-//             const entity = entityRef.current;
-//             entity.setPosition(animation.position);
-//             entity.setRotation(pose.rotation);
-//         });
-
-//         return unsubscribe;
-        
-//     }, [subscribe]);
-
-//     if (!track) {
-//         console.warn('No track provided');
-//         return null;
-//     }
-
-//     return (
-//         <Entity name='camera' ref={entityRef}>
-//             <Camera fov={fov} clearColor='#f3e8ff'/>
-//         </Entity>
-//     )
-// }
 
 /**
  * The SplatViewer is a component that displays a Gaussian Splat.
