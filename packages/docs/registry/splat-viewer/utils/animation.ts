@@ -1,7 +1,8 @@
-import { Vec3 } from 'playcanvas';
+import { Mat4, Vec3 } from 'playcanvas';
 
 import { MyQuat } from './math';
 import { CubicSpline } from './spline';
+import { Pose } from './pose';
 
 const q = new MyQuat();
 
@@ -167,6 +168,68 @@ class AnimCamera {
 
         return new AnimCamera(spline, duration, loopMode, frameRate);
     }
+    
+}
+
+type RotationTrackProps = {
+    /**
+     * The number of keys to generate
+     */
+    keys?: number,
+    /**
+     * The duration of the track
+     */
+    duration?: number,
+}
+
+export const createRotationTrack = (initial: Pose, options: RotationTrackProps = { keys: 12, duration: 20 }) => {
+    const { keys = 12, duration = 20 } = options;
+
+    const times = new Array(keys).fill(0).map((_, i) => i / keys * duration);
+    const position = [];
+    const target = [];
+
+    const initialTarget = new Vec3();
+    initial.calcTarget(initialTarget);
+
+    const mat = new Mat4();
+    const vec = new Vec3();
+    const dif = new Vec3(
+        initial.position.x - initialTarget.x,
+        initial.position.y - initialTarget.y,
+        initial.position.z - initialTarget.z
+    );
+
+    for (let i = 0; i < keys; ++i) {
+        mat.setFromEulerAngles(0, -i / keys * 360, 0);
+        mat.transformPoint(dif, vec);
+
+        position.push(initialTarget.x + vec.x);
+        position.push(initialTarget.y + vec.y);
+        position.push(initialTarget.z + vec.z);
+
+        target.push(initialTarget.x);
+        target.push(initialTarget.y);
+        target.push(initialTarget.z);
+    }
+
+    // construct a simple rotation animation around an object
+    return AnimCamera.fromTrack({
+        name: 'rotate',
+        duration,
+        frameRate: 1,
+        target: 'camera',
+        loopMode: 'repeat',
+        interpolation: 'spline',
+        keyframes: {
+            times,
+            values: {
+                position,
+                target
+            }
+        }
+    });
+    
     
 }
 

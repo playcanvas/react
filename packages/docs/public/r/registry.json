@@ -10,7 +10,7 @@
         "type": "registry:block",
         "author": "Mark Lundin",
         "category": ["3d", "viewer", "asset"],
-        "homepage": "https://playcanvas-react.vercel.app/blocks#splat-viewer-beta",
+        "homepage": "https://playcanvas-react.vercel.app/blocks/splat-viewer",
         "registryDependencies": [
             "button",
             "dropdown-menu"

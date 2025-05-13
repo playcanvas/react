@@ -4,16 +4,22 @@
     "homepage": "https://playcanvas-react.vercel.app/blocks",
     "items": [
       {
-        "name": "SplatViewer",
+        "name": "splat-viewer",
         "title": "Splat Viewer",
         "description": "A responsive and composable component for displaying Gaussian splats.",
         "type": "registry:block",
         "author": "Mark Lundin",
         "category": ["3d", "viewer", "asset"],
-        "homepage": "https://playcanvas-react.vercel.app/blocks/splat-viewer",
+        "homepage": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
+        "docs": "https://playcanvas-react.vercel.app/docs#splat-viewer",
+        "meta": {
+            "version": "0.1.0"
+        },
         "registryDependencies": [
             "button",
-            "dropdown-menu"
+            "dropdown-menu",
+            "@playcanvas/react",
+            "playcanvas"
         ],
         "files": [
             {
