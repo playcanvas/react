@@ -1,67 +1,156 @@
 {
     "$schema": "https://ui.shadcn.com/schema/registry.json",
-    "name": "3d-blocks",
+    "name": "3d blocks",
     "homepage": "https://playcanvas-react.vercel.app/blocks",
     "items": [
+      {
+        "name": "3d-blocks",
+        "title": "3D Blocks",
+        "description": "A collection of 3D blocks for PlayCanvas.",
+        "type": "registry:style",
+        "author": "Mark Lundin",
+        "category": ["3d", "blocks", "webgl"],
+        "homepage": "https://playcanvas-react.vercel.app/blocks",
+        "files": [
+            {
+                "path": "../lib/.playcanvas-react.mdc",
+                "type": "registry:file",
+                "target": ".cursor/playcanvas-react.mdc"
+            },
+            {
+                "path": "registry/.blocks.mdc",
+                "type": "registry:file",
+                "target": ".cursor/blocks.mdc"
+            }
+        ]
+      },
       {
         "name": "splat-viewer",
         "title": "Splat Viewer",
         "description": "A responsive and composable component for displaying Gaussian splats.",
         "type": "registry:block",
         "author": "Mark Lundin",
-        "category": ["3d", "viewer", "asset"],
+        "category": ["3d", "viewer", "asset", "webgl"],
         "homepage": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
         "docs": "https://playcanvas-react.vercel.app/docs#splat-viewer",
         "meta": {
-            "version": "0.1.0"
+            "version": "0.1.0.beta.1"
         },
+        "dependencies": [
+            "playcanvas"
+        ],
         "registryDependencies": [
             "button",
             "dropdown-menu",
-            "@playcanvas/react",
-            "playcanvas"
+            "tooltip",
+            "dialog",
+            "drawer",
+            "separator",
+            "toggle-group",
+            "toggle",
+            "switch",
+            "tabs",
+            "card",
+            "badge",
+            "table"
         ],
         "files": [
             {
-                "path": "registry/splat-viewer/download-button.tsx",
-                "type": "registry:component"
-            },
-            {
-                "path": "registry/splat-viewer/full-screen-button.tsx",
-                "type": "registry:component"
-            },
-            {
                 "path": "registry/splat-viewer/index.tsx",
-                "type": "registry:component"
-            },
-            {
-                "path": "registry/splat-viewer/menu-button.tsx",
-                "type": "registry:component"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/index.tsx"
             },
             {
                 "path": "registry/splat-viewer/splat-viewer.tsx",
-                "type": "registry:component"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/splat-viewer.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/full-screen-button.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/full-screen-button.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/download-button.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/download-button.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/menu-button.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/menu-button.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/controls.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/controls.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/timeline.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/timeline.tsx"
             },
             {
                 "path": "registry/splat-viewer/splat-viewer-context.tsx",
-                "type": "registry:component"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/splat-viewer-context.tsx"
             },
             {
                 "path": "registry/splat-viewer/utils/animation.ts",
-                "type": "registry:lib"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/animation.ts"
             },
             {
                 "path": "registry/splat-viewer/utils/pose.ts",
-                "type": "registry:lib"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/pose.ts"
             },
             {
                 "path": "registry/splat-viewer/utils/math.ts",
-                "type": "registry:lib"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/math.ts"
             },
             {
                 "path": "registry/splat-viewer/utils/spline.ts",
-                "type": "registry:lib"
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/spline.ts"
+            },
+            {
+                "path": "registry/splat-viewer/smart-camera.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/smart-camera.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/utils/effects.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/effects.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/utils/style.ts",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/utils/style.ts"
+            },
+            {
+                "path": "registry/splat-viewer/.splat-viewer.mdc",
+                "type": "registry:file",
+                "target": "../.cursor/rules/splat-viewer.mdc"
+            },
+            {
+                "path": "registry/splat-viewer/help-dialog.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/help-dialog.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/help-button.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/help-button.tsx"
+            },
+            {
+                "path": "registry/splat-viewer/menu-button.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/menu-button.tsx"
             }
+            
         ]
       }
     ]
