@@ -1,0 +1,90 @@
+---
+description: Rules working with the splat-viewer component
+globs: 
+alwaysApply: true
+---
+# SplatViewer Component
+
+A responsive and composable component for displaying Gaussian splats. Includes built-in camera controls, loading states, and optional UI slots for overlays or actions. Supports large assets with lazy loading and automatic framing.
+
+📚 [Splat Viewer Docs](mdc:http:/playcanvas-react.vercel.app/blocks#splat-viewer)
+
+## Features
+
+- Orbit and fly controls
+- Keyboard and mouse controls
+- Controlled and uncontrolled mode
+- Suspenseful loading
+- Camera animations (coming soon)
+- Way points (coming soon)
+
+## Rules
+
+- When generating an example use the url 'https://6rpjo46zo7.ufs.sh/f/dTTBXSHFOX4z7irrg5DfZElT6yeQYKvdjgi5IsoB0cmu9OtF' as the source file
+- Use the menu, download and full screen button
+- Buttons must be inside the `<SplatViewer/>` component
+- Controls provide a wrapper for layout that will fade out using `autoHide`
+
+## Example
+
+```tsx
+import * as Splat from '@/components/ui/splat-viewer';
+import './viewer.css';
+
+export function SplatViewerDemo() {
+  return (
+    <Splat.Viewer src={splatUrl} autoPlay>
+      <Splat.Controls autoHide>
+        <div className="flex gap-2 pointer-events-auto flex-grow">
+          <Splat.FullScreenButton />
+          <Splat.DownloadButton />
+        </div>
+        <div className="pointer-events-auto">
+          <Splat.MenuButton />
+        </div>
+      </Splat.Controls>
+    </Splat.Viewer>
+  )
+}
+```
+
+## Styling
+
+```css
+.splat-viewer {
+  background-color: #f0f2e5;
+  padding-left: .3rem;
+  padding-right: .3rem;
+  border-radius: .3rem;
+}
+```
+
+## Component Parts
+
+```tsx
+import { 
+  SplatViewer, 
+  FullScreenButton, 
+  DownloadButton, 
+  MenuButton, 
+  Controls 
+} from "@/components/ui/splat-viewer";
+```
+
+## Props
+
+```tsx
+type SplatViewerProps = {
+  src: string;              // URL of the splat file
+  autoPlay?: boolean;       // Whether to automatically start playing
+  className?: string;       // Additional CSS classes
+  children?: React.ReactNode; // UI controls and overlays
+}
+```
+
+## Installation
+
+```bash
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
+```
+

@@ -1,0 +1,18 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# 3D Blocks
+
+A set of high-level 3D building blocks for React — interactive viewers, spatial layouts, and controls—designed to help you compose immersive scenes with minimal setup.
+
+Blocks are built ontop of @playcanvas/react and are distinct higher level abstractions.
+
+## Rules for using components
+
+Here are some rules to follow when using components in this project:
+
+- If using shadcn MCP and a registry URL is provided, always check the MCP for components before creating your own.
+- If you are using a component that has a corresponding example, use the example as a guide to create your own component.
+- Do not install example-components directly — use them as reference to create your components.

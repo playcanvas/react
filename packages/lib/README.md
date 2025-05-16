@@ -12,11 +12,20 @@ A lightweight, library for for creating 3D apps in React that supports Physics, 
 
 ### Getting Started
 
-Install with your favorite package manager...
+⚡ Start building in minutes with our [Stackblitz template](https://playcanvas-react.vercel.app/new).
+
+Or for a local npm setup run the following and follow the [Getting Started Guide](https://playcanvas-react.vercel.app/docs/guide/getting-started).
 
 ```bash
 npm install @playcanvas/react playcanvas
 ```
+
+You can also clone the following starter template.
+
+```bash copy
+git clone https://github.com/marklundin/playcanvas-react-template.git
+```
+
 Create a sphere component
 
 ```jsx
@@ -40,6 +49,14 @@ const App = () => {
 ```
 
 Et voilà! ✨
+
+### Assisted AI Development
+
+To get your IDE up to speed, run the following command from the root of your project to install the latest MDC rules. Or [grab them here](https://playcanvas-react.vercel.app/rules) to add them manually.
+
+```bash
+mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
+```
 
 The library is built around the [PlayCanvas engine](https://github.com/playcanvas/engine) and comes with lots of features for creating more complex content including...
 
