@@ -1,28 +1,65 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
+import { CameraMode } from "./splat-viewer";
 
 type AssetViewerContextValue = {
+
   /**
    * Whether the viewer is in fullscreen mode.
    */
   isFullscreen: boolean;
+
   /**
    * Toggles the fullscreen mode.
    */
   toggleFullscreen: () => void;
+
+  /**
+   * Triggers a download of the asset.
+   */
+  triggerDownload: () => void;
+
   /**
    * The source of the asset.
    */
   src: string;
+
   /**
    * Whether the viewer is interacting with the asset.
    */
   isInteracting: boolean;
+
   /**
    * The type of camera to use.
    */
-  cameraType: 'orbit' | 'fly';
+  mode: CameraMode;
+
+  /**
+   * The type of camera to use.
+   */
+  setMode: (mode: CameraMode) => void;
+
+  /**
+   * The overlay to display.
+   * @defaultValue null
+   */
+  overlay: "help" | "settings" | null;
+
+  /**
+   * Toggles the overlay.
+   */
+  setOverlay: (overlay: "help" | "settings" | null) => void;
+
+  /**
+   * Whether the auto rotate is enabled.
+   */
+  autoRotate: boolean;
+
+  /**
+   * Toggles the auto rotate.
+   */
+  setAutoRotate: (autoRotate: boolean) => void;
 };
 
 export const AssetViewerContext = createContext<AssetViewerContextValue | undefined>(undefined);
@@ -33,31 +70,78 @@ export function useAssetViewer() {
   return ctx;
 }
 
+function isMacPlatform(): boolean {
+  // @ts-expect-error this is not available on all browsers
+  const userAgentData = navigator.userAgentData;
+  if (userAgentData?.platform) {
+    return userAgentData.platform === "macOS";
+  }
+
+  // Fallback for older browsers
+  return /Mac/i.test(navigator.userAgent || "");
+}
+
 export function AssetViewerProvider({
   children,
   autoPlay = false,
   targetRef,
+  mode,
+  setMode,
   src,
 }: {
   children: React.ReactNode;
   autoPlay?: boolean;
   targetRef: React.RefObject<HTMLElement>;
   src: string;
+  mode: CameraMode;
+  setMode: (mode: CameraMode) => void;
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [cameraType] = useState<'orbit' | 'fly'>('orbit');
+  const [overlay, setOverlay] = useState<"help" | "settings">(null);
+  const [autoRotate, setAutoRotate] = useState(false);
 
-  const toggleFullscreen = useCallback(() => {
+  // download
+  const triggerDownload = useCallback(() => {
+    setOverlay(null)
+    const link = document.createElement("a");
+    link.href = src;
+    link.download = src.split("/").pop() || "asset";
+    document.body.appendChild(link);
+    link.click();
+  }, [src])
+
+  // toggle help dialog
+  const handleKey = useCallback((e: KeyboardEvent) => {
+    const isCmdOrCtrl = isMacPlatform() ? e.metaKey : e.ctrlKey;
+
+    if (e.key === "?" && e.shiftKey) setOverlay('help') // help
+    if (e.key.toLowerCase() === "f" && e.shiftKey && isCmdOrCtrl) toggleFullscreen() // fullscreen
+    if (e.key.toLowerCase() === "d" && e.shiftKey && isCmdOrCtrl) triggerDownload() // download
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKey)
+    return () => window.removeEventListener("keydown", handleKey)
+  }, [handleKey])
+
+
+  // toggle fullscreen
+  const toggleFullscreen = useCallback(async () => {
     const el = targetRef.current;
     if (!el) return;
 
     if (document.fullscreenElement) {
-      document.exitFullscreen();
+      await document.exitFullscreen();
+      setOverlay(null)
+      setIsFullscreen(false);
     } else {
-      el.requestFullscreen();
+      await el.requestFullscreen();
+      setOverlay(null)
+      setIsFullscreen(true);
     }
   }, [targetRef]);
 
+  // handle fullscreen state
   useEffect(() => {
     const handler = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", handler);
@@ -106,7 +190,13 @@ export function AssetViewerProvider({
         isInteracting,
         toggleFullscreen,
         src,
-        cameraType
+        mode,
+        setMode,
+        overlay,
+        setOverlay,
+        triggerDownload,
+        autoRotate,
+        setAutoRotate
       }}
     >
       <TimelineProvider autoPlay={autoPlay}>

@@ -131,16 +131,13 @@ import {
   FullScreenButton, 
   DownloadButton, 
   MenuButton, 
-  Controls 
 } from "@components/ui/splat-viewer";
 
 export default () => (
   <SplatViewer src={splatUrl} >
-    <Controls >
-      <FullScreenButton />
-      <DownloadButton />
-      <MenuButton />
-    </Controls>
+    <FullScreenButton />
+    <DownloadButton />
+    <MenuButton />
   </SplatViewer>
 )
 ```
