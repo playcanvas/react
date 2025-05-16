@@ -6,16 +6,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Entity } from "@playcanvas/react";
 import { Camera, Script } from "@playcanvas/react/components";
-// import { StaticPostEffects } from "@/components/visual-effects";
-// import { CameraController } from "./CameraControllerScript"; // wraps the <Script> with camera controls
-import { useTimeline } from "./splat-viewer-context";
+import { useTimeline, useAssetViewer } from "./splat-viewer-context";
 import { Vec3, Entity as PcEntity, GSplatComponent } from "playcanvas";
 
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
-import { StaticPostEffects } from "@/components/PostEffects";
+// import { StaticPostEffects } from "@/components/PostEffects";
 import { useApp, useParent } from "@playcanvas/react/hooks";
 import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
+// import style from "@/registry/splat-viewer/utils/style";
+import { StaticPostEffects } from "./utils/effects";
 import style from "./utils/style";
 
 type CameraControlsProps = {
@@ -45,17 +45,16 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
 }
 
 export function SmartCamera({
-  type = "orbit",
   fov = 30,
   animationTrack,
 }: {
-  type?: "orbit" | "fly";
   fov?: number;
   animationTrack?: AnimationTrack;
 }) {
   const entityRef = useRef<PcEntity>(null);
   const { subscribe, isPlaying } = useTimeline();
-  const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
+  const { mode } = useAssetViewer();
+//   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
 
   const [pose, setPose] = useState<PoseType>({
@@ -156,9 +155,9 @@ export function SmartCamera({
       <Camera fov={fov} clearColor="#f3e8ff" />
       <CameraController
         focus={pose.target}
-        enablePan={type === "fly"}
-        enableFly={type === "fly"}
-        enableOrbit={type === "orbit"}
+        enablePan={mode === "fly"}
+        enableFly={true}
+        enableOrbit={mode === "orbit"}
         enabled={!isPlaying}
       />
       <StaticPostEffects {...style.paris}/>

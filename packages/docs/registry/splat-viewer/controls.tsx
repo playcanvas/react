@@ -11,6 +11,7 @@ type ControlsProps = {
     className?: string,
     /**
      * When enabled, the controls will be hidden when the user is not interacting with the asset.
+     * @defaultValue false
      */
     autoHide?: boolean,
     /**

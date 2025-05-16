@@ -5,7 +5,7 @@ import './globals.css'
 import { Footer, Layout, Navbar } from 'nextra-theme-docs'
 import { Banner, Head } from 'nextra/components'
 import { getPageMap } from 'nextra/page-map'
-import { CodeXml } from 'lucide-react'
+import { Circle } from 'lucide-react'
 import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
 export const metadata = {
@@ -35,10 +35,10 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       logo={
         <div className="flex items-center gap-2">
           <div className="rounded-full bg-background p-2 inline-block">
-            <CodeXml size={24} strokeWidth={2} className='text-foreground'/>
+            <Circle size={24} strokeWidth={2} className='text-foreground'/>
           </div>
           <span className='font-bold'>@playcanvas/react</span>
-          <span className='text-muted-foreground hidden sm:inline' style={{ opacity: '60%' }}>- Build 3D apps with React</span>
+          <span className='text-muted-foreground hidden lg:inline' style={{ opacity: '60%' }}>- Build 3D apps with React</span>
         </div>
       }
       // PlayCanvas discord server
@@ -69,7 +69,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           pageMap={await getPageMap()}
         >
           <ReactQueryProvider>
-            {children}
+            <div data-vaul-drawer-wrapper >
+              <div className="relative  min-h-screen flex-col bg-background">
+                {children}
+              </div>
+            </div>
           </ReactQueryProvider>
         </Layout>
       </body>
