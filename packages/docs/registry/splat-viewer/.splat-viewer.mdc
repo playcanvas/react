@@ -40,7 +40,7 @@ export function SplatViewerDemo() {
           <Splat.DownloadButton />
         </div>
         <div className="pointer-events-auto">
-          <MSplat.enuButton />
+          <Splat.MenuButton />
         </div>
       </Splat.Controls>
     </Splat.Viewer>
