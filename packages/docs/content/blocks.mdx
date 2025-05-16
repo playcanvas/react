@@ -143,13 +143,7 @@ npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
 Import all parts and piece them together.
 
 ```jsx
-import Splat from "@/components/ui/splat-viewer";
-import { 
-  SplatViewer, 
-  FullScreenButton, 
-  DownloadButton, 
-  MenuButton, 
-} from "@components/ui/splat-viewer";
+import Splat from "@/components/ui/splat-viewer/";
 
 export default () => (
   <Splat.Viewer src={splatUrl} >
