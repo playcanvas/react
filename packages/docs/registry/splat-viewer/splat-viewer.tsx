@@ -3,15 +3,14 @@
 import { Application } from "@playcanvas/react"
 import { useApp, useSplat } from "@playcanvas/react/hooks"
 import { GSplat } from "@playcanvas/react/components"
-import { Suspense, useEffect, useRef } from "react"
+import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { AssetViewerProvider, useAssetViewer, useTimeline } from "./splat-viewer-context"
-import { TooltipProvider } from "@components/ui/tooltip"
-import { cn } from "@lib/utils"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { cn } from "@/lib/utils"
 import { AnimationTrack } from "./utils/animation"
 import { SmartCamera } from "./smart-camera"
-
-// mock anim track
-// import { mockAnimTrack } from "./utils/mock-anim-track"
+import { HelpDialog } from "./help-dialog"
+export type CameraMode = 'orbit' |  'fly';
 
 type CameraControlsProps = {
     /** 
@@ -19,13 +18,22 @@ type CameraControlsProps = {
      * 
      * - `orbit`: An orbit camera that follows the splat.
      * - `fly`: A fly camera that follows the splat.
+     * 
+     * @defaultValue 'orbit'
      */
-    type: 'orbit' |  'fly',
+    mode?: CameraMode,
+
+    /**
+     * The default mode of the camera.
+     * 
+     * @defaultValue 'orbit'
+     */
+    defaultMode?: CameraMode,
 }
 
 type SplatViewerComponentProps = CameraControlsProps & {
     /**
-     * The url of the resource 
+     * The url of an image to display whilst the asset is loading.
      */
     src: string,
     /**
@@ -35,11 +43,12 @@ type SplatViewerComponentProps = CameraControlsProps & {
     
     /**
      * Whether to automatically play the animation
+     * @defaultValue false
      */
     autoPlay?: boolean,
 
     /**
-     * The function to call when the type of camera changes
+     * A callback function for when the type of camera changes
      */
     onTypeChange?: (type: 'orbit' | 'fly') => void,
 }
@@ -65,8 +74,7 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
 }
 
 function SplatComponent({ 
-    src, 
-    type = 'orbit',
+    src
 }: SplatViewerComponentProps) {
 
     const { asset, error } = useSplat(src)
@@ -98,7 +106,7 @@ function SplatComponent({
                 // type === 'animation' ? <AnimationCamera fov={30} track={track} /> : 
                 // type === 'orbit' ? <InteractiveCamera fov={30} /> :
                 // <InteractiveCamera fov={30} type={type} /> 
-                <SmartCamera type={type} fov={30} />
+                <SmartCamera fov={30} />
             }
             <GSplat asset={asset} />
         </>
@@ -117,16 +125,38 @@ function PosterComponent({ poster }: PosterComponentProps) {
 export function SplatViewer( { 
     src, 
     poster,
+    mode = 'orbit',
+    defaultMode = 'orbit',
+    onTypeChange,
     className, 
     children, 
     ...props 
 } : SplatViewerProps) {
 
+    const isControlled = !mode;
     const containerRef = useRef<HTMLDivElement>(null);
+    const [uncontrolledMode, setUncontrolledMode] = useState<CameraMode>(
+        defaultMode
+    );
+
+    const setCameraMode = useCallback(
+        (mode: CameraMode) => {
+            if (!isControlled) setUncontrolledMode(mode);
+            onTypeChange?.(mode);
+        },
+        [isControlled, onTypeChange]
+    );
+
+    const currentMode = isControlled ? mode : uncontrolledMode;
 
     return (
         <div ref={containerRef} className={cn("relative overflow-hidden", className)}> 
-            <AssetViewerProvider targetRef={containerRef} src={src}>
+            <AssetViewerProvider 
+                targetRef={containerRef} 
+                src={src}
+                mode={currentMode}
+                setMode={setCameraMode}
+            >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
                     <Application fillMode="NONE" resolutionMode="AUTO" autoRender={true}>
                         <SplatComponent src={src} {...props} />
@@ -137,6 +167,7 @@ export function SplatViewer( {
                     </TooltipProvider>
                     {/* </div> */}
                 </Suspense>
+                <HelpDialog />
             </AssetViewerProvider>
         </div>
     )

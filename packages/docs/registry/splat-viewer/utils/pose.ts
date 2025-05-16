@@ -51,7 +51,7 @@ export type PoseType = {
 
 const computeStartingPose = (gsplat: GSplatComponent, fov: number) : PoseType => {
     const bbox = gsplat?.instance?.meshInstance?.aabb ?? new BoundingBox();
-    const sceneSize = bbox.halfExtents.length();
+    const sceneSize = bbox.halfExtents.length() * 1.5;
     const distance = sceneSize / Math.sin(fov / 180 * Math.PI * 0.5);
 
     const position = new Vec3(2, 1, 2).normalize().mulScalar(distance).add(bbox.center).toArray();
