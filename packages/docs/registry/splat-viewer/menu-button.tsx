@@ -5,7 +5,6 @@ import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMe
 import { useMediaQuery } from "./help-dialog";
 import { EllipsisVerticalIcon, DownloadIcon, MinimizeIcon, MaximizeIcon, HelpCircleIcon, Rotate3dIcon, Move3DIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@/components/ui/drawer";
-import { useState } from "react";
 import { useAssetViewer } from "./splat-viewer-context";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ToggleGroup } from "@/components/ui/toggle-group";
