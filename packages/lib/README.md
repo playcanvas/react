@@ -52,7 +52,7 @@ Et voilà! ✨
 
 ### Assisted AI Development
 
-To get your IDE up to speed, run the following command from the root of your project to install the latest MDC rules. Or [grab them here](https://playcanvas-react.com/rules) to add them manually.
+To get your IDE up to speed, run the following command from the root of your project to install the latest MDC rules. Or [grab them here](https://playcanvas-react.vercel.app/rules) to add them manually.
 
 ```bash
 mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
