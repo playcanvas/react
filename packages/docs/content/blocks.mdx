@@ -23,48 +23,64 @@ export const splatVersion = registry.items.find(item => item.name === 'splat-vie
 </a>
 #  Building Blocks for 3D <Badge variant="secondary" className="-mt-2">new</Badge>
 
-A set of high-level 3D building blocks for React — interactive viewers, spatial layouts, and controls—designed to help you compose immersive scenes with minimal setup.
+A set of high-level crafted 3D primitives for React, built on top of @playcanvas/react and @shadcn/ui — interactive viewers, spatial layouts, and controls — designed to help you compose immersive scenes with minimal setup.
+
+{/* ## AI Assisted Development
+
+Each block comes with it's own set of MDC rules which are used to generate the block. To install rules for the registry run the following command in your terminal.
+
+```bash copy
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/3d-blocks.json
+```
+
+This will install the rules for the registry and for @playcanvas/react and add them to your project. */}
 
 ## Splat Viewer <Badge variant="secondary" className="-mt-2">beta</Badge>
 
-A responsive and composable component for displaying Gaussian splats.
+A responsive and composable component for displaying **Gaussian splats**.
 
 Includes built-in camera controls, loading states, and optional UI slots for overlays or actions.  
-Supports large assets with lazy loading and automatic framing. Use it in modals, pages, or full-screen scenes.  
+Supports large assets with lazy loading and automatic framing. Use it in modals, pages, or full-screen scenes. 
 
+Supports compressed gaussian splats.
 
-<div className="outline p-28 -mx-6 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-violet-600 to-purple-600 relative">
-  <OpenInV0Button url={`https://v0.dev/chat/api/open?url=${encodeURIComponent("http://playcanvas-react.vercel.app/r/splatviewer.json")}`} className="absolute top-4 right-4" />
-  <SplatViewer src={splatUrl} autoPlay className="bg-purple-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
-      <Controls autoHide >
-        <div className="flex gap-2 pointer-events-auto flex-grow">
-            <FullScreenButton />
-            <DownloadButton />
+<div className="lg:outline lg:p-28 -mx-4 lg:-mx-6 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-indigo-500 to-purple-600 relative">
+  <OpenInV0Button url={`https://v0.dev/chat/api/open?url=${encodeURIComponent("http://playcanvas-react.vercel.app/r/splat-viewer.json")}`} className="absolute top-4 right-4" />
+  <Splat.Viewer src={splatUrl} autoPlay className="bg-purple-200 rounded-t-lg lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <Splat.Controls autoHide >
+        <div className="flex gap-1 pointer-events-auto flex-grow">
+            <Splat.FullScreenButton />
+            <Splat.DownloadButton />
         </div>
-        <div className="pointer-events-auto">
-            <MenuButton />
+        <div className="flex gap-1 pointer-events-auto">
+          <Splat.CameraModeToggle />
+          <Splat.HelpButton />
+          <Splat.MenuButton />
         </div>
-      </Controls>
-  </SplatViewer>
+      </Splat.Controls>
+  </Splat.Viewer>
 </div>
-<div className="border rounded-b-lg -mx-6 demo overflow-hidden">
+<div className="border lg:rounded-b-lg -mx-4 lg:-mx-6 demo overflow-hidden">
     <Tabs items={['index.tsx', 'viewer.css']} className="!mt-0" tabClassName="!mt-2">
         <Tabs.Tab title='index.tsx' className="!mt-0 !rounded-t-none !rounded-b-xl">
             ```tsx copy
-            import { SplatViewer } from '@components/ui/splat-viewer';
+            import Splat from '@/components/ui/splat-viewer';
             import './viewer.css';
 
             export function SplatViewerDemo() {
               return (
-                <SplatViewer src={splatUrl} autoPlay >
-                  <div className="flex gap-2 pointer-events-auto flex-grow">
-                      <FullScreenButton />
-                      <DownloadButton />
-                  </div>
-                  <div className="pointer-events-auto">
-                      <MenuButton />
-                  </div>
-                </SplatViewer>
+                <Splat.Viewer src={splatUrl} autoPlay >
+                  <Splat.Controls autoHide >
+                    <div className="flex gap-2 pointer-events-auto flex-grow">
+                        <Splat.FullScreenButton />
+                        <Splat.DownloadButton />
+                    </div>
+                    <div className="pointer-events-auto">
+                      <Splat.CameraModeToggle />
+                      <Splat.MenuButton />
+                    </div>
+                  </Splat.Controls>
+                </Splat.Viewer>
               )
             }
             ```
@@ -89,12 +105,13 @@ Supports large assets with lazy loading and automatic framing. Use it in modals,
     <Check>Orbit and fly controls.</Check>
     <Check>Keyboard and mouse controls.</Check>
     <Check>Controlled and uncontrolled mode.</Check>
+    <Check>Ships with IDE Agent rules (rules.mdc).</Check>
     <Check>Suspenseful loading.</Check>
     <Dash>Camera animations. (coming soon)</Dash>
     <Dash>Way points. (coming soon)</Dash>
   </div>
   <div>
-    <span>Version {splatVersion}</span>
+    <span className="text-muted-foreground text-sm">Version <span className="font-bold">{splatVersion}</span></span>
     <div className="flex flex-col gap-4 -ml-2 mt-4">
       <a href="https://github.com/playcanvas/react-playcanvas/blob/main/packages/docs/content/blocks.mdx" target="_blank" rel="noopener noreferrer">
         <Badge variant="secondary" className="rounded-full px-4 py-0 text-muted-foreground hover:text-foreground transition-colors">
@@ -118,7 +135,7 @@ Supports large assets with lazy loading and automatic framing. Use it in modals,
 Install the component from your command line.
 
 ```bash copy
-npx shadcn@latest add https://playcanvas-react.vercel.app/r/splatviewer.json
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
 ```
 
 ### Anatomy
@@ -126,33 +143,66 @@ npx shadcn@latest add https://playcanvas-react.vercel.app/r/splatviewer.json
 Import all parts and piece them together.
 
 ```jsx
-import { 
-  SplatViewer, 
-  FullScreenButton, 
-  DownloadButton, 
-  MenuButton, 
-  Controls 
-} from "@components/ui/splat-viewer";
+import Splat from "@/components/ui/splat-viewer";
 
 export default () => (
-  <SplatViewer src={splatUrl} >
-    <Controls >
-      <FullScreenButton />
-      <DownloadButton />
-      <MenuButton />
-    </Controls>
-  </SplatViewer>
+  <Splat.Viewer src={splatUrl} >
+    <Splat.Controls >
+      <Splat.FullScreenButton />
+      <Splat.DownloadButton />
+      <Splat.CameraModeToggle />
+      <Splat.MenuButton />
+    </Splat.Controls>
+  </Splat.Viewer>
 )
 ```
 
 ### API Reference
 
+#### SplatViewer
+
+A responsive and composable component for displaying **Gaussian splats**.
+
 <TSDoc
   code={`
-    import { SplatViewer } from '@registry/splat-viewer/splat-viewer';
-    type $ = React.ComponentProps<typeof SplatViewer>;
+    import * as Splat from '@registry/splat-viewer/';
+    type $ = React.ComponentProps<typeof Splat.Viewer>;
     export default $;
   `}
 />
 
+#### Controls
 
+A simple container for UI controls that creates a sensible layout and optionally auto hides when the user is interacting.
+
+<TSDoc
+  code={`
+    import * as Splat from '@registry/splat-viewer/';
+    type $ = React.ComponentProps<typeof Splat.Controls>;
+    export default $;
+  `}
+/>
+
+#### FullScreenButton
+
+A button for entering and exiting full screen mode.
+
+<TSDoc
+  code={`
+    import * as Splat from '@registry/splat-viewer/';
+    type $ = React.ComponentProps<typeof Splat.FullScreenButton>;
+    export default $;
+  `}
+/>
+
+#### DownloadButton
+
+A button for downloading the current scene.
+
+<TSDoc
+  code={`
+    import * as Splat from '@registry/splat-viewer/';
+    type $ = React.ComponentProps<typeof Splat.DownloadButton>;
+    export default $;
+  `}
+/>

@@ -9,125 +9,131 @@ openGraph:
           width: 1200
           height: 630
 ---
-
-import { Cards } from 'nextra/components'
+import { Cards, Tabs } from 'nextra/components'
 import { Icons } from '@docs-components/Icons'
-import { Terminal } from 'lucide-react'
+import { Terminal, ArrowRight, Hexagon, Box, Codesandbox } from 'lucide-react'
 import Example from '@templates/HomePageExample'
 
-## @playcanvas/react
+<h1 className='text-4xl font-bold mt-8 mb-2'>
+  Playcanvas React
+</h1>
 
-A thin react library for for creating 3D apps that supports pointer events, physics, gaussian splats, and more straight out of the box.
+<div className='text-lg font-semibold text-muted-foreground'>
+  Build interactive 3D experiences with React — without the boilerplate. ⚡
+</div>
 
-import { Tabs, Code } from 'nextra/components'
+A powerful, declarative layer over the PlayCanvas engine, making it easy to create dynamic, GPU-accelerated apps with physics, assets, events, and more — all from JSX.
 
-<Tabs items={['Demo', 'Code']}>
-  <Tabs.Tab title='Demo'>
-    <div className='w-full aspect-video rounded-xl overflow-hidden'>
-      <ReactQueryProvider>
-        <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
-          <Example/>
-        </Application>
-      </ReactQueryProvider>
-    </div>
-  </Tabs.Tab>
-  <Tabs.Tab title='Code'>
-    ```tsx
-      const { data: envMap } = useEnvAtlas('/environment-map.png');
-      const { data: model } = useModel('/lamborghini_vision_gt.glb');
+[Get Started](/docs#getting-started)
 
-      if(!envMap || !model) return <LoadingSpinner />;
+<div className='w-[calc(100%+4rem)] aspect-video rounded-xl overflow-hidden mt-8 -mx-8'>
+  <ReactQueryProvider>
+    <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
+      <Example/>
+    </Application>
+  </ReactQueryProvider>
+</div>
 
-      return (<Entity>
-          <EnvAtlas asset={envMap} intensity={0.5} showSkybox={false} />
-          <Grid />
-          <Entity name='camera' position={[4, 1, 4]}>
-              <Camera clearColor='#090707' fov={28} />
-              <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
-              <StaticPostEffects />
-              <AutoRotate />
-          </Entity>
-          <Entity>
-              <Container asset={model}/>
-          </Entity>
-      </Entity>
-    ```
-  </Tabs.Tab>
-</Tabs>
-
-<div className="inline-buttons ">
-  
-  <a className='grayscale hover:cursor-pointer' href="https://codesandbox.io/p/sandbox/playcanvas-react-nwlrlm">
-    <img
-      alt="Open in CodeSandbox"
-      src="https://codesandbox.io/static/img/play-codesandbox.svg"
-    />
+<div className="flex flex-row gap-6 my-4 -mt-12">
+  <a className="group shadow flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit transition-colors duration-150" href="https://codesandbox.io/p/sandbox/playcanvas-react-nwlrlm" target="_blank">
+    <Codesandbox size={14} className="text-muted-foreground group-hover:text-foreground" />
+    <div className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">Open in Codesandbox</div>
+    <ArrowRight size={14} className="text-muted-foreground group-hover:text-foreground transition-colors duration-150" />
   </a>
-  {/* <a href="https://stackblitz.com/github/___YOUR_PATH___">
-    <img
-      alt="Open in StackBlitz"
-      src="https://developer.stackblitz.com/img/open_in_stackblitz.svg"
-    />
-  </a> */}
-  <a className='example-button' href="/examples/model-viewer">
-    <Terminal/>
-    <span>Open in Playground</span>
+
+  <a className="group shadow flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit transition-colors duration-150" href="/examples/model-viewer" target="_blank">
+    <Box size={14} className="text-muted-foreground group-hover:text-foreground" />
+    <div className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">Open in Playground</div>
+    <ArrowRight size={14} className="text-muted-foreground group-hover:text-foreground transition-colors duration-150" />
   </a>
 </div>
 
-### How does it work?
+## Why?
 
-The library provides a thin declarative layer around the open source library [PlayCanvas](https://playcanvas.com). You create an `Application` and add `Entities` to it. Entities have position, rotation and scale. You add behaviour by attaching `Components` to entities.
+**@playcanvas/react is designed to get you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It’s a complete, batteries-included toolkit for interactive 3D experiences in React.
 
-Here's a simple example rendering a simple 3D asset with orbit controls.
+It's built around the PlayCanvas engine - a battle-tested, real-time 3D engine that powers some of the most popular apps in the world.
+
+## Getting started
+
+⚡ Start building in minutes with our [Stackblitz template](https://playcanvas-react.vercel.app/new).
+
+Or for a local npm setup run the following and follow the [Getting Started Guide](/docs/guide/getting-started).
+
+```bash copy
+npm install @playcanvas/react playcanvas
+```
+
+You can also clone the following starter template.
+
+```bash copy
+git clone https://github.com/marklundin/playcanvas-react-template.git
+```
+
+## How does it work?
+
+Easy - You create an `Application` and add `Entities` and `Components` to it. Entities have position, rotation and scale. `Components` add behaviour to entities.
 
 ```jsx copy filename="simple-example.jsx"
 import { Application, Entity } from '@playcanvas/react'
 import { Camera } from "@playcanvas/react/components"
 import { OrbitControls } from "@playcanvas/react/scripts"
 
-const App = (car) => {
-
-  const { asset } = useModel('/lamborghini_vision_gt.glb')
-
-  if (!asset) return null
-
-  return (
-    <Application>
-        <Entity position={[0, 2, 0]}>
-          <Camera clearColor="blue"/>
-          <OrbitControls />
-        </Entity>
-        <Render type="asset" asset={asset} />
-    </Application>
-  );
-}
+const App = () => (
+  <Application>
+    <Entity position={[0, 0, 4]}>
+      <Camera clearColor="blue"/>
+      <OrbitControls />
+    </Entity>
+    <Entity position={[0, 0, 0]}>
+      <Render type="cube" />
+    </Entity>
+  </Application>
+);
 ```
 
-You can find additional examples in the [Examples](/examples).
+Find additional examples in the [Examples](/examples).
 
-### Features
+## AI Assisted Development
+
+To get your IDE up to speed, run the following from the root of your project to install the latest MDC rules. Or [grab them here](https://playcanvas-react.com/rules) to add them manually.
+
+<Tabs items={['Cursor', 'Windsurf']}>
+  <Tabs.Tab>
+    ```bash copy
+    mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash copy
+    mkdir -p .windsurf/rules && curl -s https://playcanvas-react.vercel.app/rules -o .windsurf/rules/playcanvas-react.mdc
+    ```
+  </Tabs.Tab>
+</Tabs>
+
+## Features
 
 PlayCanvas comes with a number of built in components and scripts that you can use. This makes it easy to get started building your app.
 
-- **Physics** - Add rigid body components to your entities to enable physics sims
-- **Gaussian Splats** - Add a `GSplat` component to render high quality 3D content
-- **Interactivity** - Supports PointerEvents with event bubbling
-- **Scripts** - Provides an imperative API for adding non-declaratives logic to your app
-- **Built using a natural ECS architecture.**
-- **Asset System** - Easy to use asset loader for 3D models, audio, video and other assets
-- **ECS** - Intuitive Entity Component System
+- 🎭 Simple Scene API
+- ⏳ Suspenseful Asset loading
+- ️👆 Pointer Events
+- 🛠️ Physics out of the box
+- ⚡ Script component for high frequency updates
+- 🏗️ Entity Component System
+
+And lots lots more. Check out the [API Reference](/docs/api/) for more.
 
 ## Who's using it?
-Currently used in the following apps:
-
 <Cards>
   <Cards.Card
     icon={<Icons.snapchat />}
-    title="Snap AI"
+    title="Snap"
     href="https://ai.snapchat.com"
   />
 </Cards>
+
+If you're using PlayCanvas React, please let us know and we'll add you to the list.
 
 ## First steps
 
