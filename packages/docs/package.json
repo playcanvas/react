@@ -8,7 +8,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind && npm run registry:build"
+    "build:registry": "shadcn registry:build",
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind && npm run build:registry"
   },
   "author": "",
   "license": "ISC",
