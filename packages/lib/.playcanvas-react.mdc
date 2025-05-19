@@ -1,0 +1,83 @@
+---
+description: Rules for creating 3D React content
+globs: 
+alwaysApply: true
+---
+
+# Overview of @playcanvas/react
+
+@playcanvas/react is a fully featured thin wrapper around the PlayCanvas API. You use it to build 3D content 
+
+📚 [Full Docs](mdc:https:/playcanvas-react.vercel.app/docs)  
+🔗 [GitHub Repo](mdc:https:/github.com/playcanvas/react)  
+🧩 [API Reference](mdc:https:/playcanvas-react.vercel.app/docs/api)
+
+
+## Structure
+```tsx
+// Core 
+import { Application, Entity } from '@playcanvas/react'
+// /components add behaviours to Entities
+import { Light, Camera, Render, Gsplat, Screen, Collision, RigigBody, Anim } from '@playcanvas/react/components'
+// Hooks add functionality
+import { useModel, useSplat, useFrame, useParent, useApp } from '@playcanvas/react/hooks'
+```
+
+## Rules for 3D Content
+
+When generating 3D content with `@playcanvas/react`, follow these conventions:
+
+- Always wrap components at the root in an `<Application />` to initialize the engine.
+- `<Entity />` defines a transform node — use it for `position`, `rotation`, and `scale`. It does not render anything on its own.
+- Use components from `@playcanvas/react/components` to add functionality (e.g., `<Camera />`, `<Light />`, `<Render />`).
+- Load assets using hooks like `useModel(src)` and `useSplat(src)`.
+- Materials must be created using the `useMaterial()` hook.
+- Use numeric arrays for colors and vectors:
+  - Colors: `[1, 0, 0]`
+  - Position/rotation/scale: `[0, 0, 0]`
+
+
+---
+
+### Examples
+
+#### 📸 A Camera
+
+Transform goes on `<Entity />`, camera settings go on `<Camera />`.
+
+```tsx
+<Entity position={[0, 0, 4]}>
+    <Camera fov={30}/>
+</Entity>
+```
+
+### A Light
+
+```tsx
+<Entity position={[0, 0, 4]}>
+    <Light type='directional' />
+</Entity>
+```
+
+### A Primitive
+
+```tsx
+<Entity position={[0, 0, 4]}>
+    <Render type='sphere' />
+</Entity>
+```
+
+### An Asset
+
+```tsx
+export const Car = () => {
+  const { asset } = useModel('./car.glb');
+  if (!asset) return null;
+
+  return (
+    <Entity>
+      <Render type="asset" asset={asset} />
+    </Entity>
+  );
+};
+```
