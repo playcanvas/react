@@ -33,17 +33,19 @@ import './viewer.css';
 
 export function SplatViewerDemo() {
   return (
-    <Splat.Viewer src={splatUrl} autoPlay>
-      <Splat.Controls autoHide>
-        <div className="flex gap-2 pointer-events-auto flex-grow">
-          <Splat.FullScreenButton />
-          <Splat.DownloadButton />
+    <Splat.Viewer src={splatUrl} autoPlay className="rounded-t-lg lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <Splat.Controls autoHide >
+        <div className="flex gap-1 pointer-events-auto flex-grow">
+            <Splat.FullScreenButton />
+            <Splat.DownloadButton />
         </div>
-        <div className="pointer-events-auto">
+        <div className="flex gap-1 pointer-events-auto">
+          <Splat.CameraModeToggle />
+          <Splat.HelpButton />
           <Splat.MenuButton />
         </div>
       </Splat.Controls>
-    </Splat.Viewer>
+  </Splat.Viewer>
   )
 }
 ```
