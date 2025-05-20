@@ -32,12 +32,16 @@
         "author": "Mark Lundin",
         "category": ["3d", "viewer", "asset", "webgl"],
         "homepage": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
-        "docs": "https://playcanvas-react.vercel.app/docs#splat-viewer",
+        "docs": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
         "meta": {
             "version": "0.1.0.beta.1"
         },
         "dependencies": [
-            "playcanvas"
+            "@playcanvas/react",
+            "playcanvas",
+            "lucide-react",
+            "clsx",
+            "class-variance-authority"
         ],
         "registryDependencies": [
             "button",
