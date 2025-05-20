@@ -1,3 +1,4 @@
+import { Badge } from '@/components/ui/badge';
 import type { MetaRecord } from 'nextra'
 
 // examples list
@@ -43,16 +44,16 @@ const examplesList = {
 }
 
 const meta: MetaRecord = {
-  blocks: {
-    title: 'Blocks',
-    type: 'page',
-  },
   docs: {
     title: 'Docs',
     type: 'page',
     theme: {
         sidebar: true,
     }
+  },
+  blocks: {
+    title: <div className='flex items-center gap-2'>Blocks<Badge variant="secondary">New</Badge></div>,
+    type: 'page',
   },
   examples: {
     title: 'Examples',
@@ -67,6 +68,18 @@ const meta: MetaRecord = {
     title: 'PlayCanvas Docs',
     href: 'https://developer.playcanvas.com'
   },
+  examples2: {
+    title: "Examples",
+    href: "/examples/model-viewer"
+
+  },
+  blocks2: {
+    title: <div className='flex items-center gap-2'>Blocks<Badge variant="secondary">New</Badge></div>,
+    href: '/blocks'
+  },
+  new:{
+    display: 'hidden'
+  }
 }
 
 
