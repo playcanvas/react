@@ -52,7 +52,8 @@
             "tabs",
             "card",
             "badge",
-            "table"
+            "table",
+            "slider"
         ],
         "files": [
             {
@@ -84,11 +85,6 @@
                 "path": "registry/splat-viewer/controls.tsx",
                 "type": "registry:component",
                 "target": "components/ui/splat-viewer/controls.tsx"
-            },
-            {
-                "path": "registry/splat-viewer/timeline.tsx",
-                "type": "registry:component",
-                "target": "components/ui/splat-viewer/timeline.tsx"
             },
             {
                 "path": "registry/splat-viewer/splat-viewer-context.tsx",
@@ -149,8 +145,17 @@
                 "path": "registry/splat-viewer/menu-button.tsx",
                 "type": "registry:component",
                 "target": "components/ui/splat-viewer/menu-button.tsx"
-            }
-            
+            },
+            {
+                "path": "registry/splat-viewer/camera-mode-toggle.tsx",
+                "type": "registry:component",
+                "target": "components/ui/splat-viewer/camera-mode-toggle.tsx"
+            },   
+            {
+                "path": "lib/utils.ts",
+                "type": "registry:lib",
+                "target": "lib/utils.ts"
+            }   
         ]
       }
     ]

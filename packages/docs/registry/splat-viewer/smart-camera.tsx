@@ -32,8 +32,13 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
     const entity = useParent();
 
     useEffect(() => {
+        /**
+         * FIXME:
+         * `cameraControls` name will be manged in many bundlers. This needs to be updated when
+         * PlayCanvas engine > v2.7.5 is released. See https://github.com/playcanvas/engine/pull/7593
+         */
         // @ts-expect-error CameraControls is not defined in the script
-        const controls = entity.script?.cameraControls as CameraControls;
+        const controls = (entity.script?.cameraControls || entity.script?._CameraControls) as CameraControls;
         if (controls) {
             controls.focus(new Vec3().fromArray(focus), null, false);
         }
