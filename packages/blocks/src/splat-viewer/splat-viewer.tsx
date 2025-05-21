@@ -83,6 +83,7 @@ function SplatComponent({
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
+    app.renderNextFrame = true;
 
     // unload the asset when the component is unmounted
     useEffect(() => {
@@ -94,6 +95,8 @@ function SplatComponent({
     // Hide the cursor when the timeline is playing and the user is not interacting
     useEffect(() => {
         if (app.graphicsDevice.canvas) {
+            app.renderNextFrame = true;
+
             // eslint-disable-next-line react-compiler/react-compiler
             app.graphicsDevice.canvas.style.cursor = isPlaying && !isInteracting ? 'none' : '';
         }
@@ -160,7 +163,7 @@ export function SplatViewer( {
                 setMode={setCameraMode}
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
-                    <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={true}>
+                    <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
                         <SplatComponent src={src} {...props} />
                     </Application>
                     <TooltipProvider>
