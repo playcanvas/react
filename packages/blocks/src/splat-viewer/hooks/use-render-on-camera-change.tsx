@@ -25,7 +25,10 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
     const world = entity.getWorldTransform().data;
     const proj = entity.camera?.projectionMatrix?.data;
 
-    if (!proj) return;
+    if (!proj) {
+      app.renderNextFrame = true;
+      return;
+    }
 
     let changed = false;
 
@@ -33,8 +36,7 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
       changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
 
       if (changed) {
-        console.log("changed");
-        app.renderNextFrame = true;
+        app.renderNextFrame = changed;
       }
     }
 
