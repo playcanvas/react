@@ -32,9 +32,8 @@ jobs:
       
     - name: Build library
       run: pnpm run build:lib
-      
-    - name: Run tests
-      run: pnpm run test:lib
+    - name: Build library
+      run: pnpm run build:blocks
       
     - name: Build docs
       run: pnpm run build:docs

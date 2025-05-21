@@ -32,4 +32,4 @@ jobs:
         run: pnpm install
   
       - name: Continuous Release
-        run: pnpm pkg-pr-new publish './packages/lib'
+        run: pnpm dlx pkg-pr-new publish './packages/lib'

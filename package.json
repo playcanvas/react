@@ -19,7 +19,7 @@
         "build": "pnpm run build:docs",
         "start": "pnpm --filter docs run start",
         "lint": "pnpm exec eslint .",
-        "test": "pnpm -r run test --if-present"
+        "test": "pnpm -r run test"
     },
     "devDependencies": {
         "@eslint/js": "9.25.1",
