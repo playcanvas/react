@@ -27,8 +27,13 @@ export async function generateMetadata(props) {
     return JSON.parse(source);
   }
 
-  const { metadata } = await importPage(params.mdxPath)
-  return metadata
+  try {
+    const { metadata } = await importPage(params.mdxPath)
+    return metadata
+  } catch (error) {
+    console.error(error)
+    return null
+  }
 }
  
 const Wrapper = getMDXComponents().wrapper
@@ -36,28 +41,33 @@ const Wrapper = getMDXComponents().wrapper
 export default async function Page(props) {
   const params = await props.params
 
-  const { default: MDXContent, toc, metadata } = await importPage(params.mdxPath)
-  const isExamples = params.mdxPath[0] === EXAMPLES_PATH;
+  try {
+    const { default: MDXContent, toc, metadata } = await importPage(params.mdxPath)
+    const isExamples = params.mdxPath[0] === EXAMPLES_PATH;
 
-  if (isExamples) {
-    const contentPath = params.mdxPath.slice(0, 1);
-    const fileName = params.mdxPath.slice(-1)[0];
+    if (isExamples) {
+      const contentPath = params.mdxPath.slice(0, 1);
+      const fileName = params.mdxPath.slice(-1)[0];
 
-    const source = await readFile(
-        path.join(process.cwd(), 'content', ...contentPath, `${fileName}.mdx`),
-        'utf-8'
-    )
+      const source = await readFile(
+          path.join(process.cwd(), 'content', ...contentPath, `${fileName}.mdx`),
+          'utf-8'
+      )
 
+      return (
+          <div className='absolute top-0 left-0 w-screen h-screen pointer-events-none'>
+              <Playground name={`./${params.mdxPath}.tsx`} code={source} path={metadata.filePath}/>
+          </div>
+      )
+    }
+    
     return (
-        <div className='absolute top-0 left-0 w-screen h-screen pointer-events-none'>
-            <Playground name={`./${params.mdxPath}.tsx`} code={source} path={metadata.filePath}/>
-        </div>
+      <Wrapper toc={toc} metadata={metadata}>
+        <MDXContent {...props} params={params} />
+      </Wrapper>
     )
+  } catch (error) {
+    console.error(error)
+    return <div>Error</div>
   }
-  
-  return (
-    <Wrapper toc={toc} metadata={metadata}>
-      <MDXContent {...props} params={params} />
-    </Wrapper>
-  )
 }

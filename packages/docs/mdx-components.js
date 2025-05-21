@@ -2,10 +2,10 @@ import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
 import { TSDoc, generateDocumentation } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
-import * as Splat from "@registry/splat-viewer/";
 import { Badge } from '@/components/ui/badge';
 import { OpenInV0Button } from '@/components/ui/open-in-v0-button';
 import { Check, Dash } from '@/components/Check';
+import { Viewer } from '@playcanvas/blocks';
 
 const docsComponents = getDocsMDXComponents({
   TSDoc(props) {
@@ -29,9 +29,9 @@ export function useMDXComponents(components) {
     Dash,
     Badge,
     OpenInV0Button,
+    Viewer,
     ...components,
     ...defaultComponents,
-    ...docsComponents,
-    Splat
+    ...docsComponents
   }
 }
