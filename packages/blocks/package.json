@@ -2,7 +2,7 @@
   "name": "@playcanvas/blocks",
   "description": "High level abstract 3D primitives for React",
   "homepage": "https://playcanvas-react.vercel.app/blocks",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
@@ -23,8 +23,7 @@
   },
   "scripts": {
     "build": "tsc && tsc-alias && cp src/index.css dist/",
-    "prepublishOnly": "pnpm run build",
-    "postinstall": "pnpm run build"
+    "prepublishOnly": "pnpm run build"
   },
   "repository": {
     "type": "git",
@@ -62,6 +61,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^0.511.0",
     "tailwind-merge": "^3.3.0",
+    "tw-animate-css": "^1.3.0",
     "vaul": "^1.1.2"
   },
   "devDependencies": {

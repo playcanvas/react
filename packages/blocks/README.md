@@ -13,8 +13,8 @@ Follow this guide to [Install Tailwind](https://tailwindcss.com/docs/installatio
 And add the following top your css
 
 ```
-@source "@playcanvas/blocks";
-@import "@playcanvas/blocks";
+@import "@playcanvas/blocks"
+@source "../../node_modules/@playcanvas/blocks";
 ```
 
 ...and you're done!
@@ -35,7 +35,7 @@ import { Viewer } from "@playcanvas/blocks"
 
 export function SplatViewer() {
     return (
-      <Viewer.Splat src='./splat.ply' className="rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <Viewer.Splat src='./splat.ply' className="rounded shadow cursor-grab active:cursor-grabbing" >
         <Viewer.Controls >
           <div className="flex gap-1 pointer-events-auto flex-grow">
             <Viewer.FullScreenButton />
