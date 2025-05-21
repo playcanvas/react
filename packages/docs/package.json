@@ -9,15 +9,18 @@
     "build": "next build --turbopack --no-mangling",
     "start": "next start",
     "build:registry": "shadcn registry:build",
-    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind && npm run build:registry"
+    "postbuild": "pagefind --site .next/server/app --output-path public/_pagefind && pnpm run build:registry"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
-    "@playcanvas/react": "*",
+    "@playcanvas/blocks": "workspace:*",
+    "@playcanvas/react": "workspace:*",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.61.5",
-    "@playcanvas/blocks": "*",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "leva": "^0.9.35 || ^0.10.0",
     "lucide-react": "^0.503.0",
     "monaco-editor": "^0.52.0",
