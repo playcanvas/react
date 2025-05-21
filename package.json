@@ -14,7 +14,7 @@
         "dev": "npm run dev --workspace=docs",
         "build:lib": "npm run build --workspace=@playcanvas/react",
         "build:docs": "npm run build --no-mangling --workspace=docs",
-        "build:blocks": "npm run build --no-mangling --workspace=blocks",
+        "build:blocks": "npm run build --no-mangling --workspace=@playcanvas/blocks",
         "prebuild": "npm run build:lib && npm run build:blocks",
         "build": "npm run build:docs",
         "start": "npm run start --workspace=docs",
