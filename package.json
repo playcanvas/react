@@ -14,7 +14,8 @@
         "dev": "npm run dev --workspace=docs",
         "build:lib": "npm run build --workspace=@playcanvas/react",
         "build:docs": "npm run build --no-mangling --workspace=docs",
-        "prebuild": "npm run build:lib",
+        "build:blocks": "npm run build --no-mangling --workspace=blocks",
+        "prebuild": "npm run build:lib && npm run build:blocks",
         "build": "npm run build:docs",
         "start": "npm run start --workspace=docs",
         "lint": "npx eslint",
@@ -32,6 +33,7 @@
         "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
         "globals": "16.0.0",
+        "tw-animate-css": "^1.3.0",
         "type-fest": "4.40.1",
         "typescript-eslint": "8.31.0"
     },

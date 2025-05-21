@@ -2,7 +2,6 @@ import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
 import { TSDoc, generateDocumentation } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
-import * as Splat from "@registry/splat-viewer/";
 import { Badge } from '@/components/ui/badge';
 import { OpenInV0Button } from '@/components/ui/open-in-v0-button';
 import { Check, Dash } from '@/components/Check';
@@ -31,7 +30,6 @@ export function useMDXComponents(components) {
     OpenInV0Button,
     ...components,
     ...defaultComponents,
-    ...docsComponents,
-    Splat
+    ...docsComponents
   }
 }

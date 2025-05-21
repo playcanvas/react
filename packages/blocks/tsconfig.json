@@ -1,0 +1,29 @@
+{
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "allowJs": true,
+        "declaration": true,
+        "declarationDir": "./dist",
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap": true,
+        "removeComments": false,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "outDir": "./dist",
+        "rootDir": "./src",
+        "moduleResolution": "bundler",
+        "baseUrl": ".",
+        "skipLibCheck": true,
+        "paths": {
+            "@components/*": ["./src/components/*"],
+            "@splat-viewer/*": ["./src/splat-viewer/*"],
+            "@lib/*": ["./src/lib/*"]
+        },
+    },
+    "include": ["src"],
+    "exclude": ["src/**/*.test.tsx", "src/**/*.test.ts", "src/**/*.test.jsx", "src/**/*.test.js"]
+}
