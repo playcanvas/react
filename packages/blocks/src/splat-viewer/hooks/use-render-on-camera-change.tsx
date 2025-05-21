@@ -9,6 +9,12 @@ const nearlyEquals = (a: Float32Array, b: Float32Array, epsilon = 1e-4): boolean
   return true;
 };
 
+/**
+ * A custom React hook that triggers rendering when the camera's transform or projection matrix changes.
+ *
+ * @param {Entity | null} entity - The PlayCanvas entity representing the camera. If null, the hook does nothing.
+ * @returns {void} This hook does not return a value but updates the rendering state of the application.
+ */
 export const useRenderOnCameraChange = (entity: Entity | null) => {
   const app = useApp();
   const prevWorld = useRef<Float32Array>(new Float32Array(16));
