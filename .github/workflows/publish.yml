@@ -14,17 +14,22 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.x
+
       - name: Checkout Main
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 18.x
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install Dependencies
-        run: npm i
+        run: pnpm install
   
       - name: Continuous Release
-        run: npx pkg-pr-new publish './packages/lib'
+        run: pnpm pkg-pr-new publish './packages/lib'
