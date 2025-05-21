@@ -12,12 +12,11 @@
     ],
     "scripts": {
         "dev": "pnpm -r dev",
-        "build:lib": "pnpm run build --filter @playcanvas/react",
-        "build:blocks": "pnpm run build --filter @playcanvas/blocks",
-        "build:docs": "pnpm run build --filter docs",
-        "prebuild": "pnpm run build:lib && pnpm run build:blocks",
-        "build": "pnpm run build:docs",
-        "start": "pnpm run start --filter docs",
+        "build:lib": "pnpm --filter @playcanvas/react run build",
+        "build:blocks": "pnpm --filter @playcanvas/blocks run build",
+        "build:docs": "pnpm --filter docs run build",
+        "build": "pnpm run build:lib && pnpm run build:blocks && pnpm run build:docs",
+        "start": "pnpm --filter docs run start",
         "lint": "pnpm exec eslint .",
         "test": "pnpm -r run test"
     },
@@ -33,8 +32,5 @@
         "type-fest": "4.40.1",
         "typescript": "^5.8.3",
         "typescript-eslint": "8.31.0"
-    },
-    "engines": {
-        "node": ">=20"
     }
 }
