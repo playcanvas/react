@@ -14,6 +14,7 @@ import style from "./utils/style";
 
 // @ts-expect-error There is no type definition for the camera-controls script
 import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
+import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change";
 
 type CameraControlsProps = {
     /* The focus point of the camera */
@@ -53,11 +54,14 @@ export function SmartCamera({
   fov?: number;
   animationTrack?: AnimationTrack;
 }) {
+
   const entityRef = useRef<pc.Entity>(null);
+  useRenderOnCameraChange(entityRef.current);
   const { subscribe, isPlaying } = useTimeline();
   const { mode } = useAssetViewer();
 //   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
+  app.renderNextFrame = true;
 
   const [pose, setPose] = useState<PoseType>({
     position: [2, 1, 2],

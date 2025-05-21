@@ -83,6 +83,7 @@ function SplatComponent({
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
+    app.renderNextFrame = true;
 
     // unload the asset when the component is unmounted
     useEffect(() => {
@@ -160,7 +161,7 @@ export function SplatViewer( {
                 setMode={setCameraMode}
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
-                    <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={true}>
+                    <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
                         <SplatComponent src={src} {...props} />
                     </Application>
                     <TooltipProvider>
