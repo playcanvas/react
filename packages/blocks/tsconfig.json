@@ -24,6 +24,6 @@
             "@lib/*": ["./src/lib/*"]
         },
     },
-    "include": ["src"],
+    "include": ["src/**/*"],
     "exclude": ["src/**/*.test.tsx", "src/**/*.test.ts", "src/**/*.test.jsx", "src/**/*.test.js"]
 }
