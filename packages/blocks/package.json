@@ -70,5 +70,8 @@
   },
   "peerDependencies": {
     "playcanvas": "^2.7.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
