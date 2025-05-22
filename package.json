@@ -3,6 +3,7 @@
     "description": "A monorepo for PlayCanvas React renderer and examples. Please see the packages directory for more information.",
     "private": true,
     "license": "MIT",
+    "packageManager": "pnpm@10.11.0",
     "repository": {
         "type": "git",
         "url": "https://github.com/playcanvas/react"
@@ -32,5 +33,8 @@
         "type-fest": "4.40.1",
         "typescript": "^5.8.3",
         "typescript-eslint": "8.31.0"
+    },
+    "dependencies": {
+        "next": "15.3.1"
     }
 }

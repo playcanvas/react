@@ -17,7 +17,7 @@ const withNextra = nextra({
 
 export default withNextra({
   reactStrictMode: true,
-  transpilePackages: ['next-mdx-remote-client', 'playcanvas'],
+  transpilePackages: ['next-mdx-remote-client', '@playcanvas/react', '@playcanvas/blocks'],
   redirects: async () => [
     {
       source: '/examples',
