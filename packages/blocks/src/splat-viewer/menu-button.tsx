@@ -176,7 +176,7 @@ function MenuButton() {
 
     return (
     <>
-        <Button variant="ghost" size="icon" onClick={() => setOverlay("settings")}>
+        <Button variant="ghost" size="icon" className="cursor-pointer pointer-events-auto" onClick={() => setOverlay("settings")}>
             <EllipsisVerticalIcon />
         </Button>
         <Drawer open={overlay === "settings"} onOpenChange={() => setOverlay(null)} shouldScaleBackground={true} setBackgroundColorOnScale={true}>
