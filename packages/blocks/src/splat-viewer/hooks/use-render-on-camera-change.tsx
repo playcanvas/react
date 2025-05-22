@@ -26,8 +26,6 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
     const world = entity.getWorldTransform().data;
     const proj = entity.camera?.projectionMatrix?.data;
 
-    console.log('app.autoRender', app.autoRender);
-
     if (!proj) {
       app.renderNextFrame = true;
       return;
