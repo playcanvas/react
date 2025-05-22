@@ -14,12 +14,11 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-
       - name: Checkout Main
         uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
 
       - name: Install Dependencies
         run: pnpm install
