@@ -15,8 +15,8 @@
   "license": "ISC",
   "dependencies": {
     "@monaco-editor/react": "^4.6.0",
-    "@playcanvas/blocks": "workspace:*",
-    "@playcanvas/react": "workspace:*",
+    "@playcanvas/blocks": "*",
+    "@playcanvas/react": "*",
     "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.61.5",
     "class-variance-authority": "^0.7.1",
