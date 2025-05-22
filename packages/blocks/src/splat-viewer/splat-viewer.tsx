@@ -84,21 +84,14 @@ function SplatComponent({
     const { isPlaying } = useTimeline();
     const app = useApp();
 
-    console.log('app.renderNextFrame', app.renderNextFrame);
-    app.renderNextFrame = true;
-
     // unload the asset when the component is unmounted
     useEffect(() => {
-        return () => {
-            asset?.unload();
-        }
+        return () => asset?.unload();
     }, [asset]);
 
     // Hide the cursor when the timeline is playing and the user is not interacting
     useEffect(() => {
         if (app.graphicsDevice.canvas) {
-            app.renderNextFrame = true;
-
             // eslint-disable-next-line react-compiler/react-compiler
             app.graphicsDevice.canvas.style.cursor = isPlaying && !isInteracting ? 'none' : '';
         }

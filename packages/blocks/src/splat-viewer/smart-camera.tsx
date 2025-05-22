@@ -56,13 +56,22 @@ export function SmartCamera({
 }) {
 
   const entityRef = useRef<pc.Entity>(null);
-  useRenderOnCameraChange(entityRef.current);
   const { subscribe, isPlaying } = useTimeline();
   const { mode } = useAssetViewer();
-//   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
+  const timeoutRef = useRef(0);
+  const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
+  //   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
-  app.renderNextFrame = true;
 
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      setShouldUseRenderOnCameraChange(true);
+    }, 200);
+    return () => clearTimeout(timeoutRef.current);
+  }, []);
+
+  useRenderOnCameraChange(shouldUseRenderOnCameraChange ? entityRef.current : null);
+  
   const [pose, setPose] = useState<PoseType>({
     position: [2, 1, 2],
     target: [0, 0, 0]
@@ -84,8 +93,6 @@ export function SmartCamera({
     if(!animation) {
         const actualPose = new Pose().fromLookAt(new Vec3().fromArray(initialPose.position), new Vec3().fromArray(initialPose.target));
         const track = createRotationTrack(actualPose)
-        // console.log('track', track);
-        // console.log('initialPose', initialPose, actualPose);
         setAnimation(track);
     }
 

@@ -19,7 +19,8 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
   const app = useApp();
   const prevWorld = useRef<Float32Array>(new Float32Array(16));
   const prevProj = useRef<Float32Array>(new Float32Array(16));
-  app.autoRender = false;
+
+  app.renderNextFrame = true;
 
   useFrame(() => {
     if (!entity) return;
@@ -31,21 +32,13 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
       return;
     }
 
-    let changed = false;
-
-    if (!app.autoRender && !app.renderNextFrame) {
-      changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
-
-      if (changed) {
-        app.renderNextFrame = true;
-      }
-    }
+    const changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
+    
+    app.renderNextFrame = changed;
 
     if (app.renderNextFrame) {
-      if (changed || app.autoRender) {
-        prevWorld.current.set(world);
-        prevProj.current.set(proj);
-      }
+      prevWorld.current.set(world);
+      prevProj.current.set(proj);
     }
   });
 };
