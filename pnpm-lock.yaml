@@ -45,7 +45,7 @@ importers:
   packages/blocks:
     dependencies:
       '@playcanvas/react':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../lib
       '@radix-ui/react-dialog':
         specifier: ^1.1.14
@@ -121,10 +121,10 @@ importers:
         specifier: ^4.6.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@playcanvas/blocks':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../blocks
       '@playcanvas/react':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../lib
       '@radix-ui/react-slot':
         specifier: ^1.2.3
