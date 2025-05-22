@@ -19,11 +19,14 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
   const app = useApp();
   const prevWorld = useRef<Float32Array>(new Float32Array(16));
   const prevProj = useRef<Float32Array>(new Float32Array(16));
+  app.autoRender = false;
 
   useFrame(() => {
     if (!entity) return;
     const world = entity.getWorldTransform().data;
     const proj = entity.camera?.projectionMatrix?.data;
+
+    console.log('app.autoRender', app.autoRender);
 
     if (!proj) {
       app.renderNextFrame = true;
@@ -36,7 +39,7 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
       changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
 
       if (changed) {
-        app.renderNextFrame = changed;
+        app.renderNextFrame = true;
       }
     }
 

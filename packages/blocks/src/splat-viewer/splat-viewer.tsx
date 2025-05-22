@@ -83,6 +83,8 @@ function SplatComponent({
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
+
+    console.log('app.renderNextFrame', app.renderNextFrame);
     app.renderNextFrame = true;
 
     // unload the asset when the component is unmounted
