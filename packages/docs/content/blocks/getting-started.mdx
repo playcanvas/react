@@ -78,13 +78,12 @@ Follow the official [Tailwind CSS installation guide](https://tailwindcss.com/do
     </Tabs.Tab>
 </Tabs>
 
-### Import PlayCanvas Blocks Styles
+### Configure Tailwind
 
-Add the following to your **globals.css** file. This ensures that the blocks are styled correctly.
+Add the following to your **index.css** file. This ensures that the block is processed by Tailwind.
 
-```css copy filename=src/styles/globals.css
-@import 'tailwindcss';
-@import '@playcanvas/blocks';
+```css copy filename=src/index.css
 @source '../node_modules/@playcanvas/blocks';
 ```
+
 </Steps>
