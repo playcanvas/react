@@ -1,0 +1,90 @@
+import { Tabs, Card, Code, Bleed, Steps } from 'nextra/components'
+import { ArrowRight, Hexagon, Box } from 'lucide-react'
+import { Button } from '@components/ui/button'
+
+# Getting Started
+
+**Blocks** can be installed in any React project with **Tailwind CSS**. You can use them with **Next.js**, **Vite**, or any other React framework.
+
+You can install them via NPM or shadcn's CLI.
+
+## Shadcn
+
+The recommended way to install Blocks is using Shadcn's CLI. Each Block can be installed individually which will add the block to your project.
+
+```bash copy
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
+```
+
+## Package Manager
+
+Alternatively, you can simply install the package from npm, yarn, pnpm or bun and import the components you need.
+
+<Steps>
+
+### Install
+
+Grab the package from npm, yarn, pnpm or bun.
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+    <Tabs.Tab value="npm">
+        ```bash copy
+        npm i @playcanvas/blocks
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="yarn">
+        ```bash copy
+        yarn add @playcanvas/blocks
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="pnpm">
+        ```bash copy
+        pnpm add @playcanvas/blocks
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="bun">
+        ```bash copy
+        bun add @playcanvas/blocks
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Add Tailwind CSS
+
+PlayCanvas Blocks are built with Tailwind CSS. You'll need to install Tailwind to get started.
+
+Follow the official [Tailwind CSS installation guide](https://tailwindcss.com/docs/installation) for your project.
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+    <Tabs.Tab value="npm">
+        ```bash copy
+        npm i tailwindcss
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="yarn">
+        ```bash copy
+        yarn add tailwindcss
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="pnpm">
+        ```bash copy
+        pnpm add tailwindcss
+        ```
+    </Tabs.Tab>
+    <Tabs.Tab value="bun">
+        ```bash copy
+        bun add tailwindcss
+        ```
+    </Tabs.Tab>
+</Tabs>
+
+### Import PlayCanvas Blocks Styles
+
+Add the following to your **globals.css** file. This ensures that the blocks are styled correctly.
+
+```css copy filename=src/styles/globals.css
+@import 'tailwindcss';
+@import '@playcanvas/blocks';
+@source '../node_modules/@playcanvas/blocks';
+```
+</Steps>

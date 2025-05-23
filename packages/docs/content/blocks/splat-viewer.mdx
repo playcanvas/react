@@ -1,40 +1,9 @@
----
-title: Blocks
-description: Clean, modern building blocks. Copy and paste into your apps. Works with all React frameworks. Open Source. Free forever.
-asIndexPage: true
-openGraph:
-    title: playcanvas/react docs - Blocks
-    description: Documentation for @playcanvas/react
-    images:
-        - url: https://playcanvas-react.vercel.app/blocks.png
-          width: 1536
-          height: 1024
----
 import { Tabs, Card, Code, Bleed, Steps } from 'nextra/components'
 import { ArrowRight, Hexagon, Box } from 'lucide-react'
-import registry from '../registry.json'
+import registry from '../../registry.json'
 
 export const splatUrl = process.env.NEXT_PUBLIC_SAMPLE_SPLAT
 export const splatVersion = registry.items.find(item => item.name === 'splat-viewer')?.meta?.version
-
-<a className="flex items-center mb-8 mt-4 -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="/docs/guide/getting-started">
-  <Box size={14} className="text-muted-foreground" />
-  <div className="text-xs font-medium text-muted-foreground">Build your first scene in minutes</div>
-  <ArrowRight size={14} className="text-muted-foreground" />
-</a>
-# Building Blocks for 3D <Badge variant="secondary" className="-mt-2">new</Badge>
-
-A set of high-level crafted 3D primitives for React, built on top of @playcanvas/react and @shadcn/ui — interactive viewers, spatial layouts, and controls — designed to help you compose immersive scenes with minimal setup.
-
-{/* ## AI Assisted Development
-
-Each block comes with it's own set of MDC rules which are used to generate the block. To install rules for the registry run the following command in your terminal.
-
-```bash copy
-npx shadcn@latest add https://playcanvas-react.vercel.app/r/3d-blocks.json
-```
-
-This will install the rules for the registry and for @playcanvas/react and add them to your project. */}
 
 ## Splat Viewer <Badge variant="secondary" className="-mt-2">beta</Badge>
 

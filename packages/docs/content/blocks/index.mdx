@@ -1,0 +1,121 @@
+---
+title: Blocks
+description: Clean, modern building blocks. Copy and paste into your apps. Works with all React frameworks. Open Source. Free forever.
+openGraph:
+    title: playcanvas/react docs - Blocks
+    description: Documentation for @playcanvas/react
+    images:
+        - url: https://playcanvas-react.vercel.app/blocks.png
+          width: 1536
+          height: 1024
+---
+import { Tabs, Code, Bleed, Steps } from 'nextra/components'
+import { ArrowRight, Hexagon, Box } from 'lucide-react'
+import { Button } from '@components/ui/button'
+import { Check, Block } from '@components/Check'
+import registry from '../../registry.json'
+
+export const splatUrl = process.env.NEXT_PUBLIC_BLOCKS_SPLAT
+export const splatVersion = registry.items.find(item => item.name === 'splat-viewer')?.meta?.version
+
+<h1 className='text-4xl font-bold mt-8 mb-2'>
+  Blocks for 3D <Badge variant="secondary" >new</Badge>
+</h1>
+
+<div className='text-lg font-semibold text-muted-foreground max-w-prose'>
+    High-level 3D primitives for React — minimal setup and beautiful by default.
+</div>
+
+PlayCanvas Blocks are high-level component primitives for React. Clean, simple, and beautiful by default, they're designed to drop into your project and get to work. Built around **@playcanvas/react** and **@shadcn/ui** they're composable, themeable and ready to use out of the box.
+
+<div className='flex flex-row gap-2 mt-4 items-center'>
+    <a className="flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="./getting-started">
+        <Box size={14} className="text-muted-foreground" />
+        <div className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200">Get Started</div>
+        <ArrowRight size={14} className="text-muted-foreground" />
+    </a>
+    <a href="./splat-viewer">
+        <Button variant="link" className='cursor-pointer text-muted-foreground text-xs hover:text-foreground transition-colors duration-200'>
+            Browse Blocks
+        </Button>
+    </a>
+</div>
+
+<div className='relative mb-12'>
+    <Viewer.Splat src={splatUrl} className="aspect-4:1 my-8 -mx-6 bg-gray-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing" />
+    <div className='absolute bottom-0 right-0 w-full flex flex-col items-center py-8 text-background text-xs'>
+        _Rendered with the <code>Viewer.Splat</code> component — a React block for Gaussian splats._
+        <a className="hover:underline" href="/blocks/splat-viewer">
+            _Learn more →_
+        </a>
+    </div>
+</div>
+
+## Features
+<div className="flex flex-col gap-4 py-4 items-start">
+    <Check>
+        <div className="flex flex-col">
+            <span className="font-bold">Composable</span>
+            <span className="text-muted-foreground text-sm">Blocks are flexible — arrange components in any order.</span>
+        </div>
+    </Check>
+    <Check>
+        <div className="flex flex-col">
+            <span className="font-bold">Themeable</span>
+            <span className="text-muted-foreground text-sm">Beautiful by default, but easily customizable.</span>
+        </div>
+    </Check>
+    <Check>
+        <div className="flex flex-col">
+            <span className="font-bold">AI Ready</span>
+            <span className="text-muted-foreground text-sm">AI rules.mdc files for each block.</span>
+        </div>
+    </Check>
+    <Check>
+        <div className="flex flex-col">
+            <span className="font-bold">Open Source</span>
+            <span className="text-muted-foreground text-sm">Blocks are open source and free to use forever.</span>
+        </div>
+    </Check>
+    <Check>
+        <div className="flex flex-col">
+            <span className="font-bold">PlayCanvas Powered</span>
+            <span className="text-muted-foreground text-sm">Built on a robust engine trusted in real-world 3D apps.</span>
+        </div>
+    </Check>
+</div>
+
+## How it works?
+
+Built on @playcanvas/react and the PlayCanvas engine, Blocks abstract the underlying engine to provide a high-level component API that's easy to use and understand. Internally, each block maps to a PlayCanvas entity and component hierarchy, giving you full control with a familiar dev experience.
+
+## Featured blocks
+
+We've got a few blocks already in development. Stay tuned for updates!
+
+<div className="flex flex-col gap-4 py-8 items-start">
+
+    <Block>
+        <div className="flex flex-col">
+            <span className="font-bold">Splat Viewer</span>
+            <span className="text-muted-foreground text-sm">A simple media block that presents a Gaussian Splat (3DGS) point cloud.</span>
+            <a href="/blocks/splat-viewer" className='cursor-pointer text-muted-foreground text-xs hover:text-foreground transition-colors duration-200'>
+                Learn more →
+            </a>
+        </div>    
+    </Block>
+</div>
+
+_More blocks coming soon..._
+
+## AI Ready
+
+Every block comes with MDC rules for autocompletion, documentation, and AI integration — ready for use in tools like Cursor or Windsurf. To install rules for Playcanvas Blocks run the following command.
+
+```bash copy
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/blocks.json
+```
+
+This installs the rules for the registry and for @playcanvas/react and add them to your project.
+
+
