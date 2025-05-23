@@ -4,7 +4,7 @@
     "homepage": "https://playcanvas-react.vercel.app/blocks",
     "items": [
       {
-        "name": "3d-blocks",
+        "name": "blocks",
         "title": "3D Blocks",
         "description": "A collection of 3D blocks for PlayCanvas.",
         "type": "registry:style",
@@ -31,13 +31,14 @@
         "type": "registry:block",
         "author": "Mark Lundin",
         "category": ["3d", "viewer", "asset", "webgl"],
-        "homepage": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
-        "docs": "https://playcanvas-react.vercel.app/blocks#splat-viewer",
+        "homepage": "https://playcanvas-react.vercel.app/blocks/splat-viewer",
+        "docs": "https://playcanvas-react.vercel.app/blocks/splat-viewer",
         "meta": {
             "version": "0.1.0.beta.1"
         },
         "dependencies": [
             "@playcanvas/blocks",
+            "@playcanvas/react",
             "playcanvas"
         ],
         "files": [

@@ -58,7 +58,7 @@ export default {
         },
         vignette: {
             enabled: true,
-            intensity: 0.4,
+            intensity: 0.6,
             inner: 0.25,
             outer: 1.52,
             curvature: 0.78
