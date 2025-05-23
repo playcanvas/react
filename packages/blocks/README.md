@@ -8,7 +8,7 @@ A set of beautifully crafted high-level 3D primitives for React, built on @playc
 npm install @playcanvas/blocks playcanvas
 ```
 
-Follow this guide to [Install Tailwind](https://tailwindcss.com/docs/installation)
+Follow this guide to [Install Tailwind v4](https://tailwindcss.com/docs/installation)
 
 And add the following top your css
 
