@@ -55,8 +55,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </Head>
       <body>
         <Layout
-          banner={<Banner storageKey="0.3.2-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.3.2" target="_blank" rel="noreferrer">
-            🚀 <b>@playcanvas/react 0.3.2</b> released! Find out more.
+          banner={<Banner storageKey="0.4.0-release"><a href="https://github.com/playcanvas/react/releases/tag/v0.4.0" target="_blank" rel="noreferrer">
+            <b>@playcanvas/react 0.4.0</b> available now!
           </a></Banner>}
           navbar={navbar}
           footer={<Footer>
