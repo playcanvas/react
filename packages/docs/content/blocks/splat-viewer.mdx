@@ -134,26 +134,26 @@ export default () => (
 
 ### API Reference
 
-#### SplatViewer
+#### Splat
 
 A responsive and composable component for displaying **Gaussian splats**.
 
-{/* <TSDoc
+<TSDoc
   code={`
     import { Viewer } from '@playcanvas/blocks';
-    type $ = React.ComponentProps<typeof Splat.Viewer>;
+    type $ = React.ComponentProps<typeof Viewer.Splat>;
     export default $;
   `}
-/> */}
+/>
 
 #### Controls
 
 A simple container for UI controls that creates a sensible layout and optionally auto hides when the user is interacting.
 
-{/* <TSDoc
+<TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.Controls>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.Controls>;
     export default $;
   `}
 />
@@ -164,8 +164,8 @@ A button for entering and exiting full screen mode.
 
 <TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.FullScreenButton>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.FullScreenButton>;
     export default $;
   `}
 />
@@ -176,8 +176,8 @@ A button for downloading the current scene.
 
 <TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.DownloadButton>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.DownloadButton>;
     export default $;
   `}
-/> */}
+/>
