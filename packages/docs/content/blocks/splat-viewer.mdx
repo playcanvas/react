@@ -101,17 +101,36 @@ Supports compressed gaussian splats.
 
 ### Installation
 
-Install the component from your command line.
+<Tabs items={['Manual', 'Shadcn']} className="!mt-0" tabClassName="!mt-2">
+  <Tabs.Tab title='Manual' className="!mt-0 !rounded-t-none !rounded-b-xl">
+    Follow the instructions on the [Blocks page](/blocks/installation) to install the component.
 
-```bash copy
-npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
-```
+    ```bash copy
+    npm install @playcanvas/blocks
+    ```
 
-Ensure the block is processed by Tailwind by adding the following to your `index.css`.
+    Install Tailwind and add the following to your `index.css`.
 
-```css
-@source "../node_modules/@playcanvas/blocks";
-```
+    ```css
+    @import "@playcanvas/blocks";
+    @source "../node_modules/@playcanvas/blocks";
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab title='Shadcn' className="!mt-0 !rounded-t-none !rounded-b-xl">
+    Install the component from your command line.
+
+    ```bash copy
+    npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
+    ```
+
+    Ensure the block is processed by Tailwind by adding the following to your `index.css`.
+
+    ```css
+    @source "../node_modules/@playcanvas/blocks";
+    ```
+  </Tabs.Tab>
+</Tabs>
+
 
 ### Anatomy
 
