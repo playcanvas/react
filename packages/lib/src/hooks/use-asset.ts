@@ -43,6 +43,7 @@ export interface AssetResult {
 export const useAsset = (
   src: string, 
   type: string, 
+  data: Record<string, unknown> = {},
   props: Record<string, unknown> = {}
 ): AssetResult => {
   const [result, setResult] = useState<AssetResult>({
@@ -55,7 +56,7 @@ export const useAsset = (
   let stablePropsKey = null;
 
   try{
-    stablePropsKey = JSON.stringify(props, Object.keys(props).sort())
+    stablePropsKey = JSON.stringify({ props, data }, Object.keys({ props, data }).sort())
   } catch {
     const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
     warnOnce(error);
@@ -109,7 +110,7 @@ export const useAsset = (
     }
 
     // Load the asset
-    fetchAsset(app, src, type, props)
+    fetchAsset(app, src, type, data, props)
       .then((asset) => {
         setResult({
           asset: asset as Asset,
@@ -150,9 +151,10 @@ export const useAsset = (
  */
 export const useSplat = (
   src: string, 
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
+  data: Record<string, unknown> = {},
 ): AssetResult => 
-  useAsset(src, 'gsplat', props);
+  useAsset(src, 'gsplat', data, props);
 
 /**
  * Simple hook to fetch a texture asset from the asset registry.
@@ -174,9 +176,10 @@ export const useSplat = (
  */
 export const useTexture = (
   src: string, 
+  data: Record<string, unknown> = {},
   props: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'texture', props);
+  useAsset(src, 'texture', data, props);
 
 /**
  * Simple hook to load an environment atlas texture asset.
@@ -198,9 +201,10 @@ export const useTexture = (
  */
 export const useEnvAtlas = (
   src: string, 
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
+  data: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...props });
+  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...data }, props);
 
 /**
  * Simple hook to load a 3D model asset (GLB/GLTF).
@@ -222,6 +226,7 @@ export const useEnvAtlas = (
  */
 export const useModel = (
   src: string, 
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
+  data: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'container', props);
+  useAsset(src, 'container', data, props);

@@ -3,12 +3,12 @@ import { warnOnce } from "./validation";
 
 type AssetType = ConstructorParameters<typeof Asset>[1];
 
-export const fetchAsset = (app : Application, url : string, type : string, props = {}) => {
+export const fetchAsset = (app : Application, url : string, type : string, data = {}, props = {}) => {
     return new Promise((resolve, reject) => {
 
         let propsKey = url;
         try {
-            propsKey += JSON.stringify(props, Object.keys(props).sort())
+            propsKey += JSON.stringify({ props, data }, Object.keys({ props, data }).sort())
         } catch {
             const error = `Invalid props for "fetchAsset('${url}')". Props must be serializable to JSON.`;
             warnOnce(error);
@@ -18,7 +18,7 @@ export const fetchAsset = (app : Application, url : string, type : string, props
         let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(propsKey, type as AssetType, { url }, props);
+            asset = new Asset(propsKey, type as AssetType, { url, ...data }, props);
             app.assets.add(asset);
         }
 
