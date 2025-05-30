@@ -1,5 +1,5 @@
 ---
-title: Introduction
+title: Home
 description: Clean, modern building blocks. Copy and paste into your apps. Works with all React frameworks. Open Source. Free forever.
 openGraph:
     title: playcanvas/react docs - Blocks
@@ -29,7 +29,7 @@ export const splatVersion = registry.items.find(item => item.name === 'splat-vie
 PlayCanvas Blocks are high-level component primitives for React. Clean, simple, and beautiful by default, they're designed to drop into your project and get to work. Built around **@playcanvas/react** and **@shadcn/ui** they're composable, themeable and ready to use out of the box.
 
 <div className='flex flex-row gap-2 mt-4 items-center'>
-    <a className="flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="blocks/getting-started">
+    <a className="flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="blocks/installation">
         <Box size={14} className="text-muted-foreground" />
         <div className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors duration-200">Get Started</div>
         <ArrowRight size={14} className="text-muted-foreground" />
@@ -42,12 +42,12 @@ PlayCanvas Blocks are high-level component primitives for React. Clean, simple, 
 </div>
 
 <div className='relative mb-4 lg:mb-12'>
-    <Viewer.Splat src={splatUrl} className="aspect-4:1 lg:my-8 -mx-6 bg-gray-200 rounded-lg shadow-xl cursor-grab active:cursor-grabbing pointer-events-none" />
-    <div className='lg:absolute bottom-0 right-0 w-full py-2 lg:py-8 lg:text-background text-xs italic text-center'>
-        Rendered with the <code>Viewer.Splat</code> component — a React block for Gaussian splats. 
-        <a className="hover:underline pointer-events-auto" href="/blocks/splat-viewer">
-            Learn more →
-        </a>
+    <Viewer.Splat src={splatUrl} className="aspect-4:1 mt-8 lg:my-8 -mx-4 lg:-mx-6 bg-gray-200 lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" />
+    <div className='lg:absolute bottom-0 right-0 w-full py-2 lg:py-8 lg:text-background text-xs italic text-center pointer-events-none'>
+        <span className="pointer-events-auto">
+            Rendered with the <code>Viewer.Splat</code> component — a React block for Gaussian splats.{" "}
+            <a className="underline text-bold" href="/blocks/splat-viewer">Learn more →</a>
+        </span>
     </div>
 </div>
 

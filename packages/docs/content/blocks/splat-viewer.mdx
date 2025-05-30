@@ -1,4 +1,4 @@
-import { Tabs, Card, Code, Bleed, Steps } from 'nextra/components'
+import { Tabs, Card, Code, Pre, Bleed, Steps } from 'nextra/components'
 import { ArrowRight, Hexagon, Box } from 'lucide-react'
 import registry from '../../registry.json'
 
@@ -15,7 +15,7 @@ Supports large assets with lazy loading and automatic framing. Use it in modals,
 Supports compressed gaussian splats.
 
 <div className="lg:outline lg:p-28 -mx-4 lg:-mx-6 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-indigo-500 to-purple-600 relative">
-  {/* <OpenInV0Button url="https://v0.dev/chat/api/open?url=https://playcanvas-react.vercel.app/r/splat-viewer.json" className="absolute top-4 right-4" /> */}
+  <OpenInV0Button url={`https://${process.env.VERCEL_URL}/r/splat-viewer.json`} className="absolute top-4 right-4" />
   <Viewer.Splat src={splatUrl} className="aspect-2.39:1 bg-purple-200 rounded-t-lg lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
       <Viewer.Controls autoHide >
         <div className="flex gap-1 flex-grow">
@@ -101,17 +101,36 @@ Supports compressed gaussian splats.
 
 ### Installation
 
-Install the component from your command line.
+<Tabs items={['Manual', 'Shadcn']} className="!mt-0" tabClassName="!mt-2">
+  <Tabs.Tab title='Manual' className="!mt-0 !rounded-t-none !rounded-b-xl">
+    Follow the instructions on the [Blocks page](/blocks/installation) to install the component.
 
-```bash copy
-npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
-```
+    ```bash copy
+    npm install @playcanvas/blocks
+    ```
 
-Ensure the block is processed by Tailwind by adding the following to your `index.css`.
+    Install Tailwind and add the following to your `index.css`.
 
-```css
-@source "../node_modules/@playcanvas/blocks";
-```
+    ```css
+    @import "@playcanvas/blocks";
+    @source "../node_modules/@playcanvas/blocks";
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab title='Shadcn' className="!mt-0 !rounded-t-none !rounded-b-xl">
+    Install the component from your command line.
+
+    ```bash copy
+    npx shadcn@latest add https://playcanvas-react.vercel.app/r/splat-viewer.json
+    ```
+
+    Ensure the block is processed by Tailwind by adding the following to your `index.css`.
+
+    ```css
+    @source "../node_modules/@playcanvas/blocks";
+    ```
+  </Tabs.Tab>
+</Tabs>
+
 
 ### Anatomy
 
@@ -134,26 +153,26 @@ export default () => (
 
 ### API Reference
 
-#### SplatViewer
+#### Splat
 
 A responsive and composable component for displaying **Gaussian splats**.
 
-{/* <TSDoc
+<TSDoc
   code={`
     import { Viewer } from '@playcanvas/blocks';
-    type $ = React.ComponentProps<typeof Splat.Viewer>;
+    type $ = React.ComponentProps<typeof Viewer.Splat>;
     export default $;
   `}
-/> */}
+/>
 
 #### Controls
 
 A simple container for UI controls that creates a sensible layout and optionally auto hides when the user is interacting.
 
-{/* <TSDoc
+<TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.Controls>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.Controls>;
     export default $;
   `}
 />
@@ -164,8 +183,8 @@ A button for entering and exiting full screen mode.
 
 <TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.FullScreenButton>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.FullScreenButton>;
     export default $;
   `}
 />
@@ -176,8 +195,8 @@ A button for downloading the current scene.
 
 <TSDoc
   code={`
-    import * as Splat from '@registry/splat-viewer/';
-    type $ = React.ComponentProps<typeof Splat.DownloadButton>;
+    import { Viewer } from '@playcanvas/blocks';
+    type $ = React.ComponentProps<typeof Viewer.DownloadButton>;
     export default $;
   `}
-/> */}
+/>

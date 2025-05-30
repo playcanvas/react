@@ -37,7 +37,6 @@
             "version": "0.1.0.beta.1"
         },
         "dependencies": [
-            "@playcanvas/blocks",
             "@playcanvas/react",
             "playcanvas"
         ],
