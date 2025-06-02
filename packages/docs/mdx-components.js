@@ -1,6 +1,6 @@
 import { useMDXComponents as getDocsMDXComponents } from 'nextra-theme-docs'
 
-import { TSDoc, generateDocumentation } from 'nextra/tsdoc'
+import { TSDoc, generateDefinition } from 'nextra/tsdoc'
 import { defaultComponents } from './client-mdx-components';
 import { Badge } from '@/components/ui/badge';
 import { OpenInV0Button } from '@/components/ui/open-in-v0-button';
@@ -11,7 +11,7 @@ const docsComponents = getDocsMDXComponents({
   TSDoc(props) {
     return (
       <TSDoc
-        definition={generateDocumentation(props)}
+        definition={generateDefinition(props)}
         typeLinkMap={{
           ReactNode:
             'https://github.com/DefinitelyTyped/DefinitelyTyped/blob/51fcf2a1c5da6da885c1f8c11224917bbc011493/types/react/index.d.ts#L426-L439',
