@@ -4795,6 +4795,10 @@ packages:
     resolution: {integrity: sha512-iBiBGmfhvM3/oIo+PoRhb1FvySoH30wMLgYw+urIv12S4yDAUxWKKPYHmUq6rWp8NKRDmjFI66Yjl/lGGLDk9w==}
     engines: {node: '>=18.0.0'}
 
+  playcanvas@2.7.7:
+    resolution: {integrity: sha512-iBiBGmfhvM3/oIo+PoRhb1FvySoH30wMLgYw+urIv12S4yDAUxWKKPYHmUq6rWp8NKRDmjFI66Yjl/lGGLDk9w==}
+    engines: {node: '>=18.0.0'}
+
   plimit-lit@1.6.1:
     resolution: {integrity: sha512-B7+VDyb8Tl6oMJT9oSO2CW8XC/T4UcJGrwOVoNGwOQsQYhlpfajmrMj5xeejqaASq3V/EqThyOeATEOMuSEXiA==}
     engines: {node: '>=12'}
@@ -11358,6 +11362,13 @@ snapshots:
       confbox: 0.2.2
       exsolve: 1.0.5
       pathe: 2.0.3
+
+  playcanvas@2.7.7:
+    dependencies:
+      '@types/webxr': 0.5.22
+      '@webgpu/types': 0.1.60
+    optionalDependencies:
+      canvas: 3.1.0
 
   playcanvas@2.7.7:
     dependencies:

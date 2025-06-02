@@ -4,7 +4,7 @@
   "description": "",
   "type": "module",
   "main": "index.js",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.11.1",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack --no-mangling",
