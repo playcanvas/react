@@ -109,7 +109,7 @@ export const useAsset = (
     }
 
     // Load the asset
-    fetchAsset(app, src, type, props)
+    fetchAsset({ app, url: src, type, props })
       .then((asset) => {
         setResult({
           asset: asset as Asset,

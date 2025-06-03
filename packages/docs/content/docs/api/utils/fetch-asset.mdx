@@ -16,13 +16,13 @@ If you just want a simple loading hook, you can simply wrap `fetchAsset` in a cu
 ```jsx copy filename="use-asset.jsx"
 import { fetchAsset } from '@playcanvas/react/utils'
 
-const useAsset = (src, type) => {
+const useAsset = (url, type) => {
     const app = useApp()
     const [asset, setAsset] = useState(null)
 
     useEffect(() => {
-        fetchAsset(app, src, type).then(setAsset)
-    }, [src])
+        fetchAsset({ app, url, type }).then(setAsset)
+    }, [url])
 
     return asset
 }
@@ -37,5 +37,16 @@ const Container = (( src )) => {
     </Entity>)
 }
 ```
+
+## Options
+
+<TSDoc
+  code={`
+    import { fetchAsset } from '@playcanvas/react/utils';
+    type $ = type $ = React.ComponentProps<typeof fetchAsset>;
+    export default $;
+  `}
+/>
+
 
 
