@@ -1,5 +1,5 @@
 ---
-title: Assets
+title: useAsset
 description: Documentation for the Assets hook
 openGraph:
     title: playcanvas/react docs - Assets
@@ -17,10 +17,10 @@ PlayCanvas React provides hooks for loading and managing different assets. These
 The general signature of the hooks is:
 
 ```tsx
-const { asset, loading, error } = useModel(src, props);
+const { asset, loading, error } = useModel(src, { props, subscribe });
 ```
 
-Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader.
+Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader and `subscribe` is a callback function that provides loading progress.
 
 ```tsx copy filename="render-glb.tsx"
 import { useModel } from '@playcanvas/react/hooks';
@@ -36,7 +36,18 @@ export function RenderAsset() {
 }
 ```
 
-Every hooks returns an `AssetResult` with the following properties
+## API Reference
+
+The `useAsset` hook has the following signature:
+
+<TSDoc
+  code={`
+    import type { UseAssetOptions } from '@playcanvas/react/hooks';
+    export default UseAssetOptions;
+  `}
+/>
+
+which has the following return type:
 
 <TSDoc
   code={`

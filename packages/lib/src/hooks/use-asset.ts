@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { fetchAsset } from "../utils/fetch-asset";
+import { fetchAsset, ProgressCallbackParams } from "../utils/fetch-asset";
 import { useApp } from "./use-app";
 import { Asset, TEXTURETYPE_RGBP } from "playcanvas";
 import { warnOnce } from "../utils/validation";
@@ -20,6 +20,23 @@ export interface AssetResult {
   /** Error message if loading failed, or null if successful */
   error: string | null;
 }
+
+/**
+ * Options for the useAsset hook
+ */
+export type UseAssetOptions = {
+  /**
+   * Additional properties to pass to the asset loader.
+   * @defaultValue {}
+   */
+  props?: Record<string, unknown>;
+  /**
+   * A callback function that is called to provide loading progress.
+   * @param {ProgressCallbackParams} meta - The progress of the asset loading.
+   * @returns void
+   */
+  subscribe?: (meta: ProgressCallbackParams) => void;
+};
 
 /**
  * Simple hook to fetch an asset from the asset registry.
@@ -43,8 +60,11 @@ export interface AssetResult {
 export const useAsset = (
   src: string, 
   type: string, 
-  props: Record<string, unknown> = {}
+  options?: UseAssetOptions,
 ): AssetResult => {
+
+  const { props = {} , subscribe } = options ?? {};
+
   const [result, setResult] = useState<AssetResult>({
     asset: null,
     loading: true,
@@ -60,9 +80,9 @@ export const useAsset = (
     const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
     warnOnce(error);
     setResult({
-        asset: null,
-        loading: false,
-        error
+      asset: null,
+      loading: false,
+      error
     });
   }
 
@@ -109,7 +129,7 @@ export const useAsset = (
     }
 
     // Load the asset
-    fetchAsset({ app, url: src, type, props })
+    fetchAsset({ app, url: src, type, props, onProgress: subscribe })
       .then((asset) => {
         setResult({
           asset: asset as Asset,
@@ -150,9 +170,9 @@ export const useAsset = (
  */
 export const useSplat = (
   src: string, 
-  props: Record<string, unknown> = {}
+  options?: UseAssetOptions
 ): AssetResult => 
-  useAsset(src, 'gsplat', props);
+  useAsset(src, 'gsplat', options);
 
 /**
  * Simple hook to fetch a texture asset from the asset registry.
@@ -174,9 +194,9 @@ export const useSplat = (
  */
 export const useTexture = (
   src: string, 
-  props: Record<string, unknown> = {}
+  options?: UseAssetOptions
 ): AssetResult => 
-  useAsset(src, 'texture', props);
+  useAsset(src, 'texture', options);
 
 /**
  * Simple hook to load an environment atlas texture asset.
@@ -198,9 +218,16 @@ export const useTexture = (
  */
 export const useEnvAtlas = (
   src: string, 
-  props: Record<string, unknown> = {}
+  options?: UseAssetOptions
 ): AssetResult => 
-  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...props });
+  useAsset(src, 'texture', { 
+    props: {
+      type: TEXTURETYPE_RGBP, 
+      mipmaps: false, 
+      ...options?.props 
+    },
+    subscribe: options?.subscribe
+});
 
 /**
  * Simple hook to load a 3D model asset (GLB/GLTF).
@@ -222,6 +249,6 @@ export const useEnvAtlas = (
  */
 export const useModel = (
   src: string, 
-  props: Record<string, unknown> = {}
+  options?: UseAssetOptions
 ): AssetResult => 
-  useAsset(src, 'container', props);
+  useAsset(src, 'container', options);

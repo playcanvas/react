@@ -12,14 +12,14 @@ import { fetchAsset } from "@playcanvas/react/utils"
  * @param {Object} [props] - Additional properties to pass to the asset loader.
  * @returns {{ data: Asset, isPending: boolean }} - The texture asset and its loading state.
  */
-export const useAsset = (src, type, props) => {
+export const useAsset = (src, type, props = {}) => {
     const app = useApp();
     const queryKey = [app.root?.getGuid(), src, type, props];
 
     // Construct a query for the asset
     return useQuery({ 
         queryKey,
-        queryFn: () => app && fetchAsset(app, src, type, props)
+        queryFn: () => app && fetchAsset({ app, url: src, type, props })
     })
 }
 
@@ -32,7 +32,8 @@ export const useAsset = (src, type, props) => {
  */
 export const useEnvAtlas = (src : string, props = {}) => useAsset(src, 'texture', { 
     ...props, 
-    type: TEXTURETYPE_RGBP, mipmaps: false
+    type: TEXTURETYPE_RGBP, 
+    mipmaps: false
 });
   
 export const useSplat = (src : string, props = {}) => useAsset(src, 'gsplat', props);
