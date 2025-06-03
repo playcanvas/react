@@ -1,7 +1,7 @@
 "use client"
 
 import { Application } from "@playcanvas/react"
-import { useApp, useSplat } from "@playcanvas/react/hooks"
+import { useApp } from "@playcanvas/react/hooks"
 import { GSplat } from "@playcanvas/react/components"
 import { Suspense, useCallback, useEffect, useRef, useState } from "react"
 import { AssetViewerProvider, useAssetViewer, useTimeline } from "./splat-viewer-context"
@@ -38,6 +38,7 @@ type SplatViewerComponentProps = CameraControlsProps & {
      * The url of an image to display whilst the asset is loading.
      */
     src: string,
+
     /**
      * The track to use for the animation 
      */
@@ -75,12 +76,8 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
     children?: React.ReactNode,
 }
 
-function SplatComponent({ 
-    src
-}: SplatViewerComponentProps) {
-
-    const { asset, error } = useSplat(src)
-    const { isInteracting } = useAssetViewer();
+function SplatComponent() {
+    const { isInteracting, asset, error } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
 
@@ -129,8 +126,7 @@ export function SplatViewer( {
     defaultMode = 'orbit',
     onTypeChange,
     className, 
-    children, 
-    ...props 
+    children
 } : SplatViewerProps) {
 
     const isControlled = !mode;
@@ -159,7 +155,7 @@ export function SplatViewer( {
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
                     <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
-                        <SplatComponent src={src} {...props} />
+                        <SplatComponent/>
                     </Application>
                     <TooltipProvider>
                         {children}

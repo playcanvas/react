@@ -5,6 +5,7 @@ import { Controls } from "./controls"
 import { CameraModeToggle } from "./camera-mode-toggle"
 import { HelpButton } from "./help-button"
 import { SplatViewer } from "./splat-viewer"
+import Progress from "./progress-indicator"
 
 export {
   FullScreenButton,
@@ -14,4 +15,5 @@ export {
   CameraModeToggle,
   HelpButton,
   SplatViewer as Splat,
+  Progress,
 };
