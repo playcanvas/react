@@ -1,6 +1,6 @@
 ---
-title: Hooks
-description: A collection of hooks that are useful when working with `@playcanvas/react`.
+description: A collection of useful hooks for working with `@playcanvas/react`.
+asIndexPage: true
 openGraph:
     title: playcanvas/react docs - Hooks
     description: Documentation for @playcanvas/react
@@ -12,17 +12,26 @@ openGraph:
 
 # Hooks
 
-The are a a couple of hooks that are useful when working with `@playcanvas/react`. These can often be useful when creating custom components, hooks or utilities.
+The are a a number of important hooks that are useful when working with `@playcanvas/react`. These can often be useful when creating custom components, hooks or utilities.
 
-## `useApp`
+## useApp
 
 The `useApp` hook returns the [`Application`](https://api.playcanvas.com/classes/Engine.Application.html) instance that is currently active. This is useful if you need reference to the PlayCanvas Application instance directly.
 
 ```jsx
 import { useApp } from '@playcanvas/react/hooks'
+
+const MyComponent = () => {
+  const app = useApp();
+  console.log(app);
+
+  return <Entity>
+    <Render type="box" />
+  </Entity>
+}
 ```
 
-## `useParent`
+## useParent
 
 The `useParent` hook returns the parent `Entity` of the current component. This can be useful if you need to access the parent entity of a component. For example, if you are creating a custom component that should be attached to a specific entity.
 
@@ -43,7 +52,7 @@ const ParentEntity = () => {
 };
 ```
 
-## `useFrame`
+## useFrame
 
 The `useFrame` hook ties into the event loop and will be called on every frame whilst the component is mounted. Use this when you need to update a value or perform a calculation on every frame. This is better for performance than using react state updates.
 

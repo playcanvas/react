@@ -7,4 +7,4 @@ export { useParent, ParentContext } from './use-parent';
 export { useMaterial } from './use-material'
 export { useAsset, useSplat, useTexture, useEnvAtlas, useModel } from './use-asset';
 export { useFrame } from './use-frame';
-export type { UseAssetOptions } from './use-asset';
+export type { AssetOptions, AssetResult } from './use-asset';

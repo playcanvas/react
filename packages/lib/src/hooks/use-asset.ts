@@ -24,7 +24,7 @@ export interface AssetResult {
 /**
  * Options for the useAsset hook
  */
-export type UseAssetOptions = {
+export type AssetOptions = {
   /**
    * Additional properties to pass to the asset loader.
    * @defaultValue {}
@@ -60,7 +60,7 @@ export type UseAssetOptions = {
 export const useAsset = (
   src: string, 
   type: string, 
-  options?: UseAssetOptions,
+  options?: AssetOptions,
 ): AssetResult => {
 
   const { props = {} , subscribe } = options ?? {};
@@ -170,7 +170,7 @@ export const useAsset = (
  */
 export const useSplat = (
   src: string, 
-  options?: UseAssetOptions
+  options?: AssetOptions
 ): AssetResult => 
   useAsset(src, 'gsplat', options);
 
@@ -194,7 +194,7 @@ export const useSplat = (
  */
 export const useTexture = (
   src: string, 
-  options?: UseAssetOptions
+  options?: AssetOptions
 ): AssetResult => 
   useAsset(src, 'texture', options);
 
@@ -218,7 +218,7 @@ export const useTexture = (
  */
 export const useEnvAtlas = (
   src: string, 
-  options?: UseAssetOptions
+  options?: AssetOptions
 ): AssetResult => 
   useAsset(src, 'texture', { 
     props: {
@@ -249,6 +249,6 @@ export const useEnvAtlas = (
  */
 export const useModel = (
   src: string, 
-  options?: UseAssetOptions
+  options?: AssetOptions
 ): AssetResult => 
   useAsset(src, 'container', options);

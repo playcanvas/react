@@ -1,7 +1,7 @@
 # Fetch Asset
 import { Callout } from 'nextra/components'
 
-`fetchAsset` is a simple function that loads an asset from a url and returns a corresponding `Asset`. It returns a promise that resolves when the asset loads meaning you can use it with libraries such as `SWR` or `react-query` which suspend whilst the asset loads.
+`fetchAsset` is a simple utility function for loading assets from a url. It returns a promise that resolves when the asset loads meaning you can use it with libraries such as `SWR` or `react-query` which suspend whilst the asset loads.
 
 We recommend reading more about assets in the [Loading Assets](/docs/guide/loading-assets) guide.
 
@@ -38,15 +38,11 @@ const Container = (( src )) => {
 }
 ```
 
-## Options
+## API Reference
 
 <TSDoc
   code={`
     import type { FetchAssetOptions } from '@playcanvas/react/utils';
-    type $ = FetchAssetOptions
-    export default $;
+    export default FetchAssetOptions;
   `}
 />
-
-
-
