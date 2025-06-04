@@ -1,32 +1,48 @@
-"use client"
+"use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAssetViewer } from "./splat-viewer-context";
-// import { useFrame } from "@playcanvas/react/hooks";
+import { cn } from "@lib/utils";
 
-function Progress() {
-    const progressBarRef = useRef<HTMLDivElement>(null);
-    const progressRef = useRef<number>(0);
-    const { asset, subscribeToProgress } = useAssetViewer();
+type ProgressProps = {
+  variant?: "top" | "bottom";
+  className?: string;
+  style?: React.CSSProperties;
+};
 
-    useEffect(() => {
-        const unsubscribe = subscribeToProgress((progress) => {
-            progressRef.current = progress;
-        });
-        return () => unsubscribe();
-    }, [subscribeToProgress]);
+export function Progress({ variant = "top", className, style }: ProgressProps) {
+  const { subscribe } = useAssetViewer();
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(true);
 
-    // useFrame(() => {
-        // if (progressBarRef.current) {
-        //     progressBarRef.current.style.width = `${progressRef.current * 100}%`;
-        // }
-    // })
+  useEffect(() => {
+    const unsubscribe = subscribe((progress) => {
+      if (!ref.current) return;
+      ref.current.style.width = `${progress * 100}%`;
 
-    if (asset) return null;
+      if (progress >= 1) {
+        // hide the progress bar after 500ms
+        setTimeout(() => setVisible(false), 500);
+      } else {
+        setVisible(true);
+      }
 
-    return (
-        <div ref={progressBarRef} className="w-full h-1 absolute inset-0 top-0 left-0 bg-accent" />
-    )
+    });
+    return unsubscribe;
+  }, [subscribe]);
+
+  if (!visible) return null;
+
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "absolute left-0 w-full h-1 bg-accent transition-[width] duration-300 will-change-[width]",
+        variant === "top" && "top-0",
+        variant === "bottom" && "bottom-0",
+        className
+      )}
+      style={{ width: "0%", ...style }}
+    />
+  );
 }
-
-export default Progress;

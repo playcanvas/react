@@ -2,21 +2,9 @@
 
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
 import { CameraMode } from "./splat-viewer";
-import { useSplat } from "@playcanvas/react/hooks";
-import { Asset } from "playcanvas";
 import { useSubscribe } from "./hooks/use-subscribe";
 
 type AssetViewerContextValue = {
-  /**
-   * The asset.
-   */
-  asset: Asset | null;
-
-  /**
-   * The error.
-   */
-  error: string | null;
-
   /**
    * Whether the viewer is in fullscreen mode.
    */
@@ -74,9 +62,9 @@ type AssetViewerContextValue = {
   setAutoRotate: (autoRotate: boolean) => void;
 
   /**
-   * Subscribes to the progress of the asset.
+   * Subscribes to the asset progress.
    */
-  subscribeToProgress: (fn: (progress: number) => void) => () => void;
+  subscribe: (fn: (progress: number) => void) => () => void;
 };
 
 export const AssetViewerContext = createContext<AssetViewerContextValue | undefined>(undefined);
@@ -105,6 +93,7 @@ export function AssetViewerProvider({
   mode,
   setMode,
   src,
+  subscribe,
 }: {
   children: React.ReactNode;
   autoPlay?: boolean;
@@ -112,9 +101,9 @@ export function AssetViewerProvider({
   src: string;
   mode: CameraMode;
   setMode: (mode: CameraMode) => void;
+  subscribe: (fn: (progress: number) => void) => () => void;
 }) {
-  const { subscribe, notify } = useSubscribe<number>();
-  const { asset, error } = useSplat(src, { subscribe: (meta) => notify(meta.progress) });
+  
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [overlay, setOverlay] = useState<"help" | "settings" | null>(null);
   const [autoRotate, setAutoRotate] = useState(false);
@@ -205,8 +194,6 @@ export function AssetViewerProvider({
   return (
     <AssetViewerContext.Provider
       value={{
-        asset,
-        error,
         isFullscreen,
         isInteracting,
         toggleFullscreen,
@@ -218,7 +205,7 @@ export function AssetViewerProvider({
         triggerDownload,
         autoRotate,
         setAutoRotate,
-        subscribeToProgress: subscribe
+        subscribe
       }}
     >
       <TimelineProvider autoPlay={autoPlay}>
