@@ -3,7 +3,7 @@ import { warnOnce } from "./validation";
 
 type AssetType = ConstructorParameters<typeof Asset>[1];
 
-export type ProgressCallbackParams = {
+export type AssetMeta = {
     /**
      * The normalized progress of the asset loading.
      */
@@ -32,10 +32,10 @@ export type FetchAssetOptions = {
     props?: Record<string, unknown>;
     /**
      * A callback function that is called to provide loading progress.
-     * @param {ProgressCallbackParams} meta - The progress of the asset loading.
+     * @param {AssetMeta} meta - The progress of the asset loading.
      * @returns void
      */
-    onProgress?: (meta: ProgressCallbackParams) => void;
+    onProgress?: (meta: AssetMeta) => void;
 };
 
 export const fetchAsset = ({

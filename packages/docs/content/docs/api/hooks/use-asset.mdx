@@ -17,10 +17,10 @@ PlayCanvas React provides hooks for loading and managing different assets. These
 The general signature of the hooks is:
 
 ```tsx
-const { asset, loading, error } = useModel(src, { props, subscribe });
+const { asset, loading, error } = useModel(src, props);
 ```
 
-Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader and `subscribe` is a callback function that provides loading progress.
+Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader.
 
 ```tsx copy filename="render-glb.tsx"
 import { useModel } from '@playcanvas/react/hooks';
@@ -45,9 +45,13 @@ import { useSplat } from '@playcanvas/react/hooks';
 
 export function RenderSplat() {
   const [progress, setProgress] = useState(0);
-  const { asset, loading, error } = useSplat('splat.ply', {
-    subscribe: ({ progress }) => setProgress(progress)
-  });
+  const { asset, loading, error, subscribe } = useSplat('splat.ply');
+
+  // Subscribe to loading progress
+  useEffect(() => {
+    const unsubscribe = subscribe(({ progress }) => setProgress(progress));
+    return () => unsubscribe();
+  }, [subscribe]);
 
   if (loading) return <LoadingSpinner />;
   if (error) return <ErrorMessage message={error} />;
@@ -61,20 +65,7 @@ export function RenderSplat() {
 
 ## API Reference
 
-### Parameters
-
-The `useAsset` hook has the following signature.
-
-<TSDoc
-  code={`
-    import type { AssetOptions } from '@playcanvas/react/hooks';
-    export default AssetOptions;
-  `}
-/>
-
-### Return Type
-
-and has the following return type.
+The `useAsset` hook has the following return type.
 
 <TSDoc
   code={`
