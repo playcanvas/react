@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useAssetViewer } from "./splat-viewer-context";
-import { useFrame } from "@playcanvas/react/hooks";
+// import { useFrame } from "@playcanvas/react/hooks";
 
 function Progress() {
     const progressBarRef = useRef<HTMLDivElement>(null);
@@ -16,11 +16,11 @@ function Progress() {
         return () => unsubscribe();
     }, [subscribeToProgress]);
 
-    useFrame(() => {
+    // useFrame(() => {
         // if (progressBarRef.current) {
         //     progressBarRef.current.style.width = `${progressRef.current * 100}%`;
         // }
-    })
+    // })
 
     if (asset) return null;
 
