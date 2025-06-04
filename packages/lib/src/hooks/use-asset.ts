@@ -43,7 +43,8 @@ export interface AssetResult {
  * 
  * @param src - The source URL of the asset.
  * @param type - The type of the asset (must be one of: texture, gsplat, container, model).
- * @param props - Additional properties to pass to the asset loader.
+ * @param file - Details about the file to load. This is equivalent to the `file` property in the PlayCanvas Asset.
+ * @param data - Additional data about the asset. This is equivalent to the `data` property in the PlayCanvas Asset.
  * @returns An object containing the asset, loading state, and any error.
  * 
  * @example
@@ -60,8 +61,8 @@ export interface AssetResult {
 export const useAsset = (
   src: string, 
   type: string, 
-  data: Record<string, unknown> = {},
-  props: Record<string, unknown> = {}
+  file: Record<string, unknown> = {},
+  data: Record<string, unknown> = {}
 ): AssetResult => {
 
   const app = useApp();
@@ -81,9 +82,9 @@ export const useAsset = (
   let stablePropsKey = null;
 
   try{
-    stablePropsKey = JSON.stringify({ props, data }, Object.keys({ props, data }).sort())
+    stablePropsKey = JSON.stringify({ file, data }, Object.keys({ file, data }).sort())
   } catch {
-    const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
+    const error = `Invalid props for "useAsset('${src}')". \`file\` and \`data\` must be serializable to JSON.`;
     warnOnce(error);
     setResult({
       asset: null,
@@ -139,7 +140,7 @@ export const useAsset = (
     }
 
     // Load the asset
-    fetchAsset({ app, url: src, type, data, props, onProgress })
+    fetchAsset({ app, url: src, type, data, file, onProgress })
       .then((asset) => {
         setResult({
           asset: asset as Asset,
@@ -164,7 +165,8 @@ export const useAsset = (
  * Simple hook to fetch a splat asset from the asset registry.
  * 
  * @param src - The source URL of the splat asset.
- * @param props - Additional properties to pass to the asset loader.
+ * @param file - Details about the file to load. This is equivalent to the `file` property in the PlayCanvas Asset.
+ * @param data - Additional data about the asset. This is equivalent to the `data` property in the PlayCanvas Asset.
  * @returns An object containing the asset, loading state, and any error.
  * 
  * @example
@@ -180,10 +182,10 @@ export const useAsset = (
  */
 export const useSplat = (
   src: string, 
-  props: Record<string, unknown> = {},
+  file: Record<string, unknown> = {},
   data: Record<string, unknown> = {},
 ): AssetResult => 
-  useAsset(src, 'gsplat', data, props);
+  useAsset(src, 'gsplat', file, data);
 
 /**
  * Simple hook to fetch a texture asset from the asset registry.
@@ -205,16 +207,17 @@ export const useSplat = (
  */
 export const useTexture = (
   src: string, 
-  data: Record<string, unknown> = {},
-  props: Record<string, unknown> = {}
+  file: Record<string, unknown> = {},
+  data: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'texture', data, props);
+  useAsset(src, 'texture', file, data);
 
 /**
  * Simple hook to load an environment atlas texture asset.
  * 
  * @param src - The source URL of the environment atlas texture.
- * @param props - Additional properties to pass to the asset loader.
+ * @param file - Details about the file to load. This is equivalent to the `file` property in the PlayCanvas Asset.
+ * @param data - Additional data about the asset. This is equivalent to the `data` property in the PlayCanvas Asset.
  * @returns An object containing the asset, loading state, and any error.
  * 
  * @example
@@ -230,16 +233,17 @@ export const useTexture = (
  */
 export const useEnvAtlas = (
   src: string, 
-  props: Record<string, unknown> = {},
+  file: Record<string, unknown> = {},
   data: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...data }, props);
+  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...file }, data);
 
 /**
  * Simple hook to load a 3D model asset (GLB/GLTF).
  * 
  * @param src - The source URL of the 3D model.
- * @param props - Additional properties to pass to the asset loader.
+ * @param file - Details about the file to load. This is equivalent to the `file` property in the PlayCanvas Asset.
+ * @param data - Additional data about the asset. This is equivalent to the `data` property in the PlayCanvas Asset.
  * @returns An object containing the asset, loading state, and any error.
  * 
  * @example
@@ -255,7 +259,7 @@ export const useEnvAtlas = (
  */
 export const useModel = (
   src: string, 
-  props: Record<string, unknown> = {},
+  file: Record<string, unknown> = {},
   data: Record<string, unknown> = {}
 ): AssetResult => 
-  useAsset(src, 'container', data, props);
+  useAsset(src, 'container', file, data);
