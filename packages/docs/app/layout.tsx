@@ -74,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           <ReactQueryProvider>
             <div data-vaul-drawer-wrapper >
-              <div className="relative min-h-screen">
+              <div className="relative z-0 min-h-screen">
                 {children}
               </div>
             </div>
