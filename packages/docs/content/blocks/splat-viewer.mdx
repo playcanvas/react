@@ -17,6 +17,7 @@ Supports compressed gaussian splats.
 <div className="lg:outline lg:p-28 -mx-4 lg:-mx-6 mt-12 mb-0 rounded-t-lg bg-linear-to-br from-indigo-500 to-purple-600 relative">
   <OpenInV0Button url={`https://${process.env.VERCEL_URL}/r/splat-viewer.json`} className="absolute top-4 right-4" />
   <Viewer.Splat src={splatUrl} className="aspect-2.39:1 bg-purple-200 rounded-t-lg lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+      <Viewer.Progress className="bg-[#8a01ff]" />
       <Viewer.Controls autoHide >
         <div className="flex gap-1 flex-grow">
             <Viewer.FullScreenButton />
@@ -39,6 +40,7 @@ Supports compressed gaussian splats.
             export function SplatViewerDemo() {
               return (
                 <Viewer.Splat src={splatUrl} autoPlay >
+                  <Viewer.Progress />
                   <Viewer.Controls >
                     <div className="flex gap-2 flex-grow">
                         <Viewer.FullScreenButton />
@@ -146,6 +148,7 @@ export default () => (
       <Viewer.DownloadButton />
       <Viewer.CameraModeToggle />
       <Viewer.MenuButton />
+      <Viewer.Progress />
     </Viewer.Controls>
   </Viewer.Viewer>
 )

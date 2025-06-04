@@ -12,6 +12,7 @@ import { SmartCamera } from "./smart-camera"
 import { HelpDialog } from "./help-dialog"
 import { FILLMODE_NONE } from "playcanvas"
 import { RESOLUTION_AUTO } from "playcanvas"
+import { useSubscribe } from "./hooks/use-subscribe"
 export type CameraMode = 'orbit' |  'fly';
 
 type CameraControlsProps = {
@@ -38,6 +39,7 @@ type SplatViewerComponentProps = CameraControlsProps & {
      * The url of an image to display whilst the asset is loading.
      */
     src: string,
+
     /**
      * The track to use for the animation 
      */
@@ -53,6 +55,11 @@ type SplatViewerComponentProps = CameraControlsProps & {
      * A callback function for when the type of camera changes
      */
     onTypeChange?: (type: 'orbit' | 'fly') => void,
+
+    /**
+     * A callback function for when the asset progress changes
+     */
+    onAssetProgress?: (progress: number) => void,
 }
 
 type PosterComponentProps = {
@@ -75,11 +82,11 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
     children?: React.ReactNode,
 }
 
-function SplatComponent({ 
-    src
+function SplatComponent({
+    src,
+    onAssetProgress
 }: SplatViewerComponentProps) {
-
-    const { asset, error } = useSplat(src)
+    const { asset, error, subscribe } = useSplat(src);
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
@@ -88,6 +95,10 @@ function SplatComponent({
     useEffect(() => {
         return () => asset?.unload();
     }, [asset]);
+
+    useEffect(() => {
+        return subscribe(({ progress }) => onAssetProgress?.(progress));
+    }, [subscribe, onAssetProgress]);
 
     // Hide the cursor when the timeline is playing and the user is not interacting
     useEffect(() => {
@@ -129,9 +140,11 @@ export function SplatViewer( {
     defaultMode = 'orbit',
     onTypeChange,
     className, 
-    children, 
-    ...props 
+    children
 } : SplatViewerProps) {
+
+    const { subscribe, notify } = useSubscribe<number>();
+    const onAssetProgress = useCallback((progress: number) => notify(progress), [src, notify]);
 
     const isControlled = !mode;
     const containerRef = useRef<HTMLDivElement>(null!);
@@ -156,13 +169,14 @@ export function SplatViewer( {
                 src={src}
                 mode={currentMode}
                 setMode={setCameraMode}
+                subscribe={subscribe}
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
                     <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
-                        <SplatComponent src={src} {...props} />
+                        <SplatComponent src={src} onAssetProgress={onAssetProgress} />
                     </Application>
                     <TooltipProvider>
-                        {children}
+                        { children }
                     </TooltipProvider>
                 </Suspense>
                 <HelpDialog />

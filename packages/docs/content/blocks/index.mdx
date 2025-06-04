@@ -26,7 +26,9 @@ export const splatVersion = registry.items.find(item => item.name === 'splat-vie
     High-level 3D primitives for React — minimal setup and beautiful by default.
 </div>
 
-PlayCanvas Blocks are high-level component primitives for React. Clean, simple, and beautiful by default, they're designed to drop into your project and get to work. Built around **@playcanvas/react** and **@shadcn/ui** they're composable, themeable and ready to use out of the box.
+PlayCanvas Blocks are high-level component primitives for React. Clean, simple, and beautiful by default, they're designed to drop into your project and get to work. 
+
+Built on **@playcanvas/react** and compatible with **@shadcn/ui** they're composable, themeable and ready to use out of the box.
 
 <div className='flex flex-row gap-2 mt-4 items-center'>
     <a className="flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit" href="blocks/installation">
@@ -42,10 +44,12 @@ PlayCanvas Blocks are high-level component primitives for React. Clean, simple, 
 </div>
 
 <div className='relative mb-4 lg:mb-12'>
-    <Viewer.Splat src={splatUrl} className="aspect-4:1 mt-8 lg:my-8 -mx-4 lg:-mx-6 bg-gray-200 lg:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" />
+    <Viewer.Splat src={splatUrl} className="aspect-4:1 mt-8 lg:my-8 -mx-4 lg:-mx-6 bg-gray-200 md:rounded-lg shadow-xl cursor-grab active:cursor-grabbing" >
+        <Viewer.Progress className="bg-[#e0004d]" />
+    </Viewer.Splat>
     <div className='lg:absolute bottom-0 right-0 w-full py-2 lg:py-8 lg:text-background text-xs italic text-center pointer-events-none'>
         <span className="pointer-events-auto">
-            Rendered with the <code>Viewer.Splat</code> component — a React block for Gaussian splats.{" "}
+            Rendered with the <code>Splat</code> block — a React component for Gaussian splats.{" "}
             <a className="underline text-bold" href="/blocks/splat-viewer">Learn more →</a>
         </span>
     </div>
@@ -87,7 +91,7 @@ PlayCanvas Blocks are high-level component primitives for React. Clean, simple, 
 
 ## How it works?
 
-Built on @playcanvas/react and the PlayCanvas engine, Blocks abstract the underlying engine to provide a high-level component API that's easy to use and understand. Internally, each block maps to a PlayCanvas entity and component hierarchy, giving you full control with a familiar dev experience.
+Built on **@playcanvas/react** and the PlayCanvas engine, Blocks abstract the underlying engine to provide a high-level component API that's easy to use and understand. Internally, each block maps to a PlayCanvas entity and component hierarchy, giving you full control with a familiar dev experience.
 
 ## Featured blocks
 
