@@ -82,14 +82,17 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
     children?: React.ReactNode,
 }
 
+const identity = (a: unknown) => a;
+
 function SplatComponent({
     src,
     onAssetProgress
 }: SplatViewerComponentProps) {
     const isObject = typeof src === 'object';
     const { asset, error, subscribe } = useSplat(
-        isObject ? "vfs://object.json" : src,
-        isObject ? src : {} );
+        isObject ? "vfs://force-use-sogs-parser.json" : src,
+        isObject ? { data: src, options: { mapUrl: identity }} : {} );
+
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();

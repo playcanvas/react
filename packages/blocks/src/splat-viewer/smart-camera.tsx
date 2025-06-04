@@ -87,18 +87,6 @@ export function SmartCamera({
     }
 
     const initialPose = computeStartingPose(gsplat, fov);
-    initialPose.position = [
-        -8.103486061096191,
-        1.483533501625061,
-        5.499182224273682
-    ]
-    initialPose.target = [
-      -8.103407561083364,
-      1.483563169807258,
-      5.498786613731963
-    ]
-    console.log('initialPose', initialPose);
-    //   const transitionStartRef = useRef<{ pos: Vec3; rot: Quat } | null>(null);
     
     setPose(initialPose);
     if(!animation) {
@@ -123,7 +111,6 @@ export function SmartCamera({
         animation.getPose(pose);
         
         //   if (mode === "animation") {
-        // console.log('timeline', t, animation.position, pose.rotation);
         entityRef.current?.setPosition(animation.position);
         entityRef.current?.setRotation(pose.rotation);
 

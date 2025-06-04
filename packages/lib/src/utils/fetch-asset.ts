@@ -26,15 +26,10 @@ export type FetchAssetOptions = {
      */
     type: string;
     /**
-     * Additional properties to pass to the asset.
+     * Props passed to the asset. This is spread into the `file` `data` and `options` properties of the asset.
      * @defaultValue {}
      */
     props?: Record<string, unknown>;
-    /**
-     * Additional data to pass to the asset.
-     * @defaultValue {}
-     */
-    data?: Record<string, unknown>;
     /**
      * A callback function that is called to provide loading progress.
      * @param {AssetMeta} meta - The progress of the asset loading.
@@ -44,15 +39,15 @@ export type FetchAssetOptions = {
 };
 
 export const fetchAsset = ({
-    app, url, type, props = {}, data = {}, onProgress
+    app, url, type, props = {}, onProgress
 }: FetchAssetOptions ): Promise<Asset> => {
     return new Promise((resolve, reject) => {
 
         let propsKey = url;
         try {
-            propsKey += JSON.stringify({ props, data }, Object.keys({ props, data }).sort())
+            propsKey += JSON.stringify(props, Object.keys(props).sort())
         } catch {
-            const error = `Invalid props for "fetchAsset({ url: '${url}', type: '${type}' })". Props must be serializable to JSON.`;
+            const error = `Invalid props for "fetchAsset({ url: '${url}', type: '${type}' })". \`props\` must be serializable to JSON.`;
             warnOnce(error);
             throw new Error(error);
         }
@@ -60,7 +55,7 @@ export const fetchAsset = ({
         let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(propsKey, type as AssetType, { url, ...data }, props);
+            asset = new Asset(propsKey, type as AssetType, { url, ...(props.file ?? {}) }, props.data ?? {}, props.options ?? {});
             app.assets.add(asset);
         }
 
