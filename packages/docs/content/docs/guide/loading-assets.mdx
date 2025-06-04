@@ -153,7 +153,7 @@ function useQueryModel(src: string) {
   const query = useQuery({
     queryKey: ['asset', src],
     // 'container' is the type of asset we're loading (e.g., model, texture, etc.)
-    queryFn: () => fetchAsset(app, src, 'container')
+    queryFn: () => fetchAsset({ app, url: src, type: 'container' })
   });
 
   return query;
@@ -180,7 +180,7 @@ import { useQuery } from '@tanstack/react-query';
 function useSuspendedQueryModel(src: string) {
   const query = useQuery({
     queryKey: ['asset', src],
-    queryFn: () => fetchAsset(app, src, 'container'),
+    queryFn: () => fetchAsset({ app, url: src, type: 'container' }),
     suspense: true
   });
 
