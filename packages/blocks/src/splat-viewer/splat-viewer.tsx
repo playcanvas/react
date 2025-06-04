@@ -144,7 +144,7 @@ export function SplatViewer( {
 } : SplatViewerProps) {
 
     const { subscribe, notify } = useSubscribe<number>();
-    const onAssetProgress = useCallback((progress: number) => notify(progress), [src]);
+    const onAssetProgress = useCallback((progress: number) => notify(progress), [src, notify]);
 
     const isControlled = !mode;
     const containerRef = useRef<HTMLDivElement>(null!);

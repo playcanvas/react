@@ -14,6 +14,7 @@ export function Progress({ variant = "top", className, style }: ProgressProps) {
   const { subscribe } = useAssetViewer();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
+  const timeoutRef = useRef<number>(null);
 
   useEffect(() => {
     const unsubscribe = subscribe((progress) => {
@@ -21,14 +22,16 @@ export function Progress({ variant = "top", className, style }: ProgressProps) {
       ref.current.style.width = `${progress * 100}%`;
 
       if (progress >= 1) {
-        // hide the progress bar after 500ms
-        setTimeout(() => setVisible(false), 500);
+        timeoutRef.current = setTimeout(() => setVisible(false), 500);
       } else {
         setVisible(true);
       }
-
     });
-    return unsubscribe;
+
+    return () => {
+      unsubscribe();
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, [subscribe]);
 
   if (!visible) return null;
