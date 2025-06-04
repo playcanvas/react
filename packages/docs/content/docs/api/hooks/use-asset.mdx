@@ -17,10 +17,10 @@ PlayCanvas React provides hooks for loading and managing different assets. These
 The general signature of the hooks is:
 
 ```tsx
-const { asset, loading, error } = useModel(src, { props, subscribe });
+const { asset, loading, error } = useModel(src, props);
 ```
 
-Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader and `subscribe` is a callback function that provides loading progress.
+Where `src` is the source URL of the asset and `props` are additional properties to pass to the asset loader.
 
 ```tsx copy filename="render-glb.tsx"
 import { useModel } from '@playcanvas/react/hooks';
