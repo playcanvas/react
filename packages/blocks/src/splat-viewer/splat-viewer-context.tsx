@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
-import { CameraMode, type SogsMeta } from "./splat-viewer";
+import { CameraMode } from "./splat-viewer";
 
 type AssetViewerContextValue = {
 
@@ -23,7 +23,7 @@ type AssetViewerContextValue = {
   /**
    * The source of the asset.
    */
-  src: string | SogsMeta;
+  src: string | Record<string, unknown>;
 
   /**
    * Whether the viewer is interacting with the asset.
@@ -92,7 +92,7 @@ export function AssetViewerProvider({
   children: React.ReactNode;
   autoPlay?: boolean;
   targetRef: React.RefObject<HTMLElement>;
-  src: string | SogsMeta;
+  src: string | Record<string, unknown>;
   mode: CameraMode;
   setMode: (mode: CameraMode) => void;
 }) {
@@ -114,7 +114,7 @@ export function AssetViewerProvider({
       // Multiple file download for SogsMeta
       const files = Object.values(src).reduce<string[]>((acc, value) => {
         if (value && typeof value === 'object' && 'files' in value) {
-          return [...acc, ...value.files];
+          return [...acc, ...(value.files as string[])];
         }
         return acc;
       }, []);

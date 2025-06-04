@@ -33,66 +33,12 @@ type CameraControlsProps = {
     defaultMode?: CameraMode,
 }
 
-type DType = "float32" | "uint8" | "int32";
-type SogsTexture = {
-    /**
-     * - The dimensions of the texture data array
-     */
-    shape: number[];
-    /**
-     * - The data type of the texture values
-     */
-    dtype: DType;
-    /**
-     * - Array of file paths containing the texture data
-     */
-    files: string[];
-    /**
-     * - Minimum values for normalization
-     */
-    mins?: number | number[];
-    /**
-     * - Maximum values for normalization
-     */
-    maxs?: number | number[];
-    /**
-     * - The encoding format of the texture data
-     */
-    encoding?: string;
-    /**
-     * - The quantization level of the texture data
-     */
-    quantization?: number;
-};
-
-export type SogsMeta = {
-    /**
-     * - The k-means index for each splat
-     */
-    means: SogsTexture;
-    /**
-     * - The scale factors for each splat
-     */
-    scales: SogsTexture;
-    /**
-     * - The quaternion rotations for each splat
-     */
-    quats: SogsTexture;
-    /**
-     * - The zeroth order spherical harmonics coefficients
-     */
-    sh0: SogsTexture;
-    /**
-     * - The higher order spherical harmonics coefficients
-     */
-    shN: SogsTexture;
-};
 
 type SplatViewerComponentProps = CameraControlsProps & {
     /**
      * The url of an image to display whilst the asset is loading.
      */
-    src: string | SogsMeta,
+    src: string | Record<string, unknown>,
     /**
      * The track to use for the animation 
      */
@@ -137,7 +83,7 @@ function SplatComponent({
     const isSogsMeta = typeof src === 'object';
     const { asset, error } = useSplat(
         isSogsMeta ? "vfs://splat-sogs.json" : src, 
-        isSogsMeta? src as SogsMeta : {} );
+        isSogsMeta? src : {} );
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
