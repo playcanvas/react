@@ -2,9 +2,9 @@
 
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
 import { CameraMode } from "./splat-viewer";
+import { useSubscribe } from "./hooks/use-subscribe";
 
 type AssetViewerContextValue = {
-
   /**
    * Whether the viewer is in fullscreen mode.
    */
@@ -60,6 +60,11 @@ type AssetViewerContextValue = {
    * Toggles the auto rotate.
    */
   setAutoRotate: (autoRotate: boolean) => void;
+
+  /**
+   * Subscribes to the asset progress.
+   */
+  subscribe: (fn: (progress: number) => void) => () => void;
 };
 
 export const AssetViewerContext = createContext<AssetViewerContextValue | undefined>(undefined);
@@ -88,6 +93,7 @@ export function AssetViewerProvider({
   mode,
   setMode,
   src,
+  subscribe,
 }: {
   children: React.ReactNode;
   autoPlay?: boolean;
@@ -95,7 +101,9 @@ export function AssetViewerProvider({
   src: string | Record<string, unknown>;
   mode: CameraMode;
   setMode: (mode: CameraMode) => void;
+  subscribe: (fn: (progress: number) => void) => () => void;
 }) {
+  
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [overlay, setOverlay] = useState<"help" | "settings" | null>(null);
   const [autoRotate, setAutoRotate] = useState(false);
@@ -217,7 +225,8 @@ export function AssetViewerProvider({
         setOverlay,
         triggerDownload,
         autoRotate,
-        setAutoRotate
+        setAutoRotate,
+        subscribe
       }}
     >
       <TimelineProvider autoPlay={autoPlay}>
@@ -255,26 +264,21 @@ export function TimelineProvider({
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const timeRef = useRef(time);
   const rafIdRef = useRef<number | null>(null);
-  const subscribers = useRef(new Set<(v: number) => void>());
+  const { subscribe, notify } = useSubscribe<number>();
 
   const setTime = useCallback((value: number) => {
     timeRef.current = value;
-    subscribers.current.forEach((fn) => fn(value));
-  }, []);
+    notify(value);
+  }, [notify]);
 
   const getTime = useCallback(() => timeRef.current, []);
-
-  const subscribe = useCallback((fn: (v: number) => void) => {
-    subscribers.current.add(fn);
-    return () => subscribers.current.delete(fn);
-  }, []);
 
   // Example: when time is changed and user commits it
   const onCommit = useCallback((value: number) => {
     timeRef.current = value;
     setTime(value);
     _setTime(value);
-  }, []);
+  }, [setTime]);
 
   const lastTimestampRef = useRef<number | null>(null);
 

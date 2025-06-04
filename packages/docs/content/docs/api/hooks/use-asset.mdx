@@ -1,5 +1,5 @@
 ---
-title: Assets
+title: useAsset
 description: Documentation for the Assets hook
 openGraph:
     title: playcanvas/react docs - Assets
@@ -36,13 +36,41 @@ export function RenderAsset() {
 }
 ```
 
-Every hooks returns an `AssetResult` with the following properties
+### Loading Progress
+
+The `useAsset` hook supports loading progress via the `subscribe` callback. This is useful if you want to show a loading indicator or update a progress bar. Not all asset types return a progress value during load, so this is not guaranteed to be available for all asset types.
+
+```tsx copy filename="render-splat.tsx"
+import { useSplat } from '@playcanvas/react/hooks';
+
+export function RenderSplat() {
+  const [progress, setProgress] = useState(0);
+  const { asset, loading, error, subscribe } = useSplat('splat.ply');
+
+  // Subscribe to loading progress
+  useEffect(() => {
+    const unsubscribe = subscribe(({ progress }) => setProgress(progress));
+    return () => unsubscribe();
+  }, [subscribe]);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return (<Entity>
+    <GSplat asset={asset} />
+  </Entity>);
+}
+```
+
+## API Reference
+
+The `useAsset` hook has the following return type.
 
 <TSDoc
   code={`
-    import { useAsset } from '@playcanvas/react/hooks';
-    type $ = ReturnType<typeof useAsset>;
-    export default $;
+    import type { AssetResult } from '@playcanvas/react/hooks';
+    export default AssetResult;
   `}
 />
 
@@ -136,7 +164,6 @@ export function RenderEnvAtlas() {
 ```
 
 See the [EnvAtlas](/docs/api/components/EnvAtlas) component for more information.
-
 
 ## useAsset
 

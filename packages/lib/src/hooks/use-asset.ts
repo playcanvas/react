@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { fetchAsset } from "../utils/fetch-asset";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { fetchAsset, AssetMeta } from "../utils/fetch-asset";
 import { useApp } from "./use-app";
 import { Asset, TEXTURETYPE_RGBP } from "playcanvas";
 import { warnOnce } from "../utils/validation";
@@ -9,16 +9,33 @@ import { warnOnce } from "../utils/validation";
  */
 const supportedTypes = ['texture', 'gsplat', 'container', 'model'];
 
+type AssetResultCallback = (meta: AssetMeta) => void;
+
 /**
  * Result of an asset loading operation
  */
 export interface AssetResult {
-  /** The loaded asset, or null if not loaded or failed */
+  /** 
+   * The loaded asset, or null if not loaded or failed 
+   * @defaultValue null
+   */
   asset: Asset | null;
-  /** Whether the asset is currently loading, or false if it has loaded or failed */
+  /** 
+   * Whether the asset is currently loading, or false if it has loaded or failed 
+   * @defaultValue true
+   */
   loading: boolean;
-  /** Error message if loading failed, or null if successful */
+  /** 
+   * Error message if loading failed, or null if successful 
+   * @defaultValue null
+   */
   error: string | null;
+  /**
+   * Use this to subscribe to loading progress events
+   * @param {AssetMeta} meta - The progress of the asset loading.
+   * @returns void
+   */
+  subscribe: (cb: AssetResultCallback) => () => void;
 }
 
 /**
@@ -46,13 +63,21 @@ export const useAsset = (
   data: Record<string, unknown> = {},
   props: Record<string, unknown> = {}
 ): AssetResult => {
-  const [result, setResult] = useState<AssetResult>({
+
+  const app = useApp();
+  const subscribersRef = useRef<Set<(meta: AssetMeta) => void>>(new Set());
+
+  const subscribe = useCallback((cb: AssetResultCallback) => {
+    subscribersRef.current.add(cb);
+    return () => subscribersRef.current.delete(cb);
+  }, []);
+
+  const [result, setResult] = useState<Omit<AssetResult, 'subscribe'>>({
     asset: null,
     loading: true,
     error: null
   });
-
-  const app = useApp();
+  
   let stablePropsKey = null;
 
   try{
@@ -61,11 +86,15 @@ export const useAsset = (
     const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
     warnOnce(error);
     setResult({
-        asset: null,
-        loading: false,
-        error
+      asset: null,
+      loading: false,
+      error
     });
   }
+
+  const onProgress = useCallback((meta: AssetMeta) => {
+    for (const cb of subscribersRef.current) cb(meta);
+  }, []);
 
   useEffect(() => {
 
@@ -110,7 +139,7 @@ export const useAsset = (
     }
 
     // Load the asset
-    fetchAsset(app, src, type, data, props)
+    fetchAsset({ app, url: src, type, data, props, onProgress })
       .then((asset) => {
         setResult({
           asset: asset as Asset,
@@ -123,12 +152,12 @@ export const useAsset = (
         setResult({ 
           asset: null,
           loading: false,
-          error: error?.message || `Failed to load asset: ${src}`
+          error: error?.message || `Failed to load asset: ${src}`,
         });
       });
   }, [app, src, type, stablePropsKey]);
 
-  return result;
+  return { ...result, subscribe };
 };
 
 /**
