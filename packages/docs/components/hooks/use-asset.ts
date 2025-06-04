@@ -10,17 +10,17 @@ import { fetchAsset } from "@playcanvas/react/utils"
  * 
  * @param {string} src - The URL of the texture asset. 
  * @param {string} type - The type of asset to load.
- * @param {Object} [data] - Additional properties to pass to the asset loader.
+ * @param {Object} [props] - Additional properties to pass to the asset loader.
  * @returns {{ data: Asset, isPending: boolean }} - The texture asset and its loading state.
  */
-export const useAsset = (src: string, type: string, data) => {
+export const useAsset = (src: string, type: string, props) => {
     const app = useApp();
-    const queryKey = [app.root?.getGuid(), src, type, data];
+    const queryKey = [app.root?.getGuid(), src, type, props];
 
     // Construct a query for the asset
     return useQuery({ 
         queryKey,
-        queryFn: () => app && fetchAsset({ app, url: src, type, data })
+        queryFn: () => app && fetchAsset({ app, url: src, type, props })
     })
 }
 
