@@ -86,10 +86,10 @@ function SplatComponent({
     src,
     onAssetProgress
 }: SplatViewerComponentProps) {
-    const isSogsMeta = typeof src === 'object';
+    const isObject = typeof src === 'object';
     const { asset, error, subscribe } = useSplat(
-        isSogsMeta ? "vfs://splat-sogs.json" : src, 
-        isSogsMeta? src : {} );
+        isObject ? "vfs://object.json" : src,
+        isObject ? src : {} );
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();
