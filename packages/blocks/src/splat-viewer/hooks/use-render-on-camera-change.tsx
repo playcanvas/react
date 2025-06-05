@@ -34,7 +34,9 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
 
     const changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
     
-    app.renderNextFrame = changed;
+    if (!app.renderNextFrame) {
+      app.renderNextFrame = changed;
+    }
 
     if (app.renderNextFrame) {
       prevWorld.current.set(world);
