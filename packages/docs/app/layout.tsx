@@ -52,6 +52,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head faviconGlyph="◍" >
         <link rel="icon" type="image/svg+xml" href="/pc-react-logo.svg" />
+        <link rel="canonical" href="https://playcanvas-react.vercel.app" />
+        <title>PlayCanvas React</title>
       </Head>
       <body>
         <Layout
@@ -72,7 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         >
           <ReactQueryProvider>
             <div data-vaul-drawer-wrapper >
-              <div className="relative min-h-screen">
+              <div className="relative z-0 min-h-screen">
                 {children}
               </div>
             </div>
