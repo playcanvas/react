@@ -5,7 +5,6 @@ import { Button } from "./ui/button";
 import { cn } from "@lib/utils";
 
 export function ThemedSplatViewer({ src }: { src: string }) {
-    "use client"; 
 
     const [variant, setVariant] = useState<"noir" | "paris" | "neutral" | "none">("paris");
 
