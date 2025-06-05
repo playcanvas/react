@@ -34,12 +34,12 @@ type CameraControlsProps = {
     defaultMode?: CameraMode,
 }
 
+
 type SplatViewerComponentProps = CameraControlsProps & {
     /**
      * The url of an image to display whilst the asset is loading.
      */
-    src: string,
-
+    src: string | Record<string, unknown>,
     /**
      * The track to use for the animation 
      */
@@ -82,11 +82,17 @@ export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps 
     children?: React.ReactNode,
 }
 
+const identity = (a: unknown) => a;
+
 function SplatComponent({
     src,
     onAssetProgress
 }: SplatViewerComponentProps) {
-    const { asset, error, subscribe } = useSplat(src);
+    const isObject = typeof src === 'object';
+    const { asset, error, subscribe } = useSplat(
+        isObject ? "vfs://force-use-sogs-parser.json" : src,
+        isObject ? { data: src, options: { mapUrl: identity }} : {} );
+
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
     const app = useApp();

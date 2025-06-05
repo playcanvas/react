@@ -59,7 +59,7 @@ export interface AssetResult {
  */
 export const useAsset = (
   src: string, 
-  type: string, 
+  type: string,
   props: Record<string, unknown> = {},
 ): AssetResult => {
 
@@ -80,9 +80,9 @@ export const useAsset = (
   let stablePropsKey = null;
 
   try{
-    stablePropsKey = JSON.stringify(props, Object.keys(props).sort())
+    stablePropsKey = JSON.stringify({ props }, Object.keys({ props }).sort())
   } catch {
-    const error = `Invalid props for "useAsset('${src}')". Props must be serializable to JSON.`;
+    const error = `Invalid props for "useAsset('${src}')". \`props\` must be serializable to JSON.`;
     warnOnce(error);
     setResult({
       asset: null,
@@ -179,9 +179,8 @@ export const useAsset = (
  */
 export const useSplat = (
   src: string, 
-  props: Record<string, unknown> = {}
-): AssetResult => 
-  useAsset(src, 'gsplat', props);
+  props: Record<string, unknown> = {},
+): AssetResult => useAsset(src, 'gsplat', props);
 
 /**
  * Simple hook to fetch a texture asset from the asset registry.
@@ -227,9 +226,9 @@ export const useTexture = (
  */
 export const useEnvAtlas = (
   src: string, 
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
 ): AssetResult => 
-  useAsset(src, 'texture', { type: TEXTURETYPE_RGBP, mipmaps: false, ...props });
+  useAsset(src, 'texture', { ...props, data: { type: TEXTURETYPE_RGBP, mipmaps: false, ...(props.data ?? {}) } });
 
 /**
  * Simple hook to load a 3D model asset (GLB/GLTF).
@@ -251,6 +250,6 @@ export const useEnvAtlas = (
  */
 export const useModel = (
   src: string, 
-  props: Record<string, unknown> = {}
+  props: Record<string, unknown> = {},
 ): AssetResult => 
   useAsset(src, 'container', props);

@@ -23,7 +23,7 @@ type AssetViewerContextValue = {
   /**
    * The source of the asset.
    */
-  src: string;
+  src: string | Record<string, unknown>;
 
   /**
    * Whether the viewer is interacting with the asset.
@@ -98,7 +98,7 @@ export function AssetViewerProvider({
   children: React.ReactNode;
   autoPlay?: boolean;
   targetRef: React.RefObject<HTMLElement>;
-  src: string;
+  src: string | Record<string, unknown>;
   mode: CameraMode;
   setMode: (mode: CameraMode) => void;
   subscribe: (fn: (progress: number) => void) => () => void;
@@ -110,13 +110,34 @@ export function AssetViewerProvider({
 
   // download
   const triggerDownload = useCallback(() => {
-    setOverlay(null)
-    const link = document.createElement("a");
-    link.href = src;
-    link.download = src.split("/").pop() || "asset";
-    document.body.appendChild(link);
-    link.click();
-  }, [src])
+    if (typeof src === 'string') {
+      // Single file download
+      const link = document.createElement('a');
+      link.href = src;
+      link.download = src.split('/').pop() || 'splat.ply';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Multiple file download for SogsMeta
+      const files = Object.values(src).reduce<string[]>((acc, value) => {
+        if (value && typeof value === 'object' && 'files' in value) {
+          return [...acc, ...(value.files as string[])];
+        }
+        return acc;
+      }, []);
+      
+      // Download each file sequentially
+      files.forEach((file, index) => {
+        const link = document.createElement('a');
+        link.href = file;
+        link.download = file.split('/').pop() || `splat_${index}.texture`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      });
+    }
+  }, [src]);
 
   // toggle help dialog
   const handleKey = useCallback((e: KeyboardEvent) => {
