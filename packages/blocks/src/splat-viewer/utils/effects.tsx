@@ -17,8 +17,9 @@ const deepMerge = (target: Record<string, unknown>, source: Record<string, unkno
     return result;
 };
 
-export const StaticPostEffects: FC<Partial<typeof defaultPostSettings>> = (props) => {
+export type PostEffectsSettings = Partial<typeof defaultPostSettings>;
 
+export const StaticPostEffects: FC<PostEffectsSettings> = (props) => {
     const settings = deepMerge(defaultPostSettings, props);
     return <Script script={CameraFrame} {...settings} />
 }

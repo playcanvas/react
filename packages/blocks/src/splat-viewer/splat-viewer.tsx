@@ -41,6 +41,17 @@ type SplatViewerComponentProps = CameraControlsProps & {
      */
     src: string | Record<string, unknown>,
     /**
+     * The style of the camera to use.
+     * 
+     * - `paris`: A warm saturated style.   
+     * - `neutral`: A neutral style.
+     * - `noir`: A black/white style.
+     * 
+     * @defaultValue 'neutral'
+     */
+    variant?: "paris" | "neutral" | "noir" | 'none' | Record<string, unknown>,
+
+    /**
      * The track to use for the animation 
      */
     track?: AnimationTrack,
@@ -86,6 +97,7 @@ const identity = (a: unknown) => a;
 
 function SplatComponent({
     src,
+    variant = "neutral",
     onAssetProgress
 }: SplatViewerComponentProps) {
     const isObject = typeof src === 'object';
@@ -109,10 +121,33 @@ function SplatComponent({
     // Hide the cursor when the timeline is playing and the user is not interacting
     useEffect(() => {
         if (app.graphicsDevice.canvas) {
-            // eslint-disable-next-line react-compiler/react-compiler
-            app.graphicsDevice.canvas.style.cursor = isPlaying && !isInteracting ? 'none' : '';
+            app.graphicsDevice.canvas.style.cursor = isPlaying && !isInteracting ? 'none' : 'grab';
         }
-    }, [isInteracting, app]);
+    }, [isInteracting, app, isPlaying]);
+
+    // Update cursor on mouse down/up
+    useEffect(() => {
+        const canvas = app.graphicsDevice.canvas;
+        if (!canvas) return;
+
+        const onMouseDown = () => {
+            canvas.style.cursor = 'grabbing';
+        };
+
+        const onMouseUp = () => {
+            canvas.style.cursor = isPlaying && !isInteracting ? 'none' : 'grab';
+        };
+
+        canvas.addEventListener('mousedown', onMouseDown);
+        canvas.addEventListener('mouseup', onMouseUp);
+        canvas.addEventListener('mouseleave', onMouseUp);
+
+        return () => {
+            canvas.removeEventListener('mousedown', onMouseDown);
+            canvas.removeEventListener('mouseup', onMouseUp);
+            canvas.removeEventListener('mouseleave', onMouseUp);
+        };
+    }, [app, isPlaying, isInteracting]);
     
     if (error) throw new Error(error);
     if (!asset) return null;
@@ -123,7 +158,7 @@ function SplatComponent({
                 // type === 'animation' ? <AnimationCamera fov={30} track={track} /> : 
                 // type === 'orbit' ? <InteractiveCamera fov={30} /> :
                 // <InteractiveCamera fov={30} type={type} /> 
-                <SmartCamera fov={30} />
+                <SmartCamera fov={30} variant={variant} />
             }
             <GSplat asset={asset} />
         </>
@@ -141,6 +176,7 @@ function PosterComponent({ poster }: PosterComponentProps) {
  */
 export function SplatViewer( { 
     src, 
+    variant = "neutral",
     poster,
     mode = 'orbit',
     defaultMode = 'orbit',
@@ -179,7 +215,7 @@ export function SplatViewer( {
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
                     <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
-                        <SplatComponent src={src} onAssetProgress={onAssetProgress} />
+                        <SplatComponent src={src} onAssetProgress={onAssetProgress} variant={variant} />
                     </Application>
                     <TooltipProvider>
                         { children }

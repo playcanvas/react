@@ -9,12 +9,18 @@ import { Vec3, GSplatComponent } from "playcanvas";
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
 import { useApp, useParent } from "@playcanvas/react/hooks";
-import { StaticPostEffects } from "./utils/effects";
-import style from "./utils/style";
+import { PostEffectsSettings, StaticPostEffects } from "./utils/effects";
+import { paris, neutral, noir } from "./utils/style";
 
 // @ts-expect-error There is no type definition for the camera-controls script
 import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
 import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change";
+
+const variants = new Map<string, PostEffectsSettings>([
+    ['paris', paris],
+    ['neutral', neutral],
+    ['noir', noir]
+]);
 
 type CameraControlsProps = {
     /* The focus point of the camera */
@@ -50,9 +56,11 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
 export function SmartCamera({
   fov = 30,
   animationTrack,
+  variant = "neutral"
 }: {
   fov?: number;
   animationTrack?: AnimationTrack;
+  variant?: "paris" | "neutral" | "noir" | "none" | PostEffectsSettings;
 }) {
 
   const entityRef = useRef<pc.Entity>(null);
@@ -96,6 +104,10 @@ export function SmartCamera({
     }
 
   }, [app]);
+
+  useEffect(() => {
+    app.renderNextFrame = true;
+  }, [variant]);
 
 
   // Listen to timeline changes
@@ -161,6 +173,10 @@ export function SmartCamera({
 //     );
 //   }
 
+  // If the variant is a string, use the default variant, otherwise use the variant object passed in
+  const style = typeof variant === 'string' ? variants.get(variant) ?? neutral : variant;
+  // const toneMapping = style.rendering.toneMapping ?? 4;
+
   return (
     <Entity name="camera" ref={entityRef} position={pose.position}>
       <Camera fov={fov} clearColor="#f3e8ff" />
@@ -171,7 +187,7 @@ export function SmartCamera({
         enableOrbit={mode === "orbit"}
         enabled={!isPlaying}
       />
-      <StaticPostEffects {...style.paris}/>
+      {variant !== 'none' && <StaticPostEffects {...style}/>}
     </Entity>
   );
 }
