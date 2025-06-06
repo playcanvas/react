@@ -131,8 +131,8 @@ export function SmartCamera({
         animation.getPose(pose);
         
         //   if (mode === "animation") {
-        // entityRef.current?.setPosition(animation.position);
-        // entityRef.current?.setRotation(pose.rotation);
+        entityRef.current?.setPosition(animation.position);
+        entityRef.current?.setRotation(pose.rotation);
 
     //   } else if (mode === "transition") {
         // // blend from previous to this
