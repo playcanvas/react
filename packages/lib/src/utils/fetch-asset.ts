@@ -26,8 +26,8 @@ export type FetchAssetOptions = {
      */
     type: string;
     /**
-     * Additional properties to pass to the asset.
-     * @defaultValue {{}}
+     * Props passed to the asset. This is spread into the `file` `data` and `options` properties of the asset.
+     * @defaultValue {}
      */
     props?: Record<string, unknown>;
     /**
@@ -47,7 +47,7 @@ export const fetchAsset = ({
         try {
             propsKey += JSON.stringify(props, Object.keys(props).sort())
         } catch {
-            const error = `Invalid props for "fetchAsset({ url: '${url}', type: '${type}' })". Props must be serializable to JSON.`;
+            const error = `Invalid props for "fetchAsset({ url: '${url}', type: '${type}' })". \`props\` must be serializable to JSON.`;
             warnOnce(error);
             throw new Error(error);
         }
@@ -55,7 +55,7 @@ export const fetchAsset = ({
         let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(propsKey, type as AssetType, { url }, props);
+            asset = new Asset(propsKey, type as AssetType, { url, ...(props.file ?? {}) }, props.data ?? {}, props.options ?? {});
             app.assets.add(asset);
         }
 

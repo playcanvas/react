@@ -1,5 +1,5 @@
 import { useApp, useFrame } from "@playcanvas/react/hooks";
-import { Entity } from "playcanvas";
+import { Entity as PcEntity } from "playcanvas";
 import { useRef } from "react";
 
 const nearlyEquals = (a: Float32Array, b: Float32Array, epsilon = 1e-4): boolean => {
@@ -15,7 +15,7 @@ const nearlyEquals = (a: Float32Array, b: Float32Array, epsilon = 1e-4): boolean
  * @param {Entity | null} entity - The PlayCanvas entity representing the camera. If null, the hook does nothing.
  * @returns {void} This hook does not return a value but updates the rendering state of the application.
  */
-export const useRenderOnCameraChange = (entity: Entity | null) => {
+export const useRenderOnCameraChange = (entity: PcEntity | null) => {
   const app = useApp();
   const prevWorld = useRef<Float32Array>(new Float32Array(16));
   const prevProj = useRef<Float32Array>(new Float32Array(16));
@@ -34,7 +34,9 @@ export const useRenderOnCameraChange = (entity: Entity | null) => {
 
     const changed = !nearlyEquals(world, prevWorld.current) || !nearlyEquals(proj, prevProj.current);
     
-    app.renderNextFrame = changed;
+    if (!app.renderNextFrame) {
+      app.renderNextFrame = changed;
+    }
 
     if (app.renderNextFrame) {
       prevWorld.current.set(world);
