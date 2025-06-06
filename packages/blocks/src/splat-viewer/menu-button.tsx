@@ -17,7 +17,8 @@ function MenuItemsDesktop({
     setMode,
     setOverlay,
     triggerDownload,
-    toggleFullscreen
+    toggleFullscreen,
+    resetCamera
   }: ReturnType<typeof useAssetViewer>) {
     return (
       <>
@@ -35,6 +36,10 @@ function MenuItemsDesktop({
           <DropdownMenuItem onClick={() => toggleFullscreen()}>
             Fullscreen
             <DropdownMenuShortcut>⇧⌘F</DropdownMenuShortcut>
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => resetCamera()}>
+            Reset View
+            <DropdownMenuShortcut>R</DropdownMenuShortcut>
           </DropdownMenuItem>
           <DropdownMenuCheckboxItem
             checked={true}
@@ -99,10 +104,9 @@ function MenuItemsDesktop({
     toggleFullscreen,
     isFullscreen,
     autoRotate,
-    setAutoRotate
+    setAutoRotate,
+    resetCamera
   }: ReturnType<typeof useAssetViewer>) {
-
-
     return (
       <div className="space-y-2 text-sm">
         
@@ -122,7 +126,10 @@ function MenuItemsDesktop({
                         }
                     </span>
                 </div>
-                <Switch id="auto-rotate" checked={autoRotate} onCheckedChange={() => setAutoRotate(!autoRotate)}/>
+                <Switch id="auto-rotate" checked={autoRotate} onCheckedChange={() => {
+                    setAutoRotate(!autoRotate);
+                    setOverlay(null);
+                }}/>
             </div>
         </Card>
 
@@ -136,16 +143,31 @@ function MenuItemsDesktop({
                 <HelpCircleIcon />
             </DropdownMenuShortcut>
           </Button>
-          <Button variant="ghost" className="w-full justify-between" onClick={() => triggerDownload()}>
+          <Button variant="ghost" className="w-full justify-between" onClick={() => {
+            triggerDownload();
+            setOverlay(null);
+          }}>
             Download
             <DropdownMenuShortcut>
                 <DownloadIcon />
             </DropdownMenuShortcut>
           </Button>
-          <Button variant="ghost" className="w-full justify-between" onClick={() => toggleFullscreen()}>
+          <Button variant="ghost" className="w-full justify-between" onClick={() => {
+            toggleFullscreen();
+            setOverlay(null);
+          }}>
             { isFullscreen ? "Exit Fullscreen" : "Fullscreen" }
             <DropdownMenuShortcut>
                 { isFullscreen ? <MinimizeIcon /> : <MaximizeIcon /> }
+            </DropdownMenuShortcut>
+          </Button>
+          <Button variant="ghost" className="w-full justify-between" onClick={() => {
+            resetCamera();
+            setOverlay(null);
+          }}>
+            Reset View
+            <DropdownMenuShortcut>
+                <Rotate3dIcon />
             </DropdownMenuShortcut>
           </Button>
         </div>

@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Entity } from "@playcanvas/react";
 import { Camera, Script } from "@playcanvas/react/components";
 import { useTimeline, useAssetViewer } from "./splat-viewer-context";
-import { Vec3, GSplatComponent } from "playcanvas";
+import { Vec3 } from "playcanvas";
 
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
@@ -38,7 +38,7 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
     useEffect(() => {
         /**
          * FIXME:
-         * `cameraControls` name will be manged in many bundlers. This needs to be updated when
+         * `cameraControls` name will be mangled in many bundlers. This needs to be updated when
          * PlayCanvas engine > v2.7.5 is released. See https://github.com/playcanvas/engine/pull/7593
          */
         // @ts-expect-error CameraControls is not defined in the script
@@ -46,7 +46,7 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
         if (controls) {
             controls.focus(new Vec3().fromArray(focus), null, false);
         }
-    }, [...focus]);
+    }, [focus]);
 
     return (<>
         <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
@@ -65,11 +65,11 @@ export function SmartCamera({
 
   const entityRef = useRef<pc.Entity>(null);
   const { subscribe, isPlaying } = useTimeline();
-  const { mode } = useAssetViewer();
+  const { mode, subscribeCameraReset } = useAssetViewer();
   const timeoutRef = useRef(0);
   const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
-  //   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
+  const initialPoseRef = useRef<PoseType | null>(null);
 
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
@@ -88,13 +88,9 @@ export function SmartCamera({
   const [animation, setAnimation] = useState<AnimCamera | null>(animationTrack ? AnimCamera.fromTrack(animationTrack) : null);
 
   useEffect(() => {
-    const gsplat = app.root.findComponent('gsplat') as unknown as GSplatComponent;
 
-    if (!gsplat) {
-        throw new Error("GSplat not found");
-    }
-
-    const initialPose = computeStartingPose(gsplat, fov);
+    const initialPose = computeStartingPose(app, fov);
+    initialPoseRef.current = initialPose;
     
     setPose(initialPose);
     if(!animation) {
@@ -105,10 +101,22 @@ export function SmartCamera({
 
   }, [app]);
 
+  // Expose reset functionality through callback
   useEffect(() => {
-    app.renderNextFrame = true;
-  }, [variant]);
 
+    if (!subscribeCameraReset) return;
+
+    const unsubscribe = subscribeCameraReset(() => {
+      if (!initialPoseRef.current || !entityRef.current) return;
+      
+      setPose(computeStartingPose(app, fov));
+
+      // Force a render
+      app.renderNextFrame = true;
+    });
+
+    return unsubscribe;
+  }, [subscribeCameraReset]);
 
   // Listen to timeline changes
   useEffect(() => {
@@ -123,8 +131,8 @@ export function SmartCamera({
         animation.getPose(pose);
         
         //   if (mode === "animation") {
-        entityRef.current?.setPosition(animation.position);
-        entityRef.current?.setRotation(pose.rotation);
+        // entityRef.current?.setPosition(animation.position);
+        // entityRef.current?.setRotation(pose.rotation);
 
     //   } else if (mode === "transition") {
         // // blend from previous to this
@@ -175,7 +183,6 @@ export function SmartCamera({
 
   // If the variant is a string, use the default variant, otherwise use the variant object passed in
   const style = typeof variant === 'string' ? variants.get(variant) ?? neutral : variant;
-  // const toneMapping = style.rendering.toneMapping ?? 4;
 
   return (
     <Entity name="camera" ref={entityRef} position={pose.position}>

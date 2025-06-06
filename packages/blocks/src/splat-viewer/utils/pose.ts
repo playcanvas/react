@@ -1,4 +1,4 @@
-import { BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
+import { AppBase, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
 
 import { lerp, MyQuat } from './math';
 
@@ -49,7 +49,14 @@ export type PoseType = {
     target: [number, number, number]
 }
 
-const computeStartingPose = (gsplat: GSplatComponent, fov: number) : PoseType => {
+const computeStartingPose = (app: AppBase, fov: number) : PoseType => {
+
+    const gsplat = app.root.findComponent('gsplat') as unknown as GSplatComponent;
+
+    if (!gsplat) {
+        throw new Error("GSplat not found");
+    }
+
     const bbox = gsplat?.instance?.meshInstance?.aabb ?? new BoundingBox();
     const sceneSize = bbox.halfExtents.length() * 1.5;
     const distance = sceneSize / Math.sin(fov / 180 * Math.PI * 0.5);
