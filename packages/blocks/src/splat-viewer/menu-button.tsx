@@ -3,7 +3,7 @@
 import { Button } from "@components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@components/ui/dropdown-menu";
 import { useMediaQuery } from "./help-dialog";
-import { EllipsisVerticalIcon, DownloadIcon, MinimizeIcon, MaximizeIcon, HelpCircleIcon, Rotate3dIcon, Move3DIcon } from "lucide-react";
+import { EllipsisVerticalIcon, DownloadIcon, MinimizeIcon, MaximizeIcon, HelpCircleIcon, Rotate3dIcon, Move3DIcon, RotateCcwIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@components/ui/drawer";
 import { useAssetViewer } from "./splat-viewer-context";
 import { ToggleGroupItem } from "@components/ui/toggle-group";
@@ -167,7 +167,7 @@ function MenuItemsDesktop({
           }}>
             Reset View
             <DropdownMenuShortcut>
-                <Rotate3dIcon />
+                <RotateCcwIcon />
             </DropdownMenuShortcut>
           </Button>
         </div>

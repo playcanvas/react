@@ -17,10 +17,16 @@ import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
 import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change";
 
 const variants = new Map<string, PostEffectsSettings>([
-    ['paris', paris],
-    ['neutral', neutral],
-    ['noir', noir]
+  ['paris', paris],
+  ['neutral', neutral],
+  ['noir', noir]
 ]);
+
+const length = (a: [number, number, number], b: [number, number, number]) => Math.sqrt(
+  Math.pow(a[0] - b[0], 2) +
+  Math.pow(a[1] - b[1], 2) + 
+  Math.pow(a[2] - b[2], 2)
+)
 
 type CameraControlsProps = {
     /* The focus point of the camera */
@@ -29,9 +35,11 @@ type CameraControlsProps = {
     enableFly: boolean,
     enableOrbit: boolean,
     enabled?: boolean,
+    distance?: number,
+    animate?: boolean,
 }
 
-function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) {
+function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ...props }: CameraControlsProps) {
 
     const entity = useParent();
 
@@ -44,7 +52,8 @@ function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) 
         // @ts-expect-error CameraControls is not defined in the script
         const controls = (entity.script?.cameraControls || entity.script?._CameraControls) as CameraControls;
         if (controls) {
-            controls.focus(new Vec3().fromArray(focus), null, false);
+            controls.focus(new Vec3().fromArray(focus), null, animate);
+            controls.resetZoom(distance, animate);
         }
     }, [focus]);
 
@@ -184,11 +193,14 @@ export function SmartCamera({
   // If the variant is a string, use the default variant, otherwise use the variant object passed in
   const style = typeof variant === 'string' ? variants.get(variant) ?? neutral : variant;
 
+  const distance = length(pose.position, pose.target) * 0.5
+
   return (
     <Entity name="camera" ref={entityRef} position={pose.position}>
       <Camera fov={fov} clearColor="#f3e8ff" />
       <CameraController
         focus={pose.target}
+        distance={distance}
         enablePan={mode === "fly"}
         enableFly={true}
         enableOrbit={mode === "orbit"}
