@@ -1,10 +1,10 @@
 "use client"
 
-import { FC, useLayoutEffect, useRef } from "react";
-import { useParent } from "../hooks";
-import { Asset, Entity, GSplatComponent, GSplatResource } from "playcanvas";
+import { FC } from "react";
+import { useComponent } from "../hooks";
+import { Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
-import { Schema, validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
  * @param {GSplatProps} props - The props to pass to the GSplat component.
@@ -17,40 +17,12 @@ export const GSplat: FC<GSplatProps> = (props) => {
 
     const safeProps = validatePropsWithDefaults<GSplatProps, GSplatComponent>(props, componentDefinition);
 
-    const { asset, vertex, fragment } = safeProps;
-    const parent: Entity = useParent();
-    const assetRef = useRef<Entity | null>(null);
+    useComponent("gsplat", safeProps, componentDefinition.schema);
+    return null
 
-    useLayoutEffect(() => {
-        if (asset) {
-            const resource = asset.resource as GSplatResource;
-            assetRef.current = resource.instantiate({ vertex, fragment });
-            if (assetRef.current) parent.addChild(assetRef.current);
-        }
-
-        return () => {
-            if (!assetRef.current) return;
-            parent.removeChild(assetRef.current);
-        };
-    }, [asset]);
-
-    return null;
 };
 
-interface GSplatProps extends Partial<PublicProps<GSplatComponent>> {
-    /**
-     * The asset to use for the GSplat.
-     */
-    asset: Asset;
-    /**
-     * The vertex shader to use for the GSplat.
-     */
-    vertex?: string;
-    /**
-     * The fragment shader to use for the GSplat.
-     */
-    fragment?: string;
-}
+type GSplatProps = Partial<PublicProps<GSplatComponent>>
 
 const componentDefinition = createComponentDefinition(
     "GSplat",
@@ -58,23 +30,3 @@ const componentDefinition = createComponentDefinition(
     (component) => (component as GSplatComponent).system.destroy(),
     "GSplatComponent"
 )
-
-// include additional props
-componentDefinition.schema = {
-    ...componentDefinition.schema,
-    asset: {
-        validate: (value: unknown) => value instanceof Asset,
-        errorMsg: (value: unknown) => `Invalid value for prop "asset": ${value}. Expected an Asset.`,
-        default: undefined
-    },
-    vertex: {
-        validate: (value: unknown) => !value || typeof value === 'string',
-        errorMsg: (value: unknown) => `Vertex shader must be a string, received ${value}`,
-        default: null // Allows engine to handle the default shader
-    },
-    fragment: {
-        validate: (value: unknown) => !value || typeof value === 'string',    
-        errorMsg: (value: unknown) => `Fragment shader must be a string, received ${value}`,
-        default: null // Allows engine to handle the default shader
-    }
-} as Schema<GSplatComponent, GSplatComponent>
