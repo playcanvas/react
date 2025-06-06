@@ -185,7 +185,7 @@ export function SplatViewer( {
     children
 } : SplatViewerProps) {
 
-    const { subscribe, notify } = useSubscribe<number>();
+    const [subscribe, notify] = useSubscribe<number>();
     const onAssetProgress = useCallback((progress: number) => notify(progress), [src, notify]);
 
     const isControlled = !mode;

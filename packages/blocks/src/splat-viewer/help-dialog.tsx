@@ -28,7 +28,6 @@ export function useMediaQuery(query: string) {
 }
   
 function CameraHelpTable() {
-
   const { mode } = useAssetViewer()
 
   return (
@@ -39,6 +38,9 @@ function CameraHelpTable() {
             ["Orbit", "Left Mouse"],
             ["Pan", "Right Mouse"],
             ["Zoom", "Mouse Wheel"],
+            ["Reset View", <div className="flex gap-2 text-right" key="reset">
+              <Badge variant="secondary">R</Badge>
+            </div>],
           ]} />
         ) : (
           <ControlSection controls={[
@@ -47,7 +49,6 @@ function CameraHelpTable() {
               <Badge variant="secondary" >W</Badge>
               <Badge variant="secondary" >S</Badge>
             </div>],
-            // ["Backward", <Badge variant="secondary" key="backward">S</Badge>],
             ["Left / Right", <div className="flex gap-2" key="left-right">
               <Badge variant="secondary" >A</Badge>
               <Badge variant="secondary" >D</Badge>
@@ -55,6 +56,9 @@ function CameraHelpTable() {
             ["Up / Down", <div className="flex gap-2" key="up-down">
               <Badge variant="secondary" >Q</Badge>
               <Badge variant="secondary" >E</Badge>
+            </div>],
+            ["Reset View", <div className="flex gap-2" key="reset">
+              <Badge variant="secondary">R</Badge>
             </div>],
           ]} />
         )}
@@ -69,6 +73,7 @@ function CameraHelpTable() {
           <ControlSection controls={[
             ["Look Around", "Touch on Right"],
             ["Fly", "Touch on Left"],
+            ["Reset View", "Double Tap"],
           ]} />
         )}
       </TabsContent>
@@ -88,8 +93,8 @@ function ControlSection({ controls }: { controls: [string, string | React.ReactN
     <TableBody>
       {controls.map(([label, key]) => (
         <TableRow key={label}>
-          <TableCell className="text-muted-foreground">{key}</TableCell>
-          <TableCell className="text-right font-medium">{label}</TableCell>
+          <TableCell className="font-medium">{label}</TableCell>
+          <TableCell className="flex justify-end text-muted-foreground">{key}</TableCell>
         </TableRow>
       ))}
     </TableBody>

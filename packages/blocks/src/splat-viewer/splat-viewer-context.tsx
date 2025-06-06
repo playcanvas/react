@@ -65,6 +65,16 @@ type AssetViewerContextValue = {
    * Subscribes to the asset progress.
    */
   subscribe: (fn: (progress: number) => void) => () => void;
+
+  /** 
+   * Subscribes to the camera reset.
+   */
+  subscribeCameraReset: (fn: () => void) => () => void;
+
+  /**
+   * Resets the camera.
+   */
+  resetCamera: () => void;
 };
 
 export const AssetViewerContext = createContext<AssetViewerContextValue | undefined>(undefined);
@@ -93,7 +103,7 @@ export function AssetViewerProvider({
   mode,
   setMode,
   src,
-  subscribe,
+  subscribe
 }: {
   children: React.ReactNode;
   autoPlay?: boolean;
@@ -139,20 +149,29 @@ export function AssetViewerProvider({
     }
   }, [src]);
 
-  // toggle help dialog
+  // subscribe to the camera reset event
+  const [subscribeCameraReset, notifyCameraReset] = useSubscribe<void>();
+
+  const resetCamera = useCallback(() => {
+    notifyCameraReset();
+    setMode('orbit');
+    setOverlay(null);
+  }, [notifyCameraReset, setMode, setOverlay]);
+
+  // Listen for keyboard events
   const handleKey = useCallback((e: KeyboardEvent) => {
     const isCmdOrCtrl = isMacPlatform() ? e.metaKey : e.ctrlKey;
 
     if (e.key === "?" && e.shiftKey) setOverlay('help') // help
     if (e.key.toLowerCase() === "f" && e.shiftKey && isCmdOrCtrl) toggleFullscreen() // fullscreen
     if (e.key.toLowerCase() === "d" && e.shiftKey && isCmdOrCtrl) triggerDownload() // download
+    if (e.key.toLowerCase() === "r") resetCamera() // reset camera
   }, [])
 
   useEffect(() => {
     window.addEventListener("keydown", handleKey)
     return () => window.removeEventListener("keydown", handleKey)
   }, [handleKey])
-
 
   // toggle fullscreen
   const toggleFullscreen = useCallback(async () => {
@@ -226,7 +245,9 @@ export function AssetViewerProvider({
         triggerDownload,
         autoRotate,
         setAutoRotate,
-        subscribe
+        subscribe,
+        subscribeCameraReset,
+        resetCamera
       }}
     >
       <TimelineProvider autoPlay={autoPlay}>
@@ -264,7 +285,7 @@ export function TimelineProvider({
   const [isPlaying, setIsPlaying] = useState(autoPlay);
   const timeRef = useRef(time);
   const rafIdRef = useRef<number | null>(null);
-  const { subscribe, notify } = useSubscribe<number>();
+  const [subscribe, notify] = useSubscribe<number>();
 
   const setTime = useCallback((value: number) => {
     timeRef.current = value;
