@@ -55,7 +55,7 @@ function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ..
             controls.focus(new Vec3().fromArray(focus), null, animate);
             controls.resetZoom(distance, animate);
         }
-    }, [focus]);
+    }, [focus, distance, animate]);
 
     return (<>
         <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
