@@ -9,7 +9,7 @@ import { Circle } from 'lucide-react'
 import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
 export const metadata = {
-  metadataBase: new URL('https://playcanvas.com'),
+  metadataBase: new URL('https://playcanvas-react.vercel.app'),
   title: {
     template: '%s - PlayCanvas React'
   },
@@ -52,8 +52,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html lang="en" dir="ltr" suppressHydrationWarning>
       <Head faviconGlyph="◍" >
         <link rel="icon" type="image/svg+xml" href="/pc-react-logo.svg" />
-        <link rel="canonical" href="https://playcanvas-react.vercel.app" />
-        <title>PlayCanvas React</title>
       </Head>
       <body>
         <Layout
