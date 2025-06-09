@@ -25,6 +25,8 @@ And add the following top your css
 
 A responsive and composable component for displaying **Gaussian splats**.
 
+<img width="892" alt="image" src="https://github.com/user-attachments/assets/a43d2955-85ff-4339-8847-109ea9577111" />
+
 Includes built-in camera controls, loading states, and optional UI slots for overlays or actions.  
 Supports large assets with lazy loading and automatic framing. Use it in modals, pages, or full-screen scenes. 
 
