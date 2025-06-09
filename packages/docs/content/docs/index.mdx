@@ -13,20 +13,30 @@ import { Cards, Tabs } from 'nextra/components'
 import { Icons } from '@docs-components/Icons'
 import { Terminal, ArrowRight, Hexagon, Box, Codesandbox } from 'lucide-react'
 import Example from '@templates/HomePageExample'
+import Image from 'next/image'
 
 <h1 className='text-4xl font-bold mt-8 mb-4'>
   Playcanvas React
 </h1>
 
 <div className='text-lg font-semibold text-muted-foreground'>
-  Build interactive 3D experiences with React — without the boilerplate. ⚡
+  A full-featured library for building interactive 3D content in React ⚡
 </div>
 
-A powerful, declarative layer over the PlayCanvas engine, making it easy to create dynamic, GPU-accelerated apps with physics, assets, events, and more — all from JSX.
+@playcanvas/react is a thin wrapper around PlayCanvas - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
 
-[Get Started](/docs#getting-started)
+<div className="flex flex-row gap-6 my-2 mt-6 items-center">
+  <a className="group shadow flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit transition-colors duration-150" href="/docs#getting-started" target="_blank">
+    <Box size={14} className="hidden md:block text-muted-foreground group-hover:text-foreground" />
+    <div className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">Get Started</div>
+    <ArrowRight size={14} className="text-muted-foreground group-hover:text-foreground transition-colors duration-150" />
+  </a>
+  <a className="text-xs underline duration-150 text-muted-foreground font-medium" href="/docs#why-playcanvas-react" target="_blank">
+    Learn more
+  </a>
+</div>
 
-<div className='w-[calc(100%+4rem)] aspect-video rounded-xl overflow-hidden mt-8 -mx-8'>
+<div className='w-[calc(100%+4rem)] aspect-video rounded-xl overflow-hidden mt-8 lg:-mx-8'>
   <ReactQueryProvider>
     <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
       <Example/>
@@ -48,33 +58,45 @@ A powerful, declarative layer over the PlayCanvas engine, making it easy to crea
   </a>
 </div>
 
-## Why?
+## Why PlayCanvas React?
 
-**@playcanvas/react is designed to get you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It’s a complete, batteries-included toolkit for interactive 3D experiences in React.
+**@playcanvas/react is designed to get you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It's a complete, batteries-included toolkit for interactive 3D experiences in React.
 
-It's built around the PlayCanvas engine - a battle-tested, real-time 3D engine that powers some of the most popular apps in the world.
+It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships with powerful built-in features out of the box.
 
-## Getting started
+<div className="grid grid-cols-1 my-8 sm:grid-cols-2 gap-2">  
+  <a href="/examples/motion" className="block overflow-hidden rounded-lg">
+    <img src="https://github.com/user-attachments/assets/f7be5ba5-69ae-454e-b730-f37a4b4f37ef" className="w-full h-auto" />
+  </a>
+  <a href="/examples/splats" className="block overflow-hidden rounded-lg">
+    <img src="https://github.com/user-attachments/assets/4e652314-8540-41ba-ba90-7ffba9f1731d" className="w-full h-auto" />
+  </a>
+  <a href="/examples/physics" className="block overflow-hidden rounded-lg">
+    <img src="https://github.com/user-attachments/assets/084fc21a-8efa-4967-9e50-e9520a627e8c" className="w-full h-auto" />
+  </a>
+  <a href="https://stackblitz.com/edit/pc-react-tick-tock?file=src%2FScene.tsx" className="block overflow-hidden rounded-lg">
+    <img src="https://github.com/user-attachments/assets/66eab2db-197f-4f66-b159-cf62eba8a928" className="w-full h-auto" />
+  </a>
+</div>
 
-⚡ Start building in minutes with our [Stackblitz template](https://playcanvas-react.vercel.app/new).
+Find additional examples in the [Examples](/examples).
 
-Or for a local npm setup run the following and follow the [Getting Started Guide](/docs/guide/getting-started).
+## Features
 
-```bash copy
-npm install @playcanvas/react playcanvas
-```
+- 🎭 Simple Scene API
+- ⏳ Suspenseful Asset loading
+- ️👆 Pointer Events
+- 🛠️ Physics out of the box
+- ⚡ Script component for high frequency updates
+- 🏗️ Entity Component System
 
-You can also clone the following starter template.
+And lots more. Check out the [API Reference](/docs/api/) for more.
 
-```bash copy
-git clone https://github.com/marklundin/playcanvas-react-template.git
-```
+## What does it look like?
 
-## How does it work?
+Less talking, more doing. Here's a simple example of a 3D app in React.
 
-Easy - You create an `Application` and add `Entities` and `Components` to it. Entities have position, rotation and scale. `Components` add behaviour to entities.
-
-```jsx copy filename="simple-example.jsx"
+```jsx copy filename="render-cube.jsx"
 import { Application, Entity } from '@playcanvas/react'
 import { Camera } from "@playcanvas/react/components"
 import { OrbitControls } from "@playcanvas/react/scripts"
@@ -92,11 +114,33 @@ const App = () => (
 );
 ```
 
-Find additional examples in the [Examples](/examples).
+## Getting started
 
-## AI Assisted Development
+**⚡ The quickest way to get started is to use our [playcanvas-react.app/new](https://playcanvas-react.vercel.app/new) starter template.**
 
-To get your IDE up to speed, run the following from the root of your project to install the latest MDC rules. Or [grab them here](https://playcanvas-react.vercel.app/rules) to add them manually.
+For a local npm setup run the following and follow the [Getting Started Guide](/docs/guide/getting-started).
+
+```bash copy
+npm install @playcanvas/react playcanvas
+```
+
+You can also clone the following starter template.
+
+```bash copy
+git clone https://github.com/marklundin/playcanvas-react-template.git
+```
+
+## Ready to build?
+
+If you're familiar with React but new to PlayCanvas and 3D in general, the best place to start is the [Getting Started Guide](/docs/guide/getting-started). It will walk you through creating a simple app and explain the core concepts.
+
+If you're already using PlayCanvas, but new to React, it's worth checking out the [React docs](https://react.dev/learn) first, which provide a great introduction to the React ecosystem. From then you can jump into the [API Reference](/docs/api/entity/).
+
+You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
+
+### AI assisted editors
+
+To get your IDE up to speed, run the following from the root of your project to install the latest MDC rules. Or grab them directly from [playcanvas-react.app/rules](https://playcanvas-react.vercel.app/rules).
 
 <Tabs items={['Cursor', 'Windsurf']}>
   <Tabs.Tab>
@@ -111,34 +155,9 @@ To get your IDE up to speed, run the following from the root of your project to 
   </Tabs.Tab>
 </Tabs>
 
-## Features
+## Who’s building with @playcanvas/react?
 
-PlayCanvas comes with a number of built in components and scripts that you can use. This makes it easy to get started building your app.
+Developers and studios are already using **@playcanvas/react** in production
 
-- 🎭 Simple Scene API
-- ⏳ Suspenseful Asset loading
-- ️👆 Pointer Events
-- 🛠️ Physics out of the box
-- ⚡ Script component for high frequency updates
-- 🏗️ Entity Component System
-
-And lots lots more. Check out the [API Reference](/docs/api/) for more.
-
-## Who's using it?
-<Cards>
-  <Cards.Card
-    icon={<Icons.snapchat />}
-    title="Snap"
-    href="https://ai.snapchat.com"
-  />
-</Cards>
-
-If you're using PlayCanvas React, please let us know and we'll add you to the list.
-
-## First steps
-
-If you're familiar with React but new to PlayCanvas and 3D in general, the best place to start is the [Getting Started Guide](/docs/guide/getting-started). It will walk you through creating a simple app and explain the core concepts.
-
-If you're already using PlayCanvas, but new to React, it's worth checking out the [React docs](https://react.dev/learn) first, which provide a great introduction to the React ecosystem. From then you can jump into the [API Reference](/docs/api/entity/).
-
-You can learn more about PlayCanvas on the [developer site](https://developer.playcanvas.com/) and through the [tutorials](https://developer.playcanvas.com/tutorials/). Similarly the React docs has a [great tutorial section](https://react.dev/learn)
+- ⚡ [Snap AI](https://ai.snapchat.com) uses **@playcanvas/react** to build real-time 3D interfaces inside their next-gen tools.
+- ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we’ll feature it below.

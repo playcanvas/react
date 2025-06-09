@@ -6,15 +6,15 @@
 ## @playcanvas/react
 _⚡ A full-featured library for interactive 3D in React._
 
-@playcanvas/react is a thin wrapper around the PlayCanvas engine - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
+@playcanvas/react is a thin wrapper around PlayCanvas - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
 
 <img src="https://github.com/user-attachments/assets/4e652314-8540-41ba-ba90-7ffba9f1731d" />
 
-## Why @playcanvas/react?
+## Why PlayCanvas React?
 
-**@playcanvas/react** is a fully featured 3D library that gives you everything you need to build 3D apps in React — without pulling in a maze of external libraries.
+**@playcanvas/react is designed to get you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It's a complete, batteries-included toolkit for interactive 3D experiences in React.
 
-It's built around a battle tested 3D engine and ships with powerful built-in features out of the box so you can get up to speed.
+It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships with powerful built-in features out of the box.
 
 <p>  
   <a href="https://playcanvas-react.vercel.app/examples/motion">
