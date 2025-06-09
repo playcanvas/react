@@ -1,12 +1,20 @@
-## @playcanvas/react
-⚡ A full-featured library for building interactive 3D apps in React — with assets, physics, and events all built in.
-
 [![Version](https://img.shields.io/npm/v/@playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://www.npmjs.com/package/@playcanvas/react)
 [![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=333333&colorB=444444&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
 [![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://github.com/playcanvas/react)
 
+## @playcanvas/react
+_⚡ A full-featured library for interactive 3D in React._
+
+@playcanvas/react is a thin wrapper around the PlayCanvas engine - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
+
 <img src="https://github.com/user-attachments/assets/4e652314-8540-41ba-ba90-7ffba9f1731d" />
+
+## Why @playcanvas/react?
+
+**@playcanvas/react** is a fully featured 3D library that gives you everything you need to build 3D apps in React — without pulling in a maze of external libraries.
+
+It's built around a battle tested 3D engine and ships with powerful built-in features out of the box so you can get up to speed.
 
 <p>  
   <a href="https://playcanvas-react.vercel.app/examples/motion">
@@ -23,11 +31,7 @@
   </a>
 </p>
 
-## Why @playcanvas/react?
-
-**@playcanvas/react** is a fully featured 3D library that gives you everything you need to build 3D apps in React — without pulling in a maze of external libraries.
-
-It's built around a battle tested 3D engine and ships with powerful built-in features out of the box so you can get up to speed.
+### Features
 
 - 🎭 Simple Scene API
 - ⏳ Suspenseful Asset loading
