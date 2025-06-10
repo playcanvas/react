@@ -15,10 +15,8 @@ import { Button } from '@components/ui/button'
 import { ThemedSplatViewer } from '@components/ThemedSplatViewer'
 import { Check, Block } from '@components/Check'
 import registry from '../../registry.json'
-import { church } from '@components/sogs.meta'
 
 export const splatUrl = process.env.NEXT_PUBLIC_BLOCKS_SPLAT
-export const splatVersion = registry.items.find(item => item.name === 'splat-viewer')?.meta?.version
 
 <h1 className='text-4xl font-bold mt-8 mb-2'>
   Blocks for 3D <Badge variant="secondary" >new</Badge>
@@ -45,7 +43,7 @@ Built on **@playcanvas/react** and compatible with **@shadcn/ui** they're compos
     </a>
 </div>
 
-<ThemedSplatViewer src={church} />
+<ThemedSplatViewer src={splatUrl} />
 
 ## Features
 <div className="flex flex-col gap-4 py-4 items-start">
