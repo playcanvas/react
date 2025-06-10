@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Entity } from "@playcanvas/react";
 import { Camera, Script } from "@playcanvas/react/components";
 import { useTimeline, useAssetViewer } from "./splat-viewer-context";
-import { Vec3, GSplatComponent } from "playcanvas";
+import { Vec3 } from "playcanvas";
 
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
@@ -17,10 +17,16 @@ import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
 import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change";
 
 const variants = new Map<string, PostEffectsSettings>([
-    ['paris', paris],
-    ['neutral', neutral],
-    ['noir', noir]
+  ['paris', paris],
+  ['neutral', neutral],
+  ['noir', noir]
 ]);
+
+const length = (a: [number, number, number], b: [number, number, number]) => Math.sqrt(
+  Math.pow(a[0] - b[0], 2) +
+  Math.pow(a[1] - b[1], 2) + 
+  Math.pow(a[2] - b[2], 2)
+)
 
 type CameraControlsProps = {
     /* The focus point of the camera */
@@ -29,24 +35,27 @@ type CameraControlsProps = {
     enableFly: boolean,
     enableOrbit: boolean,
     enabled?: boolean,
+    distance?: number,
+    animate?: boolean,
 }
 
-function CameraController({ focus = [0, 0, 0], ...props }: CameraControlsProps) {
+function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ...props }: CameraControlsProps) {
 
     const entity = useParent();
 
     useEffect(() => {
         /**
          * FIXME:
-         * `cameraControls` name will be manged in many bundlers. This needs to be updated when
+         * `cameraControls` name will be mangled in many bundlers. This needs to be updated when
          * PlayCanvas engine > v2.7.5 is released. See https://github.com/playcanvas/engine/pull/7593
          */
         // @ts-expect-error CameraControls is not defined in the script
         const controls = (entity.script?.cameraControls || entity.script?._CameraControls) as CameraControls;
         if (controls) {
-            controls.focus(new Vec3().fromArray(focus), null, false);
+            controls.focus(new Vec3().fromArray(focus), null, animate);
+            controls.resetZoom(distance, animate);
         }
-    }, [...focus]);
+    }, [focus, distance, animate]);
 
     return (<>
         <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
@@ -65,11 +74,11 @@ export function SmartCamera({
 
   const entityRef = useRef<pc.Entity>(null);
   const { subscribe, isPlaying } = useTimeline();
-  const { mode } = useAssetViewer();
+  const { mode, subscribeCameraReset } = useAssetViewer();
   const timeoutRef = useRef(0);
   const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
-  //   const [mode] = useState<"interactive" | "transition" | "animation">(isPlaying ? "animation" : "interactive");
   const app = useApp();
+  const initialPoseRef = useRef<PoseType | null>(null);
 
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
@@ -88,13 +97,9 @@ export function SmartCamera({
   const [animation, setAnimation] = useState<AnimCamera | null>(animationTrack ? AnimCamera.fromTrack(animationTrack) : null);
 
   useEffect(() => {
-    const gsplat = app.root.findComponent('gsplat') as unknown as GSplatComponent;
 
-    if (!gsplat) {
-        throw new Error("GSplat not found");
-    }
-
-    const initialPose = computeStartingPose(gsplat, fov);
+    const initialPose = computeStartingPose(app, fov);
+    initialPoseRef.current = initialPose;
     
     setPose(initialPose);
     if(!animation) {
@@ -105,10 +110,22 @@ export function SmartCamera({
 
   }, [app]);
 
+  // Expose reset functionality through callback
   useEffect(() => {
-    app.renderNextFrame = true;
-  }, [variant]);
 
+    if (!subscribeCameraReset) return;
+
+    const unsubscribe = subscribeCameraReset(() => {
+      if (!initialPoseRef.current || !entityRef.current) return;
+      
+      setPose(computeStartingPose(app, fov));
+
+      // Force a render
+      app.renderNextFrame = true;
+    });
+
+    return unsubscribe;
+  }, [subscribeCameraReset]);
 
   // Listen to timeline changes
   useEffect(() => {
@@ -175,13 +192,15 @@ export function SmartCamera({
 
   // If the variant is a string, use the default variant, otherwise use the variant object passed in
   const style = typeof variant === 'string' ? variants.get(variant) ?? neutral : variant;
-  // const toneMapping = style.rendering.toneMapping ?? 4;
+
+  const distance = length(pose.position, pose.target) * 0.5
 
   return (
     <Entity name="camera" ref={entityRef} position={pose.position}>
       <Camera fov={fov} clearColor="#f3e8ff" />
       <CameraController
         focus={pose.target}
+        distance={distance}
         enablePan={mode === "fly"}
         enableFly={true}
         enableOrbit={mode === "orbit"}
