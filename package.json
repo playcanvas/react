@@ -3,7 +3,7 @@
     "description": "A monorepo for PlayCanvas React renderer and examples. Please see the packages directory for more information.",
     "private": true,
     "license": "MIT",
-    "packageManager": "pnpm@10.11.1",
+    "packageManager": "pnpm@10.12.1",
     "repository": {
         "type": "git",
         "url": "https://github.com/playcanvas/react"
@@ -24,15 +24,15 @@
     "devDependencies": {
         "@eslint/js": "9.28.0",
         "@testing-library/dom": "10.4.0",
-        "@types/react": "19.1.6",
-        "@types/react-dom": "19.1.5",
+        "@types/react": "19.1.8",
+        "@types/react-dom": "19.1.6",
         "eslint": "9.28.0",
         "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
         "globals": "16.2.0",
         "type-fest": "4.41.0",
         "typescript": "5.8.3",
-        "typescript-eslint": "8.33.0"
+        "typescript-eslint": "8.34.0"
     },
     "dependencies": {
         "next": "15.3.3"
