@@ -96,7 +96,8 @@ You can also jump straight into the [docs](https://playcanvas-react.vercel.app) 
 
 Developers and studios are already using @playcanvas/react in production
 
-- ⚡ Snap AI uses @playcanvas/react to build real-time 3D interfaces inside their next-gen tools.
+- ⚡ [Snap AI](ai.snap.com) uses @playcanvas/react to build real-time 3D interfaces inside their next-gen tools.
+- [GSplat Share](https://gsplat.org/) – Share your splats with optional time-limited and password-protected links.
 - ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we’ll feature it below.
 
 ## AI assisted editors
