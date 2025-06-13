@@ -165,6 +165,31 @@ export function RenderEnvAtlas() {
 
 See the [EnvAtlas](/docs/api/components/EnvAtlas) component for more information.
 
+## useFont
+
+Text in PlayCanvas is rendered using Signed-Distance-Fields (SDF's), so you'll need to convert your ttf fonts into the appropriate format before loading them. 
+
+If you're using Vite or Rollup there's an official plugin to convert ttf files for you at build time. Check out the [@playcanvas/rollup](https://www.npmjs.com/package/@playcanvas/plugin) for more information.
+
+You can import a ttf using the `?sdf` query parameter whhich will automatically convert it into an SDF texture at build time.
+
+```tsx copy filename="render-font.tsx"
+
+// Use the @playcanvas/rollup plugin to convert the ttf file into an SDF texture at build time.
+import inconsolata from "@assets/fonts/inconsolata.ttf?sdf";
+import { useFont } from '@playcanvas/react/hooks';
+
+export function InconsolataFont() {
+  const { asset, loading, error } = useFont(inconsolata);
+
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!asset) return null;
+
+  return asset;
+}
+```
+
 ## useAsset
 
 This is a generic hook for loading any type of asset. You can use it to load any asset type that PlayCanvas supports which is sometimes useful if you need to load an asset dynamically.
