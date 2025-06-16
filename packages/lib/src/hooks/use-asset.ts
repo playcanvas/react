@@ -253,3 +253,29 @@ export const useModel = (
   props: Record<string, unknown> = {},
 ): AssetResult => 
   useAsset(src, 'container', props);
+
+/**
+ * Simple hook to load a font asset.
+ * 
+ * Fonts are described SDF textures, so you'll need to convert your .ttf files to SDF textures.
+ * into the correct format.
+ * 
+ * Learn more about SDF textures {@link https://playcanvas-react.vercel.app/docs/api/hooks/use-asset#usefont}.
+ * 
+ * @param src - The source URL of the font asset.
+ * @param props - Additional properties to pass to the asset loader.
+ * @returns An object containing the asset, loading state, and any error.
+ * 
+ * @example
+ * ```tsx
+ * import roboto from '@assets/fonts/roboto.ttf?url';
+ * export const App = () => {
+ *  const { asset, loading, error } = useFont(roboto);
+ * }
+ * ```
+ */
+export const useFont = (
+  src: string, 
+  props: Record<string, unknown> = {},
+): AssetResult => 
+  useAsset(src, 'font', props);
