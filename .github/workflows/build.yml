@@ -25,7 +25,7 @@ jobs:
     - name: Build library
       run: pnpm run build:lib
       
-    - name: Build library
+    - name: Build blocks
       run: pnpm run build:blocks
       
     - name: Build docs
