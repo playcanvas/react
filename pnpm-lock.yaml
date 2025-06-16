@@ -91,8 +91,8 @@ importers:
         specifier: ^0.511.0 || ^0.514.0 || ^0.515.0
         version: 0.511.0(react@19.1.0)
       playcanvas:
-        specifier: ^2.7.3
-        version: 2.7.7
+        specifier: ^2.8.0
+        version: 2.8.0
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -161,8 +161,8 @@ importers:
         specifier: 2.1.2
         version: 2.1.2(@types/react@19.1.8)(acorn@8.14.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       playcanvas:
-        specifier: 2.7.7
-        version: 2.7.7
+        specifier: 2.8.0
+        version: 2.8.0
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -222,8 +222,12 @@ importers:
   packages/lib:
     dependencies:
       playcanvas:
-        specifier: ~2.7.1
-        version: 2.7.7
+<<<<<<< Updated upstream
+        specifier: ~2.7.1 || ~2.8.0
+=======
+        specifier: ~2.8.0
+>>>>>>> Stashed changes
+        version: 2.8.0
       react:
         specifier: ^18.3.1 || ^19.1.0
         version: 19.1.0
@@ -4840,8 +4844,12 @@ packages:
   pkg-types@2.1.0:
     resolution: {integrity: sha512-wmJwA+8ihJixSoHKxZJRBQG1oY8Yr9pGLzRmSsNms0iNWyHHAlZCa7mmKiFR10YPZuz/2k169JiS/inOjBCZ2A==}
 
-  playcanvas@2.7.7:
-    resolution: {integrity: sha512-iBiBGmfhvM3/oIo+PoRhb1FvySoH30wMLgYw+urIv12S4yDAUxWKKPYHmUq6rWp8NKRDmjFI66Yjl/lGGLDk9w==}
+  playcanvas@2.8.0:
+    resolution: {integrity: sha512-bnueSNz+UdBAoVOcpGqFQeyAcrf+ocqKM2Nfbte1m9mKEy2u45hv8Kdm77cUy1VLg5U/Z2F0Z7mvWder07yknQ==}
+    engines: {node: '>=18.0.0'}
+
+  playcanvas@2.8.0:
+    resolution: {integrity: sha512-bnueSNz+UdBAoVOcpGqFQeyAcrf+ocqKM2Nfbte1m9mKEy2u45hv8Kdm77cUy1VLg5U/Z2F0Z7mvWder07yknQ==}
     engines: {node: '>=18.0.0'}
 
   plimit-lit@1.6.1:
@@ -11484,7 +11492,14 @@ snapshots:
       exsolve: 1.0.5
       pathe: 2.0.3
 
-  playcanvas@2.7.7:
+  playcanvas@2.8.0:
+    dependencies:
+      '@types/webxr': 0.5.22
+      '@webgpu/types': 0.1.60
+    optionalDependencies:
+      canvas: 3.1.0
+
+  playcanvas@2.8.0:
     dependencies:
       '@types/webxr': 0.5.22
       '@webgpu/types': 0.1.60
