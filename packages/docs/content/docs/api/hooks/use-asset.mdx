@@ -102,6 +102,22 @@ export function RenderModel() {
 }
 ```
 
+### Draco Decoding
+
+The `useModel` hook also supports Draco decoding out of the box without zero configuration. @playcanvas/react will use the latest version of the Draco decoder ([1.5.7](https://github.com/google/draco?tab=readme-ov-file#version-157-release)) and lazy load it from the Google CDN.
+
+Alternatively if you want to self-host the library you can manually configure the decoder using `dracoInitialize`.
+
+```tsx copy filename="render-draco.tsx"
+import { dracoInitialize } from 'playcanvas';
+
+dracoInitialize({
+  jsUrl: '/draco_decoder.js',
+  wasmUrl: '/draco_decoder.wasm',
+  lazyInit: true
+});
+```
+
 ## useSplat
 
 A specialized hook for loading Gaussian Splat assets. Pass the source URL of the splat file and any additional properties to pass to the asset loader and use the resulting asset in the [`<GSplat/>`](/docs/api/components/GSplat) component.
