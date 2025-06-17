@@ -1,6 +1,6 @@
 "use client"
 
-import { Application } from "@playcanvas/react"
+import { Application, Entity } from "@playcanvas/react"
 import { useApp, useSplat } from "@playcanvas/react/hooks"
 import { GSplat } from "@playcanvas/react/components"
 import { Suspense, useCallback, useEffect, useRef, useState } from "react"
@@ -10,8 +10,7 @@ import { cn } from "@lib/utils"
 import { AnimationTrack } from "./utils/animation"
 import { SmartCamera } from "./smart-camera"
 import { HelpDialog } from "./help-dialog"
-import { FILLMODE_NONE } from "playcanvas"
-import { RESOLUTION_AUTO } from "playcanvas"
+import { RESOLUTION_AUTO, FILLMODE_NONE } from "playcanvas"
 import { useSubscribe } from "./hooks/use-subscribe"
 export type CameraMode = 'orbit' |  'fly';
 
@@ -160,7 +159,9 @@ function SplatComponent({
                 // <InteractiveCamera fov={30} type={type} /> 
                 <SmartCamera fov={30} variant={variant} />
             }
-            <GSplat asset={asset} />
+            <Entity rotation={[0, 0, 180]}>
+                <GSplat asset={asset} />
+            </Entity>
         </>
     )
 }
