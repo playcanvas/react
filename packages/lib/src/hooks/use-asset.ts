@@ -1,8 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { fetchAsset, AssetMeta } from "../utils/fetch-asset";
 import { useApp } from "./use-app";
-import { Asset, TEXTURETYPE_RGBP } from "playcanvas";
+import { Asset, dracoInitialize, TEXTURETYPE_RGBP } from "playcanvas";
 import { warnOnce } from "../utils/validation";
+
+const base = "https://www.gstatic.com/draco/versioned/decoders/1.5.7/";
+dracoInitialize({
+  jsUrl: base + 'draco_wasm_wrapper.js',
+  wasmUrl: base + 'draco_decoder.wasm',
+  numWorkers: 2,
+  lazyInit: true
+});
 
 /**
  * Supported asset types that can be loaded
