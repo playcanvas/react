@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Entity } from "@playcanvas/react";
 import { Camera, Script } from "@playcanvas/react/components";
 import { useTimeline, useAssetViewer } from "./splat-viewer-context";
-import { Vec3 } from "playcanvas";
+import { Vec3, Entity as PcEntity } from "playcanvas";
 
 import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
 import { computeStartingPose, Pose, PoseType } from "./utils/pose";
@@ -72,7 +72,7 @@ export function SmartCamera({
   variant?: "paris" | "neutral" | "noir" | "none" | PostEffectsSettings;
 }) {
 
-  const entityRef = useRef<pc.Entity>(null);
+  const entityRef = useRef<PcEntity>(null);
   const { subscribe, isPlaying } = useTimeline();
   const { mode, subscribeCameraReset } = useAssetViewer();
   const timeoutRef = useRef(0);
@@ -83,9 +83,10 @@ export function SmartCamera({
   useEffect(() => {
     timeoutRef.current = setTimeout(() => {
       setShouldUseRenderOnCameraChange(true);
+      app.renderNextFrame = true;
     }, 200);
     return () => clearTimeout(timeoutRef.current);
-  }, []);
+  });
 
   useRenderOnCameraChange(shouldUseRenderOnCameraChange ? entityRef.current : null);
   

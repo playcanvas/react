@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { useComponent } from "../hooks";
-import { Entity, GSplatComponent } from "playcanvas";
+import { Asset, Entity, GSplatComponent } from "playcanvas";
 import { PublicProps } from "../utils/types-utils";
 import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
 /**
@@ -16,7 +16,6 @@ import { validatePropsWithDefaults, createComponentDefinition, getStaticNullAppl
 export const GSplat: FC<GSplatProps> = (props) => {
 
     const safeProps = validatePropsWithDefaults<GSplatProps, GSplatComponent>(props, componentDefinition);
-
     useComponent("gsplat", safeProps, componentDefinition.schema);
     return null
 
@@ -30,3 +29,12 @@ const componentDefinition = createComponentDefinition(
     (component) => (component as GSplatComponent).system.destroy(),
     "GSplatComponent"
 )
+
+componentDefinition.schema = {
+    ...componentDefinition.schema,
+    asset: {
+        validate: (val: unknown) => val instanceof Asset,
+        errorMsg: (val: unknown) => `Invalid value for prop "asset": "${JSON.stringify(val)}". Expected an Asset.`,
+        default: null
+    }
+}
