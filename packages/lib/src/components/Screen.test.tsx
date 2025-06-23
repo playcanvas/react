@@ -7,7 +7,7 @@ import { Application } from '../Application';
 
 const renderWithProviders = (ui: React.ReactNode) => {
     return render(
-        <Application>
+        <Application deviceTypes={["null"]}>
             <Entity>
                 {ui}
             </Entity>

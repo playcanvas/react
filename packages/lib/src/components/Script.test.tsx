@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useRef } from 'react';
-import { render } from '@testing-library/react';
+import { render, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import '@testing-library/jest-dom';
 import { Script } from './Script';
 import { Entity } from '../Entity';
 import { Script as PcScript } from 'playcanvas';
@@ -8,7 +9,7 @@ import { Application } from '../Application';
 
 const renderWithProviders = (ui: ReactNode) => {
     return render(
-        <Application>
+        <Application deviceTypes={['null']}>
             <Entity>
                 {ui}
             </Entity>
@@ -43,11 +44,12 @@ describe('Script Component', () => {
             }
         }
         
-        renderWithProviders(<Script script={TestingScript} speed={speed} direction={direction} str={str} />);
+        act(() => {
+            renderWithProviders(<Script script={TestingScript} speed={speed} direction={direction} str={str} />);
+        });
     });
 
     it('should forward ref to script instance', () => {
-
         class TestScript extends PcScript {}
 
         const TestComponent = () => {
@@ -61,11 +63,13 @@ describe('Script Component', () => {
             return <Script script={TestScript} ref={scriptRef} />;
         };
 
-        renderWithProviders(<TestComponent />);
+        act(() => {
+            renderWithProviders(<TestComponent />);
+        });
     });
 
     describe('Initialization', () => {
-        it('should initialize on first render', () => {
+        it('should initialize on first render', async () => {
             const initializeCount = vi.fn();
 
             class TestScript extends PcScript {
@@ -74,14 +78,18 @@ describe('Script Component', () => {
                 }
             }
 
-            renderWithProviders(<Script script={TestScript} speed={1} />);
+            act(() => {
+                renderWithProviders(<Script script={TestScript} speed={1} />);
+            });
             
-            expect(initializeCount).toHaveBeenCalledTimes(1);
+            await waitFor(() => {
+                expect(initializeCount).toHaveBeenCalledTimes(1);
+            });
         });
     });
 
     describe('Re-rendering', () => {
-        it('should not re-initialize when props are shallow equal', () => {
+        it('should not re-initialize when props are shallow equal', async () => {
             const initializeCount = vi.fn();
 
             class TestScript extends PcScript {
@@ -91,7 +99,7 @@ describe('Script Component', () => {
             }
 
             const Container = ({ children }: { children: ReactNode }) => (
-                <Application>
+                <Application deviceTypes={['null']}>
                     <Entity>
                         {children}
                     </Entity>
@@ -104,17 +112,24 @@ describe('Script Component', () => {
                 </Container>
             );
 
-            // Re-render with same props
-            rerender(
-                <Container>
-                    <Script script={TestScript} speed={1} />
-                </Container>
-            );
+            await waitFor(() => {
+                expect(initializeCount).toHaveBeenCalledTimes(1);
+            });
 
+            // Re-render with same props
+            act(() => {
+                rerender(
+                    <Container>
+                        <Script script={TestScript} speed={1} />
+                    </Container>
+                );
+            });
+
+            // Should still only be called once
             expect(initializeCount).toHaveBeenCalledTimes(1);
         });
 
-        it('should not re-initialize when props change', () => {
+        it('should not re-initialize when props change', async () => {
             const initializeCount = vi.fn();
 
             class TestScript extends PcScript {
@@ -124,7 +139,7 @@ describe('Script Component', () => {
             }
 
             const Container = ({ children }: { children: ReactNode }) => (
-                <Application>
+                <Application deviceTypes={['null']}>
                     <Entity>
                         {children}
                     </Entity>
@@ -137,34 +152,51 @@ describe('Script Component', () => {
                 </Container>
             );
 
-            // Re-render with different props
-            rerender(
-                <Container>
-                    <Script script={TestScript} speed={2} />
-                </Container>
-            );
+            await waitFor(() => {
+                expect(initializeCount).toHaveBeenCalledTimes(1);
+            });
 
+            // Re-render with different props
+            act(() => {
+                rerender(
+                    <Container>
+                        <Script script={TestScript} speed={2} />
+                    </Container>
+                );
+            });
+
+            // Should still only be called once
             expect(initializeCount).toHaveBeenCalledTimes(1);
         });
     });
 
     describe('Cleanup', () => {
-        it('should clean up script instance on unmount', () => {
+        it('should clean up script instance on unmount', async () => {
             const destroySpy = vi.fn();
-
+        
             class UnmountScript extends PcScript {
-                initialize() {
-                    this.on('destroy', destroySpy);
-                }
+              initialize() {
+                this.on('destroy', destroySpy);
+              }
             }
-
-            const { unmount } = renderWithProviders(
-                <Script script={UnmountScript} />
-            );
-
-            unmount();
-
-            expect(destroySpy).toHaveBeenCalledTimes(1);
-        });
+        
+            let unmount: () => void;
+        
+            // 🧪 render must happen inside act only if it's doing side effects immediately
+            await act(async () => {
+              const result = renderWithProviders(<Script script={UnmountScript} />);
+              unmount = result.unmount;
+            });
+        
+            // 🧪 unmount definitely needs act to flush effects
+            await act(async () => {
+              unmount();
+            });
+        
+            // ✅ wait for destroy to have fired
+            await waitFor(() => {
+              expect(destroySpy).toHaveBeenCalledTimes(1);
+            });
+          });
     });
 }); 

@@ -9,10 +9,10 @@ import {
   TouchDevice,
   Entity as PcEntity,
   RESOLUTION_FIXED,
-  createGraphicsDevice,
   DEVICETYPE_WEBGL2,
   DEVICETYPE_WEBGPU,
-  DEVICETYPE_NULL
+  DEVICETYPE_NULL,
+  createGraphicsDevice
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
@@ -154,7 +154,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         setApp(null);
       }
     };
-  }, [canvasRef, ...Object.values(localGraphicsDeviceOptions), deviceTypes]);
+  }, [...Object.values(localGraphicsDeviceOptions), deviceTypes]);
 
   // Separate useEffect for these props to avoid re-rendering
   useEffect(() => {
@@ -288,3 +288,15 @@ componentDefinition.schema = {
     default: undefined
   }
 } as Schema<ApplicationWithoutCanvasProps, PlayCanvasApplication>
+
+// /*
+//   This is a workaround to allow the null graphics device to be used in the test environment.
+// */
+// const createGraphicsDevice = (canvas: HTMLCanvasElement, options: GraphicsDeviceOptions & { deviceTypes?: DeviceType[] }) => {
+//   if(process.env.NODE_ENV === 'test') {
+//     // In test environment, always use the null graphics device
+//     const nullGraphicsDevice = new NullGraphicsDevice(canvas, options);
+//     return nullGraphicsDevice;
+//   }
+//   return internalCreateGraphicsDevice(canvas, options);
+// }

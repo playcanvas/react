@@ -6,10 +6,11 @@ import { ReactNode, useContext } from 'react';
 import { Entity as PcEntity } from 'playcanvas';
 import { TEST_ENTITY_PROPS } from '../test/constants';
 import { Application } from './Application';
+import React from 'react';
 
 const renderWithProviders = (ui: ReactNode) => {
   return render(
-    <Application>
+    <Application deviceTypes={["null"]}>
       {ui}
     </Application>
   );
