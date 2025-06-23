@@ -9,7 +9,10 @@ import {
   TouchDevice,
   Entity as PcEntity,
   RESOLUTION_FIXED,
-  NullGraphicsDevice
+  createGraphicsDevice,
+  DEVICETYPE_WEBGL2,
+  DEVICETYPE_WEBGPU,
+  DEVICETYPE_NULL
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks';
 import { PointerEventsContext } from './contexts/pointer-events-context';
@@ -46,7 +49,6 @@ export const Application: React.FC<ApplicationProps> = ({
         style={style}
         ref={canvasRef}
       />
-
 
       <ApplicationWithoutCanvas canvasRef={canvasRef} {...props}>
         {children}
@@ -98,6 +100,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     resolutionMode = RESOLUTION_AUTO,
     usePhysics = false,
     graphicsDeviceOptions,
+    deviceTypes,
     ...otherProps
   } = validatedProps;
 
@@ -113,28 +116,45 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   usePicker(appRef.current, canvasRef.current, pointerEvents);
 
   useLayoutEffect(() => {
-    const canvas = canvasRef.current;
-    if (canvas && !appRef.current) {
-      const localApp = new PlayCanvasApplication(canvas, {
-        mouse: new Mouse(canvas),
-        touch: new TouchDevice(canvas),
-        graphicsDevice: process.env.NODE_ENV === 'test' ? new NullGraphicsDevice(canvas) : undefined,
-        graphicsDeviceOptions: localGraphicsDeviceOptions
-      });
+    let isDestroyed = false;
+    
+    const init = async () => {
+      const canvas = canvasRef.current;
+      if (canvas && !appRef.current && !isDestroyed) {
 
-      localApp.start();
+        const graphicsDevice = await createGraphicsDevice(canvas, { deviceTypes, ...localGraphicsDeviceOptions });
 
-      appRef.current = localApp;
-      setApp(localApp);
-    }
+        if (isDestroyed) return;
+
+        const localApp = new PlayCanvasApplication(canvas, {
+          mouse: new Mouse(canvas),
+          touch: new TouchDevice(canvas),
+          graphicsDevice
+        });
+
+        if (isDestroyed) {
+          localApp.destroy();
+          return;
+        }
+
+        localApp.start();
+
+        appRef.current = localApp;
+        setApp(localApp);
+      }
+    };
+
+    init();
 
     return () => {
-      if (!appRef.current) return;
-      appRef.current.destroy();
-      appRef.current = null;
-      setApp(null);
+      isDestroyed = true;
+      if (appRef.current) {
+        appRef.current.destroy();
+        appRef.current = null;
+        setApp(null);
+      }
     };
-  }, [canvasRef, ...Object.values(localGraphicsDeviceOptions)]);
+  }, [canvasRef, ...Object.values(localGraphicsDeviceOptions), deviceTypes]);
 
   // Separate useEffect for these props to avoid re-rendering
   useEffect(() => {
@@ -178,6 +198,7 @@ type CanvasProps = {
   style?: Record<string, unknown>
 }
 
+type DeviceType = typeof DEVICETYPE_WEBGPU | typeof DEVICETYPE_WEBGL2 | typeof DEVICETYPE_NULL;
 interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, CanvasProps {
 
   /** 
@@ -197,6 +218,13 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, 
    * @default false
    */
   usePhysics?: boolean,
+
+  /**
+   * The device types to use for the graphics device.
+   * @default [DEVICETYPE_WEBGL2]
+   */
+  deviceTypes?: DeviceType[],
+
   /** Graphics Settings */
   graphicsDeviceOptions?: GraphicsDeviceOptions,
   /** The children of the application */
@@ -217,6 +245,11 @@ const componentDefinition = createComponentDefinition(
 
 componentDefinition.schema = {
   ...componentDefinition.schema,
+  deviceTypes: {
+    validate: (value: unknown) => Array.isArray(value) && value.every((v: unknown) => typeof v === 'string' && [DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2, DEVICETYPE_NULL].includes(v as typeof DEVICETYPE_WEBGPU | typeof DEVICETYPE_WEBGL2 | typeof DEVICETYPE_NULL)),
+    errorMsg: (value: unknown) => `deviceTypes must be an array containing one or more of: ${DEVICETYPE_WEBGPU}, ${DEVICETYPE_WEBGL2}, ${DEVICETYPE_NULL}. Received: ${value}`,
+    default: [DEVICETYPE_WEBGL2]
+  },
   className: {
     validate: (value: unknown) => typeof value === 'string',
     errorMsg: (value: unknown) => `className must be a string. Received: ${value}`,

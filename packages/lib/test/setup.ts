@@ -36,9 +36,6 @@ afterEach(() => {
   vi.clearAllMocks();
 });
 
-// Set NODE_ENV to test
-vi.stubEnv('NODE_ENV', 'test');
-
 // Create test application with spies
 const createTestApp = (actual: typeof playcanvas) => {
 

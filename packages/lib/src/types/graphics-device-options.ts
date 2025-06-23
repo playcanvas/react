@@ -23,6 +23,10 @@ export interface GraphicsDeviceOptions {
   desynchronized?: boolean;
   /** Whether the context is compatible with XR devices. */
   xrCompatible?: boolean;
+  /** The URL of the glslang.js file. */
+  glslangUrl?: string;
+  /** The URL of the twgsl.js file. */
+  twgslUrl?: string;
 }
 
 /**
