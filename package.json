@@ -19,9 +19,11 @@
         "build": "pnpm run build:lib && pnpm run build:blocks && pnpm run build:docs",
         "start": "pnpm --filter docs run start",
         "lint": "pnpm exec eslint .",
-        "test": "pnpm -r run test"
+        "test": "pnpm -r run test",
+        "ci:publish": "pnpm publish -r"
     },
     "devDependencies": {
+        "@changesets/cli": "^2.29.5",
         "@eslint/js": "9.29.0",
         "@testing-library/dom": "10.4.0",
         "@types/react": "19.1.8",
