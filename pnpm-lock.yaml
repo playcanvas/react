@@ -93,9 +93,6 @@ importers:
       lucide-react:
         specifier: ^0.511.0 || ^0.514.0 || ^0.515.0
         version: 0.511.0(react@19.1.0)
-      playcanvas:
-        specifier: ~2.8.0
-        version: 2.8.0
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -118,6 +115,9 @@ importers:
       '@types/react-dom':
         specifier: 19.1.6
         version: 19.1.6(@types/react@19.1.8)
+      playcanvas:
+        specifier: 2.8.0
+        version: 2.8.0
       tsc-alias:
         specifier: 1.8.16
         version: 1.8.16
