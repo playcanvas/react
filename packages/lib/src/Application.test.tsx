@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Application, ApplicationWithoutCanvas } from './Application';
+import { Application, ApplicationWithoutCanvas } from './Application.tsx';
 
 describe('Application', () => {
   beforeEach(() => {

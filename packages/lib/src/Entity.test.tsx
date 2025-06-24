@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Entity } from './Entity';
-import { ParentContext } from './hooks';
+import { Entity } from './Entity.tsx';
+import { ParentContext } from './hooks/index.ts';
 import { ReactNode, useContext } from 'react';
 import { Entity as PcEntity } from 'playcanvas';
-import { TEST_ENTITY_PROPS } from '../test/constants';
-import { Application } from './Application';
+import { TEST_ENTITY_PROPS } from '../test/constants.ts';
+import { Application } from './Application.tsx';
 
 const renderWithProviders = (ui: ReactNode) => {
   return render(

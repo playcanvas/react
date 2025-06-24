@@ -11,13 +11,13 @@ import {
   RESOLUTION_FIXED,
   NullGraphicsDevice
 } from 'playcanvas';
-import { AppContext, ParentContext } from './hooks';
-import { PointerEventsContext } from './contexts/pointer-events-context';
-import { usePicker } from './utils/picker';
-import { PhysicsProvider } from './contexts/physics-context';
-import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation';
-import { PublicProps } from './utils/types-utils';
-import { GraphicsDeviceOptions, defaultGraphicsDeviceOptions } from './types/graphics-device-options';
+import { AppContext, ParentContext } from './hooks/index.ts';
+import { PointerEventsContext } from './contexts/pointer-events-context.tsx';
+import { usePicker } from './utils/picker.tsx';
+import { PhysicsProvider } from './contexts/physics-context.tsx';
+import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation.ts';
+import { PublicProps } from './utils/types-utils.ts';
+import { GraphicsDeviceOptions, defaultGraphicsDeviceOptions } from './types/graphics-device-options.ts';
 
 /**
  * The **Application** component is the root node of the PlayCanvas React API. It creates a canvas element

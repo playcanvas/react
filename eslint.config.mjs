@@ -3,7 +3,7 @@ import pluginJs from "@eslint/js";
 import tseslint from "typescript-eslint";
 import pluginReact from "eslint-plugin-react";
 import reactCompiler from 'eslint-plugin-react-compiler'
-
+import importPlugin from 'eslint-plugin-import';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -15,17 +15,30 @@ export default [
   {
     plugins: {
       'react-compiler': reactCompiler,
+      'import': importPlugin,
     },
     settings: {
       react: {
         version: "detect", // Automatically detect React version
       },
+      'import/resolver': {
+        node: {
+          extensions: ['.js', '.ts', '.json']
+        }
+      }
     },
     rules: {
       'react/prop-types': 'off',
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
-      "react-compiler/react-compiler": "warn"
+      "react-compiler/react-compiler": "warn",
+      'import/extensions': ['error', 'always', {
+        js: 'always',
+        ts: 'always',
+      }],
+
+      // Catch unresolved paths (e.g. typos or missing .js)
+      'import/no-unresolved': 'error',
     },
   },
   {
