@@ -19,6 +19,7 @@ export default [
       'import/extensions': ['error', 'ignorePackages', {
         js: 'always',
         ts: 'always',
+        tsx: 'always',
       }]
     }
   },
