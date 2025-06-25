@@ -1,5 +1,5 @@
 import { Color } from "playcanvas"
-import { getPseudoPublicProps } from "./validation";
+import { getPseudoPublicProps } from "./validation.ts";
 
 // Define as a const object instead of a Map to allow TypeScript to extract keys
 const cssColorNamesMap = { 

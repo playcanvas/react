@@ -8,7 +8,8 @@
       "jsx": "react-jsx",
       "moduleResolution": "bundler",
       "baseUrl": ".",
-      "resolveJsonModule": true
+      "resolveJsonModule": true,
+      "rewriteRelativeImportExtensions": true
     },
     "include": [
       "packages/**/*.ts",

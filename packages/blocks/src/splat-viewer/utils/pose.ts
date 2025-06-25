@@ -1,6 +1,6 @@
 import { AppBase, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
 
-import { lerp, MyQuat } from './math';
+import { lerp, MyQuat } from './math.ts';
 
 const v = new Vec3();
 

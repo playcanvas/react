@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { Container } from './Container';
+import { Container } from './Container.tsx';
 import { Asset, Entity } from 'playcanvas';
 import { ReactNode } from 'react';
-import { Application } from './Application';
+import { Application } from './Application.tsx';
 
 const renderWithProviders = (ui: ReactNode) => {
     return render(

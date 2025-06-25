@@ -1,10 +1,10 @@
 "use client"
 
 import { FC, useLayoutEffect } from "react";
-import { useComponent, useParent } from "../hooks";
+import { useComponent, useParent } from "../hooks/index.ts";
 import { AnimComponent, AnimTrack, Entity, Asset } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils";
-import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
 import { GlbContainerResource } from "playcanvas/build/playcanvas/src/framework/parsers/glb-container-resource.js";
 
 /**

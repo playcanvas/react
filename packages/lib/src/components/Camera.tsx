@@ -1,10 +1,10 @@
 "use client"
 
 import { FC } from "react";
-import { useComponent } from "../hooks";
+import { useComponent } from "../hooks/index.ts";
 import { CameraComponent, Entity } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils";
-import { validatePropsPartial, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
+import { validatePropsPartial, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
 
 /**
  * The Camera component makes an entity behave like a camera and gives you a view into the scene.

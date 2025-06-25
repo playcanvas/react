@@ -1,8 +1,8 @@
 import { Mat4, Vec3 } from 'playcanvas';
 
-import { MyQuat } from './math';
-import { CubicSpline } from './spline';
-import { Pose } from './pose';
+import { MyQuat } from './math.ts';
+import { CubicSpline } from './spline.ts';
+import { Pose } from './pose.ts';
 
 const q = new MyQuat();
 

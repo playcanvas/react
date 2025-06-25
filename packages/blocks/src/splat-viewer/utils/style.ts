@@ -1,4 +1,4 @@
-import { PostEffectsSettings } from "./effects"
+import { PostEffectsSettings } from "./effects.ts"
 
 export const paris: PostEffectsSettings = {
     lighting: {

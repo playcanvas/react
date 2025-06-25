@@ -2,11 +2,11 @@
 
 import { Entity as PcEntity } from 'playcanvas';
 import { ReactNode, forwardRef, useImperativeHandle, useLayoutEffect, useMemo } from 'react';
-import { useParent, ParentContext, useApp } from './hooks';
-import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event';
-import { usePointerEventsContext } from './contexts/pointer-events-context';
-import { PublicProps } from './utils/types-utils';
-import { validatePropsWithDefaults, ComponentDefinition } from './utils/validation';
+import { useParent, ParentContext, useApp } from './hooks/index.ts';
+import { SyntheticMouseEvent, SyntheticPointerEvent } from './utils/synthetic-event.ts';
+import { usePointerEventsContext } from './contexts/pointer-events-context.tsx';
+import { PublicProps } from './utils/types-utils.ts';
+import { validatePropsWithDefaults, ComponentDefinition } from './utils/validation.ts';
 
 /**
  * The Entity component is the fundamental building block of a PlayCanvas scene.

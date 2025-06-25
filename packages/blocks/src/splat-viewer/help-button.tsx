@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from "@components/ui/button"
-import { useAssetViewer } from "./splat-viewer-context"
+import { useAssetViewer } from "./splat-viewer-context.tsx"
 
 function HelpButton() {
 

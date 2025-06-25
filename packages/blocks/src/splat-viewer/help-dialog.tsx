@@ -1,12 +1,12 @@
 import * as React from "react"
-import { useAssetViewer } from "./splat-viewer-context"
+import { useAssetViewer } from "./splat-viewer-context.ts"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@components/ui/dialog"
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "@components/ui/drawer"
 import { Table, TableHeader, TableBody, TableCell, TableRow, TableHead } from "@components/ui/table"
 import { Badge } from "@components/ui/badge"
 import { TabsContent, TabsList, TabsTrigger } from "@components/ui/tabs"
 import { Tabs } from "@components/ui/tabs"
-import { CameraModeToggle } from "./menu-button"
+import { CameraModeToggle } from "./menu-button.tsx"
 import { Card } from "@components/ui/card"
 
 export function useMediaQuery(query: string) {
