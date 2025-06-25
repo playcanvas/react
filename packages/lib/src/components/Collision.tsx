@@ -1,11 +1,11 @@
 "use client"
 
 import { FC, useEffect } from "react";
-import { useComponent, useParent } from "../hooks";
-import { usePhysics } from "../contexts/physics-context";
-import { validatePropsPartial, warnOnce, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { useComponent, useParent } from "../hooks/index.ts";
+import { usePhysics } from "../contexts/physics-context.tsx";
+import { validatePropsPartial, warnOnce, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
 import { CollisionComponent, Entity } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
 
 /**
  * The Collision component adds a collider to the entity. This enables the entity to collide with other entities.

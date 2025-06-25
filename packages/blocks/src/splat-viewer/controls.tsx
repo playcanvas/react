@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useAssetViewer, useTimeline } from "./splat-viewer-context";
+import { useAssetViewer, useTimeline } from "./splat-viewer-context.tsx";
 import { cn } from "@lib/utils";
 
 type ControlsProps = {

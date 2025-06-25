@@ -1,7 +1,7 @@
 "use client"
 
 import { Move3D, Rotate3D } from "lucide-react";
-import { useAssetViewer } from "./splat-viewer-context";
+import { useAssetViewer } from "./splat-viewer-context.tsx";
 import { Button } from "@components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@components/ui/tooltip";
 

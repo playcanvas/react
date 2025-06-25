@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useComponent } from "../hooks";
-import { PublicProps } from "../utils/types-utils";
+import { useComponent } from "../hooks/index.ts";
+import { PublicProps } from "../utils/types-utils.ts";
 import { Asset, Entity, SpriteComponent } from "playcanvas";
-import { createComponentDefinition, validatePropsWithDefaults, Schema, getStaticNullApplication } from "../utils/validation";
+import { createComponentDefinition, validatePropsWithDefaults, Schema, getStaticNullApplication } from "../utils/validation.ts";
 
 /**
  * The Sprite component allows an entity to render a 2D sprite.

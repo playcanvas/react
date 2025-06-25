@@ -1,9 +1,9 @@
 import { Script as PcScript } from "playcanvas";
-import { useScript } from "../hooks"
+import { useScript } from "../hooks/index.ts";
 import { forwardRef, memo, useMemo } from "react";
-import { ComponentDefinition, validatePropsPartial } from "../utils/validation";
-import { shallowEquals } from "../utils/compare";
-import { SubclassOf } from "../utils/types-utils";
+import { ComponentDefinition, validatePropsPartial } from "../utils/validation.ts";
+import { shallowEquals } from "../utils/compare.tsx";
+import { SubclassOf } from "../utils/types-utils.ts";
 
 /**
  * The Script component allows you to hook into the entity's lifecycle. This allows you to

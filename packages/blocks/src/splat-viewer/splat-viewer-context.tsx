@@ -1,8 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useEffect, useState, useContext, ReactNode, useRef } from "react";
-import { CameraMode } from "./splat-viewer";
-import { useSubscribe } from "./hooks/use-subscribe";
+import { CameraMode } from "./splat-viewer.tsx";
+import { useSubscribe } from "./hooks/use-subscribe.tsx";
 
 type AssetViewerContextValue = {
   /**

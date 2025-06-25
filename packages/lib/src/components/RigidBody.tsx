@@ -1,8 +1,8 @@
 import { FC, useEffect } from "react";
-import { useComponent } from "../hooks";
-import { usePhysics } from "../contexts/physics-context";
-import { createComponentDefinition, getStaticNullApplication, warnOnce, ComponentDefinition, validatePropsPartial, Schema } from "../utils/validation";
-import { PublicProps, Serializable } from "../utils/types-utils";
+import { useComponent } from "../hooks/index.ts";
+import { usePhysics } from "../contexts/physics-context.tsx";
+import { createComponentDefinition, getStaticNullApplication, warnOnce, ComponentDefinition, validatePropsPartial, Schema } from "../utils/validation.ts";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
 import { BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC, Entity, RigidBodyComponent } from "playcanvas";
 
 /**

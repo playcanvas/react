@@ -18,7 +18,7 @@
         "build:docs": "pnpm --filter docs run build",
         "build": "pnpm run build:lib && pnpm run build:blocks && pnpm run build:docs",
         "start": "pnpm --filter docs run start",
-        "lint": "pnpm exec eslint .",
+        "lint": "pnpm -r exec eslint .",
         "test": "pnpm -r run test",
         "ci:publish": "pnpm publish -r"
     },
@@ -28,6 +28,7 @@
         "@testing-library/dom": "10.4.0",
         "@types/react": "19.1.8",
         "@types/react-dom": "19.1.6",
+        "@vitejs/plugin-react": "4.5.2",
         "eslint": "9.29.0",
         "eslint-plugin-import": "^2.32.0",
         "eslint-plugin-react": "7.37.5",
@@ -35,7 +36,8 @@
         "globals": "16.2.0",
         "type-fest": "4.41.0",
         "typescript": "5.8.3",
-        "typescript-eslint": "8.34.0"
+        "typescript-eslint": "8.34.0",
+        "vitest": "3.2.3"
     },
     "dependencies": {
         "next": "15.3.3"

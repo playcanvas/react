@@ -1,8 +1,8 @@
 import { FC } from "react";
-import { useComponent } from "../hooks";
+import { useComponent } from "../hooks/index.ts";
 import { Entity, LightComponent } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils";
-import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation.ts";
 
 /**
  * The Light component adds a light source to the entity. A light can be a directional, omni, or spot light.

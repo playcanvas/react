@@ -2,16 +2,16 @@
 
 import { Button } from "@components/ui/button";
 import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem, DropdownMenuSeparator, DropdownMenuShortcut, DropdownMenuTrigger } from "@components/ui/dropdown-menu";
-import { useMediaQuery } from "./help-dialog";
+import { useMediaQuery } from "./help-dialog.tsx";
 import { EllipsisVerticalIcon, DownloadIcon, MinimizeIcon, MaximizeIcon, HelpCircleIcon, Rotate3dIcon, Move3DIcon, RotateCcwIcon } from "lucide-react";
 import { Drawer, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle, DrawerClose } from "@components/ui/drawer";
-import { useAssetViewer } from "./splat-viewer-context";
+import { useAssetViewer } from "./splat-viewer-context.ts";
 import { ToggleGroupItem } from "@components/ui/toggle-group";
 import { ToggleGroup } from "@components/ui/toggle-group";
 import { Card } from "@components/ui/card";
 import { Switch } from "@components/ui/switch";
 import { Separator } from "@components/ui/separator";
-import { CameraMode } from "./splat-viewer";
+import { CameraMode } from "./splat-viewer.tsx";
 function MenuItemsDesktop({
     mode,
     setMode,

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from "react";
-import { fetchAsset, AssetMeta } from "../utils/fetch-asset";
-import { useApp } from "./use-app";
+import { fetchAsset, AssetMeta } from "../utils/fetch-asset.ts";
+import { useApp } from "./use-app.tsx";
 import { Asset, dracoInitialize, TEXTURETYPE_RGBP } from "playcanvas";
-import { warnOnce } from "../utils/validation";
+import { warnOnce } from "../utils/validation.ts";
 
 const base = "https://www.gstatic.com/draco/versioned/decoders/1.5.7/";
 dracoInitialize({

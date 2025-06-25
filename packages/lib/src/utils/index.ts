@@ -1,2 +1,2 @@
-export { fetchAsset } from './fetch-asset'
-export type { FetchAssetOptions } from './fetch-asset'
+export { fetchAsset } from './fetch-asset.ts'
+export type { FetchAssetOptions } from './fetch-asset.ts'

@@ -1,10 +1,10 @@
 "use client"
 
-export { useComponent } from './use-component';
-export { useScript } from './use-script';
-export { useApp, AppContext } from './use-app';
-export { useParent, ParentContext } from './use-parent';
-export { useMaterial } from './use-material'
-export { useAsset, useSplat, useTexture, useEnvAtlas, useModel, useFont } from './use-asset';
-export { useFrame } from './use-frame';
-export type { AssetResult } from './use-asset';
+export { useComponent } from './use-component.tsx';
+export { useScript } from './use-script.tsx';
+export { useApp, AppContext } from './use-app.tsx';
+export { useParent, ParentContext } from './use-parent.tsx';
+export { useMaterial } from './use-material.tsx'
+export { useAsset, useSplat, useTexture, useEnvAtlas, useModel, useFont } from './use-asset.ts';
+export { useFrame } from './use-frame.tsx';
+export type { AssetResult } from './use-asset.ts';

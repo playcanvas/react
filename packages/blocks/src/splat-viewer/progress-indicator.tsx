@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { useAssetViewer } from "./splat-viewer-context";
+import { useAssetViewer } from "./splat-viewer-context.ts";
 import { cn } from "@lib/utils";
 
 type ProgressProps = {

@@ -1,6 +1,6 @@
 import { Entity, Vec3 } from "playcanvas";
-import { Script } from "../../components/Script";
-import { OrbitCamera, OrbitCameraInputMouse, OrbitCameraInputTouch } from "./orbit-camera";
+import { Script } from "../../components/Script.tsx";
+import { OrbitCamera, OrbitCameraInputMouse, OrbitCameraInputTouch } from "./orbit-camera.js";
 
 type OrbitCameraProps = {
     distanceMax?: number
