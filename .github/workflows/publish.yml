@@ -22,3 +22,6 @@ jobs:
 
       - name: Install Dependencies
         run: pnpm install
+  
+      - name: Continuous Release
+        run: pnpm dlx pkg-pr-new publish --compact --comment=off './packages/lib' './packages/blocks'
