@@ -94,7 +94,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
             }
         });
 
-        if(app) resizeObserver.observe(app.graphicsDevice.canvas);
+        if(app?.graphicsDevice?.canvas) resizeObserver.observe(app.graphicsDevice.canvas);
         return () => resizeObserver.disconnect();
 
     }, [app]);

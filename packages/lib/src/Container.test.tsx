@@ -4,10 +4,11 @@ import { Container } from './Container.tsx';
 import { Asset, Entity } from 'playcanvas';
 import { ReactNode } from 'react';
 import { Application } from './Application.tsx';
+import React from 'react';
 
 const renderWithProviders = (ui: ReactNode) => {
     return render(
-      <Application>
+      <Application deviceTypes={["null"]}>
         {ui}
       </Application>
     );

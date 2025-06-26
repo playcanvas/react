@@ -55,6 +55,15 @@ Enables physics for the application. Learn more about [Physics in Playcanvas](ht
 Type: `boolean`
 Default: `false`
 
+### `deviceTypes`
+The `deviceTypes` prop determines the graphics device to use. It accepts an array of strings, each representing a different device which sets an order of fallback devices. The first device that gets successfully created, will be used. 
+
+For example, if you want to use WebGPU first, but fall back to WebGL2 when WebGPU is not supported, you can use `<Application deviceTypes={["webgpu", "webgl2"]} />`.
+
+- `"webgpu"` - Use the WebGPU device type
+- `"webgl2"` - Use the WebGL2 device type
+- `"null"` - Use the Null device type. Useful for testing.
+
 ### `fillMode`
 This prop determines how the canvas fills its container. It accepts one of the following values from PlayCanvas:
 

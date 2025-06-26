@@ -8,7 +8,7 @@ const warned = new Set<string>();
 
 export const warnOnce = (message: string) => {
     if (!warned.has(message)) {
-        if (process.env.NODE_ENV === 'development') {
+        if (process.env.NODE_ENV !== 'production') {
             
             // Use setTimeout to break the call stack
             setTimeout(() => {
