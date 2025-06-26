@@ -2,12 +2,19 @@ import { platform, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_NULL, Graphi
 import { GraphicsDeviceOptions } from "../types/graphics-device-options.ts";
 
 /**
- * Creates a graphics device. This is similar to the createGraphicsDevice function in PlayCanvas, but it does not inject  additional graphics devices
- *
+ * Creates a graphics device with fallbacks. 
+ * 
+ * This is functionally very similar to the createGraphicsDevice function in PlayCanvas, 
+ * but **importantly** it does not inject additional graphics devices when none are specified!
+ * 
+ * This is necessary because often we want explicitly specify the device types we want to use,
+ * eg a Null device without WebGL2 or WebGPU.
+ * 
+ * This function is used internally by the Application component, and is also exported for use in other contexts.
  */
-export async function createGraphicsDevice(
+export async function internalCreateGraphicsDevice(
     canvas: HTMLCanvasElement,
-    options: GraphicsDeviceOptions & { deviceTypes?: [] } = {}
+    options: GraphicsDeviceOptions & { deviceTypes?: DeviceType[] } = {}
   ): Promise<GraphicsDevice> {
     const deviceTypes = options.deviceTypes ?? [];
   
@@ -50,3 +57,5 @@ export async function createGraphicsDevice(
   
     throw new Error('Failed to create a graphics device');
   }
+
+  export type DeviceType = typeof DEVICETYPE_WEBGPU | typeof DEVICETYPE_WEBGL2 | typeof DEVICETYPE_NULL;

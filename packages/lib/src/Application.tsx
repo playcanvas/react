@@ -12,7 +12,6 @@ import {
   DEVICETYPE_WEBGL2,
   DEVICETYPE_WEBGPU,
   DEVICETYPE_NULL,
-  createGraphicsDevice
 } from 'playcanvas';
 import { AppContext, ParentContext } from './hooks/index.ts';
 import { PointerEventsContext } from './contexts/pointer-events-context.tsx';
@@ -21,6 +20,7 @@ import { PhysicsProvider } from './contexts/physics-context.tsx';
 import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullApplication, applyProps } from './utils/validation.ts';
 import { PublicProps } from './utils/types-utils.ts';
 import { GraphicsDeviceOptions, defaultGraphicsDeviceOptions } from './types/graphics-device-options.ts';
+import { DeviceType, internalCreateGraphicsDevice } from './utils/create-graphics-device.ts';
 
 /**
  * The **Application** component is the root node of the PlayCanvas React API. It creates a canvas element
@@ -104,63 +104,79 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     ...otherProps
   } = validatedProps;
 
-  const localGraphicsDeviceOptions = {
-    ...defaultGraphicsDeviceOptions,
-    ...graphicsDeviceOptions
-  };
+  // Create a deviceTypes key to avoid re-rendering the application when the deviceTypes prop changes.
+  const deviceTypeKey = deviceTypes.join('-');
+
+  /**
+   * Also create a key for the graphicsDeviceOptions object to avoid 
+   * re-rendering the application when the graphicsDeviceOptions prop changes.
+   * We need to sort the keys to create a stable key.
+   */
+  const graphicsOptsKey = useMemo(() => {
+    if (!graphicsDeviceOptions) return 'none';
+    return Object.entries(graphicsDeviceOptions)
+      .sort(([a], [b]) => a.localeCompare(b))   // order-insensitive
+      .map(([k, v]) => `${k}:${String(v)}`)
+      .join('|');
+  }, [graphicsDeviceOptions]);
+
+  /**
+   * Memoize the graphicsDeviceOptions object to avoid re-rendering the application when the graphicsDeviceOptions prop changes.
+   */
+  const graphicsOpts = useMemo(
+    () => ({ ...defaultGraphicsDeviceOptions, ...graphicsDeviceOptions }),
+    [graphicsDeviceOptions]                    // ← only changes when *values* change
+  );
 
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
-
-  const deviceTypeKey = deviceTypes.join('|');
-  const memoizedDeviceTypes = useMemo<DeviceType[]>(
-    () => deviceTypes,
-    [deviceTypeKey]
-  );
 
   const pointerEvents = useMemo(() => new Set<string>(), []);
   usePicker(appRef.current, canvasRef.current, pointerEvents);
 
   useLayoutEffect(() => {
-    let isDestroyed = false;
-    
-    const init = async () => {
+
+    // Tracks if the component is unmounted while awaiting for the graphics device to be created
+    let cancelled = false; 
+  
+    (async () => {
       const canvas = canvasRef.current;
-      if (canvas && !appRef.current && !isDestroyed) {
-
-        const graphicsDevice = await createGraphicsDevice(canvas, { deviceTypes: memoizedDeviceTypes, ...localGraphicsDeviceOptions });
-
-        if (isDestroyed) return;
-
-        const localApp = new PlayCanvasApplication(canvas, {
-          mouse: new Mouse(canvas),
-          touch: new TouchDevice(canvas),
-          graphicsDevice
-        });
-
-        if (isDestroyed) {
-          localApp.destroy();
-          return;
-        }
-
-        localApp.start();
-
-        appRef.current = localApp;
-        setApp(localApp);
+      if (!canvas || appRef.current) return;
+  
+      // Create the graphics device
+      const dev = await internalCreateGraphicsDevice(canvas, {
+        deviceTypes,
+        ...graphicsOpts
+      });
+  
+      // Check if the component unmounted while we were awaiting, and destroy the device immediately and bail out
+      if (cancelled) {
+        dev.destroy?.();
+        return;
       }
-    };
-
-    init();
-
+  
+      // Proceed with normal PlayCanvas init
+      const pcApp = new PlayCanvasApplication(canvas, {
+        mouse: new Mouse(canvas),
+        touch: new TouchDevice(canvas),
+        graphicsDevice: dev
+      });
+      pcApp.start();
+  
+      appRef.current = pcApp;
+      setApp(pcApp);
+    })();
+  
+    // Cleanup create a cancellation flag to avoid re-rendering the application when the component is unmounted.
     return () => {
-      isDestroyed = true;
+      cancelled = true;
       if (appRef.current) {
         appRef.current.destroy();
         appRef.current = null;
         setApp(null);
       }
     };
-  }, [...Object.values(localGraphicsDeviceOptions), deviceTypeKey]);
+  }, [graphicsOptsKey, deviceTypeKey]);        // ← stable deps
 
   // Separate useEffect for these props to avoid re-rendering
   useEffect(() => {
@@ -203,8 +219,6 @@ type CanvasProps = {
    */
   style?: Record<string, unknown>
 }
-
-type DeviceType = typeof DEVICETYPE_WEBGPU | typeof DEVICETYPE_WEBGL2 | typeof DEVICETYPE_NULL;
 interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, CanvasProps {
 
   /** 
@@ -226,7 +240,14 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, 
   usePhysics?: boolean,
 
   /**
-   * The device types to use for the graphics device.
+   * The device types to use for the graphics device. This allows you to set an order of preference for the graphics device.
+   * The first device type in the array that is supported by the browser will be used.
+   * 
+   * @example
+   * <Application deviceTypes={[DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2]} />
+   * 
+   * This will use the WebGPU device if it is supported, otherwise it will use the WebGL2 device.
+   * 
    * @default [DEVICETYPE_WEBGL2]
    */
   deviceTypes?: DeviceType[],
@@ -253,8 +274,14 @@ componentDefinition.schema = {
   ...componentDefinition.schema,
   deviceTypes: {
     validate: (value: unknown) => Array.isArray(value) && value.every((v: unknown) => typeof v === 'string' && [DEVICETYPE_WEBGPU, DEVICETYPE_WEBGL2, DEVICETYPE_NULL].includes(v as typeof DEVICETYPE_WEBGPU | typeof DEVICETYPE_WEBGL2 | typeof DEVICETYPE_NULL)),
-    errorMsg: (value: unknown) => `deviceTypes must be an array containing one or more of: ${DEVICETYPE_WEBGPU}, ${DEVICETYPE_WEBGL2}, ${DEVICETYPE_NULL}. Received: ${value}`,
-    default: [DEVICETYPE_WEBGL2]
+    errorMsg: (value: unknown) => {
+      return `deviceTypes must be an array containing one or more of: '${DEVICETYPE_WEBGPU}', '${DEVICETYPE_WEBGL2}', '${DEVICETYPE_NULL}'. Received: ['${value}']`
+    },
+    /**
+     * In test environments, we default to a Null device, because we don't cant use WebGL2/WebGPU.
+     * This is just for testing purposes so we can test the fallback logic, without initializing WebGL2/WebGPU.
+     */
+    default: process.env.NODE_ENV === 'test' ? [DEVICETYPE_NULL] : [DEVICETYPE_WEBGL2]
   },
   className: {
     validate: (value: unknown) => typeof value === 'string',
@@ -294,15 +321,3 @@ componentDefinition.schema = {
     default: undefined
   }
 } as Schema<ApplicationWithoutCanvasProps, PlayCanvasApplication>
-
-// /*
-//   This is a workaround to allow the null graphics device to be used in the test environment.
-// */
-// const createGraphicsDevice = (canvas: HTMLCanvasElement, options: GraphicsDeviceOptions & { deviceTypes?: DeviceType[] }) => {
-//   if(process.env.NODE_ENV === 'test') {
-//     // In test environment, always use the null graphics device
-//     const nullGraphicsDevice = new NullGraphicsDevice(canvas, options);
-//     return nullGraphicsDevice;
-//   }
-//   return internalCreateGraphicsDevice(canvas, options);
-// }
