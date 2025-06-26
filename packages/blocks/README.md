@@ -1,3 +1,5 @@
+[![pkg.pr.new](https://pkg.pr.new/badge/playcanvas/blocks)](https://pkg.pr.new/~/playcanvas/blocks)
+
 # Building Blocks for 3D
 
 A set of beautifully crafted high-level 3D primitives for React, built on @playcanvas/react — designed to help you compose 3D content with minimal setup.

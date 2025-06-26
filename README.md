@@ -2,6 +2,7 @@
 [![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=333333&colorB=444444&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
 [![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://github.com/playcanvas/react)
+[![pkg.pr.new](https://pkg.pr.new/badge/playcanvas/react)](https://pkg.pr.new/~/playcanvas/react)
 
 ## @playcanvas/react
 _⚡ A full-featured library for interactive 3D in React._
