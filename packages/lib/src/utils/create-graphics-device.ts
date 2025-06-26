@@ -1,5 +1,5 @@
 import { platform, DEVICETYPE_WEBGL2, DEVICETYPE_WEBGPU, DEVICETYPE_NULL, GraphicsDevice, NullGraphicsDevice, WebglGraphicsDevice, WebgpuGraphicsDevice } from "playcanvas";
-import { GraphicsDeviceOptions } from "../types/graphics-device-options";
+import { GraphicsDeviceOptions } from "../types/graphics-device-options.ts";
 
 /**
  * Creates a graphics device. This is similar to the createGraphicsDevice function in PlayCanvas, but it does not inject  additional graphics devices
