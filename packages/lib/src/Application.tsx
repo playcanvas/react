@@ -100,7 +100,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     resolutionMode = RESOLUTION_AUTO,
     usePhysics = false,
     graphicsDeviceOptions,
-    deviceTypes,
+    deviceTypes = [DEVICETYPE_WEBGL2],
     ...otherProps
   } = validatedProps;
 
@@ -112,6 +112,12 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   const [app, setApp] = useState<PlayCanvasApplication | null>(null);
   const appRef = useRef<PlayCanvasApplication | null>(null);
 
+  const deviceTypeKey = deviceTypes.join('|');
+  const memoizedDeviceTypes = useMemo<DeviceType[]>(
+    () => deviceTypes,
+    [deviceTypeKey]
+  );
+
   const pointerEvents = useMemo(() => new Set<string>(), []);
   usePicker(appRef.current, canvasRef.current, pointerEvents);
 
@@ -122,7 +128,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
       const canvas = canvasRef.current;
       if (canvas && !appRef.current && !isDestroyed) {
 
-        const graphicsDevice = await createGraphicsDevice(canvas, { deviceTypes, ...localGraphicsDeviceOptions });
+        const graphicsDevice = await createGraphicsDevice(canvas, { deviceTypes: memoizedDeviceTypes, ...localGraphicsDeviceOptions });
 
         if (isDestroyed) return;
 
@@ -154,7 +160,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         setApp(null);
       }
     };
-  }, [...Object.values(localGraphicsDeviceOptions), deviceTypes]);
+  }, [...Object.values(localGraphicsDeviceOptions), deviceTypeKey]);
 
   // Separate useEffect for these props to avoid re-rendering
   useEffect(() => {
