@@ -1,10 +1,10 @@
 "use client"
 
 import { FC } from "react";
-import { useComponent } from "../hooks";
+import { useComponent } from "../hooks/index.ts";
 import { Asset, Entity, GSplatComponent } from "playcanvas";
-import { PublicProps } from "../utils/types-utils";
-import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation";
+import { PublicProps } from "../utils/types-utils.ts";
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
  * @param {GSplatProps} props - The props to pass to the GSplat component.

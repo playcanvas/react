@@ -1,5 +1,5 @@
 import { Application, Asset } from "playcanvas";
-import { warnOnce } from "./validation";
+import { warnOnce } from "./validation.ts";
 
 type AssetType = ConstructorParameters<typeof Asset>[1];
 

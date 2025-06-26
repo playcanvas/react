@@ -3,7 +3,7 @@ import { expect, afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
 import * as playcanvas from 'playcanvas'
-import { toHaveBeenCalledWithEvent } from './matchers';
+import { toHaveBeenCalledWithEvent } from './matchers.ts';
 
 // Mock ResizeObserver
 class ResizeObserver {

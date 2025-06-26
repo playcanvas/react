@@ -2,10 +2,10 @@ import React, { ReactNode, useEffect, useRef } from 'react';
 import { render, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom';
-import { Script } from './Script';
-import { Entity } from '../Entity';
+import { Script } from './Script.tsx';
+import { Entity } from '../Entity.tsx';
 import { Script as PcScript } from 'playcanvas';
-import { Application } from '../Application';
+import { Application } from '../Application.tsx';
 
 const renderWithProviders = (ui: ReactNode) => {
     return render(

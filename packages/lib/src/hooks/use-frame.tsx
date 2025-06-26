@@ -1,5 +1,5 @@
 import { useEffect, useCallback } from "react";
-import { useApp } from "./use-app";
+import { useApp } from "./use-app.tsx";
 
 /**
  * useFrame hook — registers a callback on every frame update.

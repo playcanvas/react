@@ -2,8 +2,8 @@
 
 import { BoundingBox, Entity as PcEntity, RenderComponent, Vec3, Application, Mat4 } from "playcanvas";
 import { Children, useLayoutEffect, useRef, useState } from "react";
-import { Entity } from "../Entity";
-import { useApp, useParent } from "../hooks";
+import { Entity } from "../Entity.tsx";
+import { useApp, useParent } from "../hooks/index.ts";
 
 interface AlignProps {
     left?: boolean;

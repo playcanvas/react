@@ -1,9 +1,9 @@
 "use client"
 
 import { FC, useEffect, useLayoutEffect } from "react";
-import { useApp } from "../hooks";
+import { useApp } from "../hooks/index.ts";
 import { Application, Asset, Texture } from "playcanvas";
-import { validatePropsWithDefaults } from "../utils/validation";
+import { validatePropsWithDefaults } from "../utils/validation.ts";
 
 interface EnvAtlasProps {
     /**

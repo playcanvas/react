@@ -1,4 +1,4 @@
-import { AnimationTrack } from "./animation";
+import { AnimationTrack } from "./animation.ts";
 
 export const mockAnimTrack: AnimationTrack[] = [
     {

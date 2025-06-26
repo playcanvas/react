@@ -1,6 +1,6 @@
 import { AppBase, CameraComponent, Entity, GraphNode, Picker } from "playcanvas"
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef } from "react"
-import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event";
+import { SyntheticMouseEvent, SyntheticPointerEvent } from "./synthetic-event.ts";
 
 // Utility to propagate events up the entity hierarchy
 const propagateEvent = (entity: Entity, event: SyntheticPointerEvent | SyntheticMouseEvent, stopAt: Entity | null = null): boolean => {

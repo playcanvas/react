@@ -1,6 +1,6 @@
 import { Color, Quat, Vec2, Vec3, Vec4, Mat4, Application, NullGraphicsDevice, Material } from "playcanvas";
-import { getColorFromName } from "./color";
-import { Serializable } from "./types-utils";
+import { getColorFromName } from "./color.ts";
+import { Serializable } from "./types-utils.ts";
 
 // Limit the size of the warned set to prevent memory leaks
 const MAX_WARNED_SIZE = 1000;

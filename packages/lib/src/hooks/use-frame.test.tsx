@@ -1,8 +1,8 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { useFrame } from './use-frame';
-import { Application } from '../Application';
+import { useFrame } from './use-frame.tsx';
+import { Application } from '../Application.tsx';
 
 describe('useFrame', () => {
 

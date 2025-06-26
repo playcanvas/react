@@ -1,7 +1,7 @@
 "use client";
 
 import { Slider } from "@components/ui/slider";
-import { useTimeline } from "./splat-viewer-context";
+import { useTimeline } from "./splat-viewer-context.ts";
 import { Button } from "@components/ui/button";
 import { PauseIcon, PlayIcon } from "lucide-react";
 import { TooltipContent, TooltipTrigger } from "@components/ui/tooltip";

@@ -1,8 +1,8 @@
 import { ForwardedRef, useEffect, useRef } from 'react';
-import { useParent } from './use-parent';
-import { useApp } from './use-app';
+import { useParent } from './use-parent.tsx';
+import { useApp } from './use-app.tsx';
 import { Application, Entity, Script, ScriptComponent } from 'playcanvas';
-import { SubclassOf } from '../utils/types-utils';
+import { SubclassOf } from '../utils/types-utils.ts';
 
 /**
  * This hook is used to create a script component on an entity. 

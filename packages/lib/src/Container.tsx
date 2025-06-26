@@ -1,7 +1,7 @@
 import { FC, useLayoutEffect, useRef } from "react";
-import { useApp } from "./hooks";
+import { useApp } from "./hooks/index.ts";
 import { Asset, Entity as PcEntity } from "playcanvas";
-import { Entity } from ".";
+import { Entity } from "./Entity.tsx";
 import { GlbContainerResource } from "playcanvas/build/playcanvas/src/framework/parsers/glb-container-resource.js";
 interface ContainerProps {
     asset: Asset;

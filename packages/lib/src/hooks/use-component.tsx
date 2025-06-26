@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from "react";
-import { useParent } from "./use-parent";
-import { useApp } from "./use-app";
+import { useParent } from "./use-parent.tsx";
+import { useApp } from "./use-app.tsx";
 import { Application, Component, Entity } from "playcanvas";
-import { applyProps, Schema } from "../utils/validation";
+import { applyProps, Schema } from "../utils/validation.ts";
 
 export function useComponent<T, InstanceType>(
   ctype: string | null, 

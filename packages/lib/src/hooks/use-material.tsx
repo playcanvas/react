@@ -1,8 +1,8 @@
 import { useLayoutEffect, useMemo } from 'react';
 import { StandardMaterial } from 'playcanvas';
-import { useApp } from './use-app';
-import { PublicProps, Serializable } from '../utils/types-utils';
-import { createComponentDefinition, applyProps, validatePropsPartial } from '../utils/validation';
+import { useApp } from './use-app.tsx';
+import { PublicProps, Serializable } from '../utils/types-utils.ts';
+import { createComponentDefinition, applyProps, validatePropsPartial } from '../utils/validation.ts';
 
 /**
  * This hook is used to create a material instance and update its properties when the props change.

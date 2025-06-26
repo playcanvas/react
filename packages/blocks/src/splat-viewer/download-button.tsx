@@ -2,7 +2,7 @@
 
 import { DownloadIcon } from "lucide-react";
 import { Button } from "@components/ui/button";
-import { useAssetViewer } from "./splat-viewer-context";
+import { useAssetViewer } from "./splat-viewer-context.tsx";
 import { TooltipTrigger, TooltipContent, Tooltip } from "@components/ui/tooltip";
 
 type DownloadButtonProps = {

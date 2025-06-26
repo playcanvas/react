@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Screen } from './Screen';
-import { Entity } from '../Entity';
-import { Application } from '../Application';
+import { Screen } from './Screen.tsx';
+import { Entity } from '../Entity.tsx';
+import { Application } from '../Application.tsx';
 
 const renderWithProviders = (ui: React.ReactNode) => {
     return render(

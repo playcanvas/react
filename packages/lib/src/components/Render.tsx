@@ -1,12 +1,12 @@
 "use client"
 
 import { FC } from "react";
-import { useComponent } from "../hooks";
-import { Container } from "../Container";
+import { useComponent } from "../hooks/index.ts";
+import { Container } from "../Container.tsx";
 import { Asset, Entity, type RenderComponent as PcRenderComponent } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils";
-import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation";
-import { createComponentDefinition } from "../utils/validation";
+import { PublicProps, Serializable } from "../utils/types-utils.ts";
+import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation.ts";
+import { createComponentDefinition } from "../utils/validation.ts";
 
 const RenderComponent: FC<RenderProps> = (props) => {
     // console.log('RenderComponent', props.material.diffuse);

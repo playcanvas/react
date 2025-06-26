@@ -3,18 +3,18 @@
 import { useEffect, useRef, useState } from "react";
 import { Entity } from "@playcanvas/react";
 import { Camera, Script } from "@playcanvas/react/components";
-import { useTimeline, useAssetViewer } from "./splat-viewer-context";
+import { useTimeline, useAssetViewer } from "./splat-viewer-context.ts";
 import { Vec3, Entity as PcEntity } from "playcanvas";
 
-import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation"; // assumed
-import { computeStartingPose, Pose, PoseType } from "./utils/pose";
+import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation.ts"; // assumed
+import { computeStartingPose, Pose, PoseType } from "./utils/pose.ts";
 import { useApp, useParent } from "@playcanvas/react/hooks";
-import { PostEffectsSettings, StaticPostEffects } from "./utils/effects";
-import { paris, neutral, noir } from "./utils/style";
+import { PostEffectsSettings, StaticPostEffects } from "./utils/effects.ts";
+import { paris, neutral, noir } from "./utils/style.ts";
 
 // @ts-expect-error There is no type definition for the camera-controls script
 import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
-import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change";
+import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change.ts";
 
 const variants = new Map<string, PostEffectsSettings>([
   ['paris', paris],
