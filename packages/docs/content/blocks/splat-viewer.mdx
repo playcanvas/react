@@ -168,6 +168,18 @@ A responsive and composable component for displaying **Gaussian splats**.
   `}
 />
 
+#### useAssetViewer
+
+A hook that provides the context for the asset viewer. This is handy if you need an imperative handle for the viewer. Use this if you need to trigger a download, or toggle the fullscreen mode, or access teh loading progress.
+
+<TSDoc
+  code={`
+    import { useAssetViewer } from '@playcanvas/blocks';
+    type $ = ReturnType<typeof useAssetViewer>;
+    export default $;
+  `}
+/>
+
 #### Controls
 
 A simple container for UI controls that creates a sensible layout and optionally auto hides when the user is interacting.
