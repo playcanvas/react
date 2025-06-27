@@ -65,13 +65,14 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@playcanvas/react": "workspace:*",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
     "playcanvas": "2.8.2",
     "tsc-alias": "1.8.16"
   },
   "peerDependencies": {
-    "@playcanvas/react": "workspace:*",
+    "@playcanvas/react": "^0.4.2",
     "playcanvas": "~2.8.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
