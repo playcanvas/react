@@ -1,4 +1,4 @@
-import { AppBase, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
+import { Application, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
 
 import { lerp, MyQuat } from './math.ts';
 
@@ -49,7 +49,7 @@ export type PoseType = {
     target: [number, number, number]
 }
 
-const computeStartingPose = (app: AppBase, fov: number) : PoseType => {
+const computeStartingPose = (app: Application, fov: number) : PoseType => {
 
     const gsplat = app.root.findComponent('gsplat') as unknown as GSplatComponent;
 

@@ -82,7 +82,7 @@
         }
     },
     "peerDependencies": {
-        "playcanvas": "~2.8.0",
+        "playcanvas": "~2.8.2",
         "react": "^18.3.1 || ^19.1.0",
         "react-dom": "^18.3.1 || ^19.1.0",
         "sync-ammo": "^0.1.2"
