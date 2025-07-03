@@ -54,6 +54,8 @@ const ParentEntity = () => {
 
 ## useFrame
 
+> **Deprecated**: The `useFrame` hook is deprecated and will be removed in a future release. Please use `useAppEvent('update', callback)` instead.
+
 The `useFrame` hook ties into the event loop and will be called on every frame whilst the component is mounted. Use this when you need to update a value or perform a calculation on every frame. This is better for performance than using react state updates.
 
 ```jsx
@@ -68,4 +70,55 @@ const MyComponent = () => {
 
   return <Entity ref={entityRef} />;
 }
+```
+
+## useAppEvent
+
+The `useAppEvent` hook provides a generic way to subscribe to PlayCanvas application events with proper TypeScript support. It supports different event types with their specific callback signatures.
+
+### Supported Events
+
+- **`'update'`**: Called every frame with delta time `(dt: number) => void`
+- **`'prerender'`**: Called before rendering with no parameters `() => void`
+- **`'postrender'`**: Called after rendering with no parameters `() => void`
+
+```jsx
+import { useAppEvent } from '@playcanvas/react/hooks'
+
+const MyComponent = () => {
+  const entityRef = useRef(null);
+
+  // Frame update with delta time (replaces useFrame)
+  useAppEvent('update', (dt) => {
+    entityRef.current.rotate(0, dt, 0);
+  });
+
+  // Pre-render hook
+  useAppEvent('prerender', () => {
+    console.log('About to render frame');
+  });
+
+  // Post-render hook
+  useAppEvent('postrender', () => {
+    console.log('Finished rendering frame');
+  });
+
+  return <Entity ref={entityRef} />;
+}
+```
+
+### Migration from useFrame
+
+To migrate from the deprecated `useFrame` hook:
+
+```jsx
+// Old way (deprecated)
+useFrame((dt) => {
+  // your frame logic
+});
+
+// New way
+useAppEvent('update', (dt) => {
+  // your frame logic
+});
 ```

@@ -3,49 +3,49 @@ import { useApp } from "./use-app.tsx";
 import { warnOnce } from "../utils/validation.ts";
 
 // Type for events with delta time
-type DeltaTimeEvents = 'update' | 'prerender' | 'postrender';
+type DeltaTimeEvents = 'update';
 
 // Type for events with no parameters
-type NoParamEvents = 'start' | 'stop' | 'destroy';
-
-// Type for events with multiple parameters
-type MultiParamEvents = 'prerender:layer' | 'postrender:layer';
+type NoParamEvents = 'prerender' | 'postrender';
 
 // Conditional type to determine callback signature based on event
 type EventCallback<T extends string> = 
   T extends DeltaTimeEvents ? (dt: number) => void :
   T extends NoParamEvents ? () => void :
-  T extends MultiParamEvents ? (camera: unknown, layer: unknown, transparent: boolean) => void :
-  (...args: unknown[]) => void;
+  never;
 
 /**
  * Generic hook for subscribing to PlayCanvas application events.
  * Supports events with different parameter signatures using TypeScript conditional types.
  * 
- * @param event - The event name to subscribe to
+ * @param {'update' | 'prerender' | 'postrender'} event - The event name to subscribe to
  * @param callback - The callback function to execute when the event fires
  * 
  * @example
  * ```tsx
  * // Event with delta time - TypeScript will enforce (dt: number) => void
  * useAppEvent('update', (dt) => console.log('Frame time:', dt));
- * useAppEvent('prerender', (dt) => console.log('Pre-render time:', dt));
- * useAppEvent('postrender', (dt) => console.log('Post-render time:', dt));
  * 
- * // Event with no parameters - TypeScript will enforce () => void
- * useAppEvent('start', () => console.log('App started'));
- * useAppEvent('stop', () => console.log('App stopped'));
- * useAppEvent('destroy', () => console.log('App destroyed'));
+ * // Events with no parameters - TypeScript will enforce () => void
+ * useAppEvent('prerender', () => console.log('Pre-render'));
+ * useAppEvent('postrender', () => console.log('Post-render'));
+ * ```
  * 
- * // Event with multiple parameters - TypeScript will enforce the correct signature
- * useAppEvent('prerender:layer', (camera, layer, transparent) => {
- *   console.log('Pre-rendering layer:', layer.name, 'transparent:', transparent);
- * });
+ * @example
+ * ```tsx
+ * function MyComponent() {
+ *   // Frame update with delta time
+ *   useAppEvent('update', (dt) => {
+ *     console.log('Frame delta time:', dt);
+ *   });
  * 
- * // Custom events - TypeScript will allow any signature
- * useAppEvent('custom:event', (data, timestamp) => {
- *   console.log('Custom event:', data, 'at:', timestamp);
- * });
+ *   // App lifecycle events
+ *   useAppEvent('prerender', () => {
+ *     console.log('Pre-rendering');
+ *   });
+ * 
+ *   return null;
+ * }
  * ```
  */
 export const useAppEvent = <T extends string>(
@@ -64,7 +64,7 @@ export const useAppEvent = <T extends string>(
 
   useEffect(() => {
     if (!app) {
-      throw new Error("`useApp` must be used within an Application component");
+      throw new Error("`useAppEvent` must be used inside an `<Application />` component");
     }
 
     app.on(event, handler);
@@ -84,28 +84,3 @@ export const useFrame = (callback: (dt: number) => void) => {
   warnOnce("`useFrame` is deprecated and will be removed in a future release. Please use useAppEvent('update', callback) instead.")
   return useAppEvent('update', callback);
 };
- 
-/*
- * Example usage:
- * 
- * function MyComponent() {
- *   // Frame update with delta time
- *   useAppEvent('update', (dt) => {
- *     console.log('Frame delta time:', dt);
- *   });
- * 
- *   // App lifecycle events
- *   useAppEvent('start', () => {
- *     console.log('Application started');
- *   });
- * 
- *   // Layer rendering events
- *   useAppEvent('prerender:layer', (camera, layer, transparent) => {
- *     if (layer.name === 'UI') {
- *       console.log('Rendering UI layer');
- *     }
- *   });
- * 
- *   return <Entity />;
- * }
- */
