@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useApp } from "./use-app.tsx";
+import { warnOnce } from "../utils/validation.ts";
 
 // Type for events with delta time
 type DeltaTimeEvents = 'update' | 'prerender' | 'postrender';
@@ -80,9 +81,10 @@ export const useAppEvent = <T extends string>(
  * @deprecated Use useAppEvent('update', callback) instead
  */
 export const useFrame = (callback: (dt: number) => void) => {
+  warnOnce("`useFrame` is deprecated and will be removed in a future release. Please use useAppEvent('update', callback) instead.")
   return useAppEvent('update', callback);
 };
-
+ 
 /*
  * Example usage:
  * 
