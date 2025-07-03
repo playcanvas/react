@@ -1,5 +1,14 @@
 # @playcanvas/blocks
 
+## 0.1.1
+
+### Patch Changes
+
+- 842abe2: Updated internal api to use `useAppEvent`
+- Updated dependencies [9dae0be]
+- Updated dependencies [842abe2]
+  - @playcanvas/react@0.6.0
+
 ## 0.1.0
 
 ### Minor Changes
