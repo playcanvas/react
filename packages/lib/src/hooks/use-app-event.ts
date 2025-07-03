@@ -1,18 +1,6 @@
 import { useEffect, useCallback } from "react";
 import { useApp } from "./use-app.tsx";
-import { warnOnce } from "../utils/validation.ts";
-
-// Type for events with delta time
-type DeltaTimeEvents = 'update';
-
-// Type for events with no parameters
-type NoParamEvents = 'prerender' | 'postrender';
-
-// Conditional type to determine callback signature based on event
-type EventCallback<T extends string> = 
-  T extends DeltaTimeEvents ? (dt: number) => void :
-  T extends NoParamEvents ? () => void :
-  never;
+import { warnOnce } from "../utils/validation.ts"
 
 /**
  * Generic hook for subscribing to PlayCanvas application events.
@@ -48,19 +36,37 @@ type EventCallback<T extends string> =
  * }
  * ```
  */
-export const useAppEvent = <T extends string>(
+type EventCallbackMap = {
+  /**
+   * @param dt - The delta time since the last frame
+   * @returns void
+   */
+  update: (dt: number) => void;
+  /**
+   * @returns void
+   */
+  prerender: () => void;
+  /**
+   * @returns void
+   */
+  postrender: () => void;
+};
+
+type AppEventName = keyof EventCallbackMap;
+
+export function useAppEvent<T extends AppEventName>(
   event: T,
-  callback: EventCallback<T>
-) => {
+  callback: EventCallbackMap[T]
+): void {
   const app = useApp();
 
-  // memoize handler so we can clean up properly
-  const handler = useCallback(
-    (...args: unknown[]) => {
-      (callback as (...args: unknown[]) => void)(...args);
-    },
-    [callback]
-  );
+  const handler = useCallback((dt?: number) => {
+    if (event === 'update') {
+      (callback as (dt: number) => void)(dt!);
+    } else {
+      (callback as () => void)();
+    }
+  }, [callback, event]);
 
   useEffect(() => {
     if (!app) {
@@ -72,7 +78,7 @@ export const useAppEvent = <T extends string>(
       app.off(event, handler);
     };
   }, [app, handler, event]);
-};
+}
 
 /**
  * useFrame hook — registers a callback on every frame update.
