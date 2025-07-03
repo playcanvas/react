@@ -21,6 +21,7 @@ import { validatePropsWithDefaults, createComponentDefinition, Schema, getNullAp
 import { PublicProps } from './utils/types-utils.ts';
 import { GraphicsDeviceOptions, defaultGraphicsDeviceOptions } from './types/graphics-device-options.ts';
 import { DeviceType, internalCreateGraphicsDevice } from './utils/create-graphics-device.ts';
+import { env } from './utils/env.ts';
 
 /**
  * The **Application** component is the root node of the PlayCanvas React API. It creates a canvas element
@@ -281,7 +282,7 @@ componentDefinition.schema = {
      * In test environments, we default to a Null device, because we don't cant use WebGL2/WebGPU.
      * This is just for testing purposes so we can test the fallback logic, without initializing WebGL2/WebGPU.
      */
-    default: process.env.NODE_ENV === 'test' ? [DEVICETYPE_NULL] : [DEVICETYPE_WEBGL2]
+    default: env === 'test' ? [DEVICETYPE_NULL] : [DEVICETYPE_WEBGL2]
   },
   className: {
     validate: (value: unknown) => typeof value === 'string',

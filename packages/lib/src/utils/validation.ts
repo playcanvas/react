@@ -1,6 +1,7 @@
 import { Color, Quat, Vec2, Vec3, Vec4, Mat4, Application, NullGraphicsDevice, Material } from "playcanvas";
 import { getColorFromName } from "./color.ts";
 import { Serializable } from "./types-utils.ts";
+import { env } from "./env.ts";
 
 // Limit the size of the warned set to prevent memory leaks
 const MAX_WARNED_SIZE = 1000;
@@ -8,7 +9,7 @@ const warned = new Set<string>();
 
 export const warnOnce = (message: string) => {
     if (!warned.has(message)) {
-        if (process.env.NODE_ENV !== 'production') {
+        if (env !== 'production') {
             
             // Use setTimeout to break the call stack
             setTimeout(() => {
@@ -73,7 +74,7 @@ export function validateAndSanitize<T, InstanceType>(
 ): T {
     const isValid = value !== undefined && propDef.validate(value);
     
-    if (!isValid && value !== undefined && process.env.NODE_ENV !== 'production') {
+    if (!isValid && value !== undefined && env !== 'production') {
         warnOnce(
             `Invalid prop "${propName}" in \`<${componentName} ${propName}={${JSON.stringify(value)}} />\`\n` +
             `  ${propDef.errorMsg(value)}\n` +
@@ -131,7 +132,7 @@ export function validatePropsPartial<T, InstanceType>(
     });
     
     // Warn about unknown props in development mode
-    if (process.env.NODE_ENV !== 'production' && warnUnknownProps && unknownProps.length > 0) {
+    if (env !== 'production' && warnUnknownProps && unknownProps.length > 0) {
         warnOnce(
             `Unknown props in "<${name}/>."\n` +
             `The following props are invalid and will be ignored: "${unknownProps.join('", "')}"\n\n` +
@@ -183,7 +184,7 @@ export function validatePropsWithDefaults<T extends object, InstanceType>(
   
     // Optionally warn about unknown props
     if (
-      process.env.NODE_ENV !== 'production' &&
+      env !== 'production' &&
       warnUnknownProps &&
       rawProps
     ) {
