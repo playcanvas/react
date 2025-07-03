@@ -2,4 +2,4 @@
 "@playcanvas/react": minor
 ---
 
-Deprecated useFrame and providing a new useAppEvent api
+Deprecate useFrame and introduce useAppEvent API
