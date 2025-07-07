@@ -13,6 +13,7 @@ import {
     BLENDMODE_SRC_ALPHA,
     BLENDEQUATION_ADD
 } from 'playcanvas';
+import { warnOnce } from '../../utils/validation.ts';
 
 const vsCode = /* glsl*/ `
     uniform mat4 camera_matrix;
@@ -193,6 +194,8 @@ export class Grid extends Script {
     static scriptName = 'grid';
 
     initialize() {
+
+        warnOnce('This script is deprecated and will be removed in the next major version. Use the `Grid` from `playcanvas` instead.');
 
         const layerName = 'World';
 

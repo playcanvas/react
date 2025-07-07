@@ -1,4 +1,5 @@
 import { Script, Entity, Layer, StandardMaterial, BLEND_NORMAL, SHADOW_VSM16, SHADOWUPDATE_REALTIME, CHUNKAPI_2_1 } from 'playcanvas';
+import { warnOnce } from '../../utils/validation.ts';
 
 const endPS = `
     litArgs_opacity = mix(light0_shadowIntensity, 0.0, shadow0);
@@ -55,6 +56,8 @@ export class ShadowCatcher extends Script {
     light = null;
 
     initialize() {
+        warnOnce('This script is deprecated and will be removed in the next major version. Use the `ShadowCatcher` from `playcanvas` instead.');
+
         // create and add the shadow layer
         this.layer = new Layer({
             name: 'Shadow Layer'
