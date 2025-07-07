@@ -1,13 +1,14 @@
 {
     "extends": "../../tsconfig.json",
     "compilerOptions": {
+        "sourceMap": true,
+        "inlineSources": true,
         "allowSyntheticDefaultImports": true,
         "esModuleInterop": true,
         "allowJs": true,
         "declaration": true,
         "declarationDir": "./dist",
         "forceConsistentCasingInFileNames": true,
-        "sourceMap": true,
         "removeComments": false,
         "noUnusedLocals": true,
         "noUnusedParameters": true,

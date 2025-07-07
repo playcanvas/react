@@ -3,6 +3,8 @@
       "target": "ES2022",
       "module": "ESNext",
       "strict": true,
+      "sourceMap": true,
+      "inlineSources": true,
       "esModuleInterop": true,
       "skipLibCheck": true,
       "jsx": "react-jsx",
