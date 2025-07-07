@@ -178,7 +178,19 @@ const attributes = {
     vertex_position: SEMANTIC_POSITION
 };
 
+/**
+ * @deprecated This script is deprecated and will be removed in the next major version.
+ *
+ * Use {@link https://github.com/playcanvas/engine/tree/main/scripts/esm/grid.mjs | Grid} from `playcanvas` instead.
+ *
+ * ```tsx
+ * import { Grid } from "playcanvas/scripts/esm/grid.mjs";
+ *
+ * export const MyScript = () => <Script script={Grid} />;
+ * ```
+ */
 export class Grid extends Script {
+    static scriptName = 'grid';
 
     initialize() {
 

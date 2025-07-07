@@ -5,7 +5,19 @@ const endPS = `
     gl_FragColor.rgb = vec3(0.0);
 `;
 
+/**
+ * @deprecated This script is deprecated and will be removed in the next major version.
+ * 
+ * Use {@link https://github.com/playcanvas/engine/tree/main/scripts/esm/shadow-catcher.mjs | ShadowCatcher} from `playcanvas` instead.
+ * 
+ * ```tsx
+ * import { ShadowCatcher } from "playcanvas/scripts/esm/shadow-catcher.mjs";
+ *
+ * export const MyScript = () => <Script script={ShadowCatcher} />;
+ * ```
+ */
 export class ShadowCatcher extends Script {
+    static scriptName = 'shadowCatcher';
     /**
      * The shadow distance of the shadow catcher light.
      * @type {number}
