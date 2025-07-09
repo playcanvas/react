@@ -29,6 +29,8 @@ interface EnvAtlasProps {
 
 /**
  * An environment atlas is a texture for rendering a skybox and global reflections.
+ * @deprecated This component is deprecated. 
+ * Use the <Environment envAtlas={asset} /> component instead.
  */
 export const EnvAtlas: FC<EnvAtlasProps>= (props) => {
 
