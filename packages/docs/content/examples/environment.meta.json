@@ -1,0 +1,15 @@
+{
+    "title": "Environment Example 🚀",
+    "description": "Learn how to use the Environment component in @playcanvas/react",
+    "openGraph": {
+        "title": "Environment Example 🚀",
+        "description": "Learn how to use the Environment component in @playcanvas/react",
+        "images": [
+            { 
+                "url": "https://playcanvas-react.vercel.app/pc_react-og.png",
+                "width": 1200,
+                "height": 630
+            }
+        ]
+    }
+}

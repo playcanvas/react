@@ -1,16 +1,17 @@
-import { Scene, Sky, Texture } from "playcanvas";
-import { useEffect } from "react";
+import { EnvLighting, Quat, Scene, Sky, SKYTYPE_DOME, Texture } from "playcanvas";
+import { useEffect, useRef } from "react";
 import { useApp } from "../hooks/use-app.tsx";
 import { createComponentDefinition, getStaticNullApplication, Schema, validatePropsWithDefaults, warnOnce } from "../utils/validation.ts";
 import { PublicProps } from "../utils/types-utils.ts";
 import { Asset } from "playcanvas";
+import dedent from "dedent";
 
 const appUUIDs = new Set<string>();
 
 /**
+ * @beta    
  * Environment component
- * 
- * @description
+
  * The Environment component is used to set the environment lighting and skybox.
  * 
  * @example
@@ -23,8 +24,8 @@ function Environment(props: EnvironmentProps) {
     const app = useApp();
  
     // split the sky props and scene props
-    const { center, depthWrite, type, ...sceneProps } = props;
-    const skyProps = { center, depthWrite, type };
+    const { center, scale, rotation, depthWrite, type, ...sceneProps } = props;
+    const skyProps = { center, scale, rotation, depthWrite, type };
 
     // Sanitize and validate the props
     const safeSceneProps = validatePropsWithDefaults(sceneProps, sceneComponentDefinition);
@@ -38,28 +39,47 @@ function Environment(props: EnvironmentProps) {
      * If multiple components are used in the same app instance, we will warn the user
      * and only the first component will be used.
      */
-    const appUUID = app.root.getGuid();
-    const appHasEnvironment = appUUIDs.has(appUUID);
-    if (appHasEnvironment) {
-        warnOnce(`There are multiple \`<Environment/>\` components in the same app instance. 
-            This will cause the environment to be set multiple times.
-            Only the first \`<Environment/>\` component will be used.`);
-    }
-    appUUIDs.add(appUUID);
-  
+    const appHasEnvironment = useRef(false);
+    useEffect(() => {
+        const appUUID = app.root.getGuid();
+        const hasEnvironment = appUUIDs.has(appUUID);
+        appUUIDs.add(appUUID);
+        appHasEnvironment.current = hasEnvironment;
+
+        if (hasEnvironment) {
+            warnOnce(
+                dedent`Multiple \`<Environment/>\` components have been mounted.
+                Only the first \`<Environment/>\` component will be used.`
+            );
+        }
+        
+        return () => {
+            appUUIDs.delete(appUUID);
+        }
+    })
+
     /**
      * Sets the skybox of the environment.
      */
     useEffect(() => {
         // If the app already has an environment, don't override it
-        if (appHasEnvironment) return;
+        if (appHasEnvironment.current) return;
+
+        const skyBoxAsset = safeSceneProps.skybox as Asset;
+        const isCubeMap = Array.isArray(skyBoxAsset.resources) && skyBoxAsset.resources.length === 6;
+        let skybox: Texture = skyBoxAsset.resource as Texture;
         
-        app.scene.skybox = safeSceneProps.skybox?.resource as Texture ?? null;  
+        // If the skybox is a HDRI, generate a cube map
+        if (!isCubeMap) {
+            skybox = EnvLighting.generateSkyboxCubemap(skyBoxAsset.resource as Texture);
+        }
+    
+        app.scene.skybox = skybox;  
 
         return () => {
             app.scene.skybox = null;
         };
-    }, [appUUID, appHasEnvironment, safeSceneProps.skybox?.id]);
+    }, [appHasEnvironment.current, safeSceneProps.skybox?.id]);
 
 
     /**
@@ -67,29 +87,49 @@ function Environment(props: EnvironmentProps) {
      */
     useEffect(() => {
         // If the app already has an environment, don't override it
-        if (appHasEnvironment) return;
+        if (appHasEnvironment.current) return;
 
         app.scene.envAtlas = safeSceneProps?.envAtlas?.resource as Texture ?? null;
 
         return () => {
             app.scene.envAtlas = null;
         };
-    }, [appUUID, appHasEnvironment, safeSceneProps.envAtlas?.id]);
+    }, [appHasEnvironment.current, safeSceneProps.envAtlas?.id]);
 
     /**
      * Sets the remaining environment settings.
      */
     useEffect(() => {   
-        if (appHasEnvironment) return;
+        if (appHasEnvironment.current) return;
 
-        Object.assign(app.scene, safeSceneProps);
-        Object.assign(app.scene.sky, safeSkyProps);
+        app.scene.sky.type = SKYTYPE_DOME;
+        app.scene.exposure = safeSceneProps.exposure ?? 1;
+        app.scene.envAtlas = safeSceneProps.envAtlas?.resource as Texture ?? null;
+
+        if (safeSkyProps.rotation) {
+            app.scene.skyboxRotation = new Quat().setFromEulerAngles(safeSkyProps.rotation[0], safeSkyProps.rotation[1], safeSkyProps.rotation[2]);
+        }
+
+        if (safeSkyProps.scale) {
+            app.scene.sky.node.setLocalScale(...safeSkyProps.scale);
+        }
+
+        if (safeSkyProps.position) {
+            app.scene.sky.node.setLocalPosition(...safeSkyProps.position); 
+        }
+
+        if (safeSkyProps.center) {
+            app.scene.sky.center.set(...safeSkyProps.center);
+        }
+
+        app.scene.sky.depthWrite = safeSkyProps.depthWrite ?? true;
 
         return () => {
             // Here we need to reset the scene and sky to their default values
             app.scene.sky.resetSkyMesh();
         };
-    }, [appUUID, appHasEnvironment]);
+
+    }, [appHasEnvironment.current, safeSkyProps.scale, safeSkyProps.center, safeSceneProps.exposure, safeSkyProps.rotation]);
 
     return null
 };
@@ -107,13 +147,33 @@ type SceneProps = Omit<Partial<PublicProps<Scene>>, 'skybox' | 'envAtlas'> & {
     * Used to set the lighting of the environment.
    */
   envAtlas?: Asset | null
+  
 }
-type SkyProps = Partial<PublicProps<Sky>> 
+
+type SkyProps = Omit<Partial<PublicProps<Sky>>, 'node' | 'center'> & {
+    /**
+     * The scale of the sky.
+     */
+    scale?: [number, number, number]
+    /**
+     * The position of the sky.
+     */
+    position?: [number, number, number]
+    /**
+     * The center of the sky.
+     */
+    center?: [number, number, number]
+    /**
+     * The rotation of the sky.
+     */
+    rotation?: [number, number, number]
+}
+
 type EnvironmentProps = SkyProps & SceneProps;
 
 // Component Definitions
 const skyComponentDefinition = createComponentDefinition<SkyProps, Sky>(
-    "Element",
+    "Sky",
     () => new Sky(getStaticNullApplication().scene),
     (sky: Sky) => sky.resetSkyMesh(),
 );
@@ -122,6 +182,38 @@ const sceneComponentDefinition = createComponentDefinition<SceneProps, Scene>(
     "Scene",
     () => getStaticNullApplication().scene
 );
+
+skyComponentDefinition.schema = {
+    ...skyComponentDefinition.schema,
+    scale: {
+        validate: (value: unknown) => Array.isArray(value) 
+            && value.length === 3 
+            && value.every(v => typeof v === 'number'),
+        errorMsg: (value: unknown) => `Expected an array of 3 numbers, got \`${typeof value}\``,
+        default: [100, 100, 100],
+    },
+    rotation: {
+        validate: (value: unknown) => Array.isArray(value) 
+            && value.length === 3 
+            && value.every(v => typeof v === 'number'),
+        errorMsg: (value: unknown) => `Expected an array of 3 numbers, got \`${typeof value}\``,
+        default: [0, 0, 0],
+    },
+    position: {
+        validate: (value: unknown) => Array.isArray(value) 
+            && value.length === 3 
+            && value.every(v => typeof v === 'number'),
+        errorMsg: (value: unknown) => `Expected an array of 3 numbers, got \`${typeof value}\``,
+        default: [0, 0, 0],
+    },
+    center: {
+        validate: (value: unknown) => Array.isArray(value) 
+            && value.length === 3 
+            && value.every(v => typeof v === 'number'),
+        errorMsg: (value: unknown) => `Expected an array of 3 numbers, got \`${typeof value}\``,
+        default: [0, 0.05, 0],
+    }
+} as Schema<SkyProps, Sky>;
 
 sceneComponentDefinition.schema = {
     ...sceneComponentDefinition.schema,
