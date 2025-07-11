@@ -75,7 +75,7 @@ export function SmartCamera({
   const entityRef = useRef<PcEntity>(null);
   const { subscribe, isPlaying } = useTimeline();
   const { mode, subscribeCameraReset } = useAssetViewer();
-  const timeoutRef = useRef(0);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
   const app = useApp();
   const initialPoseRef = useRef<PoseType | null>(null);
@@ -85,7 +85,7 @@ export function SmartCamera({
       setShouldUseRenderOnCameraChange(true);
       app.renderNextFrame = true;
     }, 200);
-    return () => clearTimeout(timeoutRef.current);
+    return () => clearTimeout(timeoutRef.current!);
   });
 
   useRenderOnCameraChange(shouldUseRenderOnCameraChange ? entityRef.current : null);
