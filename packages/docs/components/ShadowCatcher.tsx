@@ -24,10 +24,9 @@ const ShadowCatcherComponent: FC<ShadowCatcherProps> = (props) => {
             shadowResolution={1024} 
             shadowType={SHADOW_VSM_16F} 
             shadowUpdateMode={SHADOWUPDATE_REALTIME} 
-            vsmBlurSize={16} 
+            vsmBlurSize={8} 
             shadowIntensity={intensity} 
             intensity={0} />
-
         <Script script={ShadowCatcher} intensity={intensity} scale={scale} />
     </Entity>
 }
