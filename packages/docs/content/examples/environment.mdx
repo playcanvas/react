@@ -12,15 +12,23 @@ export const Example = () => {
 
     return (<Entity>
         {/* Create some environment lighting */}
-        <Environment envAtlas={envAtlas} skybox={skybox} scale={[15, 15, 15]} center={[0.0, 0.09, 0.0]} rotation={[0, 290, 0]}/>
+        <Environment 
+            type="dome" 
+            envAtlas={envAtlas} 
+            skybox={skybox} 
+            exposure={0.75}
+            scale={[15, 15, 15]} 
+            center={[0.0, 0.04, 0.0]} 
+            rotation={[0, 290, 0]}
+        />
 
         {/* Add a shadow catcher to catch the shadows from the model */}
         <ShadowCatcher width={5} depth={5} />
 
         {/* Create a camera entity */}
-        <Entity name='camera' position={[4, 1, 4]}>
-            <Camera clearColor='#090707' fov={28} />
-            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+        <Entity name='camera' position={[5, 1, -5]}>
+            <Camera clearColor='#090707' fov={45} />
+            <OrbitControls inertiaFactor={0.07} distanceMin={3} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
             {asset && <PostEffects />}
             <AutoRotate />
         </Entity>

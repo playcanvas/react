@@ -102,34 +102,65 @@ function Environment(props: EnvironmentProps) {
     useEffect(() => {   
         if (appHasEnvironment.current) return;
 
-        app.scene.sky.type = SKYTYPE_DOME;
         app.scene.exposure = safeSceneProps.exposure ?? 1;
         app.scene.envAtlas = safeSceneProps.envAtlas?.resource as Texture ?? null;
-
+        
         if (safeSkyProps.rotation) {
             app.scene.skyboxRotation = new Quat().setFromEulerAngles(safeSkyProps.rotation[0], safeSkyProps.rotation[1], safeSkyProps.rotation[2]);
         }
-
+        
         if (safeSkyProps.scale) {
             app.scene.sky.node.setLocalScale(...safeSkyProps.scale);
         }
-
+        
         if (safeSkyProps.position) {
             app.scene.sky.node.setLocalPosition(...safeSkyProps.position); 
         }
-
+        
         if (safeSkyProps.center) {
             app.scene.sky.center.set(...safeSkyProps.center);
         }
-
+        
+        console.log('safeSkyProps.type', safeSkyProps.type);
+        app.scene.sky.type = safeSkyProps.type ?? SKYTYPE_DOME;
         app.scene.sky.depthWrite = safeSkyProps.depthWrite ?? true;
 
+        // Set the skybox mip level
+        app.scene.skyboxMip = safeSceneProps.skyboxMip ?? 0;
+        app.scene.skyboxLuminance = safeSceneProps.skyboxLuminance ?? 1;
+        app.scene.skyboxIntensity = safeSceneProps.skyboxIntensity ?? 1;
+        app.scene.skyboxHighlightMultiplier = safeSceneProps.skyboxHighlightMultiplier ?? 1;
+
         return () => {
-            // Here we need to reset the scene and sky to their default values
-            app.scene.sky.resetSkyMesh();
+            // Reset the scene and sky to their default values
+            // app.scene.exposure = 1;
+            // app.scene.envAtlas = null;
+            // app.scene.skybox = null;
+            // app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
+            // app.scene.sky.node.setLocalScale(100, 100, 100);
+            // app.scene.sky.node.setLocalPosition(0, 0, 0);
+            // app.scene.sky.center.set(0, 0.05, 0);   
+            // app.scene.sky.type = SKYTYPE_DOME;
+            // app.scene.sky.depthWrite = true;
+            // app.scene.skyboxMip = 0;
+            // app.scene.skyboxLuminance = 1;
+            // app.scene.skyboxIntensity = 1;
+            // app.scene.skyboxHighlightMultiplier = 1;
         };
 
-    }, [appHasEnvironment.current, safeSkyProps.scale, safeSkyProps.center, safeSceneProps.exposure, safeSkyProps.rotation]);
+    }, [
+        appHasEnvironment.current, 
+        safeSkyProps.scale, 
+        safeSkyProps.center, 
+        safeSceneProps.exposure, 
+        safeSkyProps.rotation,
+        safeSceneProps.skyboxMip,
+        safeSceneProps.skyboxLuminance,
+        safeSceneProps.skyboxIntensity,
+        safeSceneProps.skyboxHighlightMultiplier,
+        safeSkyProps.type,
+        safeSkyProps.depthWrite,
+    ]);
 
     return null
 };
