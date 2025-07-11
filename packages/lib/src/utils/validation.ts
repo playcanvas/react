@@ -315,7 +315,7 @@ export function createComponentDefinition<T, InstanceType>(
                 apply: (instance, props, key) => {
                     if(typeof props[key] === 'string') {
                         const colorString = getColorFromName(props[key] as string) || props[key] as string;
-                        (instance[key as keyof InstanceType] as Color) = new Color().fromString(colorString);;
+                        (instance[key as keyof InstanceType] as Color) = new Color().fromString(colorString);
                     } else {
                         (instance[key as keyof InstanceType] as Color) = (instance[key as keyof InstanceType] as Color) = new Color().fromArray(props[key] as number[]);
                     }
