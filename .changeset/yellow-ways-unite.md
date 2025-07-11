@@ -2,4 +2,4 @@
 "@playcanvas/react": patch
 ---
 
-Fixes an issues setting light colors
+Fixes an issue setting light colors
