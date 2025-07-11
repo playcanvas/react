@@ -116,19 +116,51 @@ const App = () => (
 
 ## Getting started
 
-**⚡ The quickest way to get started is to use our [playcanvas-react.app/new](https://playcanvas-react.vercel.app/new) starter template.**
+The quickest way to get started is to run the following
+ 
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash copy
+    pnpm create playcanvas -t react-ts
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash copy
+    npm create playcanvas@latest -t react-ts
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash copy
+    yarn create playcanvas -t react-ts
+    ```
+  </Tabs.Tab>
+</Tabs>
 
-For a local npm setup run the following and follow the [Getting Started Guide](/docs/guide/getting-started).
+This will spin up a new project and dev environment and get you up and running in seconds.
 
-```bash copy
-npm install @playcanvas/react playcanvas
-```
+Alternatively try the [playcanvas-react.app/new](https://playcanvas-react.vercel.app/new) Stackblitz starter template.
 
-You can also clone the following starter template.
+### Installing manually
 
-```bash copy
-git clone https://github.com/marklundin/playcanvas-react-template.git
-```
+If you already have a project setup you can install the library via npm.
+
+<Tabs items={['pnpm', 'npm', 'yarn']}>
+  <Tabs.Tab>
+    ```bash copy
+    pnpm add @playcanvas/react
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash copy
+    npm install @playcanvas/react
+    ```
+  </Tabs.Tab>
+  <Tabs.Tab>
+    ```bash copy
+    npm install @playcanvas/react
+    ```
+  </Tabs.Tab>
+</Tabs>
 
 ## Ready to build?
 
@@ -160,4 +192,5 @@ To get your IDE up to speed, run the following from the root of your project to 
 Developers and studios are already using **@playcanvas/react** in production
 
 - ⚡ [Snap AI](https://ai.snapchat.com) uses **@playcanvas/react** to build real-time 3D interfaces inside their next-gen tools.
+- [GSplat Share](https://gsplat.org/) – Share your splats with optional time-limited and password-protected links.
 - ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we’ll feature it below.

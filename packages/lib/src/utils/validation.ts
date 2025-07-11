@@ -314,10 +314,10 @@ export function createComponentDefinition<T, InstanceType>(
                     `Expected a hex like "#FF0000", CSS color name like "red", or an array "[1, 0, 0]").`,
                 apply: (instance, props, key) => {
                     if(typeof props[key] === 'string') {
-                        const color = getColorFromName(props[key] as string) || props[key] as string;
-                        (instance[key as keyof InstanceType] as Color).fromString(color);
+                        const colorString = getColorFromName(props[key] as string) || props[key] as string;
+                        (instance[key as keyof InstanceType] as Color) = new Color().fromString(colorString);
                     } else {
-                        (instance[key as keyof InstanceType] as Color).fromArray(props[key] as number[]);
+                        (instance[key as keyof InstanceType] as Color) = (instance[key as keyof InstanceType] as Color) = new Color().fromArray(props[key] as number[]);
                     }
                 }
             };

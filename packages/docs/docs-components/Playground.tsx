@@ -76,10 +76,10 @@ const PlayGround: FC<PlaygroundProps> = ({
             </div>
             { showCodeEditor && <Suspense>
                 <div 
-                    className='absolute p-0 lg:p-12 pointer-events-auto top-[calc(var(--nextra-navbar-height)+var(--nextra-banner-height))] h-[calc(100vh-var(--nextra-navbar-height)-var(--nextra-banner-height))] flex mx-auto max-w-[90rem] xl:p-8'
+                    className='absolute p-0 pointer-events-auto box-border inset-0 flex mx-auto max-w-[90rem] max-h-[calc(100%-var(--nextra-banner-height))] xl:p-8'
                     onMouseMove={e => e.stopPropagation() }
                 >
-                    <div className='w-screen lg:w-lg overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
+                    <div className='lg:w-lg m-8 max-h-[calc(100%-8rem)] box-border overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
                         <div id='code-editor-header' className='flex justify-between items-center p-2 bg-zinc-800 px-4'>
                             <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono opacity-80 w-full'>
                                 <TerminalIcon className='w-4 h-4' />
