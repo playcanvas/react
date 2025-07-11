@@ -1,3 +1,5 @@
+"use client";
+
 import { Entity } from "@playcanvas/react";
 import { Script } from "@playcanvas/react/components";
 import { Grid as GridScript } from "playcanvas/scripts/esm/grid.mjs";
