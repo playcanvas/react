@@ -1,4 +1,4 @@
-import { EnvLighting, Quat, Scene, Sky, SKYTYPE_DOME, Texture } from "playcanvas";
+import { EnvLighting, Quat, Scene, Sky, SKYTYPE_DOME, SKYTYPE_INFINITE, Texture } from "playcanvas";
 import { useEffect, useRef } from "react";
 import { useApp } from "../hooks/use-app.tsx";
 import { createComponentDefinition, getStaticNullApplication, Schema, validatePropsWithDefaults, warnOnce } from "../utils/validation.ts";
@@ -66,10 +66,11 @@ function Environment(props: EnvironmentProps) {
         if (appHasEnvironment.current) return;
 
         const skyBoxAsset = safeSceneProps.skybox as Asset;
+
         const isCubeMap = Array.isArray(skyBoxAsset.resources) && skyBoxAsset.resources.length === 6;
         let skybox: Texture = skyBoxAsset.resource as Texture;
         
-        // If the skybox is a HDRI, generate a cube map
+        // If the skybox is not a cube map, try to generate a cube map from it.
         if (!isCubeMap) {
             skybox = EnvLighting.generateSkyboxCubemap(skyBoxAsset.resource as Texture);
         }
@@ -121,7 +122,6 @@ function Environment(props: EnvironmentProps) {
             app.scene.sky.center.set(...safeSkyProps.center);
         }
         
-        console.log('safeSkyProps.type', safeSkyProps.type);
         app.scene.sky.type = safeSkyProps.type ?? SKYTYPE_DOME;
         app.scene.sky.depthWrite = safeSkyProps.depthWrite ?? true;
 
@@ -132,34 +132,42 @@ function Environment(props: EnvironmentProps) {
         app.scene.skyboxHighlightMultiplier = safeSceneProps.skyboxHighlightMultiplier ?? 1;
 
         return () => {
-            // Reset the scene and sky to their default values
-            // app.scene.exposure = 1;
-            // app.scene.envAtlas = null;
-            // app.scene.skybox = null;
-            // app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
-            // app.scene.sky.node.setLocalScale(100, 100, 100);
-            // app.scene.sky.node.setLocalPosition(0, 0, 0);
-            // app.scene.sky.center.set(0, 0.05, 0);   
-            // app.scene.sky.type = SKYTYPE_DOME;
-            // app.scene.sky.depthWrite = true;
-            // app.scene.skyboxMip = 0;
-            // app.scene.skyboxLuminance = 1;
-            // app.scene.skyboxIntensity = 1;
-            // app.scene.skyboxHighlightMultiplier = 1;
+            
+            /**
+             * We have hardcoded the default values for the scene and sky in order to reset them
+             * 
+             * This isn't perfect as any changes the the engine defaults will break this.
+             * TODO: Find a better way to reset the scene and sky.
+             */
+
+            app.scene.exposure = 1;
+            app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
+            app.scene.sky.node.setLocalScale(1, 1, 1);
+            app.scene.sky.node.setLocalPosition(0, 0, 0);
+            app.scene.sky.center.set(0, 0.05, 0);   
+            app.scene.sky.type = SKYTYPE_INFINITE;
+            app.scene.sky.depthWrite = false;
+            app.scene.skyboxMip = 0;
+            app.scene.skyboxLuminance = 0;
+            app.scene.skyboxIntensity = 1;
+            app.scene.skyboxHighlightMultiplier = 1;
         };
 
     }, [
         appHasEnvironment.current, 
-        safeSkyProps.scale, 
-        safeSkyProps.center, 
         safeSceneProps.exposure, 
-        safeSkyProps.rotation,
+        safeSkyProps.type,
+        safeSkyProps.depthWrite,
         safeSceneProps.skyboxMip,
         safeSceneProps.skyboxLuminance,
         safeSceneProps.skyboxIntensity,
         safeSceneProps.skyboxHighlightMultiplier,
-        safeSkyProps.type,
-        safeSkyProps.depthWrite,
+
+        // compute keys for scale, rotation, and center
+        `scale-${safeSkyProps.scale?.join('-')}`, 
+        `rotation-${safeSkyProps.rotation?.join('-')}`,
+        `center-${safeSkyProps.center?.join('-')}`, 
+        
     ]);
 
     return null
