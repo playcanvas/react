@@ -1,5 +1,20 @@
 # @playcanvas/blocks
 
+## 0.1.1
+
+### Patch Changes
+
+- 931eac0: Include TS Source inside source maps
+- c373646: Type fixes
+- 842abe2: Updated internal api to use `useAppEvent`
+- Updated dependencies [28a7345]
+- Updated dependencies [931eac0]
+- Updated dependencies [9dae0be]
+- Updated dependencies [637d196]
+- Updated dependencies [842abe2]
+- Updated dependencies [85229d7]
+  - @playcanvas/react@0.6.0
+
 ## 0.1.0
 
 ### Minor Changes
