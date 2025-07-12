@@ -78,11 +78,11 @@ The `useAsset` hook has the following return type.
 
 The following hooks are available:
 
-- [`useModel`](/docs/api/hooks/assets#usemodel) - Load a 3D model asset
-- [`useSplat`](/docs/api/hooks/assets#usesplat) - Load a Gaussian Splat asset
-- [`useTexture`](/docs/api/hooks/assets#usetexture) - Load a texture asset
-- [`useEnvAtlas`](/docs/api/hooks/assets#useenvatlas) - Load an environment atlas texture
-- [`useAsset`](/docs/api/hooks/assets#useasset) - Generic hook for loading any type of asset
+- [`useModel`](/docs/api/hooks/use-asset#usemodel) - Load a 3D model asset
+- [`useSplat`](/docs/api/hooks/use-asset#usesplat) - Load a Gaussian Splat asset
+- [`useTexture`](/docs/api/hooks/use-asset#usetexture) - Load a texture asset
+- [`useEnvAtlas`](/docs/api/hooks/use-asset#useenvatlas) - Load an environment atlas texture
+- [`useAsset`](/docs/api/hooks/use-asset#useasset) - Generic hook for loading any type of asset
 
 ## useModel
 
@@ -120,7 +120,7 @@ dracoInitialize({
 
 ## useSplat
 
-A specialized hook for loading Gaussian Splat assets. Pass the source URL of the splat file and any additional properties to pass to the asset loader and use the resulting asset in the [`<GSplat/>`](/docs/api/components/GSplat) component.
+A specialized hook for loading Gaussian Splat assets. Pass the source URL of the splat file and any additional properties to pass to the asset loader and use the resulting asset in the [`<GSplat/>`](/docs/api/components/splat) component.
 
 ```tsx copy filename="render-splat.tsx"
 import { useSplat } from '@playcanvas/react/hooks';
@@ -159,7 +159,7 @@ export function RenderTexture() {
 }
 ```
 
-See the [useMaterial](/docs/api/hooks/assets/useMaterial) hook and [Render](/docs/api/components/Render) component for more information.
+See the [useMaterial](/docs/api/hooks/use-asset/useMaterial) hook and [Render](/docs/api/components/Render) component for more information.
 
 ## useEnvAtlas
 

@@ -17,7 +17,7 @@ alwaysApply: true
 ```tsx
 // Core 
 import { Application, Entity } from '@playcanvas/react'
-// /components add behaviours to Entities
+// Components add behaviors to Entities
 import { Light, Camera, Render, Gsplat, Screen, Collision, RigigBody, Anim } from '@playcanvas/react/components'
 // Hooks add functionality
 import { useModel, useSplat, useAppEvent, useParent, useApp } from '@playcanvas/react/hooks'

@@ -16,7 +16,7 @@ import { Callout } from 'nextra/components'
 
 Assets are a core part of any 3D application, and they can also take a significant amount time to load, which can make your app feel sluggish. Knowing how to load and manage assets efficiently is key to a smooth user experience.
 
-`@playcanvas/react` provides a set of specialized hooks for loading different types of assets, as well as a utility function for loading assets. For detailed API documentation, see the [Asset Hooks reference](/docs/api/hooks/assets)
+`@playcanvas/react` provides a set of specialized hooks for loading different types of assets, as well as a utility function for loading assets. For detailed API documentation, see the [Asset Hooks reference](/docs/api/hooks/use-asset)
 
 ## Basic Usage
 
@@ -74,11 +74,11 @@ const { asset } = useTexture('texture.jpg', {
 
 There are different hooks for loading different types of assets. You can create more advanced hooks by wrapping the `useAsset` hook.
 
-- [`useModel`](/docs/api/hooks/assets#usemodel) for loading 3D GLTF/GLB models
-- [`useTexture`](/docs/api/hooks/assets#usetexture) for loading textures
-- [`useSplat`](/docs/api/hooks/assets#usesplat) for loading splat maps
-- [`useEnvAtlas`](/docs/api/hooks/assets#useenvatlas) for loading environment atlases
-- [`useAsset`](/docs/api/hooks/assets#useasset) for loading any type of asset
+- [`useModel`](/docs/api/hooks/use-asset#usemodel) for loading 3D GLTF/GLB models
+- [`useTexture`](/docs/api/hooks/use-asset#usetexture) for loading textures
+- [`useSplat`](/docs/api/hooks/use-asset#usesplat) for loading splat maps
+- [`useEnvAtlas`](/docs/api/hooks/use-asset#useenvatlas) for loading environment atlases
+- [`useAsset`](/docs/api/hooks/use-asset#useasset) for loading any type of asset
 
 ## Advanced Patterns
 
