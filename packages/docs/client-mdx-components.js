@@ -1,6 +1,6 @@
 import { Application, Entity } from '@playcanvas/react'
 import { OrbitControls } from '@playcanvas/react/scripts'
-import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody } from '@playcanvas/react/components'
+import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Environment } from '@playcanvas/react/components'
 
 import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
@@ -11,6 +11,7 @@ import ShadowCatcher from '@components/ShadowCatcher'
 import AutoRotate from '@components/AutoRotate'
 import { MotionEntity, MotionLight } from '@components/MotionEntity'
 import { Glb } from '@components/Glb'
+import { useEnvAtlas } from '@playcanvas/react/hooks'
 
 import { version } from 'playcanvas';
 const PcVersion = () => <span>{version}</span>;
@@ -20,7 +21,7 @@ export const defaultComponents = {
     ReactQueryProvider,
     Application,
     Entity,
-    Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light,
+    Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light, Environment,
     OrbitControls,
     EnvAtlasComponent,
     Grid,
@@ -30,5 +31,6 @@ export const defaultComponents = {
     AutoRotate,
     MotionEntity,
     MotionLight,
+    useEnvAtlas,
     Glb
 }

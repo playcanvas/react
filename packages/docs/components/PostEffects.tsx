@@ -82,7 +82,7 @@ const defaultPostSettings = {
     "grading": {
         "enabled": true,
         "brightness": 0.83,
-        "contrast": 1.06,
+        "contrast": 1.1,
         "saturation": 1.2,
         "tint": {
             "r": 1,

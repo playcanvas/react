@@ -14,7 +14,7 @@ export function Progress({ variant = "top", className, style }: ProgressProps) {
   const { subscribe } = useAssetViewer();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(true);
-  const timeoutRef = useRef<number>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const unsubscribe = subscribe((progress) => {

@@ -17,10 +17,10 @@ alwaysApply: true
 ```tsx
 // Core 
 import { Application, Entity } from '@playcanvas/react'
-// /components add behaviours to Entities
-import { Light, Camera, Render, Gsplat, Screen, Collision, RigigBody, Anim } from '@playcanvas/react/components'
+// Components add behaviors to Entities
+import { Light, Camera, Render, Gsplat, Screen, Collision, RigidBody, Anim } from '@playcanvas/react/components'
 // Hooks add functionality
-import { useModel, useSplat, useFrame, useParent, useApp } from '@playcanvas/react/hooks'
+import { useModel, useSplat, useAppEvent, useParent, useApp } from '@playcanvas/react/hooks'
 ```
 
 ## Rules for 3D Content

@@ -1,4 +1,4 @@
-import { useApp, useFrame } from "@playcanvas/react/hooks";
+import { useApp, useAppEvent } from "@playcanvas/react/hooks";
 import { Entity as PcEntity } from "playcanvas";
 import { useEffect, useRef } from "react";
 
@@ -47,11 +47,11 @@ export const useRenderOnCameraChange = (entity: PcEntity | null) => {
   }, [app]);
 
   /**
-   * This hook ensures that rendering only happens when the camera has moved or it's projection has changed.
+   * This hook ensures that rendering only happens when the camera has moved or its projection has changed.
    * However if the canvas is not visible on the page it will take precedence.
    * Don't render if the canvas is not visible regardless of any animations.
    */
-  useFrame(() => {
+  useAppEvent('update', () => {
     if (!entity || !isVisible.current) return;
     const world = entity.getWorldTransform().data;
     const proj = entity.camera?.projectionMatrix?.data;

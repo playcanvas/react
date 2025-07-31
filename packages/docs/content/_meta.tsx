@@ -22,6 +22,10 @@ const examplesList = {
     title: 'Pointer Events',
     href: '/examples/pointer-events'
   },
+  'environment' : {
+    title: 'Environment',
+    href: '/examples/environment'
+  },
   // "Advanced" : {
   //   type: 'separator',
   // },

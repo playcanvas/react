@@ -15,6 +15,8 @@ import { SubclassOf } from "../utils/types-utils.ts";
  * @example
  * // A Rotator script that rotates the entity around the Y axis
  * class Rotator extends Script {
+ *  static scriptName = 'rotator';
+ *
  *  update(dt: number) {
  *    this.entity.rotate(0, 1, 0, dt);
  *  }
