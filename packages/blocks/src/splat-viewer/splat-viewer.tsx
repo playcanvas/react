@@ -215,7 +215,11 @@ export function SplatViewer( {
                 subscribe={subscribe}
             >
                 <Suspense fallback={<PosterComponent poster={poster} />} >
-                    <Application fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} autoRender={false}>
+                    <Application 
+                        fillMode={FILLMODE_NONE} 
+                        resolutionMode={RESOLUTION_AUTO} 
+                        autoRender={false}
+                        graphicsDeviceOptions={{ antialias: false }}>
                         <SplatComponent src={src} onAssetProgress={onAssetProgress} variant={variant} />
                     </Application>
                     <TooltipProvider>
