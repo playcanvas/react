@@ -99,6 +99,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
     fillMode = FILLMODE_NONE,
     resolutionMode = RESOLUTION_AUTO,
     usePhysics = false,
+    pickerEnabled = true,
     graphicsDeviceOptions,
     deviceTypes = [DEVICETYPE_WEBGL2],
     ...otherProps
@@ -132,7 +133,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   const appRef = useRef<PlayCanvasApplication | null>(null);
 
   const pointerEvents = useMemo(() => new Set<string>(), []);
-  usePicker(appRef.current, canvasRef.current, pointerEvents);
+  usePicker(appRef.current, canvasRef.current, pointerEvents, pickerEnabled);
 
   useLayoutEffect(() => {
 
@@ -239,6 +240,12 @@ interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, 
    */
   usePhysics?: boolean,
 
+  /** 
+   * Set to `false` to disable the global picker
+   * @default true
+   */
+  pickerEnabled?: boolean,
+
   /**
    * The device types to use for the graphics device. This allows you to set an order of preference for the graphics device.
    * The first device type in the array that is supported by the browser will be used.
@@ -303,6 +310,11 @@ componentDefinition.schema = {
   usePhysics: {
     validate: (value: unknown) => typeof value === 'boolean',
     errorMsg: (value: unknown) => `usePhysics must be a boolean. Received: ${value}`,
+    default: false
+  },
+  pickerEnabled: {
+    validate: (value: unknown) => typeof value === 'boolean',
+    errorMsg: (value: unknown) => `pickerEnabled must be a boolean. Received: ${value}`,
     default: false
   },
   fillMode: {
