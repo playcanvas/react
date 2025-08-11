@@ -102,7 +102,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
         if(app?.graphicsDevice?.canvas) resizeObserver.observe(app.graphicsDevice.canvas);
         return () => resizeObserver.disconnect();
 
-    }, [app, picker]);
+    }, [app]);
 
 
     // Store pointer position
