@@ -154,7 +154,6 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
     // Construct a generic handler for pointer events
     const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
         if (!picker || !app || !canvasRectRef.current) return;
-        if (pointerEvents.size === 0) return;
 
         const entity = await getEntityAtPointerEvent(app, picker, canvasRectRef.current, e);
 
