@@ -52,6 +52,11 @@ const getEntityAtPointerEvent = async (app : AppBase, picker: Picker, rect: DOMR
      // Calculate position relative to canvas
      const x = e.clientX - rect.left;
      const y = e.clientY - rect.top;
+
+     // Ignore events outside the canvas bounds to avoid unnecessary picker work
+     if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+         return null;
+     }
      
      // Scale calculation using PlayCanvas's DPR
      const scaleX = canvas.width / (rect.width * app.graphicsDevice.maxPixelRatio);
@@ -85,7 +90,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
         return new Picker(app, app.graphicsDevice.width, app.graphicsDevice.height);
     }, [app]);
 
-    // Watch for the canvas to resize. Neccesary for correct picking
+    // Watch for the canvas to resize. Necessary for correct picking
     useEffect(() => {
         const resizeObserver = new ResizeObserver(() => {
             canvasRectRef.current = app ? app.graphicsDevice.canvas.getBoundingClientRect() : null;
@@ -97,7 +102,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
         if(app?.graphicsDevice?.canvas) resizeObserver.observe(app.graphicsDevice.canvas);
         return () => resizeObserver.disconnect();
 
-    }, [app]);
+    }, [app, picker]);
 
 
     // Store pointer position
@@ -106,7 +111,11 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
     }, [picker])
 
     const onFrameUpdate = useCallback(async () => {
-        if (pointerEvents.size === 0) return;
+        if (pointerEvents.size === 0) {
+            // No listeners: clear hover state to avoid stale pointerout on re-enable
+            activeEntity.current = null;
+            return;
+        }
 
         const e : PointerEvent | null = pointerDetails.current;
         if (!picker || !app || !e) return null;
@@ -145,6 +154,7 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
     // Construct a generic handler for pointer events
     const onInteractionEvent = useCallback(async (e: MouseEvent)  => {
         if (!picker || !app || !canvasRectRef.current) return;
+        if (pointerEvents.size === 0) return;
 
         const entity = await getEntityAtPointerEvent(app, picker, canvasRectRef.current, e);
 
@@ -176,5 +186,5 @@ export const usePicker = (app: AppBase | null, el: HTMLElement | null, pointerEv
             el.removeEventListener('pointermove', onPointerMove);
             app.off('update', onFrameUpdate);
         };
-    }, [app, el, onInteractionEvent, pointerEvents]);
+    }, [app, el, onInteractionEvent, onPointerMove, onFrameUpdate]);
 }
