@@ -169,7 +169,7 @@ describe('usePicker', () => {
     });
 
     // Provide a camera stub so picking path runs
-    vi.spyOn(app.root as any, 'findComponents').mockReturnValue([{ priority: 1, renderTarget: null }]);
+    vi.spyOn(app.root, 'findComponents').mockReturnValue([{ priority: 1, renderTarget: null }] as unknown as pc.CameraComponent[]);
 
     const pointerEvents = new Set<string>();
 
