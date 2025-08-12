@@ -2,7 +2,7 @@
   "name": "@playcanvas/blocks",
   "description": "High level abstract 3D primitives for React",
   "homepage": "https://playcanvas-react.vercel.app/blocks",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
