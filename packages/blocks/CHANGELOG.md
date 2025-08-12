@@ -1,5 +1,17 @@
 # @playcanvas/blocks
 
+## 0.1.2
+
+### Patch Changes
+
+- b019445: Ensure SplatViewer is initialized without anti-aliasing
+- 28998cb: Update deps
+- Updated dependencies [1e8d7e6]
+- Updated dependencies [28998cb]
+- Updated dependencies [0b08685]
+- Updated dependencies [62d7178]
+  - @playcanvas/react@0.7.0
+
 ## 0.1.1
 
 ### Patch Changes
