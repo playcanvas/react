@@ -19,8 +19,7 @@
         "build": "pnpm run build:lib && pnpm run build:blocks && pnpm run build:docs",
         "start": "pnpm --filter docs run start",
         "lint": "pnpm -r exec eslint .",
-        "test": "pnpm -r run test",
-        "ci:publish": "pnpm publish -r"
+        "test": "pnpm -r run test"
     },
     "devDependencies": {
         "@changesets/cli": "2.29.5",
