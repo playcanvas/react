@@ -96,11 +96,11 @@
         "access": "public"
     },
     "devDependencies": {
-        "@testing-library/jest-dom": "6.6.4",
+        "@testing-library/jest-dom": "6.8.0",
         "@testing-library/react": "16.3.0",
-        "@types/node": "22.17.1",
-        "@types/react": "19.1.9",
-        "@types/react-dom": "19.1.7",
+        "@types/node": "22.18.0",
+        "@types/react": "19.1.12",
+        "@types/react-dom": "19.1.9",
         "@vitejs/plugin-react": "4.7.0",
         "@vitest/coverage-v8": "3.2.4",
         "eslint-plugin-require-extensions": "0.1.3",
