@@ -78,7 +78,9 @@ function Environment(props: EnvironmentProps) {
         app.scene.skybox = skybox;  
 
         return () => {
-            app.scene.skybox = null;
+            if (app?.scene?.skybox) {
+                app.scene.skybox = null;
+            }
         };
     }, [appHasEnvironment.current, safeSceneProps.skybox?.id]);
 
@@ -93,7 +95,9 @@ function Environment(props: EnvironmentProps) {
         app.scene.envAtlas = safeSceneProps?.envAtlas?.resource as Texture ?? null;
 
         return () => {
-            app.scene.envAtlas = null;
+            if (app?.scene?.envAtlas) {
+                app.scene.envAtlas = null;
+            }
         };
     }, [appHasEnvironment.current, safeSceneProps.envAtlas?.id]);
 
@@ -140,17 +144,19 @@ function Environment(props: EnvironmentProps) {
              * TODO: Find a better way to reset the scene and sky.
              */
 
-            app.scene.exposure = 1;
-            app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
-            app.scene.sky.node.setLocalScale(1, 1, 1);
-            app.scene.sky.node.setLocalPosition(0, 0, 0);
-            app.scene.sky.center.set(0, 0.05, 0);   
-            app.scene.sky.type = SKYTYPE_INFINITE;
-            app.scene.sky.depthWrite = false;
-            app.scene.skyboxMip = 0;
-            app.scene.skyboxLuminance = 0;
-            app.scene.skyboxIntensity = 1;
-            app.scene.skyboxHighlightMultiplier = 1;
+            if (app.scene) {
+                app.scene.exposure = 1;
+                app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
+                app.scene.sky.node.setLocalScale(1, 1, 1);
+                app.scene.sky.node.setLocalPosition(0, 0, 0);
+                app.scene.sky.center.set(0, 0.05, 0);   
+                app.scene.sky.type = SKYTYPE_INFINITE;
+                app.scene.sky.depthWrite = false;
+                app.scene.skyboxMip = 0;
+                app.scene.skyboxLuminance = 0;
+                app.scene.skyboxIntensity = 1;
+                app.scene.skyboxHighlightMultiplier = 1;
+            }
         };
 
     }, [
