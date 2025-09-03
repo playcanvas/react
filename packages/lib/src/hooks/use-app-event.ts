@@ -85,8 +85,7 @@ export function useAppEvent<
       // update event always receives delta time as first argument
       (callback as (dt: number) => void)(args[0] as number);
     } else {
-      // For custom events, forward all arguments to the callback
-      (callback as any)(...args);
+      (callback as () => void)();
     }
   }, [callback, event]);
 
