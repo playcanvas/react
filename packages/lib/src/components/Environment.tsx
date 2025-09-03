@@ -78,7 +78,7 @@ function Environment(props: EnvironmentProps) {
         app.scene.skybox = skybox;  
 
         return () => {
-            if (app?.scene?.skybox) {
+            if (app?.scene) {
                 app.scene.skybox = null;
             }
         };
