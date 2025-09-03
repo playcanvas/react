@@ -1,7 +1,7 @@
 import { useEffect, useCallback } from "react";
 import { useApp } from "./use-app.tsx";
 import { warnOnce } from "../utils/validation.ts"
-pm 
+
 /**
  * Base event callback map for PlayCanvas application events.
  * This can be extended to include custom events.
