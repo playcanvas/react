@@ -95,7 +95,7 @@ function Environment(props: EnvironmentProps) {
         app.scene.envAtlas = safeSceneProps?.envAtlas?.resource as Texture ?? null;
 
         return () => {
-            if (app?.scene?.envAtlas) {
+            if (app?.scene) {
                 app.scene.envAtlas = null;
             }
         };
