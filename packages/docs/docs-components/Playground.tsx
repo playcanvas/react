@@ -58,7 +58,7 @@ const PlayGround: FC<PlaygroundProps> = ({
             <div className='absolute bottom-0 left-0 shadow-lg' > 
                 {/* Button that toggles the code editor */}
                 { !showCodeEditor && <button onClick={() => setShowCodeEditor(true)} className='flex items-center shadow-lg justify-center opacity-80 hover:opacity-100 transition-opacity duration-300  bg-zinc-800 w-10 h-10 cursor-pointer text-zinc-200 p-2 m-10 rounded-full'>
-                    <TerminalIcon className='w-full h-full' />
+                    <TerminalIcon className='w-full h-full pointer-events-auto' />
                 </button> }
              
             </div>
@@ -66,7 +66,7 @@ const PlayGround: FC<PlaygroundProps> = ({
             <div id='leva-portal' className='h-0' onMouseMove={e => e.stopPropagation() } >
                 <Leva collapsed hidden/>
             </div>
-            <div className="absolute w-screen h-screen top-0 -z-10 pointer-events-none" ref={resizeRef} >
+            <div className="absolute flex w-full h-full -z-10 pointer-events-none" ref={resizeRef} >
                 <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} className="pointer-events-auto">
                     <ResizeHandler resizeRef={resizeRef}/>
                     <Suspense >
@@ -76,10 +76,10 @@ const PlayGround: FC<PlaygroundProps> = ({
             </div>
             { showCodeEditor && <Suspense>
                 <div 
-                    className='absolute p-0 pointer-events-auto box-border inset-0 flex mx-auto max-w-[90rem] max-h-[calc(100%-var(--nextra-banner-height))] xl:p-8'
+                    className='absolute p-0 pointer-events-none box-border inset-0 flex mx-auto max-w-[90rem] max-h-[calc(100%-var(--nextra-banner-height))] xl:p-8'
                     onMouseMove={e => e.stopPropagation() }
                 >
-                    <div className='lg:w-lg m-8 max-h-[calc(100%-8rem)] box-border overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
+                    <div className='lg:w-lg m-8 max-h-[calc(100%-8rem)] pointer-events-auto box-border overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
                         <div id='code-editor-header' className='flex justify-between items-center p-2 bg-zinc-800 px-4'>
                             <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono opacity-80 w-full'>
                                 <TerminalIcon className='w-4 h-4' />
