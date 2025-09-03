@@ -66,8 +66,8 @@ const PlayGround: FC<PlaygroundProps> = ({
             <div id='leva-portal' className='h-0' onMouseMove={e => e.stopPropagation() } >
                 <Leva collapsed hidden/>
             </div>
-            <div className="absolute flex w-full h-full -z-10 pointer-events-none" ref={resizeRef} >
-                <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} className="pointer-events-auto">
+            <div className="absolute flex w-full h-full -z-10" ref={resizeRef} >
+                <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} >
                     <ResizeHandler resizeRef={resizeRef}/>
                     <Suspense >
                         <Preview/>
@@ -76,7 +76,7 @@ const PlayGround: FC<PlaygroundProps> = ({
             </div>
             { showCodeEditor && <Suspense>
                 <div 
-                    className='absolute p-0 pointer-events-none box-border inset-0 flex mx-auto max-w-[90rem] max-h-[calc(100%-var(--nextra-banner-height))] xl:p-8'
+                    className='absolute p-0 box-border inset-0 flex mx-auto max-w-[90rem] max-h-[calc(100%-var(--nextra-banner-height))] xl:p-8'
                     onMouseMove={e => e.stopPropagation() }
                 >
                     <div className='lg:w-lg m-8 max-h-[calc(100%-8rem)] pointer-events-auto box-border overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
