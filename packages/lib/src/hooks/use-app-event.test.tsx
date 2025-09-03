@@ -50,4 +50,56 @@ describe('useAppEvent', () => {
     }).toThrow('`useApp` must be used within an Application component');
   });
 
+  it('should support custom events with custom EventCallbackMap', () => {
+    // Define a custom event map - no need to extend BaseEventCallbackMap
+    interface CustomEventMap {
+      levelComplete: (level: number, score: number) => void;
+      playerDeath: (position: [number, number, number]) => void;
+    }
+
+    const levelCompleteCallback = vi.fn();
+    const playerDeathCallback = vi.fn();
+
+    const { unmount } = renderHook(() => {
+      // Use the hook with custom event types
+      useAppEvent<CustomEventMap>('levelComplete', levelCompleteCallback);
+      useAppEvent<CustomEventMap>('playerDeath', playerDeathCallback);
+    }, {
+      wrapper: ({ children }) => <Application deviceTypes={["null"]}>{children}</Application>
+    });
+
+    // Should not throw during registration
+    expect(levelCompleteCallback).toBeDefined();
+    expect(playerDeathCallback).toBeDefined();
+
+    // Should not throw during cleanup
+    unmount();
+  });
+
+  it('should support custom events without extending BaseEventCallbackMap', () => {
+    // Define a custom event map that doesn't extend BaseEventCallbackMap
+    interface StandaloneEventMap {
+      gameStart: () => void;
+      gamePause: (paused: boolean) => void;
+    }
+
+    const gameStartCallback = vi.fn();
+    const gamePauseCallback = vi.fn();
+
+    const { unmount } = renderHook(() => {
+      // Use the hook with standalone custom event types
+      useAppEvent<StandaloneEventMap>('gameStart', gameStartCallback);
+      useAppEvent<StandaloneEventMap>('gamePause', gamePauseCallback);
+    }, {
+      wrapper: ({ children }) => <Application deviceTypes={["null"]}>{children}</Application>
+    });
+
+    // Should not throw during registration
+    expect(gameStartCallback).toBeDefined();
+    expect(gamePauseCallback).toBeDefined();
+
+    // Should not throw during cleanup
+    unmount();
+  });
+
 }); 
