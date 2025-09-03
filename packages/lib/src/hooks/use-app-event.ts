@@ -102,8 +102,6 @@ export function useAppEvent<
   }, [app, handler, event]);
 }
 
-
-
 /**
  * useFrame hook — registers a callback on every frame update.
  * The callback receives the delta time (dt) since the last frame.
