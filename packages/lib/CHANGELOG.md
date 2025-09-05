@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.7.1
+
+### Patch Changes
+
+- f74918d: Fixes issue with Environment cleanup
+
 ## 0.7.0
 
 ### Minor Changes
