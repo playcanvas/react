@@ -6,6 +6,9 @@ import Playground from '@docs-components/Playground'
  
 export const generateStaticParams = generateStaticParamsFor('mdxPath')
 const EXAMPLES_PATH = 'examples'
+// Limit this catch-all route to only the statically generated params so it
+// doesn't intercept unrelated requests (e.g. /.well-known, static assets).
+export const dynamicParams = false
  
 export async function generateMetadata(props) {
   const params = await props.params
