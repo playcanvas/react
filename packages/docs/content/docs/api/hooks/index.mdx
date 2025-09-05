@@ -74,13 +74,47 @@ const MyComponent = () => {
 
 ## useAppEvent
 
-The `useAppEvent` hook provides a generic way to subscribe to PlayCanvas application events with proper TypeScript support. It supports different event types with their specific callback signatures.
+The `useAppEvent` hook provides a generic way to subscribe to PlayCanvas application events with proper TypeScript support. It supports both built-in events and custom events with their specific callback signatures.
 
-### Supported Events
+### Built-in Events
 
 - **`'update'`**: Called every frame with delta time `(dt: number) => void`
 - **`'prerender'`**: Called before rendering with no parameters `() => void`
 - **`'postrender'`**: Called after rendering with no parameters `() => void`
+
+### Custom Events
+
+You can define custom event maps for events fired by your application:
+
+```jsx
+import { useAppEvent } from '@playcanvas/react/hooks'
+
+// Define your custom event map - no need to extend anything
+interface MyEventMap {
+  levelComplete: (level: number, score: number) => void;
+  playerDeath: (position: [number, number, number]) => void;
+  gameOver: (finalScore: number) => void;
+}
+
+const MyComponent = () => {
+  // Subscribe to custom events with full type safety
+  useAppEvent<MyEventMap>('levelComplete', (level, score) => {
+    console.log(`Level ${level} completed with score ${score}`);
+  });
+
+  useAppEvent<MyEventMap>('playerDeath', (position) => {
+    console.log('Player died at position:', position);
+  });
+
+  useAppEvent<MyEventMap>('gameOver', (finalScore) => {
+    console.log('Game over! Final score:', finalScore);
+  });
+
+  return null;
+};
+```
+
+**Note**: Custom events must be fired from your PlayCanvas application instance using `app.fire('eventName', ...args)` for the hook to receive them.
 
 ```jsx
 import { useAppEvent } from '@playcanvas/react/hooks'
