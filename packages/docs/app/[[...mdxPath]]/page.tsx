@@ -58,7 +58,7 @@ export default async function Page(props) {
       )
 
       return (
-          <div className='absolute top-0 left-0 w-screen h-screen pointer-events-none'>
+          <div className='absolute top-0 left-0 w-screen h-[calc(100dvh-var(--nextra-navbar-height)-var(--nextra-banner-height))] pointer-events-none'>
               <Playground name={`./${params.mdxPath.join('/')}.tsx`} code={source} path={metadata.filePath}/>
           </div>
       )
