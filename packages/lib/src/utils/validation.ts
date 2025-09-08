@@ -235,51 +235,91 @@ export function applyProps<T extends Record<string, unknown>, InstanceType>(inst
 
 
 /**
- * Get the pseudo public props of an instance. This is useful for creating a component definition from an instance.
- * @param container The container to get the pseudo public props from.
- * @returns The pseudo public props of the container.
+ * Property information including whether it's defined with a setter.
  */
-export function getPseudoPublicProps(container: Record<string, unknown>) {
+export type PropertyInfo = {
+    value: unknown;
+    isDefinedWithSetter: boolean;
+};
+
+/**
+ * Get the pseudo public props of an instance with setter information. This is useful for creating a component definition from an instance.
+ * @param container The container to get the pseudo public props from.
+ * @returns The pseudo public props of the container with setter flags.
+ */
+export function getPseudoPublicProps(container: Record<string, unknown>): Record<string, PropertyInfo> {
+    const result: Record<string, PropertyInfo> = {};
+    
     // Get regular enumerable properties
     const entries = Object.entries(container)
         .filter(([key]) => !key.startsWith('_') && typeof container[key] !== 'function');
+    
+    // Add regular properties (not defined with setters)
+    entries.forEach(([key, value]) => {
+        result[key] = {
+            value,
+            isDefinedWithSetter: false
+        };
+    });
     
     // Get getters and setters from the prototype
     const prototype = Object.getPrototypeOf(container);
     if (prototype && prototype !== Object.prototype) {
         const descriptors = Object.getOwnPropertyDescriptors(prototype);
-        const getterSetterEntries = Object.entries(descriptors)
-            .filter(([key, descriptor]) => {
-                // Include properties that have setters (and optionally getters) and don't start with _
-                return (descriptor.get && descriptor.set) && 
-                       !key.startsWith('_') && 
-                       key !== 'constructor';
-            })
-            .map(([key, descriptor]) => {
-                // For properties with both getter and setter, try to get the value if possible
-                if (descriptor.get) {
-                    try {
-                        const value = descriptor.get.call(container);
-                        // Create a shallow copy of the value to avoid reference issues
-                        const safeValue = value !== null && typeof value === 'object' 
-                            ? value.clone ? value.clone() : { ...value } 
-                            : value;
-                        return [key, safeValue];
-                    } catch {
-                        // If we can't get the value, just use the key
-                        return [key, undefined];
-                    }
-                }
-                // For setters only, we can't get the value
-                return [key, undefined];
-            });
         
-        // Combine regular properties with getter/setter properties
-        return Object.fromEntries([...entries, ...getterSetterEntries]);
+        Object.entries(descriptors).forEach(([key, descriptor]) => {
+            // Skip private properties and constructor
+            if (key.startsWith('_') || key === 'constructor') return;
+            
+            // Check if this property has a setter
+            const hasSetter = descriptor.set !== undefined;
+            
+            // If it's a getter/setter property, try to get the value
+            if (descriptor.get) {
+                try {
+                    const value = descriptor.get.call(container);
+                    // Create a shallow copy of the value to avoid reference issues
+                    const safeValue = value !== null && typeof value === 'object' 
+                        ? value.clone ? value.clone() : { ...value } 
+                        : value;
+                    
+                    result[key] = {
+                        value: safeValue,
+                        isDefinedWithSetter: hasSetter
+                    };
+                } catch {
+                    // If we can't get the value, just use undefined
+                    result[key] = {
+                        value: undefined,
+                        isDefinedWithSetter: hasSetter
+                    };
+                }
+            } else if (hasSetter) {
+                // Setter-only property
+                result[key] = {
+                    value: undefined,
+                    isDefinedWithSetter: true
+                };
+            }
+        });
     }
     
-    // If no prototype or it's just Object.prototype, just return the regular properties
-    return Object.fromEntries(entries);
+    return result;
+}
+
+/**
+ * Check if a specific property is defined using a setter (like `set prop(){}`).
+ * @param container The container to check.
+ * @param propName The property name to check.
+ * @returns True if the property is defined using a setter, false otherwise.
+ */
+export function isDefinedWithSetter(container: Record<string, unknown>, propName: string): boolean {
+    const prototype = Object.getPrototypeOf(container);
+    if (prototype && prototype !== Object.prototype) {
+        const descriptor = Object.getOwnPropertyDescriptor(prototype, propName);
+        return descriptor?.set !== undefined;
+    }
+    return false;
 }
 
 /**
@@ -300,10 +340,11 @@ export function createComponentDefinition<T, InstanceType>(
     const instance: InstanceType = createInstance();
     const schema: Schema<T, InstanceType> = {};
     const props = getPseudoPublicProps(instance as Record<string, unknown>);
-    const entries = Object.entries(props) as [keyof T, unknown][];
+    const entries = Object.entries(props) as [keyof T, PropertyInfo][];
 
     // Basic type detection 
-    entries.forEach(([key, value]) => {
+    entries.forEach(([key, propertyInfo]) => {
+        const { value, isDefinedWithSetter } = propertyInfo;
         
         // Colors
         if (value instanceof Color) {
@@ -329,7 +370,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 2 numbers.`,
-                apply: (instance, props, key) => {
+                apply: isDefinedWithSetter ? (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec2) = props[key] as Vec2;
+                } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
                 }
             };
@@ -341,7 +384,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 3 numbers.`,
-                apply: (instance, props, key) => {
+                apply: isDefinedWithSetter ? (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec3) = props[key] as Vec3;
+                } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
                 }
             };
@@ -352,7 +397,9 @@ export function createComponentDefinition<T, InstanceType>(
                 validate: (val) => Array.isArray(val) && val.length === 4,
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
-                apply: (instance, props, key) => {
+                apply: isDefinedWithSetter ? (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Vec4) = props[key] as Vec4;
+                } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
                 }
             };
@@ -365,7 +412,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 4 numbers.`,
-                apply: (instance, props, key) => {
+                apply: isDefinedWithSetter ? (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as Quat) = props[key] as Quat;
+                } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
                 }
             };
