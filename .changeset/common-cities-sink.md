@@ -2,4 +2,4 @@
 "@playcanvas/react": patch
 ---
 
-Fixes type definition for Collision component
+Fix type definition for Collision component to support proper Vec3 serialization
