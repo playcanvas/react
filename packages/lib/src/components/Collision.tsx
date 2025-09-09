@@ -65,7 +65,7 @@ export const Collision: FC<CollisionProps> = (props) => {
     return null;
 }
 
-interface CollisionProps extends Partial<PublicProps<CollisionComponent>> {
+interface CollisionProps extends Partial<Serializable<PublicProps<CollisionComponent>>> {
     type?: "box"
         | "capsule"
         | "compound"
