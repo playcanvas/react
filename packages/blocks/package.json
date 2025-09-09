@@ -22,8 +22,7 @@
     }
   },
   "scripts": {
-    "build": "tsc && tsc-alias && cp src/index.css dist/",
-    "prepublishOnly": "pnpm run build"
+    "build": "tsc && tsc-alias && cp src/index.css dist/"
   },
   "repository": {
     "type": "git",
