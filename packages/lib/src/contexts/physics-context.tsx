@@ -1,9 +1,21 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AppBase } from 'playcanvas';
 
-interface PhysicsContextType {
+/**
+ * Physics context type containing physics state information.
+ */
+export interface PhysicsContextType {
+  /**
+   * Whether physics is enabled on the application.
+   */
   isPhysicsEnabled: boolean;
+  /**
+   * Whether the physics library has been successfully loaded.
+   */
   isPhysicsLoaded: boolean;
+  /**
+   * The error that occurred when loading physics, if any.
+   */
   physicsError: Error | null;
 }
 
@@ -16,6 +28,30 @@ const PhysicsContext = createContext<PhysicsContextType>({
 // Track how many Application instances are using physics
 let physicsInstanceCount = 0;
 
+/**
+ * Hook to access physics context information.
+ * 
+ * @returns Physics context containing physics state information
+ * 
+ * @example
+ * ```tsx
+ * import { usePhysics } from '@playcanvas/react/hooks';
+ * 
+ * const MyComponent = () => {
+ *   const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
+ * 
+ *   if (physicsError) {
+ *     return <div>Physics error: {physicsError.message}</div>;
+ *   }
+ * 
+ *   if (!isPhysicsLoaded) {
+ *     return <div>Loading physics...</div>;
+ *   }
+ * 
+ *   return <div>Physics is ready!</div>;
+ * };
+ * ```
+ */
 export const usePhysics = () => useContext(PhysicsContext);
 
 interface PhysicsProviderProps {
