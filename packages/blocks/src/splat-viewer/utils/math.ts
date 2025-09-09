@@ -11,19 +11,7 @@ const x = new Vec3();
 const y = new Vec3();
 const z = new Vec3();
 
-class MyQuat extends Quat {
-    dot(other: MyQuat) {
-        return this.x * other.x + this.y * other.y + this.z * other.z + this.w * other.w;
-    }
-
-    lerp(a: MyQuat, b: MyQuat, t: number) {
-        const omt = (1 - t) * (a.dot(b) < 0 ? -1 : 1);
-        this.x = a.x * omt + b.x * t;
-        this.y = a.y * omt + b.y * t;
-        this.z = a.z * omt + b.z * t;
-        this.w = a.w * omt + b.w * t;
-        return this.normalize();
-    }
+class ExtendedQuat extends Quat {
 
     // set a quaternion given an orthonormal basis
     fromBasis(x: Vec3, y: Vec3, z: Vec3) {
@@ -68,20 +56,6 @@ class MyQuat extends Quat {
         y.cross(z, x);
         return this.fromBasis(x, y, z);
     }
-
-    fromArray(array: number[], offset = 0) {
-        this.x = array[offset];
-        this.y = array[offset + 1];
-        this.z = array[offset + 2];
-        return this;
-    }
-
-    toArray(array: number[], offset = 0) {
-        array[offset] = this.x;
-        array[offset + 1] = this.y;
-        array[offset + 2] = this.z;
-        return array;
-    }
 }
 
 class SmoothDamp {
@@ -123,4 +97,4 @@ class SmoothDamp {
     }
 }
 
-export { lerp, damp, mod, MyQuat, SmoothDamp };
+export { lerp, damp, mod, ExtendedQuat, SmoothDamp };

@@ -1,6 +1,6 @@
 import { Application, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
 
-import { lerp, MyQuat } from './math.ts';
+import { lerp, ExtendedQuat } from './math.ts';
 
 const v = new Vec3();
 
@@ -8,7 +8,7 @@ const v = new Vec3();
 class Pose {
 
     position: Vec3 = new Vec3();
-    rotation: MyQuat = new MyQuat();
+    rotation: ExtendedQuat = new ExtendedQuat();
     distance: number = 1;
 
     constructor(other = null) {

@@ -1,10 +1,10 @@
 import { Mat4, Vec3 } from 'playcanvas';
 
-import { MyQuat } from './math.ts';
+import { ExtendedQuat } from './math.ts';
 import { CubicSpline } from './spline.ts';
 import { Pose } from './pose.ts';
 
-const q = new MyQuat();
+const q = new ExtendedQuat();
 
 export type AnimationTrack = {
     /* The name of the track */
