@@ -1,5 +1,18 @@
 # @playcanvas/react
 
+## 0.8.0
+
+### Minor Changes
+
+- 6c3f3c9: Exposes a new usePhysics hook to determine physics engine state
+
+### Patch Changes
+
+- 8138b6a: Fix type definition for Collision component to support proper Vec3 serialization
+- f74918d: Fixes issue with Environment cleanup
+- f5f3001: Allow custom events in useAppEvent
+- 91fac3a: Fixes prop assignment for components with setters
+
 ## 0.7.0
 
 ### Minor Changes
