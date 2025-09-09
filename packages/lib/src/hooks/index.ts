@@ -8,3 +8,4 @@ export { useMaterial } from './use-material.tsx'
 export { useAsset, useSplat, useTexture, useEnvAtlas, useModel, useFont } from './use-asset.ts';
 export { useFrame, useAppEvent } from './use-app-event.ts';
 export type { AssetResult } from './use-asset.ts';
+export { usePhysics, type PhysicsContextType } from '../contexts/physics-context.tsx';

@@ -156,3 +156,69 @@ useAppEvent('update', (dt) => {
   // your frame logic
 });
 ```
+
+## usePhysics
+
+The `usePhysics` hook provides access to physics context information, allowing you to check the physics state and handle physics-related errors. This hook is particularly useful when working with physics-enabled applications.
+
+```jsx
+import { usePhysics } from '@playcanvas/react/hooks'
+
+const PhysicsStatus = () => {
+  const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
+
+  if (physicsError) {
+    return <div>Physics error: {physicsError.message}</div>;
+  }
+
+  if (!isPhysicsLoaded) {
+    return <div>Loading physics...</div>;
+  }
+
+  return <div>Physics is ready!</div>;
+};
+```
+
+### Return Value
+
+The hook returns an object with the following properties:
+
+- **`isPhysicsEnabled`**: `boolean` - Whether physics is enabled on the application
+- **`isPhysicsLoaded`**: `boolean` - Whether the physics library has been successfully loaded
+- **`physicsError`**: `Error | null` - The error that occurred when loading physics, if any
+
+### Usage with Physics Components
+
+This hook is commonly used alongside physics components like `RigidBody` and `Collision` to provide user feedback about physics state:
+
+```jsx
+import { usePhysics } from '@playcanvas/react/hooks'
+
+const PhysicsAwareComponent = () => {
+  const { isPhysicsEnabled, isPhysicsLoaded, physicsError } = usePhysics();
+
+  if (!isPhysicsEnabled) {
+    console.warn('Physics is not enabled on this application');
+    return null;
+  }
+
+  if (physicsError) {
+    console.error('Failed to load physics', physicsError);
+    return null;
+  }
+
+  if (!isPhysicsLoaded) {
+    console.log('Loading physics library...');
+    return null;
+  }
+
+  return (
+    <Entity>
+      <RigidBody type="dynamic" />
+      <Collision type="box" />
+    </Entity>
+  );
+};
+```
+
+**Note**: This hook requires the application to have physics enabled via the `usePhysics` prop on the `Application` component.
