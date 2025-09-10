@@ -18,8 +18,12 @@
     {
       "matchPackageNames": ["playcanvas"],
       "groupName": "playcanvas",
-      "matchUpdateTypes": ["major", "minor"],
-      "labels": ["playcanvas"]
+      "prCreation": "immediate",
+      "minimumReleaseAge": 0,
+      "labels": ["playcanvas", "dependencies"],
+      "assignees": ["marklundin"],
+      "semanticCommitType": "feat",
+      "semanticCommitScope": "playcanvas"
     }
   ]
 }
