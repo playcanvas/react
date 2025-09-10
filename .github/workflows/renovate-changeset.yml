@@ -1,0 +1,26 @@
+name: Add Changeset to dependency PRs
+
+on:
+  # Use pull_request_target so we can push to PR branches from forks (Renovate).
+  pull_request_target:
+    types: [opened, reopened, synchronize, labeled]
+
+permissions:
+  contents: write        # allow committing the .changeset file
+  pull-requests: write   # allow commenting/updating the PR
+
+jobs:
+  add-changeset:
+    # Only run for PRs labeled "dependencies" (Renovate adds this via :label(dependencies))
+    # and skip Changesets' own release PRs (usually titled "Version Packages")
+    if: contains(github.event.pull_request.labels.*.name, 'dependencies')
+    runs-on: ubuntu-latest
+    steps:
+      # Create or update a .changeset/*.md in the PR
+      - name: Add a changeset based on conventional commits
+        uses: mscharley/dependency-changesets-action@v1.0.5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          use-conventional-commits: true
+          author-name: "Renovate Changesets"
+          author-email: "github-actions[bot]@users.noreply.github.com"
