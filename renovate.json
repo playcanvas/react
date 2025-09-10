@@ -19,7 +19,7 @@
       "matchPackageNames": ["playcanvas"],
       "groupName": "playcanvas",
       "prCreation": "immediate",
-      "minimumReleaseAge": 0,
+      "minimumReleaseAge": "0",
       "labels": ["playcanvas", "dependencies"],
       "assignees": ["marklundin"],
       "semanticCommitType": "feat",
