@@ -1,5 +1,17 @@
 # @playcanvas/blocks
 
+## 0.2.0
+
+### Minor Changes
+
+- 118c922: feat(playcanvas): update dependency playcanvas to v2.11.4
+
+### Patch Changes
+
+- 3f6a73f: Removes redundant Quaternion methods
+- Updated dependencies [118c922]
+  - @playcanvas/react@0.9.0
+
 ## 0.1.3
 
 ### Patch Changes

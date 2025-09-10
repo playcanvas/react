@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.9.0
+
+### Minor Changes
+
+- 118c922: feat(playcanvas): update dependency playcanvas to v2.11.4
+
 ## 0.8.0
 
 ### Minor Changes
