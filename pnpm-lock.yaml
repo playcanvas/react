@@ -106,8 +106,8 @@ importers:
         specifier: ^0.511.0 || ^0.514.0 || ^0.515.0 || ^0.523.0 || ^0.525.0 || ^0.539.0 || ^0.542.0 || ^0.543.0
         version: 0.511.0(react@19.1.0)
       playcanvas:
-        specifier: ~2.8.2
-        version: 2.8.2
+        specifier: ~2.8.2 || ~2.11.0
+        version: 2.11.4
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -176,8 +176,8 @@ importers:
         specifier: 2.1.3
         version: 2.1.3(@types/react@19.1.12)(acorn@8.15.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(unified@11.0.5)
       playcanvas:
-        specifier: 2.8.2
-        version: 2.8.2
+        specifier: 2.11.4
+        version: 2.11.4
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -240,8 +240,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       playcanvas:
-        specifier: ~2.8.2
-        version: 2.8.2
+        specifier: ~2.8.2 || ~2.11.0
+        version: 2.11.4
       react:
         specifier: ^18.3.1 || ^19.1.0
         version: 19.1.0
@@ -5237,8 +5237,8 @@ packages:
   pkg-types@2.1.0:
     resolution: {integrity: sha512-wmJwA+8ihJixSoHKxZJRBQG1oY8Yr9pGLzRmSsNms0iNWyHHAlZCa7mmKiFR10YPZuz/2k169JiS/inOjBCZ2A==}
 
-  playcanvas@2.8.2:
-    resolution: {integrity: sha512-wyIYzROAu0Txs0emdR2N0AnbiGS2TRTzmAKlsVmYa1JDTe9dMJ+6gmauwsQMfNeStnGWRlSv5VDIHZ4D4Gzb2A==}
+  playcanvas@2.11.4:
+    resolution: {integrity: sha512-GoPr4JiLflMQ98BYtxQUGb/Xf5iRnVLaUKWmRxoaY1GGcb5HMwqNfQEjUusfA0lNfMEBJdSuPMjSHltwp5+50Q==}
     engines: {node: '>=18.0.0'}
 
   plimit-lit@1.6.1:
@@ -12468,7 +12468,7 @@ snapshots:
       exsolve: 1.0.5
       pathe: 2.0.3
 
-  playcanvas@2.8.2:
+  playcanvas@2.11.4:
     dependencies:
       '@types/webxr': 0.5.22
       '@webgpu/types': 0.1.60
