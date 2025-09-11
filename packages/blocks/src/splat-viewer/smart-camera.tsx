@@ -52,8 +52,8 @@ function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ..
         // @ts-expect-error CameraControls is not defined in the script
         const controls = (entity.script?.cameraControls || entity.script?._CameraControls) as CameraControls;
         if (controls) {
-            controls.focus(new Vec3().fromArray(focus), null, animate);
-            controls.resetZoom(distance, animate);
+            controls.focus(new Vec3().fromArray(focus), false);
+
         }
     }, [focus, distance, animate]);
 
