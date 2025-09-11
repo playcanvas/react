@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.9.1
+
+### Patch Changes
+
+- 6372f9c: Ensure better prop validation for components that only have a setter.
+
 ## 0.9.0
 
 ### Minor Changes
