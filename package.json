@@ -32,7 +32,7 @@
         "eslint-plugin-import": "2.32.0",
         "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
-        "globals": "16.3.0",
+        "globals": "16.4.0",
         "pkg-pr-new": "0.0.59",
         "type-fest": "4.41.0",
         "typescript": "5.9.2",
@@ -40,6 +40,6 @@
         "vitest": "3.2.4"
     },
     "dependencies": {
-        "next": "15.5.2"
+        "next": "15.5.3"
     }
 }
