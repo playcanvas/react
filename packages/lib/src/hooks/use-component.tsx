@@ -33,7 +33,9 @@ export function useComponent<T, InstanceType>(
 
       if (comp) {
         type SystemKeys = keyof typeof app.systems;
-        if (app.systems[ctype as SystemKeys]) parent.removeComponent(ctype);
+        if (app.systems[ctype as SystemKeys] && parent.c[ctype]) {
+          parent.removeComponent(ctype);
+        }
       }
     };
   }, [app, parent, ctype]);

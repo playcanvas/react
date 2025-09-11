@@ -226,7 +226,11 @@ export function applyProps<T extends Record<string, unknown>, InstanceType>(inst
                     // Use type assertion to satisfy the type checker
                     propDef.apply(instance, props, key as string);
                 } else {
-                    (instance as Record<string, unknown>)[key] = value;
+                    try {
+                        (instance as Record<string, unknown>)[key] = value;
+                    } catch (error) {
+                        console.error(`Error applying prop ${key}: ${error}`);
+                    }
                 }
             }
         }   
@@ -270,10 +274,12 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
         Object.entries(descriptors).forEach(([key, descriptor]) => {
             // Skip private properties and constructor
             if (key.startsWith('_') || key === 'constructor') return;
-            
-            // Check if this property has a setter
-            const hasSetter = descriptor.set !== undefined;
-            
+
+            const hasGetter = typeof descriptor.get === 'function';
+            const hasSetter = typeof descriptor.set === 'function';
+  
+            if (hasSetter && !hasGetter) return;   
+
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
                 try {
