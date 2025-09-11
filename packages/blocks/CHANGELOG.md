@@ -1,5 +1,13 @@
 # @playcanvas/blocks
 
+## 0.2.1
+
+### Patch Changes
+
+- f6bf216: Updated camera api (removed resetZoom)
+- Updated dependencies [6372f9c]
+  - @playcanvas/react@0.9.1
+
 ## 0.2.0
 
 ### Minor Changes
