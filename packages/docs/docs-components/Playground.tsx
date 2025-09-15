@@ -66,7 +66,7 @@ const PlayGround: FC<PlaygroundProps> = ({
             <div id='leva-portal' className='h-0' onMouseMove={e => e.stopPropagation() } >
                 <Leva collapsed hidden/>
             </div>
-            <div className="absolute w-full h-full -z-10" ref={resizeRef} >
+            <div className="absolute w-full h-full -z-10 pointer-events-auto" ref={resizeRef} >
                 <Application usePhysics fillMode={FILLMODE_NONE} resolutionMode={RESOLUTION_AUTO} >
                     <ResizeHandler resizeRef={resizeRef}/>
                     <Suspense >
