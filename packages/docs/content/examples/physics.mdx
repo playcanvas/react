@@ -25,6 +25,8 @@ export const Physics = () => {
     const swirl = new pc.Vec3();
 
     class MoverScript extends pc.Script {
+        static scriptName = 'mover';
+
         update(dt) {
             const delta = Math.min(0.1, dt)
             
@@ -49,6 +51,8 @@ export const Physics = () => {
 
     // Follows the mouse cursor
     class FollowPointerScript extends pc.Script {
+        static scriptName = 'followPointer';
+        
         pointer = new pc.Vec3();
 
         initialize()  {
