@@ -101,6 +101,7 @@ export const MotionLight: FC<MotionLightProps> = ({ intensity = 1, type = "direc
     }, [intensity]);
 
     class LightScript extends PcScript {
+        static scriptName = 'lightScript';
         update() {
             this.entity.light.intensity = intensityMV.get();
         }

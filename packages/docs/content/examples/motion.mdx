@@ -10,6 +10,7 @@ export const MouseRotation = () => {
      * and then uses an imperative script to update the rotation of the entity.
      */
     class MouseRotatesEntity extends pc.Script {
+        static scriptName = 'mouseRotatesEntity';
         initialize() {
             this.t = new pc.Vec2()
             this.c = new pc.Vec2()
