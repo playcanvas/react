@@ -163,10 +163,11 @@ See the [useMaterial](/docs/api/hooks/use-asset/useMaterial) hook and [Render](/
 
 ## useEnvAtlas
 
-A specialized hook for loading environment atlas textures. Pass the source URL of the texture file and any additional properties to pass to the asset loader and use the resulting asset in the [`<EnvAtlas/>`](/docs/api/components/EnvAtlas) component.
+A specialized hook for loading environment atlas textures. Pass the source URL of the texture file and any additional properties to pass to the asset loader and use the resulting asset in the [`<Environment/>`](/docs/api/components/Environment) component.
 
 ```tsx copy filename="render-env-atlas.tsx"
 import { useEnvAtlas } from '@playcanvas/react/hooks';
+import { Environment } from '@playcanvas/react/components';
 
 export function RenderEnvAtlas() {
   const { asset, loading, error } = useEnvAtlas('env.jpg');
@@ -175,7 +176,7 @@ export function RenderEnvAtlas() {
   if (error) return <ErrorMessage message={error} />;
   if (!asset) return null;
 
-  return <EnvAtlas asset={asset} />;
+  return <Environment envAtlas={asset} />;
 }
 ```
 

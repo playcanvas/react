@@ -229,7 +229,7 @@ export const useTexture = (
  * if (error) return <ErrorMessage message={error} />;
  * if (!asset) return null;
  * 
- * return <EnvAtlas asset={asset} />;
+ * return <Environment envAtlas={asset} />;
  * ```
  */
 export const useEnvAtlas = (

@@ -1,7 +1,7 @@
 "use client";
 
 import { Container, Entity } from '@playcanvas/react';
-import { Camera, EnvAtlas } from '@playcanvas/react/components';
+import { Camera, Environment } from '@playcanvas/react/components';
 import { OrbitControls } from '@playcanvas/react/scripts';
 
 import { useEnvAtlas, useModel } from '@components/hooks/use-asset';
@@ -12,11 +12,11 @@ import ShadowCatcher from '@components/ShadowCatcher';
 
 const Example = () => {
 
-    const { data: envMap } = useEnvAtlas('/environment-map.png');
+    const { data: envAtlas } = useEnvAtlas('/environment-map.png');
     const { data: model } = useModel('/lamborghini_vision_gt.glb');
 
     return (<Entity>
-        <EnvAtlas asset={envMap} skyboxIntensity={1.2} showSkybox={false} />
+        { envAtlas && <Environment envAtlas={envAtlas} showSkybox={false}/> }
         <Grid />
         <ShadowCatcher width={5} depth={5} />
         <Entity name='camera' position={[4, 1, 4]}>

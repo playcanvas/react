@@ -1,6 +1,5 @@
 "use client"
 
-export { EnvAtlas } from './EnvAtlas.tsx'
 export { Camera } from './Camera.tsx'
 export { GSplat } from './GSplat.tsx'
 export { Light } from './Light.tsx'

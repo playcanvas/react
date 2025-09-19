@@ -1,6 +1,6 @@
 import { Application, Entity } from '@playcanvas/react'
 import { OrbitControls } from '@playcanvas/react/scripts'
-import { Align, Light, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Environment } from '@playcanvas/react/components'
+import { Align, Light, Anim, Camera, Collision, GSplat, Script, Render, RigidBody, Environment } from '@playcanvas/react/components'
 
 import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
@@ -21,7 +21,7 @@ export const defaultComponents = {
     ReactQueryProvider,
     Application,
     Entity,
-    Align, Anim, Camera, Collision, EnvAtlas, GSplat, Script, Render, RigidBody, Light, Environment,
+    Align, Anim, Camera, Collision, GSplat, Script, Render, RigidBody, Light, Environment,
     OrbitControls,
     EnvAtlasComponent,
     Grid,
