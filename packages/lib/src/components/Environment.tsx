@@ -24,12 +24,13 @@ function Environment(props: EnvironmentProps) {
     const app = useApp();
  
     // split the sky props and scene props
-    const { center, scale, rotation, depthWrite, type, ...sceneProps } = props;
-    const skyProps = { center, scale, rotation, depthWrite, type };
+    const { center, scale, rotation, depthWrite, type, showSkybox, ...sceneProps } = props;
+    const skyProps = { center, scale, rotation, depthWrite, type, showSkybox };
 
     // Sanitize and validate the props
     const safeSceneProps = validatePropsWithDefaults(sceneProps, sceneComponentDefinition);
     const safeSkyProps = validatePropsWithDefaults(skyProps, skyComponentDefinition);
+    
 
     /**
      * We want to ensure that the environment is only set once per app instance.
@@ -66,6 +67,8 @@ function Environment(props: EnvironmentProps) {
         if (appHasEnvironment.current) return;
 
         const skyBoxAsset = safeSceneProps.skybox as Asset;
+
+        if (!skyBoxAsset) return;
 
         const isCubeMap = Array.isArray(skyBoxAsset.resources) && skyBoxAsset.resources.length === 6;
         let skybox: Texture = skyBoxAsset.resource as Texture;
@@ -135,6 +138,12 @@ function Environment(props: EnvironmentProps) {
         app.scene.skyboxIntensity = safeSceneProps.skyboxIntensity ?? 1;
         app.scene.skyboxHighlightMultiplier = safeSceneProps.skyboxHighlightMultiplier ?? 1;
 
+        const layer = app?.scene?.layers?.getLayerByName('Skybox');
+
+        if (layer) {
+            layer.enabled = safeSkyProps.showSkybox ?? true;
+        }
+
         return () => {
             
             /**
@@ -143,8 +152,9 @@ function Environment(props: EnvironmentProps) {
              * This isn't perfect as any changes the the engine defaults will break this.
              * TODO: Find a better way to reset the scene and sky.
              */
-
+            
             if (app.scene) {
+                
                 app.scene.exposure = 1;
                 app.scene.skyboxRotation = new Quat().setFromEulerAngles(0, 0, 0);
                 app.scene.sky.node.setLocalScale(1, 1, 1);
@@ -156,6 +166,11 @@ function Environment(props: EnvironmentProps) {
                 app.scene.skyboxLuminance = 0;
                 app.scene.skyboxIntensity = 1;
                 app.scene.skyboxHighlightMultiplier = 1;
+
+                const layer = app?.scene?.layers?.getLayerByName('Skybox');
+                if (layer) {
+                    layer.enabled = true;
+                }
             }
         };
 
@@ -164,6 +179,7 @@ function Environment(props: EnvironmentProps) {
         safeSceneProps.exposure, 
         safeSkyProps.type,
         safeSkyProps.depthWrite,
+        safeSkyProps.showSkybox,
         safeSceneProps.skyboxMip,
         safeSceneProps.skyboxLuminance,
         safeSceneProps.skyboxIntensity,
@@ -212,6 +228,10 @@ type SkyProps = Omit<Partial<PublicProps<Sky>>, 'node' | 'center'> & {
      * The rotation of the sky.
      */
     rotation?: [number, number, number]
+    /**
+     * Whether to show the skybox.
+     */
+    showSkybox?: boolean
 }
 
 type EnvironmentProps = SkyProps & SceneProps;
@@ -257,6 +277,11 @@ skyComponentDefinition.schema = {
             && value.every(v => typeof v === 'number'),
         errorMsg: (value: unknown) => `Expected an array of 3 numbers, got \`${typeof value}\``,
         default: [0, 0.05, 0],
+    },
+    showSkybox: {
+        validate: (value: unknown) => typeof value === "boolean",
+        errorMsg: (value: unknown) => `Expected a boolean, got \`${typeof value}\``,
+        default: true,
     }
 } as Schema<SkyProps, Sky>;
 
