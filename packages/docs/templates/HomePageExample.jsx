@@ -20,7 +20,7 @@ const Example = () => {
         <Grid />
         <ShadowCatcher width={5} depth={5} />
         <Entity name='camera' position={[4, 1, 4]}>
-            <Camera clearColor='#090707' fov={28} renderSceneColorMap={true}/>
+            <Camera clearColor='#090707' fov={28} />
             <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
             <StaticPostEffects />
             <AutoRotate />
