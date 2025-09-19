@@ -4,13 +4,13 @@ import React, { FC, ComponentProps } from "react";
 import { useEnvAtlas } from "./hooks/use-asset";
 import { Environment } from "@playcanvas/react/components";
 
-type EnvAtlasComponentsProps = ComponentProps<typeof Environment> & {
-    src: string;
+type EnvironmentLightingProps = ComponentProps<typeof Environment> & {
+    src?: string;
     intensity?: number;
 }
 
- const EnvAtlasComponent: FC<EnvAtlasComponentsProps> = ({ 
-    src, 
+ const EnvironmentLighting: FC<EnvironmentLightingProps> = ({ 
+    src = '/environment-map.png', 
     intensity = 1, 
     ...props 
 }) => {
@@ -21,4 +21,4 @@ type EnvAtlasComponentsProps = ComponentProps<typeof Environment> & {
 
 }
 
-export default EnvAtlasComponent;
+export default EnvironmentLighting;

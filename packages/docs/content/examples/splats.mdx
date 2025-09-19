@@ -7,9 +7,6 @@ export const Example = () => {
     const { data: splat } = useSplat(splatURL);
 
     return <Entity>
-        {/* Create a camera entity */}
-        <EnvAtlasComponent src='/environment-map.png' />
-
         <Entity>
             <Camera fov={30} />
             { splat && <OrbitControls 

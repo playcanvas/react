@@ -24,7 +24,7 @@ Here's what it should look like...
 <ReactQueryProvider>
     <Application >
         {/* Create some environment lighting */}
-        <EnvAtlasComponent src='/environment-map.png' intensity={0.8}/>
+        <EnvironmentLightingProps intensity={0.8}/>
         {/* Render the background grid */}
         <Grid />
         {/* Add a shadow catcher to catch the shadows from the model */}
@@ -183,7 +183,7 @@ import { OrbitControls } from '@playcanvas/react/scripts'
 export default function App() {
     return <Application>
         {/* Create some environment lighting */}
-        <EnvAtlasComponent src='/environment-map.png' />
+        <EnvironmentLighting/>
         {/* Render the background grid */}
         <Grid />
         {/* Add a shadow catcher to catch the shadows from the model */}

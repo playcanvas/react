@@ -13,8 +13,8 @@ export const LoadingGLB = () => {
     if(!asset) return null;
 
     return <Entity>
-
-        <EnvAtlasComponent src='/environment-map.png' intensity={2}/>
+        {/* Create some environment lighting */}
+        <EnvironmentLighting intensity={2}/>
 
         {/* Render the background grid */}
         <Grid />

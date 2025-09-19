@@ -4,7 +4,7 @@ import { Align, Light, Anim, Camera, Collision, GSplat, Script, Render, RigidBod
 
 import ReactQueryProvider from '@docs-components/ReactQueryProvider'
 
-import EnvAtlasComponent from '@components/EnvAtlas'
+import EnvironmentLighting from '@/components/EnvironmentLighting'
 import Grid from '@components/Grid'
 import PostEffects, { StaticPostEffects} from '@components/PostEffects'
 import ShadowCatcher from '@components/ShadowCatcher'
@@ -23,7 +23,7 @@ export const defaultComponents = {
     Entity,
     Align, Anim, Camera, Collision, GSplat, Script, Render, RigidBody, Light, Environment,
     OrbitControls,
-    EnvAtlasComponent,
+    EnvironmentLighting,
     Grid,
     ShadowCatcher,
     PostEffects,
