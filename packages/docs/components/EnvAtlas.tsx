@@ -1,12 +1,10 @@
 "use client";
 
-import { FC/*, useLayoutEffect */ } from "react";
+import React, { FC, ComponentProps } from "react";
 import { useEnvAtlas } from "./hooks/use-asset";
-import type { Asset } from "playcanvas";
-import { EnvAtlas } from "@playcanvas/react/components";
-// import { useApp } from "@playcanvas/react/hooks";
+import { Environment } from "@playcanvas/react/components";
 
-type EnvAtlasComponentsProps = {
+type EnvAtlasComponentsProps = ComponentProps<typeof Environment> & {
     src: string;
     intensity?: number;
 }
@@ -19,7 +17,7 @@ type EnvAtlasComponentsProps = {
 
     const { data } = useEnvAtlas(src);
 
-    return <EnvAtlas asset={data as Asset} {...props} skyboxIntensity={intensity} showSkybox={false}/>
+    return <Environment envAtlas={data} {...props} skyboxIntensity={intensity} showSkybox={false}/>
 
 }
 
