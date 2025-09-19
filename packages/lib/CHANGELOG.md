@@ -1,5 +1,12 @@
 # @playcanvas/react
 
+## 0.10.0
+
+### Minor Changes
+
+- 617939a: Fully removes the deprecated <EnvAtlas/> component
+- 3082203: Adds a new `<Environment showSkybox={false}/>` prop which can hide the skybox layer.
+
 ## 0.9.1
 
 ### Patch Changes
