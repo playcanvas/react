@@ -27,7 +27,7 @@ export const Example = () => {
 
         {/* Create a camera entity */}
         <Entity name='camera' position={[5, 1, -5]}>
-            <Camera clearColor='#090707' fov={45} renderSceneColorMap={true}/>
+            <Camera clearColor='#090707' fov={45} renderSceneColorMap={true} />
             <OrbitControls inertiaFactor={0.07} distanceMin={3} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
             {asset && <PostEffects />}
             <AutoRotate />
