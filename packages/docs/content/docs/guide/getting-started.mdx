@@ -44,18 +44,20 @@ Here's what it should look like...
 
 ### Create a new project
 
-We recommend using [Vite](https://vitejs.dev/) to create your project. It's fast, easy to use, and quickly integrates with React. But you can use any other build tool you prefer.
+The fastest way to get started is using the official PlayCanvas project scaffolding tool:
 
-You can create a new project with the following command, and follow the prompts
+```bash
+npx create playcanvas@latest my-first-3d-app -t react-ts
+cd my-first-3d-app
+npm run dev
+```
+
+Alternatively, you can use [Vite](https://vitejs.dev/) to create your project and manually install the dependencies:
 
 ```bash
 npm create vite@latest my-first-3d-app -- --template react
-```
-
-Next, install the `@playcanvas/react` package and start the development server:
-
-```bash
-npm install @playcanvas/react playcanvas@latest
+cd my-first-3d-app
+npm install @playcanvas/react
 npm run dev
 ```
 
