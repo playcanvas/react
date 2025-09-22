@@ -1,5 +1,15 @@
 # @playcanvas/react
 
+## 0.10.0
+
+### Minor Changes
+
+- fa859ed: Full removes the Grid Script. Please use the official version in the playcanvas engine
+- 617939a: Fully removes the deprecated <EnvAtlas/> component
+- 3edf166: Removes deprecated ShadowCatcher. Use the Playcanvas exported version
+- fa859ed: Removes deprecated Grid Script. Use Playcanvas script instead
+- 3082203: Adds a new `<Environment showSkybox={false}/>` prop which can hide the skybox layer.
+
 ## 0.9.1
 
 ### Patch Changes
