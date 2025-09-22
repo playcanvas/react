@@ -1,5 +1,20 @@
 # @playcanvas/blocks
 
+## 0.3.0
+
+### Minor Changes
+
+- 8d7f477: feat(playcanvas): update dependency playcanvas to v2.11.8
+
+### Patch Changes
+
+- Updated dependencies [fa859ed]
+- Updated dependencies [617939a]
+- Updated dependencies [3edf166]
+- Updated dependencies [fa859ed]
+- Updated dependencies [3082203]
+  - @playcanvas/react@0.10.0
+
 ## 0.2.1
 
 ### Patch Changes
