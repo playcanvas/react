@@ -43,18 +43,23 @@ It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships wi
 
 ## Getting Started
 
-⚡ Start building in minutes with our [playcanvas-react.app/new](https://playcanvas-react.vercel.app/new) template.
+⚡ Start building in minutes with our [playcanvas-react.vercel.app/new](https://playcanvas-react.vercel.app/new) template.
 
-Install with your favorite package manager...
+### Quick Start
+
+Create a new @playcanvas/react project and follow the instructions:
 
 ```bash
-npm install @playcanvas/react playcanvas
+npx create playcanvas@latest -t react-t
 ```
 
-You can also clone the following starter template.
+### Manual Installation
 
-```bash copy
-git clone https://github.com/marklundin/playcanvas-react-template.git
+Or install in an existing project with your favorite package manager:
+
+**npm**
+```bash
+npm install @playcanvas/react
 ```
 
 ### Show me the code
@@ -100,13 +105,27 @@ Developers and studios are already using @playcanvas/react in production
 - ⚡ Snap AI uses @playcanvas/react to build real-time 3D interfaces inside their next-gen tools.
 - ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we’ll feature it below.
 
-## AI assisted editors
+## AI Ready
 
-To get your IDE up to speed, you can install the latest MDC rules for cursor. Or [grab them here](https://playcanvas-react.vercel.app/rules) to add them manually.
+Every component comes with MDC rules for autocompletion, documentation, and AI integration — ready for use in tools like Cursor or Windsurf.
+
+### Install AI Rules for @playcanvas/react
 
 ```bash
 mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
 ```
+
+### Install AI Rules for Blocks
+
+To install rules for PlayCanvas Blocks:
+
+```bash
+npx shadcn@latest add https://playcanvas-react.vercel.app/r/blocks.json
+```
+
+This installs the rules for the registry and for @playcanvas/react and adds them to your project.
+
+[Grab the rules manually here](https://playcanvas-react.vercel.app/rules) if you prefer.
 
 ## Contributing
 
