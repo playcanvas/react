@@ -66,7 +66,7 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@types/react": "19.1.12",
+    "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
     "playcanvas": "2.11.4",
     "tsc-alias": "1.8.16"
