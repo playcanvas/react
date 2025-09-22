@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "private": "true",
-  "packageManager": "pnpm@10.15.1",
+  "packageManager": "pnpm@10.17.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack --no-mangling",
@@ -28,7 +28,7 @@
     "monaco-editor": "^0.52.0 || ^0.53.0",
     "motion": "^11.13.1 || ^12.0.0",
     "next": "15.5.3",
-    "next-mdx-remote-client": "2.1.3",
+    "next-mdx-remote-client": "2.1.5",
     "playcanvas": "2.11.4",
     "react": "^19.1.0",
     "react-codesandboxer": "^3.1.5",
@@ -40,15 +40,15 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.13",
-    "@types/node": "22.18.1",
+    "@types/node": "22.18.6",
     "autoprefixer": "10.4.21",
     "globby": "14.1.0",
     "next": "15.5.3",
-    "nextra": "4.4.0",
-    "nextra-theme-docs": "4.4.0",
+    "nextra": "4.5.0",
+    "nextra-theme-docs": "4.5.0",
     "pagefind": "1.4.0",
     "postcss": "8.5.6",
-    "shadcn": "3.2.1",
+    "shadcn": "3.3.1",
     "tailwindcss": "4.1.13",
     "tw-animate-css": "1.3.8"
   }
