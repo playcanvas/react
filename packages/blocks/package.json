@@ -68,7 +68,7 @@
   "devDependencies": {
     "@types/react": "19.1.13",
     "@types/react-dom": "19.1.9",
-    "playcanvas": "2.11.4",
+    "playcanvas": "2.11.8",
     "tsc-alias": "1.8.16"
   },
   "peerDependencies": {

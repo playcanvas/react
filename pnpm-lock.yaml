@@ -176,8 +176,8 @@ importers:
         specifier: 2.1.5
         version: 2.1.5(@types/react@19.1.13)(acorn@8.15.0)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(unified@11.0.5)
       playcanvas:
-        specifier: 2.11.4
-        version: 2.11.4
+        specifier: 2.11.8
+        version: 2.11.8
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -5313,6 +5313,10 @@ packages:
 
   playcanvas@2.11.4:
     resolution: {integrity: sha512-GoPr4JiLflMQ98BYtxQUGb/Xf5iRnVLaUKWmRxoaY1GGcb5HMwqNfQEjUusfA0lNfMEBJdSuPMjSHltwp5+50Q==}
+    engines: {node: '>=18.0.0'}
+
+  playcanvas@2.11.8:
+    resolution: {integrity: sha512-s6/Ot/pD24DyeXr47X/R1lSu0QeVWk0/RvAWnk3RSm9BBvq1UNqn3psPNI3a5A7ILjNamblYk+WlFdqGn4otRQ==}
     engines: {node: '>=18.0.0'}
 
   plimit-lit@1.6.1:
@@ -12685,6 +12689,13 @@ snapshots:
       pathe: 2.0.3
 
   playcanvas@2.11.4:
+    dependencies:
+      '@types/webxr': 0.5.22
+      '@webgpu/types': 0.1.60
+    optionalDependencies:
+      canvas: 3.1.0
+
+  playcanvas@2.11.8:
     dependencies:
       '@types/webxr': 0.5.22
       '@webgpu/types': 0.1.60
