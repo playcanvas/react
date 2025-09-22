@@ -31,7 +31,7 @@ Here's what it should look like...
         <ShadowCatcher intensity={1} width={5} depth={5}  />
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 1, 4]}>
-            <Camera clearColor='#090707' fov={28} />
+            <Camera clearColor='#090707' fov={28} renderSceneColorMap={true}/>
             <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
             {/* <PostEffects /> This doesn't work yet */}
             <AutoRotate />
@@ -193,7 +193,7 @@ export default function App() {
         {/* Render the background grid */}
         <Grid />
         {/* Add a shadow catcher to catch the shadows from the model */}
-        <ShadowCatcher intensity={0.9} />
+        <ShadowCatcher width={5} depth={5} />
         <Entity name='camera' position={[0, 0, 2]}>
             <Camera />
             <OrbitControls/>
