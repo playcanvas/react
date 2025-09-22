@@ -184,6 +184,10 @@ export default function App() {
     return <Application>
         {/* Create some environment lighting */}
         <EnvironmentLighting/>
+        {/* Create a large XZ entity with a script that renders a grid */}
+        <Entity name='grid' scale={[1000, 1, 1000]}>
+            <Script script={Grid} />
+        </Entity>
         {/* Render the background grid */}
         <Grid />
         {/* Add a shadow catcher to catch the shadows from the model */}
