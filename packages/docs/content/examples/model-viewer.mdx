@@ -19,7 +19,7 @@ export const ModelViewer = () => {
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 1, 4]}>
             <Camera clearColor='#090707' fov={28} renderSceneColorMap={true} />
-            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <OrbitControls inertiaFactor={0.07} zoomRange={[6, 10]} pitchRange={[-90, -5]}/>
             {asset && <PostEffects />}
             <AutoRotate />
         </Entity>

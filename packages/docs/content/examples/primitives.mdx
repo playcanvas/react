@@ -15,7 +15,7 @@ export const Primitives = () => {
     ]
 
     const [primitive, setPrimitive] = useState('box')
-    const material = useMaterial({ diffuse: 'gray' })
+    const material = useMaterial({ diffuse: 'red' })
 
     const app = useApp();
 
@@ -33,15 +33,11 @@ export const Primitives = () => {
     ))
 
     return <Entity>
-
-        
+        {/* Create some environment lighting */}
+        <EnvironmentLighting />        
 
         {/* Render the background grid */}
         <Grid />
-
-        <Entity position={[0, 2, 0]}>
-            <Light intensity={10} color='#ff0000' />
-        </Entity>
 
         {/* Add a shadow catcher to catch the shadows from the model */}
         <ShadowCatcher width={5} depth={5} />
@@ -49,7 +45,7 @@ export const Primitives = () => {
         {/* Create a camera entity */}
         <Entity name='camera' position={[4, 3, 4]}>
             <Camera clearColor='#111111' fov={28} />
-            <OrbitControls inertiaFactor={0.07} distanceMin={6} distanceMax={10} pitchAngleMin={1} pitchAngleMax={90}/>
+            <OrbitControls inertiaFactor={0.07} zoomRange={[6, 10]} pitchRange={[-90, -5]}/>
             <AutoRotate />
         </Entity>
 
