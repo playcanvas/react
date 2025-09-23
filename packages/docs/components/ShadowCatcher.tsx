@@ -15,7 +15,7 @@ type ShadowCatcherProps = {
 const ShadowCatcherComponent: FC<ShadowCatcherProps> = (props) => {
     const { width = 2, depth = 2, intensity = 0.75 } = props;
     const scale = useMemo(() => new Vec3(width, 1, depth), [width, depth]);
-    return <Entity>
+    return <Entity position={[0, .001, 0]}>
         <Light type='directional' 
             castShadows={true} 
             normalOffsetBias={0} 
