@@ -81,12 +81,12 @@ const PlayGround: FC<PlaygroundProps> = ({
                 >
                     <div className='lg:w-lg m-8 max-h-[calc(100%-8rem)] pointer-events-auto box-border overflow-hidden rounded-xl shadow-lg opacity-100 hover:opacity-90 focused:opacity-90 transition-opacity duration-300'>
                         <div id='code-editor-header' className='flex justify-between items-center p-2 bg-zinc-800 px-4'>
-                            <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono opacity-80 w-full'>
+                            <div id='code-editor-title' className='flex text-xs items-center justify-between font-mono w-full text-stone-50'>
                                 <TerminalIcon className='w-4 h-4' />
                                 <a 
                                     href={`https://github.com/playcanvas/react/tree/main/packages/docs/${path}`} 
                                     target='_blank' rel="noreferrer"
-                                    className='px-2 hover:underline opacity-80 hover:opacity-100 transition-opacity duration-300'
+                                    className='px-2 hover:underline opacity-90 hover:opacity-100 transition-opacity duration-300 '
                                 >
                                     {name}
                                 </a>

@@ -26,7 +26,7 @@ export const Primitives = () => {
         <button 
             key={type} 
             onClick={() => setPrimitive(type)}
-            className="m-2 px-4 py-2 bg-zinc-800 cursor-pointer hover:bg-zinc-600 text-white rounded shadow transition-colors duration-200 font-medium"
+            className="m-2 px-4 py-2 bg-zinc-800 pointer-events-auto cursor-pointer hover:bg-zinc-600 text-white rounded shadow transition-colors duration-200 font-medium"
         >
             {type}
         </button>
@@ -54,7 +54,7 @@ export const Primitives = () => {
             <Render type={primitive} material={material} />
         </Entity>
 
-        <div className='pointer-events-auto absolute bottom-0 top-22 right-0 p-18'>
+        <div className='pointer-events-none absolute bottom-0 top-22 right-0 p-18'>
             {buttons}
         </div>
         
