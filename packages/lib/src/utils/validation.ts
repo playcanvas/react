@@ -282,7 +282,11 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
 
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
+                const originalWarn = console.warn;
                 try {
+                    // Temporarily silence the console
+                    console.warn = () => {}; 
+
                     const value = descriptor.get.call(container);
                     // Create a shallow copy of the value to avoid reference issues
                     const safeValue = value !== null && typeof value === 'object' 
@@ -299,6 +303,10 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
                         value: undefined,
                         isDefinedWithSetter: hasSetter
                     };
+                }
+                finally {
+                    // Restore the console
+                    console.warn = originalWarn;
                 }
             } else if (hasSetter) {
                 // Setter-only property
