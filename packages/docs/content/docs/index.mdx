@@ -36,7 +36,7 @@ import Image from 'next/image'
   </a>
 </div>
 
-<div className='w-full aspect-video rounded-xl overflow-hidden mt-8 lg:-mx-8'>
+<div className='lg:w-[calc(100%+4rem)] aspect-video rounded-xl overflow-hidden mt-8 lg:-mx-8'>
   <ReactQueryProvider>
     <Application className='hover:cursor-grab active:cursor-grabbing w-full' fillMode="NONE" resolutionMode="AUTO">
       <Example/>
@@ -44,7 +44,7 @@ import Image from 'next/image'
   </ReactQueryProvider>
 </div>
 
-<div className="flex flex-row gap-6 my-4 -mt-12 justify-end">
+<div className="flex flex-row gap-6 my-4 -mt-12 justify-end pr-8 lg:pr-0">
   <a className="group shadow flex items-center -ml-2 flex-row gap-2 bg-muted rounded-full p-2 px-4 max-w-fit transition-colors duration-150" href="https://codesandbox.io/p/sandbox/playcanvas-react-nwlrlm" target="_blank">
     <Codesandbox size={14} className="hidden md:block text-muted-foreground group-hover:text-foreground" />
     <div className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors duration-150">Open in Codesandbox</div>
