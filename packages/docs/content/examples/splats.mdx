@@ -1,23 +1,23 @@
 export const Example = () => {
-
     /**
-     * Loading a Gaussian Splat ply
+     * Loading a compressed Gaussian Splat SOGs file
      */
-    const splatURL = "https://6rpjo46zo7.ufs.sh/f/dTTBXSHFOX4z7irrg5DfZElT6yeQYKvdjgi5IsoB0cmu9OtF"
-    const { data: splat } = useSplat(splatURL);
+
+    const { data: splat } = useSplat('/skull.sog');
+
+    if (!splat) return null;
 
     return <Entity>
         <Entity>
-            <Camera fov={30} />
-            { splat && <OrbitControls 
-                distanceMin={3} 
-                distanceMax={6} /> }
+            <Camera fov={30} position={[0, , -6]}/>
+            <OrbitControls zoomRange={[3, 6]} />
         </Entity>
         {/* Create the splat entity */}
         <Entity 
-            rotation={[0, 40, 180]} 
-            position={[0.2, -1.7, -6]}>
-            { splat && <GSplat asset={splat}/> }
+            rotation={[0, 210, 180]} 
+            position={[0, -.5, 0]}
+            >
+            <GSplat asset={splat}/>
         </Entity>
     </Entity>
 }
