@@ -377,7 +377,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 2 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec2).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec2) = new Vec2().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
                 }
@@ -391,7 +391,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 3 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec3).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec3) = new Vec3().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
                 }
@@ -404,7 +404,7 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec4).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec4) = new Vec4().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
                 }
@@ -419,7 +419,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Quat).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Quat) = new Quat().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
                 }
