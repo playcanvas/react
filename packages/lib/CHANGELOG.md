@@ -1,5 +1,12 @@
 # @playcanvas/react
 
+## 0.10.1
+
+### Patch Changes
+
+- 39c8647: Ensure any member defined with a setter is called appropriately
+- 98dc81c: Prevents deprecation warnings flooding the console during prop validation
+
 ## 0.10.0
 
 ### Minor Changes

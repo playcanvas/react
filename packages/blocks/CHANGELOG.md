@@ -1,5 +1,13 @@
 # @playcanvas/blocks
 
+## 0.3.1
+
+### Patch Changes
+
+- Updated dependencies [39c8647]
+- Updated dependencies [98dc81c]
+  - @playcanvas/react@0.10.1
+
 ## 0.3.0
 
 ### Minor Changes
