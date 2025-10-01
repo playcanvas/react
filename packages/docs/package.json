@@ -42,7 +42,7 @@
     "@tailwindcss/postcss": "4.1.13",
     "@types/node": "22.18.6",
     "autoprefixer": "10.4.21",
-    "globby": "14.1.0",
+    "globby": "15.0.0",
     "next": "15.5.3",
     "nextra": "4.5.0",
     "nextra-theme-docs": "4.5.0",
