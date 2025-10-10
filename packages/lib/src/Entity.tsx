@@ -69,8 +69,20 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
   // Check if the entity has pointer events attached
   const hasPointerEvents = !!(onPointerDown || onPointerUp || onPointerOver || onPointerOut || onClick);
 
+  // Helper function to apply entity properties
+  const applyEntityProperties = (e: PcEntity) => {
+    e.name = name;
+    e.setLocalPosition(...position as [number, number, number]);
+    e.setLocalScale(...scale as [number, number, number]);
+    e.setLocalEulerAngles(...rotation as [number, number, number]);
+  };
+
   // Create the entity only when 'app' changes
-  const entity = useMemo(() => new PcEntity(undefined, app), [app]) as PcEntity
+  const entity = useMemo<PcEntity>(() => {
+    const e = new PcEntity(undefined, app);
+    applyEntityProperties(e);
+    return e;
+  }, [app]) as PcEntity;
 
   useImperativeHandle(ref, () => entity);
 
@@ -111,11 +123,9 @@ export const Entity = forwardRef<PcEntity, EntityProps> (function Entity(
 
   }, [app, parent, entity, onPointerDown, onPointerUp, onPointerOver, onPointerOut, onClick]);
 
+  // Update entity properties when they change
   useLayoutEffect(() => {
-    entity.name = name;
-    entity.setLocalPosition(...position as [number, number, number]);
-    entity.setLocalScale(...scale as [number, number, number]);
-    entity.setLocalEulerAngles(...rotation as [number, number, number]);
+    applyEntityProperties(entity);
   }, [entity, name, position, scale, rotation]);
 
   return (<>
