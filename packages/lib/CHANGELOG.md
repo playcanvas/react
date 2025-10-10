@@ -1,5 +1,12 @@
 # @playcanvas/react
 
+## 0.10.2
+
+### Patch Changes
+
+- deab2a7: Fix ensures font works with use asset hook
+- f147fa5: Fixes a race condition with the Entity component when setting transform props
+
 ## 0.10.1
 
 ### Patch Changes
