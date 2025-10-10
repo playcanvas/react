@@ -15,7 +15,7 @@ dracoInitialize({
 /**
  * Supported asset types that can be loaded
  */
-const supportedTypes = ['texture', 'gsplat', 'container', 'model'];
+const supportedTypes = ['texture', 'gsplat', 'container', 'model', 'font'];
 
 type AssetResultCallback = (meta: AssetMeta) => void;
 
