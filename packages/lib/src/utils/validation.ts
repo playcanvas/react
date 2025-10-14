@@ -494,7 +494,7 @@ export function createComponentDefinition<T, InstanceType>(
                 default: value,
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`,
             };
-        } else {
+        } else if(value === null) {
             schema[key] = {
                 validate: () => true,
                 default: value,
