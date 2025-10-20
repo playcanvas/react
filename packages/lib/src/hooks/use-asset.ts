@@ -268,7 +268,7 @@ export const useModel = (
  * Fonts are described SDF textures, so you'll need to convert your .ttf files to SDF textures.
  * into the correct format.
  * 
- * Learn more about SDF textures {@link https://playcanvas-react.vercel.app/docs/api/hooks/use-asset#usefont}.
+ * Learn more about SDF textures {@link https://developer.playcanvas.com/user-manual/playcanvas-react/api/hooks/use-asset#usefont}.
  * 
  * @param src - The source URL of the font asset.
  * @param props - Additional properties to pass to the asset loader.
