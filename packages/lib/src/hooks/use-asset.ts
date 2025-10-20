@@ -265,7 +265,7 @@ export const useModel = (
 /**
  * Simple hook to load a font asset.
  * 
- * Fonts are described SDF textures, so you'll need to convert your .ttf files to SDF textures.
+ * Fonts are described as SDF textures, so you'll need to convert your .ttf files to SDF textures.
  * into the correct format.
  * 
  * Learn more about SDF textures {@link https://developer.playcanvas.com/user-manual/playcanvas-react/api/hooks/use-asset#usefont}.
