@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.10.3
+
+### Patch Changes
+
+- 61b1f1d: Include nullish props in component schema
+
 ## 0.10.2
 
 ### Patch Changes
