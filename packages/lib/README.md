@@ -91,7 +91,7 @@ Et voilà! ✨
 Now you've got the tools you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/playcanvas-react/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples) to explore real examples in action.
 
 - [Hello World](https://playcanvas-react.vercel.app/examples/hello-world)
-- [Loading a 3d model](https://playcanvas-react.vercel.app/examples/load-a-3D-model)
+- [Loading a 3D model](https://playcanvas-react.vercel.app/examples/load-a-3D-model)
 - [Interaction](https://playcanvas-react.vercel.app/examples/pointer-events)
 - [Physics](https://playcanvas-react.vercel.app/examples/physics)
 - [Splats](https://playcanvas-react.vercel.app/examples/splats)
