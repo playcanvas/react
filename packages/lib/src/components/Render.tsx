@@ -1,40 +1,21 @@
 "use client"
 
-import { FC, ReactElement, useRef, createContext, useContext, useCallback } from "react";
+import { FC, ReactElement, createContext, useContext } from "react";
 import { useComponent } from "../hooks/index.ts";
 import { MeshInstance } from "./MeshInstance.tsx";
 import { Asset, Entity, MeshInstance as PcMeshInstance, type RenderComponent as PcRenderComponent } from "playcanvas";
 import { PublicProps, Serializable } from "../utils/types-utils.ts";
 import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation.ts";
 import { createComponentDefinition } from "../utils/validation.ts";
-import { useParent } from "../hooks/use-parent.tsx";
+import { Container } from "../Container.tsx";
 
 const MeshInstanceContext = createContext<((instance: PcMeshInstance) => void) | null>(null);
 
 export const useMeshInstanceRegistration = () => useContext(MeshInstanceContext);
 
 const RenderComponent: FC<RenderProps> = (props) => {
-    const { children, ...rest } = props;
-
-    const parent : Entity = useParent();
-    const meshInstancesRef = useRef<PcMeshInstance[]>([]);
-
-    useComponent("render", rest, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
-    
-    const registerMeshInstance = useCallback((instance: PcMeshInstance) => {
-        if (!meshInstancesRef.current.includes(instance)) {
-            meshInstancesRef.current.push(instance);
-            if (parent.render) {
-                (parent.render as PcRenderComponent).meshInstances = meshInstancesRef.current;
-            }
-        }
-    }, [parent]);
-
-    return (
-        <MeshInstanceContext.Provider value={registerMeshInstance}>
-            {children}
-        </MeshInstanceContext.Provider>
-    );
+    useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
+    return null;
 }
 
 /**
@@ -63,11 +44,11 @@ export const Render: FC<RenderProps> = (props) => {
     if(safeProps.type === "asset" && !safeProps.asset) return null;
 
     // Render a container if the asset is a container
-    // if (safeProps.asset?.type === 'container') {
-    //     return <Container asset={safeProps.asset as Asset} >
-    //         { safeProps.children }
-    //     </Container>
-    // }
+    if (safeProps.asset?.type === 'container') {
+        return <Container asset={safeProps.asset as Asset} >
+            { safeProps.children }
+        </Container>
+    }
 
     // console.log('safeProps', safeProps);
 
