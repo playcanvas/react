@@ -1,5 +1,25 @@
 # @playcanvas/react
 
+## 0.10.3
+
+### Patch Changes
+
+- 61b1f1d: Include nullish props in component schema
+
+## 0.10.2
+
+### Patch Changes
+
+- deab2a7: Fix ensures font works with use asset hook
+- f147fa5: Fixes a race condition with the Entity component when setting transform props
+
+## 0.10.1
+
+### Patch Changes
+
+- 39c8647: Ensure any member defined with a setter is called appropriately
+- 98dc81c: Prevents deprecation warnings flooding the console during prop validation
+
 ## 0.10.0
 
 ### Minor Changes

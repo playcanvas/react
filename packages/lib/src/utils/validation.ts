@@ -282,7 +282,11 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
 
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
+                const originalWarn = console.warn;
                 try {
+                    // Temporarily silence the console
+                    console.warn = () => {}; 
+
                     const value = descriptor.get.call(container);
                     // Create a shallow copy of the value to avoid reference issues
                     const safeValue = value !== null && typeof value === 'object' 
@@ -299,6 +303,10 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
                         value: undefined,
                         isDefinedWithSetter: hasSetter
                     };
+                }
+                finally {
+                    // Restore the console
+                    console.warn = originalWarn;
                 }
             } else if (hasSetter) {
                 // Setter-only property
@@ -377,7 +385,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 2 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec2).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec2) = new Vec2().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
                 }
@@ -391,7 +399,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 3 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec3).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec3) = new Vec3().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
                 }
@@ -404,7 +412,7 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Vec4).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Vec4) = new Vec4().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
                 }
@@ -419,7 +427,7 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
-                    (instance[key as keyof InstanceType] as Quat).fromArray(props[key] as number[]);
+                    (instance[key as keyof InstanceType] as Quat) = new Quat().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
                     (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
                 }
@@ -485,6 +493,15 @@ export function createComponentDefinition<T, InstanceType>(
                 validate: (val) => val instanceof Material,
                 default: value,
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`,
+            };
+        } else if(value === null) {
+            schema[key] = {
+                validate: () => true,
+                default: value,
+                errorMsg: () => '',
+                apply: (instance, props, key) => {
+                    (instance[key as keyof InstanceType] as unknown) = props[key];
+                }
             };
         }
     });
