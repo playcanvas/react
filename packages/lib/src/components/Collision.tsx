@@ -79,7 +79,7 @@ const componentDefinition = createComponentDefinition(
     "Collision",
     () => new Entity("mock-collision", getStaticNullApplication()).addComponent('collision') as CollisionComponent,
     (component) => (component as CollisionComponent).system.destroy(),
-    "CollisionComponent"
+    { apiName: "CollisionComponent" }
 )
 
 componentDefinition.schema = {

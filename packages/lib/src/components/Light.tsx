@@ -37,7 +37,7 @@ const componentDefinition = createComponentDefinition<LightProps, LightComponent
     "Light",
     () => new Entity('mock-light', getStaticNullApplication()).addComponent('light') as LightComponent,
     (component) => (component as LightComponent).system.destroy(),
-    "LightComponent"
+    { apiName: "LightComponent" }
 )
 
 componentDefinition.schema = {
