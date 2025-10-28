@@ -222,7 +222,7 @@ type CanvasProps = {
 }
 
 // These props are excluded from the <Application/> component props.
-type ExcludedApplicationProps = 'mouse' | 'touch' | 'keyboard';
+type ExcludedApplicationProps = 'mouse' | 'touch' | 'keyboard' | 'gamepads' | 'scene' | 'scripts' | 'assets';
 
 interface ApplicationProps extends Omit<Partial<PublicProps<PlayCanvasApplication>>, ExcludedApplicationProps>, CanvasProps {
 
@@ -269,7 +269,7 @@ interface ApplicationWithoutCanvasProps extends ApplicationProps {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
-const exclude: ExcludedApplicationProps[] = ['mouse', 'touch', 'keyboard'];
+const exclude: ExcludedApplicationProps[] = ['mouse', 'touch', 'keyboard', 'gamepads', 'scene', 'scripts', 'assets'];
 
 const componentDefinition = createComponentDefinition(
   "Application",
