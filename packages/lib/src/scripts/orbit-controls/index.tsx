@@ -31,7 +31,7 @@ export const OrbitControls = ({
     touch = { orbitSensitivity: 0.4, distanceSensitivity: 0.2 }, 
  } : OrbitControls) => {
 
-    warnOnce('The `<OrbitControls/>` component is deprecated and will be removed in a future release. Use the PlayCanvas `CameraControls` script via the `<Script/>` component instead. `<Script script={CameraControls}/>`');
+    warnOnce('The `<OrbitControls/>` component is deprecated and will be removed in a future release. Use the PlayCanvas `CameraControls` script from `playcanvas` via the `<Script/>` component instead: `<Script script={CameraControls}/>`.');
     
     const orbitCameraProps : OrbitCameraProps = { distanceMax, distanceMin, pitchAngleMax, pitchAngleMin, inertiaFactor, focusEntity, pivotPoint, frameOnStart, distance }
     
