@@ -39,7 +39,7 @@ export const Collision: FC<CollisionProps> = (props) => {
                 '   </Application>\n\n' +
                 '2. Make sure you have the required dependencies installed:\n' +
                 '   npm install sync-ammo\n\n' +
-                'For more information, see: https://playcanvas-react.vercel.app/docs/physics'
+                'For more information, see: https://developer.playcanvas.com/user-manual/playcanvas-react/guide/physics'
             );
         }
 
@@ -51,7 +51,7 @@ export const Collision: FC<CollisionProps> = (props) => {
                 '   npm install sync-ammo\n\n' +
                 '2. Make sure your bundler is configured to handle WASM files\n\n' +
                 '3. Check that your server is configured to serve .wasm files with the correct MIME type\n\n' +
-                'For more information, see: https://playcanvas-react.vercel.app/docs/physics#troubleshooting'
+                'For more information, see: https://developer.playcanvas.com/user-manual/playcanvas-react/guide/physics#troubleshooting'
             );
         }
     }, [isPhysicsEnabled, physicsError]);

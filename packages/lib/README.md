@@ -43,7 +43,7 @@ It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships wi
 
 ## Getting Started
 
-⚡ Start building in minutes with our [playcanvas-react.vercel.app/new](https://playcanvas-react.vercel.app/new) template.
+⚡ Start building in minutes with our [Getting Started guide](https://developer.playcanvas.com/user-manual/playcanvas-react/getting-started).
 
 ### Quick Start
 
@@ -88,15 +88,15 @@ Et voilà! ✨
 
 ## Ready to build something?
 
-Now you've got the tools you're ready to start building. Start with the [Getting Started](https://playcanvas-react.vercel.app/docs/guide/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples/) to explore real examples in action.
+Now you've got the tools you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/playcanvas-react/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples) to explore real examples in action.
 
-- [Hello World](http://playcanvas-react.vercel.app/examples/hello-world)
-- [Loading a 3d model](http://playcanvas-react.vercel.app/examples/load-a-3D-model)
-- [Interaction](http://playcanvas-react.vercel.app/examples/pointer-events)
-- [Physics](http://playcanvas-react.vercel.app/examples/physics)
-- [Splats](http://playcanvas-react.vercel.app/examples/splats)
+- [Hello World](https://playcanvas-react.vercel.app/examples/hello-world)
+- [Loading a 3D model](https://playcanvas-react.vercel.app/examples/load-a-3D-model)
+- [Interaction](https://playcanvas-react.vercel.app/examples/pointer-events)
+- [Physics](https://playcanvas-react.vercel.app/examples/physics)
+- [Splats](https://playcanvas-react.vercel.app/examples/splats)
 
-You can also jump straight into the [docs](https://playcanvas-react.vercel.app) or [api](https://playcanvas-react.vercel.app/docs/api).
+You can also jump straight into the [docs](https://developer.playcanvas.com/user-manual/playcanvas-react) or [api](https://developer.playcanvas.com/user-manual/playcanvas-react/api).
 
 ## Who’s building with @playcanvas/react?
 
@@ -112,7 +112,7 @@ Every component comes with MDC rules for autocompletion, documentation, and AI i
 ### Install AI Rules for @playcanvas/react
 
 ```bash
-mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
+mkdir -p .cursor/rules && curl -s https://developer.playcanvas.com/user-manual/playcanvas-react/rules -o .cursor/rules/playcanvas-react.mdc
 ```
 
 ### Install AI Rules for Blocks
@@ -120,12 +120,12 @@ mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .
 To install rules for PlayCanvas Blocks:
 
 ```bash
-npx shadcn@latest add https://playcanvas-react.vercel.app/r/blocks.json
+npx shadcn@latest add https://developer.playcanvas.com/user-manual/playcanvas-react/r/blocks.json
 ```
 
 This installs the rules for the registry and for @playcanvas/react and adds them to your project.
 
-[Grab the rules manually here](https://playcanvas-react.vercel.app/rules) if you prefer.
+[Grab the rules manually here](https://developer.playcanvas.com/user-manual/playcanvas-react/rules) if you prefer.
 
 ## Contributing
 
