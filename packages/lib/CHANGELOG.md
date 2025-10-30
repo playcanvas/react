@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.10.4
+
+### Patch Changes
+
+- 86f01de: Adds a deprecation warning to OrbitControls
+
 ## 0.10.3
 
 ### Patch Changes
