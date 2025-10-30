@@ -1,5 +1,12 @@
 # @playcanvas/react
 
+## 0.10.4
+
+### Patch Changes
+
+- 131b07d: Fixing issue with Application schema validation
+- 86f01de: Adds a deprecation warning to OrbitControls
+
 ## 0.10.3
 
 ### Patch Changes
