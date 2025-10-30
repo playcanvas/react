@@ -47,7 +47,7 @@ const componentDefinition = createComponentDefinition<ScreenProps, ScreenCompone
     "Screen",
     () => new Entity("mock-screen", getStaticNullApplication()).addComponent("screen") as ScreenComponent,
     (component) => (component as ScreenComponent).system.destroy(),
-    "ScreenComponent"
+    { apiName: "ScreenComponent" }
 );
 
 componentDefinition.schema = {

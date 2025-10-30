@@ -56,5 +56,5 @@ const componentDefinition = createComponentDefinition<MaterialProps, StandardMat
     "Material",
     () => new StandardMaterial(),
     (material) => material.destroy(),
-    "StandardMaterial"
+    { apiName: "StandardMaterial" }
 )
