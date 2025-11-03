@@ -48,3 +48,5 @@ componentDefinition.schema = {
         default: "directional"
     }
 } as Schema<LightProps, LightComponent>
+
+export { componentDefinition as lightComponentDefinition };
