@@ -10,7 +10,7 @@ import { Entity as PcEntity, Asset } from 'playcanvas';
  */
 export function createMockGltfAsset(
   hierarchy: PcEntity,
-  id: number = Math.floor(Math.random() * 10000)
+  id: number = Math.floor(Math.random() * 1000000)
 ): Asset {
   // Create a mock asset that mimics the structure returned by PlayCanvas asset loader
   const mockAsset = {
@@ -19,7 +19,7 @@ export function createMockGltfAsset(
     type: 'container',
     resource: {
       instantiateRenderEntity: () => {
-        // Clone the hierarchy to prevent test pollution
+        // Return the hierarchy directly to prevent test pollution
         return hierarchy;
       }
     },

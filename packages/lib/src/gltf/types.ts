@@ -6,6 +6,11 @@ import type { Render } from '../components/Render.tsx';
 import type { Camera } from '../components/Camera.tsx';
 
 /**
+ * Supported component types for modification
+ */
+export type SupportedComponentType = 'light' | 'render' | 'camera';
+
+/**
  * Action types for entity modifications
  */
 export enum ActionType {
@@ -43,7 +48,7 @@ export interface ClearChildrenAction extends BaseAction {
  */
 export interface ModifyComponentAction extends BaseAction {
   type: ActionType.MODIFY_COMPONENT;
-  componentType: string;
+  componentType: SupportedComponentType;
   props: Record<string, unknown>;
 }
 
@@ -71,7 +76,7 @@ export interface Rule {
 export interface MergedRule {
   entityGuid: string;
   clearChildren: boolean;
-  componentActions: Map<string, Action>; // componentType -> winning action
+  componentActions: Map<SupportedComponentType, Action>; // componentType -> winning action
   addChildren: ReactNode[];
 }
 

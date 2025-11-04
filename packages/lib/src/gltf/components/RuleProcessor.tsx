@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useEffect, ReactNode } from 'react';
-import { Entity } from 'playcanvas';
+import { Entity, Component } from 'playcanvas';
 import { ParentContext } from '../../hooks/use-parent.tsx';
 import { MergedRule, ActionType, ModifyComponentAction } from '../types.ts';
+import { componentSchemaRegistry } from '../utils/schema-registry.ts';
+import { validatePropsPartial, applyProps, ComponentDefinition, Schema } from '../../utils/validation.ts';
 
 /**
  * Internal component that applies final merged rules to entities
@@ -12,24 +14,30 @@ import { MergedRule, ActionType, ModifyComponentAction } from '../types.ts';
 export interface RuleProcessorProps {
   entity: Entity;
   rule: MergedRule;
+  originalChildGUIDs: string[];
 }
 
-export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule }) => {
+export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, originalChildGUIDs }) => {
   // Apply modifications in a batched effect
   useEffect(() => {
     // 1. Clear children if requested
     if (rule.clearChildren) {
-      const originalChildren = [...entity.children];
+      const originalChildren = originalChildGUIDs.map(guid => {
+        return entity.children.find(c => c.getGuid() === guid);
+      }).filter(Boolean); // Filter out any that might already be gone
+      
+      // Now, we only destroy the original children
       originalChildren.forEach(child => {
-        entity.removeChild(child);
-        child.destroy();
+        entity.removeChild(child as Entity);
+        (child as Entity).destroy();
       });
     }
 
-    // 2. Apply component actions with prop merging
+    // 2. Apply component actions with prop merging using component schemas
     for (const [componentType, action] of rule.componentActions.entries()) {
       if (action.type !== ActionType.MODIFY_COMPONENT) continue;
       
+      // componentType is now type-safe: SupportedComponentType
       const existingComponent = entity.c?.[componentType];
       if (!existingComponent) continue;
 
@@ -42,27 +50,45 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule }) =>
         continue;
       }
 
-      // Apply all other props (generic merge)
+      // Get component definition from registry (type-safe now)
+      const componentDef = componentSchemaRegistry[componentType] as ComponentDefinition<Record<string, unknown>, Component> | undefined;
+      
+      if (!componentDef || !componentDef.schema) {
+        throw new Error(`No component schema found for component type "${componentType}". Component must be registered in schema registry.`);
+      }
+
+      // Execute functional props and prepare for validation
+      const propsToValidate: Record<string, unknown> = {};
+      const comp = existingComponent as unknown as Record<string, unknown>;
+      const schema = componentDef.schema as Schema<Record<string, unknown>, Component>;
+      
       for (const propName in mergeProps) {
         const propValue = mergeProps[propName];
-        const comp = existingComponent as unknown as Record<string, unknown>;
         
         if (typeof propValue === 'function') {
-          // Functional update (e.g., intensity={val => val * 2})
-          const existingValue = comp[propName];
-          
-          // Clone complex types to prevent accidental mutation
-          const currentValue = (existingValue && typeof existingValue === 'object' && 'clone' in existingValue && typeof existingValue.clone === 'function')
-            ? existingValue.clone()
-            : existingValue;
-            
-          comp[propName] = propValue(currentValue);
-          
+          // Functional update (e.g., intensity={(val) => val * 2})
+          // Get current value from component and execute function
+          const currentValue = comp[propName];
+          propsToValidate[propName] = propValue(currentValue);
         } else {
-          // Value overwrite (e.g., intensity={10})
-          comp[propName] = propValue;
+          // Direct value
+          propsToValidate[propName] = propValue;
         }
       }
+
+      // Validate props using component schema
+      const validatedProps = validatePropsPartial(
+        propsToValidate,
+        componentDef,
+        false // Don't warn about unknown props during modification
+      );
+
+      // Apply validated props using schema's apply functions
+      applyProps(
+        existingComponent as Component,
+        schema,
+        validatedProps as Record<string, unknown>
+      );
     }
   }, [entity, rule]);
 

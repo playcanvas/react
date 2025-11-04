@@ -19,6 +19,7 @@ export interface EntityMetadata {
   path: string;
   guid: string;
   name: string;
+  originalChildGUIDs: string[];
 }
 
 export type PathPredicate = (entity: Entity, metadata: EntityMetadata) => boolean;

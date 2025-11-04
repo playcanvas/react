@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useMemo, useCallback, ReactNode, useRef } from 'react';
 import { Asset, Entity } from 'playcanvas';
 import { GltfContext } from '../context.tsx';
-import { Rule, MergedRule, ActionType } from '../types.ts';
+import { Rule, MergedRule, ActionType, ModifyComponentAction } from '../types.ts';
 import { EntityMetadata, PathMatcher } from '../utils/path-matcher.ts';
 import { RuleProcessor } from './RuleProcessor.tsx';
 import { useParent } from '../../hooks/use-parent.tsx';
@@ -66,7 +66,8 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
   const rulesRef = useRef<Map<string, Rule>>(new Map());
   const [mergedRules, setMergedRules] = useState<Map<string, MergedRule>>(new Map());
   const pathMatcher = useMemo(() => new PathMatcher(), []);
-
+  const [rulesVersion, setRulesVersion] = useState(0);
+  
   // Check if we need to instantiate (render is true OR has Modify.Node children)
   const shouldInstantiate = useMemo(() => {
     // Always instantiate if render is true
@@ -118,6 +119,7 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
   // Process rules and resolve conflicts
   const processRules = useCallback(() => {
     if (!rootEntity || hierarchyCache.size === 0) {
+      setMergedRules(new Map());
       return;
     }
 
@@ -150,20 +152,22 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
   // Rule registration callbacks
   const registerRule = useCallback((rule: Rule) => {
     rulesRef.current.set(rule.id, rule);
-    // Trigger re-processing of rules
-    processRules();
-  }, [processRules]);
+    // "Poke" the component to re-process rules
+    setRulesVersion(v => v + 1);
+  }, []);
 
   const unregisterRule = useCallback((ruleId: string) => {
     rulesRef.current.delete(ruleId);
-    // Trigger re-processing of rules
-    processRules();
-  }, [processRules]);
+    // "Poke" the component to re-process rules
+    setRulesVersion(v => v + 1);
+  }, []);
 
   // Re-process rules when dependencies change
   useEffect(() => {
+    // This effect now runs ONLY when the cache is ready
+    // or when the rules have *actually* changed.
     processRules();
-  }, [processRules, hierarchyCache]);
+  }, [processRules, hierarchyCache, rulesVersion]); // <
 
   // Add root entity to parent scene (merged from Gltf component)
   useEffect(() => {
@@ -210,6 +214,7 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
             key={guid}
             entity={metadata.entity}
             rule={rule}
+            originalChildGUIDs={metadata.originalChildGUIDs ?? []}
           />
         );
       })}
@@ -227,12 +232,15 @@ function buildHierarchyCache(
 ): void {
   const path = parentPath ? `${parentPath}.${entity.name}` : entity.name;
   const guid = entity.getGuid();
+
+  const originalChildGUIDs = entity.children.map((child) => child.getGuid());
   
   cache.set(guid, {
     entity,
     path,
     guid,
-    name: entity.name
+    name: entity.name,
+    originalChildGUIDs
   });
 
   // Recursively process children
@@ -275,7 +283,7 @@ function mergeRules(entityGuid: string, rules: Rule[]): MergedRule {
 
         case ActionType.MODIFY_COMPONENT: {
           // For component actions, highest specificity wins per component type
-          const componentAction = action as { componentType: string };
+          const componentAction = action as ModifyComponentAction;
           if (!merged.componentActions.has(componentAction.componentType)) {
             merged.componentActions.set(componentAction.componentType, action);
           }

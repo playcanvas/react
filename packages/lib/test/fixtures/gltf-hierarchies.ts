@@ -12,31 +12,35 @@ import { createEntityHierarchy, EntityStructure } from '../utils/gltf-entity-bui
  *     RightArm [render]
  */
 export function createSimpleRobot(app: PcApplication): PcEntity {
-  const structure: EntityStructure = {
-    name: 'RootNode',
-    children: [
-      {
-        name: 'Body',
-        children: [
-          {
-            name: 'Head',
-            components: {
-              light: { type: 'point', intensity: 1 }
+    const structure: EntityStructure = {
+      name: 'RootNode',
+      children: [
+        {
+          name: 'Body',
+          components: { render: {} }, // Add render to Body
+          children: [
+            {
+              name: 'Head',
+              components: {
+                light: { type: 'point', intensity: 1 },
+                render: {} // Add render to Head
+              }
+            },
+            {
+              name: 'LeftArm',
+              components: { render: {} } // Add render to LeftArm
+            },
+            {
+              name: 'RightArm',
+              components: { render: {} } // Add render to RightArm
             }
-          },
-          {
-            name: 'LeftArm'
-          },
-          {
-            name: 'RightArm'
-          }
-        ]
-      }
-    ]
-  };
+          ]
+        }
+      ]
+    };
 
-  return createEntityHierarchy(app, structure);
-}
+    return createEntityHierarchy(app, structure);
+  }
 
 /**
  * Complex scene with multiple levels and components
@@ -90,7 +94,8 @@ export function createComplexScene(app: PcApplication): PcEntity {
                   {
                     name: 'Head',
                     components: {
-                      camera: { fov: 60 }
+                      camera: { fov: 60 },
+                      render: {}
                     },
                     children: [
                       {
@@ -114,9 +119,12 @@ export function createComplexScene(app: PcApplication): PcEntity {
               {
                 name: 'Body',
                 children: [
-                  {
-                    name: 'Head'
-                  }
+                    {
+                        name: 'Head',
+                        components: {
+                            render: {}
+                        },
+                    }
                 ]
               }
             ]

@@ -9,7 +9,8 @@ import {
   ModifyNodeProps,
   ModifyLightProps,
   ModifyRenderProps,
-  ModifyCameraProps
+  ModifyCameraProps,
+  SupportedComponentType
 } from '../types.ts';
 import { defaultPathMatcher } from '../utils/path-matcher.ts';
 import { ModifyLight } from './ModifyLight.tsx';
@@ -112,7 +113,7 @@ ModifyNode.displayName = 'ModifyNode';
  * Creates a component modification action from component props
  */
 function createComponentAction(
-  componentType: string,
+  componentType: SupportedComponentType,
   props: ModifyLightProps | ModifyRenderProps | ModifyCameraProps,
   ruleId: string
 ): Action | null {
