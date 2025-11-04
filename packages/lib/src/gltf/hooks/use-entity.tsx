@@ -3,7 +3,7 @@
 import { Entity } from 'playcanvas';
 import { useMemo } from 'react';
 import { useParent } from '../../hooks/use-parent.ts';
-import { useGltfScene } from './use-gltf-scene.ts';
+import { useGltf } from './use-gltf.tsx';
 import { PathPredicate, EntityMetadata } from '../utils/path-matcher.ts';
 
 /**
@@ -28,7 +28,7 @@ export function useEntity(
   path: string | PathPredicate
 ): Entity | Entity[] | null {
   const parentEntity = useParent();
-  const { hierarchyCache } = useGltfScene();
+  const { hierarchyCache } = useGltf();
 
   return useMemo(() => {
     // If path is a predicate function

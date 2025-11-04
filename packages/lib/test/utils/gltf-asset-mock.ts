@@ -6,7 +6,7 @@ import { Entity as PcEntity, Asset } from 'playcanvas';
  * 
  * @param hierarchy - The root entity of the hierarchy
  * @param id - Optional asset ID (defaults to random number)
- * @returns A mock Asset object compatible with GltfScene
+ * @returns A mock Asset object compatible with Gltf
  */
 export function createMockGltfAsset(
   hierarchy: PcEntity,

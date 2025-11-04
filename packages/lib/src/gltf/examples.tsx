@@ -2,11 +2,11 @@
  * Examples demonstrating the GLTF Declarative Modification API
  * 
  * This file contains various usage examples showing how to use the
- * GltfScene, Gltf, and Modify components to declaratively modify
+ * Gltf, Gltf, and Modify components to declaratively modify
  * loaded GLTF assets.
  */
 
-import { GltfScene, Modify, useEntity } from './index.ts';
+import { Gltf, Modify, useEntity } from './index.ts';
 import { useModel } from '../hooks/use-asset.ts';
 import { Light } from '../components/Light.tsx';
 import { Render } from '../components/Render.tsx';
@@ -21,7 +21,7 @@ export function Example1_BasicUsage() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id} />
+    <Gltf asset={asset} key={asset.id} />
   );
 }
 
@@ -34,16 +34,16 @@ export function Example2_RemoveComponents() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="[light]">
-        <Modify.Component type="light" remove />
+        <Modify.Light remove />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
 /**
- * Example 3: Modify Components - Change light properties using render prop
+ * Example 3: Modify Components - Change light properties with prop merging
  */
 export function Example3_ModifyComponents() {
   const { asset } = useModel('model.glb');
@@ -51,32 +51,31 @@ export function Example3_ModifyComponents() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="[light]">
-        <Modify.Component type="light">
-          {(props) => <Light {...props} color="red" intensity={2} />}
-        </Modify.Component>
+        <Modify.Light color="red" intensity={2} />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
 /**
- * Example 4: Replace Components - Complete replacement of components
+ * Example 4: Functional Updates - Use functions to update based on existing values
  */
-export function Example4_ReplaceComponents() {
+export function Example4_FunctionalUpdates() {
   const { asset } = useModel('model.glb');
   
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="[light]">
-        <Modify.Component type="light">
-          <Light type="directional" color="blue" intensity={5} castShadows />
-        </Modify.Component>
+        <Modify.Light 
+          intensity={(val: number | undefined) => (val || 1) * 2} 
+          castShadows 
+        />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -89,13 +88,13 @@ export function Example5_AddChildren() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="Head">
         <Entity name="HelmetLight" position={[0, 1, 0]}>
           <Light type="omni" color="yellow" intensity={3} />
         </Entity>
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -108,13 +107,13 @@ export function Example6_ClearChildren() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="Head" clearChildren>
         <Entity name="NewHelmet">
           <Render type="box" />
         </Entity>
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -127,12 +126,10 @@ export function Example7_WildcardPatterns() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       {/* Single-level wildcard: matches direct children */}
       <Modify.Node path="Body.*">
-        <Modify.Component type="render">
-          {(props) => <Render {...props} castShadows={false} />}
-        </Modify.Component>
+        <Modify.Render castShadows={false} />
       </Modify.Node>
       
       {/* Multi-level wildcard: matches all descendants */}
@@ -141,7 +138,7 @@ export function Example7_WildcardPatterns() {
           <Light type="omni" color="green" />
         </Entity>
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -154,14 +151,12 @@ export function Example8_CombinedQueries() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       {/* Match all lights under Head node */}
       <Modify.Node path="Head.*[light]">
-        <Modify.Component type="light">
-          {(props) => <Light {...props} color="orange" />}
-        </Modify.Component>
+        <Modify.Light color="orange" />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -174,18 +169,16 @@ export function Example9_PredicateFunctions() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node 
         path={(entity) => {
           // Match entities with "weapon" in the name
           return entity.name.toLowerCase().includes('weapon');
         }}
       >
-        <Modify.Component type="render">
-          {(props) => <Render {...props} castShadows />}
-        </Modify.Component>
+        <Modify.Render castShadows />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -198,11 +191,11 @@ export function Example10_MultipleRules() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       
       {/* Rule 1: Remove all existing lights */}
       <Modify.Node path="[light]">
-        <Modify.Component type="light" remove />
+        <Modify.Light remove />
       </Modify.Node>
       
       {/* Rule 2: Add new light to Head */}
@@ -214,11 +207,9 @@ export function Example10_MultipleRules() {
       
       {/* Rule 3: Modify all render components */}
       <Modify.Node path="**[render]">
-        <Modify.Component type="render">
-          {(props) => <Render {...props} receiveShadows />}
-        </Modify.Component>
+        <Modify.Render receiveShadows />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -244,11 +235,11 @@ export function Example11_UseEntityHook() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       <Modify.Node path="Arm">
         <HandGlow />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -262,22 +253,18 @@ export function Example12_Specificity() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       
       {/* Less specific: matches all lights */}
       <Modify.Node path="[light]">
-        <Modify.Component type="light">
-          {(props) => <Light {...props} color="red" />}
-        </Modify.Component>
+        <Modify.Light color="red" />
       </Modify.Node>
       
       {/* More specific: matches lights under Head - this wins! */}
       <Modify.Node path="Head.Helmet[light]">
-        <Modify.Component type="light">
-          {(props) => <Light {...props} color="blue" />}
-        </Modify.Component>
+        <Modify.Light color="blue" />
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 
@@ -291,18 +278,16 @@ export function Example13_ComplexModification() {
   if (!asset) return null;
   
   return (
-    <GltfScene asset={asset} key={asset.id}>
+    <Gltf asset={asset} key={asset.id}>
       
       {/* Remove all original lights */}
       <Modify.Node path="**[light]">
-        <Modify.Component type="light" remove />
+        <Modify.Light remove />
       </Modify.Node>
       
       {/* Make all renders cast shadows */}
       <Modify.Node path="**[render]">
-        <Modify.Component type="render">
-          {(props) => <Render {...props} castShadows receiveShadows />}
-        </Modify.Component>
+        <Modify.Render castShadows receiveShadows />
       </Modify.Node>
       
       {/* Add lights to specific parts */}
@@ -327,7 +312,7 @@ export function Example13_ComplexModification() {
           </Entity>
         </Entity>
       </Modify.Node>
-    </GltfScene>
+    </Gltf>
   );
 }
 

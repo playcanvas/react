@@ -2,16 +2,15 @@
 
 import React, { useState, useEffect, useMemo, useCallback, ReactNode, useRef } from 'react';
 import { Asset, Entity } from 'playcanvas';
-import { GltfSceneContext } from '../context.tsx';
+import { GltfContext } from '../context.tsx';
 import { Rule, MergedRule, ActionType } from '../types.ts';
 import { EntityMetadata, PathMatcher } from '../utils/path-matcher.ts';
 import { RuleProcessor } from './RuleProcessor.tsx';
 import { useParent } from '../../hooks/use-parent.tsx';
 
-export interface GltfSceneProps {
+export interface GltfProps {
   /**
    * The GLTF asset loaded via useModel
-   * IMPORTANT: Provide a unique key to this component (e.g., key={asset.id})
    */
   asset: Asset;
   
@@ -42,25 +41,25 @@ export interface GltfSceneProps {
  * const { asset } = useModel('model.glb');
  * 
  * return (
- *   <GltfScene asset={asset} key={asset.id}>
+ *   <Gltf asset={asset} key={asset.id}>
  *     <Modify.Node path="head.*[light]">
  *       <Modify.Component type="light" remove />
  *     </Modify.Node>
- *   </GltfScene>
+ *   </Gltf>
  * );
  * ```
  * 
  * @example
  * ```tsx
  * // Don't render visuals, only process modifications
- * <GltfScene asset={asset} key={asset.id} render={false}>
+ * <Gltf asset={asset} key={asset.id} render={false}>
  *   <Modify.Node path="**[light]">
  *     <Modify.Component type="light" remove />
  *   </Modify.Node>
- * </GltfScene>
+ * </Gltf>
  * ```
  */
-export const GltfScene: React.FC<GltfSceneProps> = ({ asset, render = true, children }) => {
+export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) => {
   const parent = useParent();
   const [rootEntity, setRootEntity] = useState<Entity | null>(null);
   const [hierarchyCache, setHierarchyCache] = useState<Map<string, EntityMetadata>>(new Map());
@@ -175,7 +174,7 @@ export const GltfScene: React.FC<GltfSceneProps> = ({ asset, render = true, chil
     parent.addChild(rootEntity);
     
     return () => {
-      // Only remove if still a child (GltfScene's cleanup will destroy it)
+      // Only remove if still a child (Gltf's cleanup will destroy it)
       if (rootEntity.parent === parent) {
         parent.removeChild(rootEntity);
       }
@@ -197,7 +196,7 @@ export const GltfScene: React.FC<GltfSceneProps> = ({ asset, render = true, chil
   }
 
   return (
-    <GltfSceneContext.Provider value={contextValue}>
+    <GltfContext.Provider value={contextValue}>
       {/* Render children (includes Gltf and Modify.Node components) */}
       {children}
       
@@ -214,7 +213,7 @@ export const GltfScene: React.FC<GltfSceneProps> = ({ asset, render = true, chil
           />
         );
       })}
-    </GltfSceneContext.Provider>
+    </GltfContext.Provider>
   );
 };
 
@@ -274,9 +273,7 @@ function mergeRules(entityGuid: string, rules: Rule[]): MergedRule {
           break;
         }
 
-        case ActionType.MODIFY_COMPONENT:
-        case ActionType.REMOVE_COMPONENT:
-        case ActionType.REPLACE_COMPONENT: {
+        case ActionType.MODIFY_COMPONENT: {
           // For component actions, highest specificity wins per component type
           const componentAction = action as { componentType: string };
           if (!merged.componentActions.has(componentAction.componentType)) {
@@ -291,5 +288,5 @@ function mergeRules(entityGuid: string, rules: Rule[]): MergedRule {
   return merged;
 }
 
-GltfScene.displayName = 'GltfScene';
+Gltf.displayName = 'Gltf';
 

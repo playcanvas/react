@@ -4,7 +4,7 @@ import { PathMatcher } from '../utils/path-matcher.ts';
 import { ReactNode } from 'react';
 
 /**
- * Helper function to merge rules (extracted from GltfScene component)
+ * Helper function to merge rules (extracted from Gltf component)
  */
 function mergeRules(entityGuid: string, rules: Rule[]): MergedRule {
   const merged: MergedRule = {

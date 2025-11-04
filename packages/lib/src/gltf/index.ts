@@ -1,13 +1,12 @@
 "use client";
 
 // Components
-export { GltfScene } from './components/GltfScene.tsx';
-export type { GltfSceneProps } from './components/GltfScene.tsx';
 export { Gltf } from './components/Gltf.tsx';
+export type { GltfProps } from './components/Gltf.tsx';
 export { Modify } from './components/Modify.tsx';
 
 // Hooks
-export { useGltfScene } from './hooks/use-gltf-scene.ts';
+export { useGltf } from './hooks/use-gltf.tsx';
 export { useEntity } from './hooks/use-entity.ts';
 
 // Types
@@ -16,8 +15,10 @@ export type {
   Action,
   MergedRule,
   ModifyNodeProps,
-  ModifyComponentProps,
-  GltfSceneContextValue
+  ModifyLightProps,
+  ModifyRenderProps,
+  ModifyCameraProps,
+  GltfContextValue
 } from './types';
 
 // Utilities

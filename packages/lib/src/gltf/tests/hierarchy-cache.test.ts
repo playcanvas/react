@@ -14,7 +14,7 @@ import {
 import { EntityMetadata } from '../utils/path-matcher.ts';
 
 /**
- * Helper function to build hierarchy cache (extracted from GltfScene component)
+ * Helper function to build hierarchy cache (extracted from Gltf component)
  */
 function buildHierarchyCache(
   entity: PcEntity,

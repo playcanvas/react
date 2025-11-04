@@ -6,22 +6,23 @@ export { Entity } from './Entity.tsx';
 
 // GLTF Scene Modification API
 export { 
-  GltfScene, 
   Gltf, 
   Modify,
-  useGltfScene,
+  useGltf,
   useEntity,
   PathMatcher,
   defaultPathMatcher
-} from './gltf-scene/index.ts';
+} from './gltf/index.ts';
 export type {
-  GltfSceneProps,
+  GltfProps,
   Rule,
   Action,
   MergedRule,
   ModifyNodeProps,
-  ModifyComponentProps,
-  GltfSceneContextValue,
+  ModifyLightProps,
+  ModifyRenderProps,
+  ModifyCameraProps,
+  GltfContextValue,
   PathPredicate,
   EntityMetadata
-} from './gltf-scene/index.ts';
+} from './gltf/index.ts';
