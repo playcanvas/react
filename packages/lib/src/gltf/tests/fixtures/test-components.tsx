@@ -16,6 +16,8 @@ import { Modify } from '../../components/Modify.tsx';
 import { Application } from '../../../Application.tsx';
 import { Entity } from '../../../Entity.tsx';
 import { Render } from '../../../components/Render.tsx';
+import { Light } from '../../../components/Light.tsx';
+import { Camera } from '../../../components/Camera.tsx';
 import { AppContext } from '../../../hooks/index.ts';
 
 /**
@@ -568,6 +570,31 @@ export const AssetWithoutResourceWithSpy: React.FC<{
     <Application deviceTypes={['null']}>
       <Gltf asset={asset} key={asset.id} />
       <AppRootSpy onRootCaptured={onRootCaptured} />
+    </Application>
+  );
+};
+
+/**
+ * Add component to entity that already has that component type.
+ * 
+ * Tests the warning when trying to add a component (Light, Render, Camera) to an entity
+ * that already has that component. This should trigger a warnOnce warning suggesting
+ * to use Modify.ComponentName instead.
+ */
+export const AddComponentToExisting: React.FC<{
+  asset: Asset;
+  path: string;
+  component: 'light' | 'render' | 'camera';
+}> = ({ asset, path, component }) => {
+  return (
+    <Application deviceTypes={['null']}>
+      <Gltf asset={asset} key={asset.id}>
+        <Modify.Node path={path}>
+          {component === 'light' && <Light type="directional" intensity={2} />}
+          {component === 'render' && <Render type="box" />}
+          {component === 'camera' && <Camera fov={75} />}
+        </Modify.Node>
+      </Gltf>
     </Application>
   );
 };

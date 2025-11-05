@@ -5,6 +5,8 @@ import React from 'react';
 import { Gltf } from '../components/Gltf.tsx';
 import { Modify } from '../components/Modify.tsx';
 import { Application } from '../../Application.tsx';
+import { Light } from '../../components/Light.tsx';
+import { Render } from '../../components/Render.tsx';
 
 import {
   createSimpleRobot,
@@ -36,7 +38,8 @@ import {
   ConditionalRendering,
   NonMatchingPaths,
   GltfWithAppSpy,
-  AssetWithoutResourceWithSpy
+  AssetWithoutResourceWithSpy,
+  AddComponentToExisting
 } from './fixtures/test-components.tsx';
 
 describe('Gltf Integration Tests', () => {
@@ -694,11 +697,9 @@ describe('Gltf Integration Tests', () => {
       // --- ASSERT ---
       await waitFor(() => {
         // Check that the *actual* app.root from the context has no children
-        // The Application initializes asynchronously, so we need to wait for it
-        // When asset.resource is null, Gltf doesn't instantiate, so no entities should be added
         expect(contextSpy.current).not.toBeNull();
         expect(contextSpy.current!.children.length).toBe(0);
-      }, { timeout: 5000, interval: 100 });
+      });
     });
 
     it('should do nothing when paths match no entities', async () => {
@@ -720,6 +721,72 @@ describe('Gltf Integration Tests', () => {
         // The light should still exist and its intensity should be the original value
         expect(head.c.light).toBeDefined();
         expect((head.c.light as LightComponent).intensity).toBe(1);
+      });
+    });
+    
+    describe('Warnings', () => {
+
+      it('should warn when adding component to entity that already has that component', async () => {
+        // --- ARRANGE ---
+        const hierarchy = createSimpleRobot(app);
+        const asset = createMockGltfAsset(hierarchy, 1);
+        const head = findEntityByName(hierarchy, 'Head')!;
+        const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+      
+        // Check BEFORE state - entities already have components
+        expect(head.c.light).toBeDefined();
+        expect(leftArm.c.render).toBeDefined();
+      
+        // Spy on console.warn
+        const warnSpy = vi
+          .spyOn(console, 'warn')
+          .mockImplementation(() => {});
+      
+        try {
+          // --- ACT ---
+          // Add both Light to Head and Render to LeftArm in separate Modify.Nodes
+          render(
+            <Application deviceTypes={['null']}>
+              <Gltf asset={asset} key={asset.id}>
+                <Modify.Node path="RootNode.Body.Head">
+                  <Light type="directional" intensity={2} />
+                </Modify.Node>
+                <Modify.Node path="RootNode.Body.LeftArm">
+                  <Render type="box" />
+                </Modify.Node>
+              </Gltf>
+            </Application>
+          );
+      
+          // --- ASSERT ---
+          // warnOnce uses setTimeout, so we need to wait for both warnings
+          await waitFor(() => {
+            expect(warnSpy).toHaveBeenCalled();
+          });
+          
+          // Verify both warnings were called
+          const lightWarning = warnSpy.mock.calls.find(call => 
+            call[0] === '%c[PlayCanvas React]:' &&
+            typeof call[1] === 'string' &&
+            typeof call[2] === 'string' &&
+            call[2].includes('Cannot add <Light> component to entity "Head"')
+          );
+          expect(lightWarning).toBeDefined();
+          expect(lightWarning![2]).toContain('Entity already has a light component');
+          expect(lightWarning![2]).toContain('Use <Modify.Light> to modify the existing component');
+          
+          const renderWarning = warnSpy.mock.calls.find(call => 
+            call[0] === '%c[PlayCanvas React]:' &&
+            typeof call[1] === 'string' &&
+            typeof call[2] === 'string' &&
+            call[2].includes('Cannot add <Render> component to entity "LeftArm"')
+          );
+          expect(renderWarning).toBeDefined();
+          expect(renderWarning![2]).toContain('Entity already has a render component');
+          expect(renderWarning![2]).toContain('Use <Modify.Render> to modify the existing component');
+        } finally {
+          warnSpy.mockRestore();
+        }
       });
     });
   });
