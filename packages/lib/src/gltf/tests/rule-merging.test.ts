@@ -540,8 +540,14 @@ describe('Rule Merging and Conflict Resolution', () => {
 
       const merged = mergeRules('guid-123', [rule1, rule2]);
 
-      // Exact path (300) should beat wildcard with filter (60 = 10 + 50)
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
+      const winningAction = merged.componentActions.get('light') as ModifyComponentAction;
+      
+      // The winning rule is 'rule1'
+      expect(winningAction.ruleId).toBe('rule1'); 
+      // The action type is 'MODIFY_COMPONENT'
+      expect(winningAction.type).toBe(ActionType.MODIFY_COMPONENT);
+      // The props are from 'rule1'
+      expect(winningAction.props.remove).toBe(true);
     });
   });
 
