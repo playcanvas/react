@@ -22,9 +22,15 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
   useEffect(() => {
     // 1. Clear children if requested
     if (rule.clearChildren) {
-      const originalChildren = originalChildGUIDs.map(guid => {
-        return entity.children.find(c => (c as Entity).getGuid() === guid);
-      }).filter(Boolean) as Entity[]; // Filter out any that might already be gone
+      // Build a Map of current children by GUID for O(1) lookup
+      const childrenByGuid = new Map<string, Entity>(
+        entity.children.map(c => [(c as Entity).getGuid(), c as Entity])
+      );
+      
+      // Find original children efficiently
+      const originalChildren = originalChildGUIDs
+        .map(guid => childrenByGuid.get(guid))
+        .filter(Boolean) as Entity[];
       
       // Now, we only destroy the original children
       originalChildren.forEach(child => {

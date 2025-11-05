@@ -99,8 +99,8 @@ export class PathMatcher {
         // ** matches zero or more complete segments
         // Need to handle: A.**.B should match A.B, A.X.B, A.X.Y.B
         if (i === 0) {
-          // At start: match any number of segments with optional trailing dot
-          regexStr += '(?:(?:[^.]+\\.)?)*';
+          // At start: match zero or more segments (each ending with a dot)
+          regexStr += '(?:[^.]+\\.)*';
         } else if (i === patternParts.length - 1) {
           // At end: match zero or more segments with required leading dot
           regexStr += '(?:\\.(?:[^.]+))*';
