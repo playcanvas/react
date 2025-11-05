@@ -1,12 +1,11 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { act, render, waitFor } from '@testing-library/react';
-import { Application as PcApplication, Entity as PcEntity, NullGraphicsDevice, Asset } from 'playcanvas';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
+import { Application as PcApplication, Entity as PcEntity, NullGraphicsDevice, Asset, LightComponent, RenderComponent } from 'playcanvas';
 import React from 'react';
 import { Gltf } from '../components/Gltf.tsx';
 import { Modify } from '../components/Modify.tsx';
 import { Application } from '../../Application.tsx';
 import { Entity } from '../../Entity.tsx';
-import { Light } from '../../components/Light.tsx';
 import { Render } from '../../components/Render.tsx';
 import {
   createSimpleRobot,
@@ -15,6 +14,7 @@ import {
 } from '../../../test/fixtures/gltf-hierarchies.ts';
 import { createMockGltfAsset } from '../../../test/utils/gltf-asset-mock.ts';
 import { findEntityByName } from '../../../test/utils/gltf-entity-builder.ts';
+import { useApp } from '../../hooks/use-app.tsx';
 
 describe('Gltf Integration Tests', () => {
   let app: PcApplication;
@@ -454,32 +454,56 @@ describe('Gltf Integration Tests', () => {
       });
     });
 
-    it('should replace component', async () => {
+    it('should modify existing component props', async () => {
       // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
+      // Check BEFORE state
+      const light = head.c.light as LightComponent;
+      expect(head.c.light).toBeDefined();
+      expect(light.type).toBe('omni');
+      expect(light.color).not.deep.equal({r: 1, g: 0, b: 0});
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
             <Modify.Node path="RootNode.Body.Head">
+              {/* This is a MODIFY/MERGE action */}
               <Modify.Light type="directional" color="red" />
             </Modify.Node>
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        const light = head.c.light as LightComponent;
+        expect(light).toBeDefined();
+        expect(light.type).toBe('directional');
+        expect(light.color.r).toBe(1); // Assuming 'red' maps to [1,0,0]
       });
     });
   });
 
   describe('Multiple rules and conflict resolution', () => {
     it('should apply multiple non-conflicting rules', async () => {
-      const hierarchy = createSimpleRobot(app);
+      // --- ARRANGE ---
+      // (Assuming createSimpleRobot adds 'render' to LeftArm)
+      const hierarchy = createSimpleRobot(app); 
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      
+      const head = findEntityByName(hierarchy, 'Head')!;
+      const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+      
+      // Check BEFORE state
+      expect(head.c.light).toBeDefined();
+      expect(leftArm.c.render).toBeDefined();
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -492,16 +516,26 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        expect(head.c.light).toBeUndefined();
+        expect(leftArm.c.render).toBeUndefined();
       });
     });
 
     it('should resolve conflicts by specificity', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
+      // Check BEFORE state
+      expect(head.c.light).toBeDefined();
+      expect((head.c.light as LightComponent).intensity).toBe(1); // From fixture
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -517,17 +551,28 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        // More specific rule should win
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        // The high-spec rule won, so the light was NOT removed
+        expect(head.c.light).toBeDefined(); 
+        // And its intensity WAS modified
+        expect((head.c.light as LightComponent).intensity).toBe(2); 
       });
     });
 
     it('should handle rules affecting same entity', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
+      // Check BEFORE state
+      expect(head.c.light).toBeDefined();
+      expect(findEntityByName(head, 'Helmet')).toBeNull();
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -538,20 +583,36 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        expect(head.c.light).toBeUndefined();
+        
+        // The new entity should be added
+        const helmet = findEntityByName(head, 'Helmet');
+        expect(helmet).not.toBeNull();
+        expect(helmet!.parent).toBe(head);
       });
     });
   });
 
   describe('Predicate functions', () => {
     it('should match using predicate function', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+    
       const predicate = (entity: PcEntity) => entity.name.includes('Arm');
-
+    
+      const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+      const rightArm = findEntityByName(hierarchy, 'RightArm')!;
+    
+      // Check BEFORE state
+      expect(leftArm.c.render).toBeDefined();
+      expect(rightArm.c.render).toBeDefined();
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -561,80 +622,143 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        // Should match LeftArm and RightArm
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        // The predicate should have matched both entities
+        expect(leftArm.c.render).toBeUndefined();
+        expect(rightArm.c.render).toBeUndefined();
       });
     });
   });
 
   describe('Complex scenarios', () => {
     it('should handle complex modification chain', async () => {
+      // --- ARRANGE ---
       const hierarchy = createComplexScene(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+    
+      const sun = findEntityByName(hierarchy, 'Sun')!;
+      const playerHead = findEntityByName(findEntityByName(hierarchy, 'Player')!, 'Head')!;
+      
+      // This is the entity that has the render component
+      const enemyHead = findEntityByName(findEntityByName(hierarchy, 'Enemy')!, 'Head')!;
+    
+      // Check BEFORE state
+      expect(sun.c.light).toBeDefined(); // Rule 1 target
+      expect(findEntityByName(playerHead, 'HeadLight')).toBeNull(); // Rule 2 target
+      expect(enemyHead.c.render).toBeDefined(); // Rule 3 target
+      expect((enemyHead.c.render as RenderComponent).castShadows).toBe(false);
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
-            {/* Remove all lights globally */}
+            {/* Rule 1: Remove all lights */}
             <Modify.Node path="**[light]">
               <Modify.Light remove />
             </Modify.Node>
             
-            {/* Add custom light to player head */}
+            {/* Rule 2: Add light to player head */}
             <Modify.Node path="Scene.Characters.Player.Body.Head">
-              <Entity name="HeadLight">
-                <Light type="omni" color="cyan" intensity={2} />
-              </Entity>
+              <Entity name="HeadLight" />
             </Modify.Node>
             
-            {/* Modify all render components */}
+            {/* Rule 3: Modify all render components */}
             <Modify.Node path="**[render]">
               <Modify.Render castShadows={true} />
             </Modify.Node>
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        
+        // 1. Check Rule 1 (Remove)
+        expect(sun.c.light).toBeUndefined();
+        
+        // 2. Check Rule 2 (Add)
+        const headLight = findEntityByName(playerHead, 'HeadLight');
+        expect(headLight).not.toBeNull();
+        
+        // 3. Check Rule 3 (Modify)
+        expect((playerHead.c.render as RenderComponent).castShadows).toBe(true);
+        expect((enemyHead.c.render as RenderComponent).castShadows).toBe(true);
       });
     });
 
     it('should handle nested hierarchy modifications', async () => {
+      // --- ARRANGE ---
       const hierarchy = createComplexScene(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+    
+      // Get references for Rule 1
+      const environment = findEntityByName(hierarchy, 'Environment')!;
+      expect(findEntityByName(environment, 'Sun')).toBeDefined(); // Original child
+      expect(findEntityByName(environment, 'NewSun')).toBeNull(); // New child
+    
+      // Get references for Rule 2
+      const playerHead = findEntityByName(findEntityByName(hierarchy, 'Player')!, 'Head')!;
+      const enemyHead = findEntityByName(findEntityByName(hierarchy, 'Enemy')!, 'Head')!;
+      expect(findEntityByName(playerHead, 'Hat')).toBeNull();
+      expect(findEntityByName(enemyHead, 'Hat')).toBeNull();
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
-            {/* Clear Environment children */}
+            {/* Rule 1: Clear Environment children */}
             <Modify.Node path="Scene.Environment" clearChildren>
               <Entity name="NewSun">
-                <Light type="directional" />
+                {/* <Light type="directional" /> */}
               </Entity>
             </Modify.Node>
             
-            {/* Modify all character heads */}
+            {/* Rule 2: Modify all character heads */}
             <Modify.Node path="Scene.Characters.*.Body.Head">
               <Entity name="Hat" />
             </Modify.Node>
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state for Rule 1
+        expect(findEntityByName(environment, 'Sun')).toBeNull(); // Original is gone
+        const newSun = findEntityByName(environment, 'NewSun');
+        expect(newSun).not.toBeNull();
+        expect(newSun!.parent).toBe(environment);
+    
+        // Check AFTER state for Rule 2
+        const playerHat = findEntityByName(playerHead, 'Hat');
+        const enemyHat = findEntityByName(enemyHead, 'Hat');
+        expect(playerHat).not.toBeNull();
+        expect(playerHat!.parent).toBe(playerHead);
+        expect(enemyHat).not.toBeNull();
+        expect(enemyHat!.parent).toBe(enemyHead);
       });
     });
   });
 
   describe('React lifecycle', () => {
     it('should cleanup on unmount', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
+      // 1. Spy on the root entity's destroy method
+      const destroySpy = vi.spyOn(hierarchy, 'destroy');
+    
+      // Check BEFORE state
+      expect(head.c.light).toBeDefined();
+      expect(destroySpy).not.toHaveBeenCalled();
+    
+      // --- ACT 1: Render and wait for mods ---
       const { unmount } = render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -644,23 +768,29 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // 2. Wait for the component to be fully settled (light is removed)
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        expect(head.c.light).toBeUndefined();
       });
-
+    
+      // --- ACT 2: Unmount ---
       unmount();
-
-      // After unmount, cleanup should occur
+    
+      // --- ASSERT ---
+      // 3. Wait for the unmount's useEffect cleanup to run
       await waitFor(() => {
-        expect(true).toBe(true);
+        // 4. Check that destroy() was called
+        expect(destroySpy).toHaveBeenCalled();
       });
     });
 
     it('should update rules when props change', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
       const TestComponent = ({ removeLights }: { removeLights: boolean }) => (
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
@@ -672,68 +802,129 @@ describe('Gltf Integration Tests', () => {
           </Gltf>
         </Application>
       );
-
+    
+      // --- ACT 1 (Initial Render) ---
       const { rerender } = render(<TestComponent removeLights={false} />);
-
+    
+      // --- ASSERT 1 (Check "Before" State) ---
+      // Wait for the component to settle, then check the light
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // The light should exist because removeLights is false
+        expect(head.c.light).toBeDefined(); 
       });
-
+    
+      // --- ACT 2 (Rerender) ---
       rerender(<TestComponent removeLights={true} />);
-
+    
+      // --- ASSERT 2 (Check "After" State) ---
+      // Wait for the new rules to be applied
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // The light should now be gone
+        expect(head.c.light).toBeUndefined(); 
       });
     });
   });
 
   describe('Edge cases', () => {
-    it('should handle empty Gltf (no modifications)', async () => {
+    it('should handle empty Gltf', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
+    
+      // Check BEFORE state
+      expect(hierarchy.parent).toBeNull();
 
-      const { container } = render(
+      // This object will hold the *actual* app.root from the component tree
+      const contextSpy: { current: PcEntity | null } = { current: null };
+
+      // A helper component to capture the context
+      const AppSpy = () => {
+        // Use your hook to get the real app context
+        // Assuming useApp() returns the pc.Application instance
+        const appInstance = useApp();
+        contextSpy.current = appInstance.root;
+        return null;
+      };
+    
+      // --- ACT ---
+      render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id} />
+          <AppSpy />
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(container).toBeDefined();
+        // Check AFTER state - hierarchy should be added to the React Application's root
+        expect(hierarchy.parent).not.toBeNull();
+        expect(contextSpy.current).not.toBeNull();
+        expect(hierarchy.parent).toBe(contextSpy.current);
       });
     });
 
     it('should handle asset without resource', () => {
+      // --- ARRANGE ---
       const assetWithoutResource = {
         id: 1,
         resource: null
       } as unknown as Asset;
-
-      const { container } = render(
+    
+      const contextSpy: { current: PcEntity | null } = { current: null };
+    
+      // A helper component to capture the context
+      const AppSpy = () => {
+        const appInstance = useApp(); 
+        contextSpy.current = appInstance.root; // Capture the real app.root
+        return null;
+      };
+    
+      // --- ACT ---
+      render(
         <Application deviceTypes={['null']}>
           <Gltf asset={assetWithoutResource} key={assetWithoutResource.id} />
+          <AppSpy />
         </Application>
       );
-
-      expect(container).toBeDefined();
+    
+      // --- ASSERT ---
+      // No waitFor is needed, this is synchronous
+      waitFor(() => {
+      // Check that the *actual* app.root from the context has no children
+        expect(contextSpy.current).not.toBeNull();
+        expect(contextSpy.current!.children.length).toBe(0);
+      });
     });
 
-    it('should handle paths that match no entities', async () => {
+    it('should do nothing when paths match no entities', async () => {
+      // --- ARRANGE ---
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
-
+      const head = findEntityByName(hierarchy, 'Head')!;
+    
+      // Check BEFORE state
+      expect(head.c.light).toBeDefined();
+      expect((head.c.light as LightComponent).intensity).toBe(1);
+    
+      // --- ACT ---
       render(
         <Application deviceTypes={['null']}>
           <Gltf asset={asset} key={asset.id}>
+            {/* This path will not match any node */}
             <Modify.Node path="NonExistent.Path.Here">
               <Modify.Light remove />
+              <Modify.Light intensity={99} />
             </Modify.Node>
           </Gltf>
         </Application>
       );
-
+    
+      // --- ASSERT ---
       await waitFor(() => {
-        expect(hierarchy).toBeDefined();
+        // Check AFTER state
+        // The light should still exist and its intensity should be the original value
+        expect(head.c.light).toBeDefined();
+        expect((head.c.light as LightComponent).intensity).toBe(1);
       });
     });
   });

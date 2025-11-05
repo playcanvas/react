@@ -89,7 +89,7 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
 
   // Instantiate asset and build hierarchy cache
   useEffect(() => {
-    if (!asset || !asset.resource || !shouldInstantiate) {
+    if (!asset || !asset.resource || !shouldInstantiate || !parent) {
       return;
     }
 
@@ -114,7 +114,7 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
       setRootEntity(null);
       setHierarchyCache(new Map());
     };
-  }, [asset, shouldInstantiate]);
+  }, [asset, shouldInstantiate, parent]);
 
   // Process rules and resolve conflicts
   const processRules = useCallback(() => {

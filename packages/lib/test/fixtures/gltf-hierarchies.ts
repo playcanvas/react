@@ -22,7 +22,7 @@ export function createSimpleRobot(app: PcApplication): PcEntity {
             {
               name: 'Head',
               components: {
-                light: { type: 'point', intensity: 1 },
+                light: { type: 'omni', intensity: 1 },
                 render: {} // Add render to Head
               }
             },
@@ -122,7 +122,9 @@ export function createComplexScene(app: PcApplication): PcEntity {
                     {
                         name: 'Head',
                         components: {
-                            render: {}
+                            render: {
+                                castShadows: false
+                            }
                         },
                     }
                 ]
