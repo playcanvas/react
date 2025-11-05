@@ -33,7 +33,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('RootNode.Body.Head', metadata)).toBe(true);
@@ -48,7 +49,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('RootNode.Body.Head', metadata)).toBe(true);
@@ -64,7 +66,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(caseInsensitiveMatcher.matches('rootnode.body.head', metadata)).toBe(true);
@@ -81,7 +84,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('*.Body.Head', metadata)).toBe(true);
@@ -97,7 +101,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('*.*.Head', metadata)).toBe(true);
@@ -115,21 +120,24 @@ describe('PathMatcher', () => {
         entity: item1,
         path: 'Root.Item1',
         guid: item1.getGuid(),
-        name: 'Item1'
+        name: 'Item1',
+        originalChildGUIDs: []
       };
 
       const metadata2: EntityMetadata = {
         entity: item2,
         path: 'Root.Item2',
         guid: item2.getGuid(),
-        name: 'Item2'
+        name: 'Item2',
+        originalChildGUIDs: []
       };
 
       const metadataSpecial: EntityMetadata = {
         entity: special,
         path: 'Root.Special',
         guid: special.getGuid(),
-        name: 'Special'
+        name: 'Special',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('Root.*', metadata1)).toBe(true);
@@ -145,7 +153,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       // Single wildcard should only match one level
@@ -163,7 +172,8 @@ describe('PathMatcher', () => {
         entity: deepNode,
         path: 'Level0.Level1.Level2.Level3.Level4.DeepNode',
         guid: deepNode.getGuid(),
-        name: 'DeepNode'
+        name: 'DeepNode',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('Level0.**.DeepNode', metadata)).toBe(true);
@@ -180,14 +190,16 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       const bodyMetadata: EntityMetadata = {
         entity: body,
         path: 'RootNode.Body',
         guid: body.getGuid(),
-        name: 'Body'
+        name: 'Body',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('**', headMetadata)).toBe(true);
@@ -202,7 +214,8 @@ describe('PathMatcher', () => {
         entity: eyes,
         path: 'Scene.Characters.Player.Body.Head.Eyes',
         guid: eyes.getGuid(),
-        name: 'Eyes'
+        name: 'Eyes',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('Scene.**.Eyes', metadata)).toBe(true);
@@ -219,7 +232,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'Scene.Characters.Player.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('**.Head', metadata)).toBe(true);
@@ -238,14 +252,16 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       const armMetadata: EntityMetadata = {
         entity: leftArm,
         path: 'RootNode.Body.LeftArm',
         guid: leftArm.getGuid(),
-        name: 'LeftArm'
+        name: 'LeftArm',
+        originalChildGUIDs: []
       };
 
       // Head has light component
@@ -263,14 +279,16 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       const armMetadata: EntityMetadata = {
         entity: leftArm,
         path: 'RootNode.Body.LeftArm',
         guid: leftArm.getGuid(),
-        name: 'LeftArm'
+        name: 'LeftArm',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('RootNode.Body.Head[light]', headMetadata)).toBe(true);
@@ -287,14 +305,16 @@ describe('PathMatcher', () => {
         entity: keyLight,
         path: 'LightingRig.MainLights.KeyLight',
         guid: keyLight.getGuid(),
-        name: 'KeyLight'
+        name: 'KeyLight',
+        originalChildGUIDs: []
       };
 
       const geoMetadata: EntityMetadata = {
         entity: geometry,
         path: 'LightingRig.Geometry',
         guid: geometry.getGuid(),
-        name: 'Geometry'
+        name: 'Geometry',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('**[light]', lightMetadata)).toBe(true);
@@ -310,7 +330,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('[light]RootNode.Body.Head', metadata)).toBe(true);
@@ -330,14 +351,16 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       const armMetadata: EntityMetadata = {
         entity: leftArm,
         path: 'RootNode.Body.LeftArm',
         guid: leftArm.getGuid(),
-        name: 'LeftArm'
+        name: 'LeftArm',
+        originalChildGUIDs: []
       };
 
       const predicate = (entity: PcEntity) => entity.name.includes('Head');
@@ -354,7 +377,8 @@ describe('PathMatcher', () => {
         entity: head,
         path: 'RootNode.Body.Head',
         guid: head.getGuid(),
-        name: 'Head'
+        name: 'Head',
+        originalChildGUIDs: []
       };
 
       const predicate = (_entity: PcEntity, meta: EntityMetadata) => {
@@ -417,7 +441,8 @@ describe('PathMatcher', () => {
         entity: root,
         path: 'RootNode',
         guid: root.getGuid(),
-        name: 'RootNode'
+        name: 'RootNode',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('RootNode', metadata)).toBe(true);
@@ -441,14 +466,16 @@ describe('PathMatcher', () => {
         entity: nodeInBranch1,
         path: 'Root.Branch1.Node',
         guid: nodeInBranch1.getGuid(),
-        name: 'Node'
+        name: 'Node',
+        originalChildGUIDs: []
       };
 
       const metadata2: EntityMetadata = {
         entity: nodeInBranch2,
         path: 'Root.Branch2.Node',
         guid: nodeInBranch2.getGuid(),
-        name: 'Node'
+        name: 'Node',
+        originalChildGUIDs: []
       };
 
       // Path matching should distinguish between them
@@ -475,7 +502,8 @@ describe('PathMatcher', () => {
         entity,
         path: 'Node-With_Special.Chars',
         guid: entity.getGuid(),
-        name: 'Node-With_Special.Chars'
+        name: 'Node-With_Special.Chars',
+        originalChildGUIDs: []
       };
 
       expect(pathMatcher.matches('Node-With_Special.Chars', metadata)).toBe(true);

@@ -27,6 +27,7 @@ function buildHierarchyCache(
   cache.set(guid, {
     entity,
     path,
+    originalChildGUIDs: [],
     guid,
     name: entity.name
   });

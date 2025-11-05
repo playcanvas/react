@@ -38,8 +38,7 @@ import {
   ConditionalRendering,
   NonMatchingPaths,
   GltfWithAppSpy,
-  AssetWithoutResourceWithSpy,
-  AddComponentToExisting
+  AssetWithoutResourceWithSpy
 } from './fixtures/test-components.tsx';
 
 describe('Gltf Integration Tests', () => {

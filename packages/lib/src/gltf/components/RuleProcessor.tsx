@@ -3,9 +3,9 @@
 import React, { useEffect, ReactNode } from 'react';
 import { Entity, Component } from 'playcanvas';
 import { ParentContext } from '../../hooks/use-parent.tsx';
-import { MergedRule, ActionType, ModifyComponentAction } from '../types.ts';
+import { MergedRule, ActionType, ModifyComponentAction, SupportedComponentType } from '../types.ts';
 import { componentSchemaRegistry } from '../utils/schema-registry.ts';
-import { validatePropsPartial, applyProps, ComponentDefinition, Schema } from '../../utils/validation.ts';
+import { validatePropsPartial, applyProps, ComponentDefinition, Schema, warnOnce } from '../../utils/validation.ts';
 
 /**
  * Internal component that applies final merged rules to entities
@@ -99,6 +99,26 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
   if (rule.addChildren.length > 0) {
     rule.addChildren.forEach((child, index) => {
       if (React.isValidElement(child)) {
+        // Check if this is a component that already exists on the entity
+        const childType = child.type as { displayName?: string; name?: string };
+        const displayName = childType?.displayName || childType?.name;
+        
+        // Map component display names to component types
+        const componentTypeMap: Record<string, SupportedComponentType> = {
+          'Light': 'light',
+          'Render': 'render',
+          'Camera': 'camera'
+        };
+        
+        const componentType = componentTypeMap[displayName || ''];
+        if (componentType && entity.c?.[componentType]) {
+          warnOnce(
+            `Cannot add <${displayName}> component to entity "${entity.name}". ` +
+            `Entity already has a ${componentType} component. ` +
+            `Use <Modify.${displayName}> to modify the existing component, or <Modify.${displayName} remove> to remove it first.`
+          );
+        }
+        
         // Clone with unique key to ensure proper React reconciliation
         children.push(
           React.cloneElement(child, {
