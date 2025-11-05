@@ -23,8 +23,8 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
     // 1. Clear children if requested
     if (rule.clearChildren) {
       const originalChildren = originalChildGUIDs.map(guid => {
-        return entity.children.find(c => c.getGuid() === guid);
-      }).filter(Boolean); // Filter out any that might already be gone
+        return entity.children.find(c => (c as Entity).getGuid() === guid);
+      }).filter(Boolean) as Entity[]; // Filter out any that might already be gone
       
       // Now, we only destroy the original children
       originalChildren.forEach(child => {

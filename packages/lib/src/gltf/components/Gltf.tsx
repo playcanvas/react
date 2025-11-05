@@ -233,7 +233,7 @@ function buildHierarchyCache(
   const path = parentPath ? `${parentPath}.${entity.name}` : entity.name;
   const guid = entity.getGuid();
 
-  const originalChildGUIDs = entity.children.map((child) => child.getGuid());
+  const originalChildGUIDs = entity.children.map((child) => (child as Entity).getGuid());
   
   cache.set(guid, {
     entity,
