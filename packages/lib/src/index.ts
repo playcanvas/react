@@ -8,11 +8,11 @@ export { Entity } from './Entity.tsx';
 export { 
   Gltf, 
   Modify,
-  useGltf,
   useEntity,
   PathMatcher,
   defaultPathMatcher
 } from './gltf/index.ts';
+
 export type {
   GltfProps,
   Rule,
@@ -22,7 +22,6 @@ export type {
   ModifyLightProps,
   ModifyRenderProps,
   ModifyCameraProps,
-  GltfContextValue,
   PathPredicate,
   EntityMetadata
 } from './gltf/index.ts';

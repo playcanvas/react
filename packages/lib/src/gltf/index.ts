@@ -6,7 +6,6 @@ export type { GltfProps } from './components/Gltf.tsx';
 export { Modify } from './components/Modify.tsx';
 
 // Hooks
-export { useGltf } from './hooks/use-gltf.tsx';
 export { useEntity } from './hooks/use-entity.ts';
 
 // Types
@@ -17,8 +16,7 @@ export type {
   ModifyNodeProps,
   ModifyLightProps,
   ModifyRenderProps,
-  ModifyCameraProps,
-  GltfContextValue
+  ModifyCameraProps
 } from './types';
 
 // Utilities

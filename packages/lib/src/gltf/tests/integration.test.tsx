@@ -5,8 +5,7 @@ import React from 'react';
 import { Gltf } from '../components/Gltf.tsx';
 import { Modify } from '../components/Modify.tsx';
 import { Application } from '../../Application.tsx';
-import { Entity } from '../../Entity.tsx';
-import { Render } from '../../components/Render.tsx';
+
 import {
   createSimpleRobot,
   createComplexScene,
@@ -14,7 +13,31 @@ import {
 } from '../../../test/fixtures/gltf-hierarchies.ts';
 import { createMockGltfAsset } from '../../../test/utils/gltf-asset-mock.ts';
 import { findEntityByName } from '../../../test/utils/gltf-entity-builder.ts';
-import { useApp } from '../../hooks/use-app.tsx';
+import {
+  BasicGltf,
+  GltfWithModifications,
+  EmptyGltf,
+  RemoveComponentFromPath,
+  RemoveAllComponentsByFilter,
+  RemoveRenderWithWildcard,
+  RemoveWithMultiLevelWildcard,
+  RemoveWithCombinedPathAndFilter,
+  AddChildEntity,
+  AddMultipleChildren,
+  ClearChildrenAndReplace,
+  ModifyComponent,
+  ModifyComponentMultiple,
+  MultipleNonConflictingRules,
+  SpecificityConflictResolution,
+  SameEntityMultipleRules,
+  PredicateFunctionMatching,
+  ComplexModificationChain,
+  NestedHierarchyModifications,
+  ConditionalRendering,
+  NonMatchingPaths,
+  GltfWithAppSpy,
+  AssetWithoutResourceWithSpy
+} from './fixtures/test-components.tsx';
 
 describe('Gltf Integration Tests', () => {
   let app: PcApplication;
@@ -31,11 +54,7 @@ describe('Gltf Integration Tests', () => {
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
 
-      const { container } = render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id} render={true} />
-        </Application>
-      );
+      const { container } = render(<BasicGltf asset={asset} />);
 
       await waitFor(() => {
         expect(container).toBeDefined();
@@ -46,15 +65,7 @@ describe('Gltf Integration Tests', () => {
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
 
-      const { container } = render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id} render={false}>
-            <Modify.Node path="**[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      const { container } = render(<GltfWithModifications asset={asset} />);
 
       await waitFor(() => {
         expect(container).toBeDefined();
@@ -65,11 +76,7 @@ describe('Gltf Integration Tests', () => {
       const hierarchy = createSimpleRobot(app);
       const asset = createMockGltfAsset(hierarchy, 1);
 
-      const { container } = render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id} render={false} />
-        </Application>
-      );
+      const { container } = render(<EmptyGltf asset={asset} />);
 
       expect(container).toBeDefined();
     });
@@ -84,15 +91,7 @@ describe('Gltf Integration Tests', () => {
       expect(head).toBeDefined();
       expect(head?.c.light).toBeDefined();
       
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveComponentFromPath asset={asset} path="RootNode.Body.Head" />);
       
       await waitFor(() => {
         const head = findEntityByName(hierarchy, 'Head');
@@ -121,15 +120,7 @@ describe('Gltf Integration Tests', () => {
       expect(spot2.c.light).toBeDefined();
 
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="**[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveAllComponentsByFilter asset={asset} path="**[light]" />);
 
       // --- ASSERT ---
       await waitFor(() => {
@@ -153,15 +144,7 @@ describe('Gltf Integration Tests', () => {
       expect(head).toBeDefined();
       expect(head.c.light).toBeDefined(); // Correct "before" check
 
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveComponentFromPath asset={asset} path="RootNode.Body.Head" />);
 
       await waitFor(() => {
         expect(head.c.light).toBeUndefined(); 
@@ -184,15 +167,7 @@ describe('Gltf Integration Tests', () => {
       expect(rightArm.c.render).toBeDefined();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.*">
-              <Modify.Render remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveRenderWithWildcard asset={asset} path="RootNode.Body.*" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -215,15 +190,7 @@ describe('Gltf Integration Tests', () => {
       expect(playerHead.c.render).toBeDefined();
       expect(enemyHead.c.render).toBeDefined();
     
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="Scene.**.Head">
-              <Modify.Render remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveWithMultiLevelWildcard asset={asset} path="Scene.**.Head" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -252,15 +219,7 @@ describe('Gltf Integration Tests', () => {
       expect(spot2.c.light).toBeDefined();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveAllComponentsByFilter asset={asset} path="[light]" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -291,16 +250,7 @@ describe('Gltf Integration Tests', () => {
       expect(spot1.c.light).toBeDefined(); // Spot1 should exist
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {/* This path should ONLY match lights in the MainLights group */}
-            <Modify.Node path="LightingRig.MainLights.*[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<RemoveWithCombinedPathAndFilter asset={asset} path="LightingRig.MainLights.*[light]" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -329,17 +279,7 @@ describe('Gltf Integration Tests', () => {
       expect(findEntityByName(head, 'Helmet')).toBeNull(); // No helmet exists yet
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              <Entity name="Helmet">
-                <Render type="box" />
-              </Entity>
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<AddChildEntity asset={asset} path="RootNode.Body.Head" childName="Helmet" childType="box" />);
     
       await waitFor(() => {
         const helmet = findEntityByName(head, 'Helmet');
@@ -363,17 +303,7 @@ describe('Gltf Integration Tests', () => {
       expect(findEntityByName(body, 'Child3')).toBeNull();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body">
-              <Entity name="Child1" />
-              <Entity name="Child2" />
-              <Entity name="Child3" />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<AddMultipleChildren asset={asset} path="RootNode.Body" childNames={['Child1', 'Child2', 'Child3']} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -402,15 +332,7 @@ describe('Gltf Integration Tests', () => {
       expect(body.children.length).toBe(3); // Initial check
 
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body" clearChildren>
-              <Entity name="OnlyChild" />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<ClearChildrenAndReplace asset={asset} path="RootNode.Body" newChildName="OnlyChild" />);
 
       // --- ASSERT ---
       await waitFor(() => {
@@ -436,16 +358,7 @@ describe('Gltf Integration Tests', () => {
       expect(head.c.light['intensity']).toBe(1); // From the fixture
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              {/* This is a simple prop merge/overwrite */}
-              <Modify.Light intensity={2} />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<ModifyComponent asset={asset} path="RootNode.Body.Head" intensity={2} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -467,16 +380,7 @@ describe('Gltf Integration Tests', () => {
       expect(light.color).not.deep.equal({r: 1, g: 0, b: 0});
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              {/* This is a MODIFY/MERGE action */}
-              <Modify.Light type="directional" color="red" />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<ModifyComponentMultiple asset={asset} path="RootNode.Body.Head" type="directional" color="red" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -504,18 +408,7 @@ describe('Gltf Integration Tests', () => {
       expect(leftArm.c.render).toBeDefined();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              <Modify.Light remove />
-            </Modify.Node>
-            <Modify.Node path="RootNode.Body.LeftArm">
-              <Modify.Render remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<MultipleNonConflictingRules asset={asset} path1="RootNode.Body.Head" path2="RootNode.Body.LeftArm" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -537,19 +430,12 @@ describe('Gltf Integration Tests', () => {
     
       // --- ACT ---
       render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {/* Low specificity - remove all lights */}
-            <Modify.Node path="**[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-            
-            {/* High specificity - modify specific light */}
-            <Modify.Node path="RootNode.Body.Head">
-              <Modify.Light intensity={2} />
-            </Modify.Node>
-          </Gltf>
-        </Application>
+        <SpecificityConflictResolution 
+          asset={asset} 
+          lowSpecificityPath="**[light]" 
+          highSpecificityPath="RootNode.Body.Head"
+          intensity={2}
+        />
       );
     
       // --- ASSERT ---
@@ -573,16 +459,7 @@ describe('Gltf Integration Tests', () => {
       expect(findEntityByName(head, 'Helmet')).toBeNull();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path="RootNode.Body.Head">
-              <Modify.Light remove />
-              <Entity name="Helmet" />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<SameEntityMultipleRules asset={asset} path="RootNode.Body.Head" childName="Helmet" />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -613,15 +490,7 @@ describe('Gltf Integration Tests', () => {
       expect(rightArm.c.render).toBeDefined();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            <Modify.Node path={predicate}>
-              <Modify.Render remove />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<PredicateFunctionMatching asset={asset} predicate={predicate} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -652,26 +521,7 @@ describe('Gltf Integration Tests', () => {
       expect((enemyHead.c.render as RenderComponent).castShadows).toBe(false);
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {/* Rule 1: Remove all lights */}
-            <Modify.Node path="**[light]">
-              <Modify.Light remove />
-            </Modify.Node>
-            
-            {/* Rule 2: Add light to player head */}
-            <Modify.Node path="Scene.Characters.Player.Body.Head">
-              <Entity name="HeadLight" />
-            </Modify.Node>
-            
-            {/* Rule 3: Modify all render components */}
-            <Modify.Node path="**[render]">
-              <Modify.Render castShadows={true} />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<ComplexModificationChain asset={asset} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -707,23 +557,7 @@ describe('Gltf Integration Tests', () => {
       expect(findEntityByName(enemyHead, 'Hat')).toBeNull();
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {/* Rule 1: Clear Environment children */}
-            <Modify.Node path="Scene.Environment" clearChildren>
-              <Entity name="NewSun">
-                {/* <Light type="directional" /> */}
-              </Entity>
-            </Modify.Node>
-            
-            {/* Rule 2: Modify all character heads */}
-            <Modify.Node path="Scene.Characters.*.Body.Head">
-              <Entity name="Hat" />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<NestedHierarchyModifications asset={asset} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -791,20 +625,8 @@ describe('Gltf Integration Tests', () => {
       const asset = createMockGltfAsset(hierarchy, 1);
       const head = findEntityByName(hierarchy, 'Head')!;
     
-      const TestComponent = ({ removeLights }: { removeLights: boolean }) => (
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {removeLights && (
-              <Modify.Node path="**[light]">
-                <Modify.Light remove />
-              </Modify.Node>
-            )}
-          </Gltf>
-        </Application>
-      );
-    
       // --- ACT 1 (Initial Render) ---
-      const { rerender } = render(<TestComponent removeLights={false} />);
+      const { rerender } = render(<ConditionalRendering asset={asset} removeLights={false} />);
     
       // --- ASSERT 1 (Check "Before" State) ---
       // Wait for the component to settle, then check the light
@@ -814,7 +636,7 @@ describe('Gltf Integration Tests', () => {
       });
     
       // --- ACT 2 (Rerender) ---
-      rerender(<TestComponent removeLights={true} />);
+      rerender(<ConditionalRendering asset={asset} removeLights={true} />);
     
       // --- ASSERT 2 (Check "After" State) ---
       // Wait for the new rules to be applied
@@ -837,22 +659,12 @@ describe('Gltf Integration Tests', () => {
       // This object will hold the *actual* app.root from the component tree
       const contextSpy: { current: PcEntity | null } = { current: null };
 
-      // A helper component to capture the context
-      const AppSpy = () => {
-        // Use your hook to get the real app context
-        // Assuming useApp() returns the pc.Application instance
-        const appInstance = useApp();
-        contextSpy.current = appInstance.root;
-        return null;
+      const handleRootCaptured = (root: PcEntity) => {
+        contextSpy.current = root;
       };
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id} />
-          <AppSpy />
-        </Application>
-      );
+      render(<GltfWithAppSpy asset={asset} onRootCaptured={handleRootCaptured} />);
     
       // --- ASSERT ---
       await waitFor(() => {
@@ -863,7 +675,7 @@ describe('Gltf Integration Tests', () => {
       });
     });
 
-    it('should handle asset without resource', () => {
+    it('should handle asset without resource', async () => {
       // --- ARRANGE ---
       const assetWithoutResource = {
         id: 1,
@@ -871,29 +683,22 @@ describe('Gltf Integration Tests', () => {
       } as unknown as Asset;
     
       const contextSpy: { current: PcEntity | null } = { current: null };
-    
-      // A helper component to capture the context
-      const AppSpy = () => {
-        const appInstance = useApp(); 
-        contextSpy.current = appInstance.root; // Capture the real app.root
-        return null;
+
+      const handleRootCaptured = (root: PcEntity) => {
+        contextSpy.current = root;
       };
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={assetWithoutResource} key={assetWithoutResource.id} />
-          <AppSpy />
-        </Application>
-      );
+      render(<AssetWithoutResourceWithSpy asset={assetWithoutResource} onRootCaptured={handleRootCaptured} />);
     
       // --- ASSERT ---
-      // No waitFor is needed, this is synchronous
-      waitFor(() => {
-      // Check that the *actual* app.root from the context has no children
+      await waitFor(() => {
+        // Check that the *actual* app.root from the context has no children
+        // The Application initializes asynchronously, so we need to wait for it
+        // When asset.resource is null, Gltf doesn't instantiate, so no entities should be added
         expect(contextSpy.current).not.toBeNull();
         expect(contextSpy.current!.children.length).toBe(0);
-      });
+      }, { timeout: 5000, interval: 100 });
     });
 
     it('should do nothing when paths match no entities', async () => {
@@ -907,17 +712,7 @@ describe('Gltf Integration Tests', () => {
       expect((head.c.light as LightComponent).intensity).toBe(1);
     
       // --- ACT ---
-      render(
-        <Application deviceTypes={['null']}>
-          <Gltf asset={asset} key={asset.id}>
-            {/* This path will not match any node */}
-            <Modify.Node path="NonExistent.Path.Here">
-              <Modify.Light remove />
-              <Modify.Light intensity={99} />
-            </Modify.Node>
-          </Gltf>
-        </Application>
-      );
+      render(<NonMatchingPaths asset={asset} path="NonExistent.Path.Here" />);
     
       // --- ASSERT ---
       await waitFor(() => {
