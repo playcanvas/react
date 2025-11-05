@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { Rule, MergedRule, ActionType } from '../types.ts';
+import { Rule, MergedRule, ActionType, ModifyComponentAction } from '../types.ts';
 import { PathMatcher } from '../utils/path-matcher.ts';
 import { ReactNode } from 'react';
 
@@ -35,11 +35,9 @@ function mergeRules(entityGuid: string, rules: Rule[]): MergedRule {
           break;
         }
 
-        case ActionType.MODIFY_COMPONENT:
-        case ActionType.REMOVE_COMPONENT:
-        case ActionType.REPLACE_COMPONENT: {
+        case ActionType.MODIFY_COMPONENT: {
           // For component actions, highest specificity wins per component type
-          const componentAction = action as { componentType: string };
+          const componentAction = action as ModifyComponentAction;
           if (!merged.componentActions.has(componentAction.componentType)) {
             merged.componentActions.set(componentAction.componentType, action);
           }
@@ -67,8 +65,9 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: 300,
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'rule1',
             specificity: 300
           }
@@ -79,7 +78,7 @@ describe('Rule Merging and Conflict Resolution', () => {
 
       expect(merged.entityGuid).toBe('guid-123');
       expect(merged.componentActions.size).toBe(1);
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.REMOVE_COMPONENT);
+      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
     });
 
     it('should handle multiple actions from single rule', () => {
@@ -89,15 +88,16 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: 300,
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'rule1',
             specificity: 300
           },
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'render',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'rule1',
             specificity: 300
           }
@@ -107,7 +107,7 @@ describe('Rule Merging and Conflict Resolution', () => {
       const merged = mergeRules('guid-123', [rule]);
 
       expect(merged.componentActions.size).toBe(2);
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.REMOVE_COMPONENT);
+      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
       expect(merged.componentActions.get('render')?.type).toBe(ActionType.MODIFY_COMPONENT);
     });
   });
@@ -120,8 +120,9 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: 1,
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'low',
             specificity: 1
           }
@@ -136,7 +137,7 @@ describe('Rule Merging and Conflict Resolution', () => {
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'high',
             specificity: 300
           }
@@ -159,8 +160,9 @@ describe('Rule Merging and Conflict Resolution', () => {
           specificity: 1,
           actions: [
             {
-              type: ActionType.REMOVE_COMPONENT,
+              type: ActionType.MODIFY_COMPONENT,
               componentType: 'light',
+              props: { remove: true },
               ruleId: 'rule1',
               specificity: 1
             }
@@ -174,7 +176,7 @@ describe('Rule Merging and Conflict Resolution', () => {
             {
               type: ActionType.MODIFY_COMPONENT,
               componentType: 'light',
-              renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+              props: {},
               ruleId: 'rule2',
               specificity: 120
             }
@@ -186,9 +188,9 @@ describe('Rule Merging and Conflict Resolution', () => {
           specificity: 300,
           actions: [
             {
-              type: ActionType.REPLACE_COMPONENT,
+              type: ActionType.MODIFY_COMPONENT,
               componentType: 'light',
-              replacement: null as unknown as React.ReactElement,
+              props: {},
               ruleId: 'rule3',
               specificity: 300
             }
@@ -199,7 +201,7 @@ describe('Rule Merging and Conflict Resolution', () => {
       const merged = mergeRules('guid-123', rules);
 
       // Highest specificity (300) should win
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.REPLACE_COMPONENT);
+      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
       expect(merged.componentActions.get('light')?.ruleId).toBe('rule3');
     });
 
@@ -210,8 +212,9 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: 300,
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'rule1',
             specificity: 300
           }
@@ -226,7 +229,7 @@ describe('Rule Merging and Conflict Resolution', () => {
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'render',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'rule2',
             specificity: 210
           }
@@ -236,7 +239,7 @@ describe('Rule Merging and Conflict Resolution', () => {
       const merged = mergeRules('guid-123', [rule1, rule2]);
 
       expect(merged.componentActions.size).toBe(2);
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.REMOVE_COMPONENT);
+      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
       expect(merged.componentActions.get('render')?.type).toBe(ActionType.MODIFY_COMPONENT);
     });
   });
@@ -384,15 +387,16 @@ describe('Rule Merging and Conflict Resolution', () => {
             specificity: 300
           },
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'complex',
             specificity: 300
           },
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'render',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'complex',
             specificity: 300
           },
@@ -420,14 +424,16 @@ describe('Rule Merging and Conflict Resolution', () => {
           specificity: 1,
           actions: [
             {
-              type: ActionType.REMOVE_COMPONENT,
+              type: ActionType.MODIFY_COMPONENT,
               componentType: 'light',
+              props: { remove: true },
               ruleId: 'rule1',
               specificity: 1
             },
             {
-              type: ActionType.REMOVE_COMPONENT,
+              type: ActionType.MODIFY_COMPONENT,
               componentType: 'camera',
+              props: { remove: true },
               ruleId: 'rule1',
               specificity: 1
             }
@@ -441,7 +447,7 @@ describe('Rule Merging and Conflict Resolution', () => {
             {
               type: ActionType.MODIFY_COMPONENT,
               componentType: 'light',
-              renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+              props: {},
               ruleId: 'rule2',
               specificity: 201
             }
@@ -453,9 +459,9 @@ describe('Rule Merging and Conflict Resolution', () => {
           specificity: 500,
           actions: [
             {
-              type: ActionType.REPLACE_COMPONENT,
+              type: ActionType.MODIFY_COMPONENT,
               componentType: 'camera',
-              replacement: null as unknown as React.ReactElement,
+              props: {},
               ruleId: 'rule3',
               specificity: 500
             },
@@ -476,7 +482,7 @@ describe('Rule Merging and Conflict Resolution', () => {
       expect(merged.componentActions.get('light')?.ruleId).toBe('rule2');
 
       // Camera: rule3 wins (specificity 500 > 1)
-      expect(merged.componentActions.get('camera')?.type).toBe(ActionType.REPLACE_COMPONENT);
+      expect(merged.componentActions.get('camera')?.type).toBe(ActionType.MODIFY_COMPONENT);
       expect(merged.componentActions.get('camera')?.ruleId).toBe('rule3');
 
       // Children should be added
@@ -508,8 +514,9 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: pathMatcher.getSpecificity('RootNode.Body.Head'),
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'rule1',
             specificity: pathMatcher.getSpecificity('RootNode.Body.Head')
           }
@@ -524,7 +531,7 @@ describe('Rule Merging and Conflict Resolution', () => {
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'rule2',
             specificity: pathMatcher.getSpecificity('RootNode.*[light]')
           }
@@ -534,7 +541,7 @@ describe('Rule Merging and Conflict Resolution', () => {
       const merged = mergeRules('guid-123', [rule1, rule2]);
 
       // Exact path (300) should beat wildcard with filter (60 = 10 + 50)
-      expect(merged.componentActions.get('light')?.type).toBe(ActionType.REMOVE_COMPONENT);
+      expect(merged.componentActions.get('light')?.type).toBe(ActionType.MODIFY_COMPONENT);
     });
   });
 
@@ -546,8 +553,9 @@ describe('Rule Merging and Conflict Resolution', () => {
         specificity: 300,
         actions: [
           {
-            type: ActionType.REMOVE_COMPONENT,
+            type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
+            props: { remove: true },
             ruleId: 'rule1',
             specificity: 300
           }
@@ -562,7 +570,7 @@ describe('Rule Merging and Conflict Resolution', () => {
           {
             type: ActionType.MODIFY_COMPONENT,
             componentType: 'light',
-            renderProp: (props: Record<string, unknown>) => props as unknown as React.ReactElement,
+            props: {},
             ruleId: 'rule2',
             specificity: 300
           }
