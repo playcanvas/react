@@ -2,7 +2,7 @@
  * Examples demonstrating the GLTF Declarative Modification API
  * 
  * This file contains various usage examples showing how to use the
- * Gltf, Gltf, and Modify components to declaratively modify
+ * Gltf and Modify components to declaratively modify
  * loaded GLTF assets.
  */
 
