@@ -167,7 +167,7 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
     // This effect now runs ONLY when the cache is ready
     // or when the rules have *actually* changed.
     processRules();
-  }, [processRules, hierarchyCache, rulesVersion]); // <
+  }, [processRules, hierarchyCache, rulesVersion]);
 
   // Add root entity to parent scene (merged from Gltf component)
   useEffect(() => {
