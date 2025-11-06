@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, ReactNode } from 'react';
+import React, { useEffect, ReactNode, useRef } from 'react';
 import { Entity, Component } from 'playcanvas';
 import { ParentContext } from '../../hooks/use-parent.tsx';
 import { MergedRule, ActionType, ModifyComponentAction, SupportedComponentType } from '../types.ts';
@@ -18,8 +18,21 @@ export interface RuleProcessorProps {
 }
 
 export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, originalChildGUIDs }) => {
+  // Store original component values to ensure functional updates always use original values
+  // Map structure: componentType -> propName -> originalValue
+  const originalValuesRef = useRef<Map<string, Map<string, unknown>>>(new Map());
+  
+  // Track which entity we captured originals for, so we re-capture if entity changes
+  const capturedEntityRef = useRef<Entity | null>(null);
+  
   // Apply modifications in a batched effect
   useEffect(() => {
+    // Re-capture originals if entity changed
+    if (capturedEntityRef.current !== entity) {
+      originalValuesRef.current.clear();
+      capturedEntityRef.current = entity;
+    }
+    
     // 1. Clear children if requested
     if (rule.clearChildren) {
       // Build a Map of current children by GUID for O(1) lookup
@@ -39,7 +52,34 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
       });
     }
 
-    // 2. Apply component actions with prop merging using component schemas
+    // 2. First pass: Capture original values for all functional updates
+    for (const [componentType, action] of rule.componentActions.entries()) {
+      if (action.type !== ActionType.MODIFY_COMPONENT) continue;
+      
+      const existingComponent = entity.c?.[componentType];
+      if (!existingComponent) continue;
+
+      const modifyAction = action as ModifyComponentAction;
+      const { remove, ...mergeProps } = modifyAction.props;
+
+      if (remove) continue; // Skip removal actions for capturing
+
+      // Capture original values for functional updates
+      if (!originalValuesRef.current.has(componentType)) {
+        originalValuesRef.current.set(componentType, new Map());
+      }
+      const comp = existingComponent as unknown as Record<string, unknown>;
+      const originalValues = originalValuesRef.current.get(componentType)!;
+      
+      for (const propName in mergeProps) {
+        const propValue = mergeProps[propName];
+        if (typeof propValue === 'function' && !originalValues.has(propName)) {
+          originalValues.set(propName, comp[propName]);
+        }
+      }
+    }
+
+    // 3. Second pass: Apply component actions with prop merging using component schemas
     for (const [componentType, action] of rule.componentActions.entries()) {
       if (action.type !== ActionType.MODIFY_COMPONENT) continue;
       
@@ -68,14 +108,17 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
       const comp = existingComponent as unknown as Record<string, unknown>;
       const schema = componentDef.schema as Schema<Record<string, unknown>, Component>;
       
+      const originalValues = originalValuesRef.current.get(componentType);
+      
       for (const propName in mergeProps) {
         const propValue = mergeProps[propName];
         
         if (typeof propValue === 'function') {
           // Functional update (e.g., intensity={(val) => val * 2})
-          // Get current value from component and execute function
-          const currentValue = comp[propName];
-          propsToValidate[propName] = propValue(currentValue);
+          // Always use original value if captured, otherwise fall back to current value
+          const originalValue = originalValues?.get(propName);
+          const valueToUse = originalValue !== undefined ? originalValue : comp[propName];
+          propsToValidate[propName] = propValue(valueToUse);
         } else {
           // Direct value
           propsToValidate[propName] = propValue;
