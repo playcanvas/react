@@ -87,8 +87,18 @@ export class PathMatcher {
       return true;
     }
 
-    // Split pattern into parts
-    const patternParts = normalizedPattern.split('.');
+    // Handle empty pattern - should not match anything
+    if (normalizedPattern === '') {
+      return false;
+    }
+
+    // Split pattern into parts and filter out empty segments
+    const patternParts = normalizedPattern.split('.').filter(p => p !== '');
+    
+    // If all parts were empty (e.g., ".." or "."), return false
+    if (patternParts.length === 0) {
+      return false;
+    }
     
     // Build regex string with special handling for **
     let regexStr = '^';

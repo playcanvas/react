@@ -467,6 +467,107 @@ describe('useEntity hook', () => {
       });
     });
 
+    it('should support component filters', async () => {
+      const hierarchy = createSimpleRobot(app);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      const body = findEntityByName(hierarchy, 'Body')!;
+      const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+
+      let result: PcEntity | PcEntity[] | null = null;
+      const onResult = (r: PcEntity | PcEntity[] | null) => {
+        result = r;
+      };
+
+      render(
+        <Application deviceTypes={['null']}>
+          <GltfWrapper rootEntity={hierarchy}>
+            <TestComponent path="**[light]" onResult={onResult} />
+          </GltfWrapper>
+        </Application>
+      );
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+        // Component filter with ** should return array (wildcard pattern)
+        expect(Array.isArray(result)).toBe(true);
+        const resultArray = result as PcEntity[];
+        // Should find Head which has a light component
+        expect(resultArray.length).toBeGreaterThan(0);
+        expect(resultArray.some(e => e === head)).toBe(true);
+        // Should not find Body or LeftArm (they don't have lights)
+        expect(resultArray.some(e => e === body)).toBe(false);
+        expect(resultArray.some(e => e === leftArm)).toBe(false);
+      });
+    });
+
+    it('should support component filters with wildcards', async () => {
+      const hierarchy = createSimpleRobot(app);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      const body = findEntityByName(hierarchy, 'Body')!;
+      const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+      const rightArm = findEntityByName(hierarchy, 'RightArm')!;
+
+      let result: PcEntity | PcEntity[] | null = null;
+      const onResult = (r: PcEntity | PcEntity[] | null) => {
+        result = r;
+      };
+
+      render(
+        <Application deviceTypes={['null']}>
+          <GltfWrapper rootEntity={hierarchy}>
+            <TestComponent path="*[render]" onResult={onResult} />
+          </GltfWrapper>
+        </Application>
+      );
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        const resultArray = result as PcEntity[];
+        // *[render] from RootNode should only match direct children with render
+        // Body is the only direct child of RootNode with render
+        expect(resultArray.length).toBe(1);
+        expect(resultArray).toContain(body);
+        // Should not find Head, LeftArm, RightArm (they're nested, not direct children)
+        expect(resultArray).not.toContain(head);
+        expect(resultArray).not.toContain(leftArm);
+        expect(resultArray).not.toContain(rightArm);
+      });
+    });
+
+    it('should support component filters with multi-level wildcards', async () => {
+      const hierarchy = createSimpleRobot(app);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      const body = findEntityByName(hierarchy, 'Body')!;
+      const leftArm = findEntityByName(hierarchy, 'LeftArm')!;
+      const rightArm = findEntityByName(hierarchy, 'RightArm')!;
+
+      let result: PcEntity | PcEntity[] | null = null;
+      const onResult = (r: PcEntity | PcEntity[] | null) => {
+        result = r;
+      };
+
+      render(
+        <Application deviceTypes={['null']}>
+          <GltfWrapper rootEntity={hierarchy}>
+            <TestComponent path="**[render]" onResult={onResult} />
+          </GltfWrapper>
+        </Application>
+      );
+
+      await waitFor(() => {
+        expect(result).toBeDefined();
+        expect(Array.isArray(result)).toBe(true);
+        const resultArray = result as PcEntity[];
+        // **[render] should match all descendants with render components
+        expect(resultArray.length).toBeGreaterThanOrEqual(3);
+        expect(resultArray).toContain(body);
+        expect(resultArray).toContain(head);
+        expect(resultArray).toContain(leftArm);
+        expect(resultArray).toContain(rightArm);
+      });
+    });
+
     it('should handle empty hierarchy', async () => {
       const rootEntity = new PcEntity('EmptyRoot', app);
 

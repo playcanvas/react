@@ -4,10 +4,11 @@ import { Entity } from 'playcanvas';
 import { useMemo } from 'react';
 import { useParent } from '../../hooks/use-parent.tsx';
 import { useGltf } from './use-gltf.tsx';
-import { PathPredicate, EntityMetadata } from '../utils/path-matcher.ts';
+import { PathPredicate, EntityMetadata, PathMatcher } from '../utils/path-matcher.ts';
 
 /**
  * Hook to find entities by path relative to the current parent context
+ * Uses PathMatcher for consistent path matching with Modify.Node
  * 
  * @param path - String path or predicate function to match entities
  * @returns The matched entity, array of entities (for wildcards), or null if not found
@@ -22,13 +23,16 @@ import { PathPredicate, EntityMetadata } from '../utils/path-matcher.ts';
  * 
  * // Find with wildcard
  * const allChildren = useEntity('*');
+ * 
+ * // Find with component filter
+ * const lights = useEntity('*[light]');
  * ```
  */
 export function useEntity(
   path: string | PathPredicate
 ): Entity | Entity[] | null {
   const parentEntity = useParent();
-  const { hierarchyCache } = useGltf();
+  const { hierarchyCache, pathMatcher } = useGltf();
 
   return useMemo(() => {
     // If path is a predicate function
@@ -36,10 +40,9 @@ export function useEntity(
       return findEntitiesByPredicate(parentEntity, path, hierarchyCache);
     }
 
-    // If path is a string, use relative tree traversal
-    const segments = path.split('.');
-    return findByPathSegments(parentEntity, segments);
-  }, [path, parentEntity, hierarchyCache]);
+    // Use PathMatcher for string paths - ensures consistency with Modify.Node
+    return findEntitiesByPattern(parentEntity, path, pathMatcher);
+  }, [path, parentEntity, hierarchyCache, pathMatcher]);
 }
 
 /**
@@ -71,100 +74,56 @@ function findEntitiesByPredicate(
 }
 
 /**
- * Helper to find entities by path segments using relative tree traversal
- * Much more efficient than global cache search - only searches relevant subtree
+ * Helper to find entities by pattern using PathMatcher
+ * Traverses the subtree relative to parent and builds relative paths
+ * Uses PathMatcher.match() to check if pattern matches relative path
  */
-function findByPathSegments(
-  entity: Entity,
-  pathSegments: string[]
+function findEntitiesByPattern(
+  rootEntity: Entity,
+  pattern: string,
+  pathMatcher: PathMatcher
 ): Entity | Entity[] | null {
-  if (!entity || pathSegments.length === 0) return null;
+  if (!rootEntity) return null;
 
-  const currentSegment = pathSegments[0];
-  const remainingSegments = pathSegments.slice(1);
+  const matches: Entity[] = [];
+  
+  // Build relative paths as we traverse the subtree
+  // Relative path is empty for root, "Child" for direct children, "Child.Grandchild" for nested, etc.
+  function traverse(entity: Entity, relativePath: string) {
+    // Check if this entity matches the pattern using PathMatcher
+    // PathMatcher.match() handles component filters, wildcards, etc.
+    // For root entity, relativePath is empty string, so pattern "" would match it
+    // For children, relativePath is like "Body" or "Body.Head"
+    if (pathMatcher.match(pattern, relativePath, entity)) {
+      matches.push(entity);
+    }
 
-  // Handle single-level wildcard (*)
-  if (currentSegment === '*') {
-    const matches: Entity[] = [];
+    // Traverse children, building relative paths
     for (const child of entity.children) {
-      if (remainingSegments.length === 0) {
-        // Matched the last '*' - add this child
-        matches.push(child as Entity);
-      } else {
-        // Continue searching deeper
-        const result = findByPathSegments(child as Entity, remainingSegments);
-        if (result) {
-          if (Array.isArray(result)) {
-            matches.push(...result);
-          } else {
-            matches.push(result);
-          }
-        }
-      }
+      const childEntity = child as Entity;
+      const childName = childEntity.name;
+      // Build relative path: empty for root's children, "Parent.Child" for nested
+      const childRelativePath = relativePath ? `${relativePath}.${childName}` : childName;
+      traverse(childEntity, childRelativePath);
     }
-    return matches.length > 0 ? matches : null;
   }
 
-  // Handle multi-level wildcard (**)
-  if (currentSegment === '**') {
-    const matches: Entity[] = [];
-    
-    // ** matches zero or more levels
-    if (remainingSegments.length === 0) {
-      // ** at end matches all descendants
-      function collectAll(e: Entity) {
-        matches.push(e);
-        for (const child of e.children) {
-          collectAll(child as Entity);
-        }
-      }
-      for (const child of entity.children) {
-        collectAll(child as Entity);
-      }
-    } else {
-      // ** in middle - try matching at current level and all descendant levels
-      function searchDeep(e: Entity) {
-        const result = findByPathSegments(e, remainingSegments);
-        if (result) {
-          if (Array.isArray(result)) {
-            matches.push(...result);
-          } else {
-            matches.push(result);
-          }
-        }
-        for (const child of e.children) {
-          searchDeep(child as Entity);
-        }
-      }
-      
-      // Try matching from current level
-      const currentResult = findByPathSegments(entity, remainingSegments);
-      if (currentResult) {
-        if (Array.isArray(currentResult)) {
-          matches.push(...currentResult);
-        } else {
-          matches.push(currentResult);
-        }
-      }
-      
-      // Search all descendants
-      for (const child of entity.children) {
-        searchDeep(child as Entity);
-      }
-    }
-    
-    return matches.length > 0 ? matches : null;
+  // Start traversal from root entity with empty relative path
+  // This means patterns like "Body" will match direct children, "Body.Head" will match nested
+  traverse(rootEntity, '');
+
+  // Return single entity if one match, array if multiple, null if none
+  // For wildcard patterns (* or **), always return array even if single match
+  const hasWildcards = pattern.includes('*');
+  
+  if (matches.length === 0) {
+    return null;
+  } else if (matches.length === 1 && !hasWildcards) {
+    // Exact path with single match - return single entity
+    return matches[0];
+  } else {
+    // Multiple matches or wildcard pattern - return array
+    return matches;
   }
-
-  // Handle exact segment match
-  const childEntity = entity.findByName(currentSegment) as Entity | null;
-  if (!childEntity) return null;
-
-  if (remainingSegments.length === 0) {
-    return childEntity; // Found the entity
-  }
-
-  // Recurse deeper
-  return findByPathSegments(childEntity, remainingSegments);
 }
 
