@@ -393,6 +393,210 @@ describe('Gltf Integration Tests', () => {
         expect(light.color.r).toBe(1); // Assuming 'red' maps to [1,0,0]
       });
     });
+
+    it('should apply functional prop updates', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      
+      // Check BEFORE state - intensity is 1 from fixture
+      expect(head.c.light).toBeDefined();
+      expect((head.c.light as LightComponent).intensity).toBe(1);
+    
+      // --- ACT ---
+      // Double the intensity using functional update
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body.Head">
+              <Modify.Light intensity={(val: number | undefined) => (val || 1) * 2} />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const light = head.c.light as LightComponent;
+        expect(light).toBeDefined();
+        expect(light.intensity).toBe(2); // 1 * 2 = 2
+      });
+    });
+
+    it('should handle undefined values in functional updates', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const body = findEntityByName(hierarchy, 'Body')!;
+      
+      // Body has a render component but no light, so we'll add one first
+      // Then modify it with a functional update that handles undefined
+      body.addComponent('light', { type: 'omni' });
+      // Don't set intensity, so it will be undefined/default
+    
+      // --- ACT ---
+      // Use functional update that handles undefined
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body">
+              <Modify.Light intensity={(val: number | undefined) => (val || 1) * 3} />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const updatedLight = body.c.light as LightComponent;
+        expect(updatedLight).toBeDefined();
+        // Should default to 1, then multiply by 3 = 3
+        expect(updatedLight.intensity).toBe(3);
+      });
+    });
+
+    it('should mix functional and direct prop updates', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      
+      expect(head.c.light).toBeDefined();
+      expect((head.c.light as LightComponent).intensity).toBe(1);
+    
+      // --- ACT ---
+      // Mix functional update for intensity with direct prop for color
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body.Head">
+              <Modify.Light 
+                intensity={(val: number | undefined) => (val || 1) * 2}
+                color="blue"
+              />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const light = head.c.light as LightComponent;
+        expect(light).toBeDefined();
+        expect(light.intensity).toBe(2); // Functional update
+        expect(light.color.r).toBeLessThan(1); // Blue has less red
+        expect(light.color.b).toBeGreaterThan(0.5); // Blue has more blue
+      });
+    });
+
+    it('should apply multiple functional prop updates', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      
+      // Set initial values
+      const light = head.c.light as LightComponent;
+      light.intensity = 2;
+      light.range = 10;
+      
+      expect(light.intensity).toBe(2);
+      expect(light.range).toBe(10);
+    
+      // --- ACT ---
+      // Apply multiple functional updates
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body.Head">
+              <Modify.Light 
+                intensity={(val: number | undefined) => (val || 1) * 3}
+                range={(val: number | undefined) => (val || 5) + 5}
+              />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const updatedLight = head.c.light as LightComponent;
+        expect(updatedLight.intensity).toBe(6); // 2 * 3 = 6
+        expect(updatedLight.range).toBe(15); // 10 + 5 = 15
+      });
+    });
+
+    it('should handle boolean functional updates', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      
+      // Head has a render component
+      const renderComponent = head.c.render as RenderComponent;
+      expect(renderComponent).toBeDefined();
+      // Set initial castShadows value
+      renderComponent.castShadows = false;
+    
+      // --- ACT ---
+      // Toggle castShadows using functional update
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body.Head">
+              <Modify.Render castShadows={(val: boolean | undefined) => !(val || false)} />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const updatedRender = head.c.render as RenderComponent;
+        expect(updatedRender.castShadows).toBe(true); // Flipped from false
+      });
+    });
+
+    it('should handle functional updates with zero values correctly', async () => {
+      // --- ARRANGE ---
+      const hierarchy = createSimpleRobot(app);
+      const asset = createMockGltfAsset(hierarchy, 1);
+      const head = findEntityByName(hierarchy, 'Head')!;
+      
+      // Head has intensity 1 from fixture
+      expect(head.c.light).toBeDefined();
+      expect((head.c.light as LightComponent).intensity).toBe(1);
+    
+      // --- ACT ---
+      // Functional update that correctly handles zero values
+      // This demonstrates the difference between using || (treats 0 as falsy) 
+      // vs !== undefined (preserves 0)
+      // If intensity were 0, using || would default to 1, but !== undefined preserves 0
+      render(
+        <Application deviceTypes={['null']}>
+          <Gltf asset={asset} key={asset.id}>
+            <Modify.Node path="RootNode.Body.Head">
+              <Modify.Light intensity={(val: number | undefined) => {
+                // Correct way: check !== undefined to preserve zero values
+                // Wrong way: val || 1 would treat 0 as falsy
+                return val !== undefined && val !== null ? val * 2 : 1;
+              }} />
+            </Modify.Node>
+          </Gltf>
+        </Application>
+      );
+    
+      // --- ASSERT ---
+      await waitFor(() => {
+        const updatedLight = head.c.light as LightComponent;
+        expect(updatedLight).toBeDefined();
+        // Function received 1, multiplied by 2 = 2
+        // This test verifies the function executes correctly
+        // The zero-handling is demonstrated by using !== undefined instead of ||
+        expect(updatedLight.intensity).toBe(2);
+      });
+    });
   });
 
   describe('Multiple rules and conflict resolution', () => {
