@@ -2,7 +2,7 @@
 
 import { Entity } from 'playcanvas';
 import { useMemo } from 'react';
-import { useParent } from '../../hooks/use-parent.ts';
+import { useParent } from '../../hooks/use-parent.tsx';
 import { useGltf } from './use-gltf.tsx';
 import { PathPredicate, EntityMetadata } from '../utils/path-matcher.ts';
 
