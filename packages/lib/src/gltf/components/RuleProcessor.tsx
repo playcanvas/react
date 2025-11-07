@@ -43,7 +43,7 @@ export const RuleProcessor: React.FC<RuleProcessorProps> = ({ entity, rule, orig
       // Find original children efficiently
       const originalChildren = originalChildGUIDs
         .map(guid => childrenByGuid.get(guid))
-        .filter(Boolean) as Entity[];
+        .filter((child): child is Entity => child !== undefined);
       
       // Now, we only destroy the original children
       originalChildren.forEach(child => {
