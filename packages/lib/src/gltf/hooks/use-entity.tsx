@@ -8,24 +8,19 @@ import { PathPredicate, EntityMetadata, PathMatcher } from '../utils/path-matche
 
 /**
  * Hook to find entities by path relative to the current parent context
- * Uses PathMatcher for consistent path matching with Modify.Node
- * 
- * @param path - String path or predicate function to match entities
+ * Uses the unified PathMatcher for consistent syntax with Modify.Node
+ * * @param path - String path or predicate function to match entities
  * @returns The matched entity, array of entities (for wildcards), or null if not found
- * 
- * @example
+ * * @example
  * ```tsx
  * // Find by path
  * const handEntity = useEntity('arm.hand');
- * 
- * // Find by predicate
+ * * // Find by predicate
  * const lightsEntity = useEntity((entity) => entity.c?.light !== undefined);
- * 
- * // Find with wildcard
+ * * // Find with wildcard
  * const allChildren = useEntity('*');
- * 
- * // Find with component filter
- * const lights = useEntity('*[light]');
+ * * // Find with component filter
+ * const lights = useEntity('**[light]');
  * ```
  */
 export function useEntity(
@@ -35,25 +30,49 @@ export function useEntity(
   const { hierarchyCache, pathMatcher } = useGltf();
 
   return useMemo(() => {
-    // If path is a predicate function
-    if (typeof path === 'function') {
-      return findEntitiesByPredicate(parentEntity, path, hierarchyCache);
+    if (!parentEntity) {
+      return null;
     }
+    
+    let matches: Entity[] = [];
 
-    // Use PathMatcher for string paths - ensures consistency with Modify.Node
-    return findEntitiesByPattern(parentEntity, path, pathMatcher);
+    // If path is a predicate function, use the (fast) predicate helper
+    if (typeof path === 'function') {
+      matches = findEntitiesByPredicate(parentEntity, path, hierarchyCache);
+    
+    // If path is a string, use the (powerful) pattern helper
+    } else {
+      // Guard against empty string path
+      if (path === '') return null;
+      matches = findEntitiesByPattern(parentEntity, path, pathMatcher);
+    }
+    
+    // --- Return logic ---
+    // For wildcard/predicate, always return array or null
+    const hasWildcards = typeof path === 'function' || (typeof path === 'string' && (path.includes('*') || path.includes('[')));
+    
+    if (matches.length === 0) {
+      return null;
+    }
+    if (matches.length === 1 && !hasWildcards) {
+      // Exact path with single match
+      return matches[0];
+    }
+    // Multiple matches or wildcard/predicate
+    return matches;
+    
   }, [path, parentEntity, hierarchyCache, pathMatcher]);
 }
 
 /**
- * Helper to find entities by predicate function
- * Uses O(1) Map lookup instead of O(N) iteration
+ * Helper to find entities by predicate function (relative)
+ * Traverses descendants of root and checks predicate
  */
 function findEntitiesByPredicate(
   root: Entity,
   predicate: PathPredicate,
   hierarchyCache: Map<string, EntityMetadata>
-): Entity[] | null {
+): Entity[] {
   const matches: Entity[] = [];
 
   function traverse(entity: Entity) {
@@ -62,68 +81,57 @@ function findEntitiesByPredicate(
     if (metadata && predicate(entity, metadata)) {
       matches.push(entity);
     }
-
     // Traverse children
     for (const child of entity.children) {
       traverse(child as Entity);
     }
   }
 
-  traverse(root);
-  return matches.length > 0 ? matches : null;
+  // Start traversal from the children, not the root itself
+  for (const child of root.children) {
+    traverse(child as Entity);
+  }
+  return matches;
 }
 
 /**
- * Helper to find entities by pattern using PathMatcher
- * Traverses the subtree relative to parent and builds relative paths
- * Uses PathMatcher.match() to check if pattern matches relative path
+ * Helper to find entities by string pattern (relative)
+ * Uses the powerful PathMatcher for consistent syntax
  */
 function findEntitiesByPattern(
   rootEntity: Entity,
   pattern: string,
   pathMatcher: PathMatcher
-): Entity | Entity[] | null {
-  if (!rootEntity) return null;
-
+): Entity[] {
   const matches: Entity[] = [];
   
-  // Build relative paths as we traverse the subtree
-  // Relative path is empty for root, "Child" for direct children, "Child.Grandchild" for nested, etc.
+  /**
+   * Recursive traversal that builds relative paths
+   * @param entity The entity to check
+   * @param relativePath The path relative to rootEntity
+   */
   function traverse(entity: Entity, relativePath: string) {
-    // Check if this entity matches the pattern using PathMatcher
-    // PathMatcher.match() handles component filters, wildcards, etc.
-    // For root entity, relativePath is empty string, so pattern "" would match it
-    // For children, relativePath is like "Body" or "Body.Head"
+    // Check if *this* entity matches the pattern
     if (pathMatcher.match(pattern, relativePath, entity)) {
       matches.push(entity);
     }
 
-    // Traverse children, building relative paths
+    // Traverse children, building the next relative path
     for (const child of entity.children) {
       const childEntity = child as Entity;
       const childName = childEntity.name;
-      // Build relative path: empty for root's children, "Parent.Child" for nested
       const childRelativePath = relativePath ? `${relativePath}.${childName}` : childName;
       traverse(childEntity, childRelativePath);
     }
   }
 
-  // Start traversal from root entity with empty relative path
-  // This means patterns like "Body" will match direct children, "Body.Head" will match nested
-  traverse(rootEntity, '');
-
-  // Return single entity if one match, array if multiple, null if none
-  // For wildcard patterns (* or **), always return array even if single match
-  const hasWildcards = pattern.includes('*');
-  
-  if (matches.length === 0) {
-    return null;
-  } else if (matches.length === 1 && !hasWildcards) {
-    // Exact path with single match - return single entity
-    return matches[0];
-  } else {
-    // Multiple matches or wildcard pattern - return array
-    return matches;
+  // This is the key: start the traversal from the *children*
+  // of the rootEntity. This makes all paths relative.
+  // 'useEntity("Head")' (from 'Body') will build a relativePath of 'Head'
+  // and match it against the pattern 'Head'.
+  for (const child of rootEntity.children) {
+    traverse(child as Entity, child.name);
   }
-}
 
+  return matches;
+}
