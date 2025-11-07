@@ -9,17 +9,17 @@ import { PathPredicate, EntityMetadata, PathMatcher } from '../utils/path-matche
 /**
  * Hook to find entities by path relative to the current parent context
  * Uses the unified PathMatcher for consistent syntax with Modify.Node
- * * @param path - String path or predicate function to match entities
+ * @param path - String path or predicate function to match entities
  * @returns The matched entity, array of entities (for wildcards), or null if not found
- * * @example
+ * @example
  * ```tsx
  * // Find by path
  * const handEntity = useEntity('arm.hand');
- * * // Find by predicate
+ * // Find by predicate
  * const lightsEntity = useEntity((entity) => entity.c?.light !== undefined);
- * * // Find with wildcard
+ * // Find with wildcard
  * const allChildren = useEntity('*');
- * * // Find with component filter
+ * // Find with component filter
  * const lights = useEntity('**[light]');
  * ```
  */
