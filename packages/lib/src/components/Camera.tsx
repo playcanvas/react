@@ -34,3 +34,5 @@ const componentDefinition = createComponentDefinition<CameraProps, CameraCompone
     (component) => (component as CameraComponent).system.destroy(),
     { apiName: "CameraComponent" }
 )
+
+export { componentDefinition as cameraComponentDefinition };

@@ -95,4 +95,5 @@ componentDefinition.schema = {
     }
 }
 
+export { componentDefinition as renderComponentDefinition };
 export default Render;
