@@ -19,6 +19,13 @@ import { useParent } from "../hooks/use-parent.tsx";
 import { useApp } from "../hooks/use-app.tsx";
 
 /**
+ * Extended instancing data with cleanup flag
+ */
+type InstancingDataWithCleanup = NonNullable<PcMeshInstance["instancingData"]> & {
+  _destroyVertexBuffer?: boolean;
+};
+
+/**
  * Declarative wrapper for pc.MeshInstance.
  * Supports morphs, skins, and hardware instancing.
  */
@@ -84,9 +91,11 @@ const MeshInstanceComponent: FC<MeshInstanceProps> = (props) => {
         mi.setInstancing(vertexBuffer);
       } else if (matrices && count && device) {
         const format = VertexFormat.getDefaultInstancingFormat(device);
-        const vb = new VertexBuffer(device, format, count, { data: matrices });
+        const vb = new VertexBuffer(device, format, count, { data: matrices.buffer as ArrayBuffer });
         mi.setInstancing(vb);
-        (mi.instancingData as any)._destroyVertexBuffer = true;
+        if (mi.instancingData) {
+          (mi.instancingData as InstancingDataWithCleanup)._destroyVertexBuffer = true;
+        }
       }
 
       if (count) mi.instancingCount = count;
@@ -101,8 +110,9 @@ const MeshInstanceComponent: FC<MeshInstanceProps> = (props) => {
       if (idx !== -1) render.meshInstances.splice(idx, 1);
 
       // clean up any auto-created instancing buffer
-      if (mi.instancingData && (mi.instancingData as any)._destroyVertexBuffer) {
-        mi.instancingData.vertexBuffer?.destroy();
+      const instancingData = mi.instancingData as InstancingDataWithCleanup | null;
+      if (instancingData?._destroyVertexBuffer) {
+        instancingData.vertexBuffer?.destroy();
       }
 
       instanceRef.current = null;
@@ -133,7 +143,7 @@ const MeshInstanceComponent: FC<MeshInstanceProps> = (props) => {
       const { matrices, count } = props.instancing;
       if (matrices && mi.instancingData.vertexBuffer) {
         const vb = mi.instancingData.vertexBuffer;
-        const view = vb.lock();
+        const view = vb.lock() as unknown as Float32Array;
         view.set(matrices);
         vb.unlock();
       }
@@ -156,8 +166,10 @@ const componentDefinition = createComponentDefinition<MeshInstanceProps, PcMeshI
       new Entity("mock", getStaticNullApplication())
     ),
   (mi) => {
-    if (mi.instancingData && (mi.instancingData as any)._destroyVertexBuffer)
-      mi.instancingData.vertexBuffer?.destroy();
+    const instancingData = mi.instancingData as InstancingDataWithCleanup | null;
+    if (instancingData?._destroyVertexBuffer) {
+      instancingData.vertexBuffer?.destroy();
+    }
   },
   "MeshInstanceComponent"
 );
@@ -187,11 +199,15 @@ componentDefinition.schema = {
     default: undefined,
   },
   instancing: {
-    validate: (v: unknown) =>
-      !v ||
-      (typeof v === "object" &&
-        ((v as any).vertexBuffer instanceof VertexBuffer ||
-          (v as any).matrices instanceof Float32Array)),
+    validate: (v: unknown) => {
+      if (!v) return true;
+      if (typeof v !== "object" || v === null) return false;
+      const obj = v as Record<string, unknown>;
+      return (
+        (obj.vertexBuffer instanceof VertexBuffer) ||
+        (obj.matrices instanceof Float32Array)
+      );
+    },
     errorMsg: (v: unknown) =>
       `Invalid value for prop "instancing": ${v}. Expected { vertexBuffer?: VertexBuffer, matrices?: Float32Array, count?: number }.`,
     default: undefined,
