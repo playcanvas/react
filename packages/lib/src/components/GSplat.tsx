@@ -27,7 +27,7 @@ const componentDefinition = createComponentDefinition(
     "GSplat",
     () => new Entity("mock-gsplat", getStaticNullApplication()).addComponent('gsplat') as GSplatComponent,
     (component) => (component as GSplatComponent).system.destroy(),
-    "GSplatComponent"
+    { apiName: "GSplatComponent" }
 )
 
 componentDefinition.schema = {

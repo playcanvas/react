@@ -32,5 +32,7 @@ const componentDefinition = createComponentDefinition<CameraProps, CameraCompone
     "Camera",
     () => new Entity("mock-camera", getStaticNullApplication()).addComponent('camera') as CameraComponent,
     (component) => (component as CameraComponent).system.destroy(),
-    "CameraComponent"
+    { apiName: "CameraComponent" }
 )
+
+export { componentDefinition as cameraComponentDefinition };

@@ -30,7 +30,7 @@ const componentDefinition = createComponentDefinition<SpriteProps, SpriteCompone
     "Sprite",
     () => new Entity("mock-sprite", getStaticNullApplication()).addComponent('sprite') as SpriteComponent,
     (component) => (component as SpriteComponent).system.destroy(),
-    "SpriteComponent"
+    { apiName: "SpriteComponent" }
 )
 
 componentDefinition.schema = {

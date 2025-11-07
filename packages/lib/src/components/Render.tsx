@@ -82,7 +82,7 @@ const componentDefinition = createComponentDefinition<RenderProps, PcRenderCompo
     "Render",
     () => new Entity('mock-render', getStaticNullApplication()).addComponent('render') as PcRenderComponent,
     (component) => (component as PcRenderComponent).system.destroy(),
-    "RenderComponent"   
+    { apiName: "RenderComponent" }   
 )
 
 componentDefinition.schema = {
@@ -104,4 +104,5 @@ componentDefinition.schema = {
     }
 }
 
+export { componentDefinition as renderComponentDefinition };
 export default Render;

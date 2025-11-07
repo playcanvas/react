@@ -1,6 +1,7 @@
 import { Entity, Vec3 } from "playcanvas";
 import { Script } from "../../components/Script.tsx";
 import { OrbitCamera, OrbitCameraInputMouse, OrbitCameraInputTouch } from "./orbit-camera.js";
+import { warnOnce } from "../../utils/validation.ts";
 
 type OrbitCameraProps = {
     distanceMax?: number
@@ -29,6 +30,8 @@ export const OrbitControls = ({
     mouse = { orbitSensitivity: 0.3, distanceSensitivity: 0.15 }, 
     touch = { orbitSensitivity: 0.4, distanceSensitivity: 0.2 }, 
  } : OrbitControls) => {
+
+    warnOnce('The `<OrbitControls/>` component is deprecated and will be removed in a future release. Use the PlayCanvas `CameraControls` script from `playcanvas` via the `<Script/>` component instead: `<Script script={CameraControls}/>`.');
     
     const orbitCameraProps : OrbitCameraProps = { distanceMax, distanceMin, pitchAngleMax, pitchAngleMin, inertiaFactor, focusEntity, pivotPoint, frameOnStart, distance }
     

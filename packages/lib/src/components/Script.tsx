@@ -49,7 +49,9 @@ interface ScriptProps {
     [key: string]: unknown;
 }
 
-class NullScript extends PcScript {}
+class NullScript extends PcScript {
+    static scriptName = 'null-script';
+}
 
 const componentDefinition = {
     name: "Script",

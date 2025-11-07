@@ -88,7 +88,8 @@ export function validateAndSanitize<T, InstanceType>(
 
 /**
  * Validate props partially. This iterates over props and validates them against the schema. 
- * If a prop is not in the schema, it will be ignored. This will not return default values for missing props.
+ * If a prop is not in the schema, it will raise a warning but not applied.
+ * This will not return default values for missing props.
  * 
  * @param rawProps The raw props to validate.
  * @param componentDef The component definition.
@@ -217,7 +218,11 @@ export function validatePropsWithDefaults<T extends object, InstanceType>(
  * @param schema The schema of the container
  * @param props The props to apply
  */
-export function applyProps<T extends Record<string, unknown>, InstanceType>(instance: InstanceType, schema: Schema<T, InstanceType>, props: T) {
+export function applyProps<T extends Record<string, unknown>, InstanceType>(
+    instance: InstanceType, 
+    schema: Schema<T, InstanceType>, 
+    props: T
+) {
     Object.entries(props as Record<keyof T, unknown>).forEach(([key, value]) => {
         if (key in schema) {
             const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
@@ -343,14 +348,20 @@ export function isDefinedWithSetter(container: Record<string, unknown>, propName
  * @param name The name of the component.
  * @param createInstance A function that creates an instance of the component.
  * @param cleanup A function that cleans up the instance.
- * @param apiName The API name of the component.
+ * @param options The options for the component definition.
+ * @param options.exclude The props to exclude from the component definition.
+ * @param options.apiName The API name of the component.
  */
 export function createComponentDefinition<T, InstanceType>(
     name: string,
     createInstance: () => InstanceType,
     cleanup?: (instance: InstanceType) => void,
-    apiName?: string,
+    options?: {
+        exclude?: string[];
+        apiName?: string,
+    },
 ): ComponentDefinition<T, InstanceType> {
+    const { exclude = [], apiName = name } = options ?? {};
     const instance: InstanceType = createInstance();
     const schema: Schema<T, InstanceType> = {};
     const props = getPseudoPublicProps(instance as Record<string, unknown>);
@@ -358,6 +369,7 @@ export function createComponentDefinition<T, InstanceType>(
 
     // Basic type detection 
     entries.forEach(([key, propertyInfo]) => {
+        if(exclude.includes(String(key))) return;
         const { value, isDefinedWithSetter } = propertyInfo;
         
         // Colors
@@ -494,7 +506,10 @@ export function createComponentDefinition<T, InstanceType>(
                 default: value,
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected a Material.`,
             };
-        } else if(value === null) {
+        } 
+        
+        // Null
+        else if(value === null) {
             schema[key] = {
                 validate: () => true,
                 default: value,
