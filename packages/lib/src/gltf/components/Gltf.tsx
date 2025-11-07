@@ -94,6 +94,13 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
     }
 
     // Instantiate the render entity
+    if (
+      !asset.resource ||
+      typeof (asset.resource as any).instantiateRenderEntity !== 'function'
+    ) {
+      console.error('Asset resource does not have instantiateRenderEntity method');
+      return;
+    }
     const entity = (asset.resource as { instantiateRenderEntity: () => Entity }).instantiateRenderEntity();
     
     if (!entity) {
