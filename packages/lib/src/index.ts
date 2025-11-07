@@ -8,9 +8,7 @@ export { Entity } from './Entity.tsx';
 export { 
   Gltf, 
   Modify,
-  useEntity,
-  PathMatcher,
-  defaultPathMatcher
+  useEntity
 } from './gltf/index.ts';
 
 export type {

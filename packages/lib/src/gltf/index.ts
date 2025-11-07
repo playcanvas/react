@@ -19,7 +19,5 @@ export type {
   ModifyCameraProps
 } from './types';
 
-// Utilities
-export { PathMatcher, defaultPathMatcher } from './utils/path-matcher.ts';
 export type { PathPredicate, EntityMetadata } from './utils/path-matcher.ts';
 
