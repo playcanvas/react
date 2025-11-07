@@ -96,6 +96,8 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
     // Instantiate the render entity
     if (
       !asset.resource ||
+      // We should use GLBContainerResource instead of any, but its not exported from playcanvas
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       typeof (asset.resource as any).instantiateRenderEntity !== 'function'
     ) {
       console.error('Asset resource does not have instantiateRenderEntity method');
