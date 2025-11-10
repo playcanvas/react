@@ -18,7 +18,7 @@ jobs:
     steps:
       # Create or update a .changeset/*.md in the PR
       - name: Add a changeset based on conventional commits
-        uses: mscharley/dependency-changesets-action@v1.1.9
+        uses: mscharley/dependency-changesets-action@v1.2.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           use-conventional-commits: true
