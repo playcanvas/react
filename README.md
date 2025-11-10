@@ -83,15 +83,15 @@ Et voilà! ✨
 
 ## Ready to build something?
 
-Now you've got the tools you're ready to start building. Start with the [Getting Started](https://playcanvas-react.vercel.app/docs/guide/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples/) to explore real examples in action.
+Now you've got the tools you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/playcanvas-react/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples) to explore real examples in action.
 
-- [Hello World](http://playcanvas-react.vercel.app/examples/hello-world)
-- [Loading a 3d model](http://playcanvas-react.vercel.app/examples/load-a-3D-model)
-- [Interaction](http://playcanvas-react.vercel.app/examples/pointer-events)
-- [Physics](http://playcanvas-react.vercel.app/examples/physics)
-- [Splats](http://playcanvas-react.vercel.app/examples/splats)
+- [Hello World](https://playcanvas-react.vercel.app/examples/hello-world)
+- [Loading a 3D model](https://playcanvas-react.vercel.app/examples/load-a-3D-model)
+- [Interaction](https://playcanvas-react.vercel.app/examples/pointer-events)
+- [Physics](https://playcanvas-react.vercel.app/examples/physics)
+- [Splats](https://playcanvas-react.vercel.app/examples/splats)
 
-You can also jump straight into the [docs](https://playcanvas-react.vercel.app) or [api](https://playcanvas-react.vercel.app/docs/api).
+You can also jump straight into the [docs](https://developer.playcanvas.com/user-manual/playcanvas-react) or [api](https://developer.playcanvas.com/user-manual/playcanvas-react/api).
 
 ## Who’s building with @playcanvas/react?
 
@@ -103,10 +103,10 @@ Developers and studios are already using @playcanvas/react in production
 
 ## AI assisted editors
 
-To get your IDE up to speed, you can install the latest MDC rules for cursor. Or [grab them here](https://playcanvas-react.vercel.app/rules) to add them manually.
+To get your IDE up to speed, you can install the latest MDC rules for cursor. Or [grab them here](https://developer.playcanvas.com/user-manual/playcanvas-react/rules) to add them manually.
 
 ```bash
-mkdir -p .cursor/rules && curl -s https://playcanvas-react.vercel.app/rules -o .cursor/rules/playcanvas-react.mdc
+mkdir -p .cursor/rules && curl -s https://developer.playcanvas.com/user-manual/playcanvas-react/rules -o .cursor/rules/playcanvas-react.mdc
 ```
 
 ## Contributing
