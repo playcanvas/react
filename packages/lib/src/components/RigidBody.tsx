@@ -74,7 +74,7 @@ const componentDefinition = createComponentDefinition(
     "RigidBody",
     () => new Entity("mock-rigidbody", getStaticNullApplication()).addComponent('rigidbody') as RigidBodyComponent,
     (component) => (component as RigidBodyComponent).system.destroy(),
-    "RigidBodyComponent"
+    { apiName: "RigidBodyComponent" }
 )
 
 

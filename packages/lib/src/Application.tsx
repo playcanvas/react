@@ -189,7 +189,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
   // These app properties can be updated without re-rendering
   useLayoutEffect(() => {
     if (!app) return;
-    applyProps(app, componentDefinition.schema, otherProps as Record<keyof PlayCanvasApplication, unknown>);
+    applyProps(app, componentDefinition.schema, otherProps as Record<string, unknown>);
   });
 
   if (!app) return null;
@@ -220,7 +220,11 @@ type CanvasProps = {
    */
   style?: Record<string, unknown>
 }
-interface ApplicationProps extends Partial<PublicProps<PlayCanvasApplication>>, CanvasProps {
+
+// These props are excluded from the <Application/> component props.
+type ExcludedApplicationProps = 'mouse' | 'touch' | 'keyboard' | 'gamepads' | 'scene' | 'scripts' | 'assets';
+
+interface ApplicationProps extends Omit<Partial<PublicProps<PlayCanvasApplication>>, ExcludedApplicationProps>, CanvasProps {
 
   /** 
    * Controls how the canvas fills the window and resizes when the window changes.
@@ -265,10 +269,13 @@ interface ApplicationWithoutCanvasProps extends ApplicationProps {
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
 
+const exclude: ExcludedApplicationProps[] = ['mouse', 'touch', 'keyboard', 'gamepads', 'scene', 'scripts', 'assets'];
+
 const componentDefinition = createComponentDefinition(
   "Application",
   () => getNullApplication(),
-  (app) => app.destroy()
+  (app) => app.destroy(),
+  { exclude }
 )
 
 componentDefinition.schema = {

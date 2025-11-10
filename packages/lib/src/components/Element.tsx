@@ -33,7 +33,7 @@ const componentDefinition = createComponentDefinition<ElementProps, ElementCompo
     "Element",
     () => new Entity("mock-element", getStaticNullApplication()).addComponent("element") as ElementComponent,
     (component) => (component as ElementComponent).system.destroy(),
-    "ElementComponent"
+    { apiName: "ElementComponent" }
 );
 
 
