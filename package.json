@@ -37,7 +37,7 @@
         "type-fest": "5.2.0",
         "typescript": "5.9.3",
         "typescript-eslint": "8.46.3",
-        "vitest": "3.2.4"
+        "vitest": "4.0.8"
     },
     "dependencies": {
         "next": "15.5.6"
