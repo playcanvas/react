@@ -1,5 +1,17 @@
 # @playcanvas/react
 
+## 0.11.0
+
+### Minor Changes
+
+- e800b2e: Introduced a new declarative GLTF modification API. Users can now use the `<Gltf>` and `Modify` components to add, remove, and modify components (like `light`, `render`, `camera`) on entities within a loaded GLB hierarchy.
+
+### Patch Changes
+
+- 131b07d: Fixing issue with Application schema validation
+- 86f01de: Adds a deprecation warning to OrbitControls
+- 19a8f7f: Updated docs links and README refs
+
 ## 0.10.3
 
 ### Patch Changes

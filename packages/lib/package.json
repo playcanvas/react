@@ -2,7 +2,7 @@
     "name": "@playcanvas/react",
     "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
     "homepage": "https://developer.playcanvas.com/user-manual/playcanvas-react",
-    "version": "0.10.3",
+    "version": "0.11.0",
     "license": "MIT",
     "type": "module",
     "sideEffects": false,
