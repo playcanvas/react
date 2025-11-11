@@ -69,7 +69,8 @@ const createTestApp = (actual: typeof playcanvas) => {
 vi.mock('playcanvas', async () => {
   const actual = await vi.importActual<typeof import('playcanvas')>('playcanvas');
 
-  const MockApplication = vi.fn().mockImplementation(() => {
+  const MockApplication = vi.fn(function MockApplication(this: unknown, ...args: unknown[]) {
+    void args;
     return createTestApp(actual);
   });
 
@@ -80,8 +81,11 @@ vi.mock('playcanvas', async () => {
 });
 
 // Mock ResizeObserver
-global.ResizeObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-})); 
+global.ResizeObserver = vi.fn(function MockResizeObserver(this: unknown, ...args: unknown[]) {
+  void args;
+  return {
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  };
+}); 

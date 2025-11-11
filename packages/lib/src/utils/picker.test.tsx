@@ -55,11 +55,14 @@ const mockPicker = () => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .spyOn(pc as any, 'Picker')
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .mockImplementation((): any => ({
-      prepare: prepareSpy,
-      getSelectionAsync: getSelectionSpy,
-      resize: resizeSpy,
-    }));
+    .mockImplementation(function MockPicker(this: unknown, ...args: unknown[]): any {
+      void args;
+      return {
+        prepare: prepareSpy,
+        getSelectionAsync: getSelectionSpy,
+        resize: resizeSpy,
+      };
+    });
   return { prepareSpy, getSelectionSpy, resizeSpy, pickerCtorSpy };
 };
 
@@ -124,11 +127,13 @@ describe('usePicker', () => {
 
     // Capture ResizeObserver callbacks
     const observedCallbacks: Array<() => void> = [];
-    const RO = vi.fn().mockImplementation((cb: () => void) => ({
-      observe: vi.fn(() => observedCallbacks.push(cb)),
-      unobserve: vi.fn(),
-      disconnect: vi.fn(),
-    }));
+    const RO = vi.fn(function MockResizeObserver(this: unknown, cb: () => void) {
+      return {
+        observe: vi.fn(() => observedCallbacks.push(cb)),
+        unobserve: vi.fn(),
+        disconnect: vi.fn(),
+      };
+    });
     (globalThis as unknown as { ResizeObserver: unknown }).ResizeObserver = RO as unknown;
 
     const canvas = createTestCanvas();

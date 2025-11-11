@@ -136,11 +136,16 @@ export const mockPlayCanvas = () => {
     FILLMODE_KEEP_ASPECT: 'KEEP_ASPECT',
     RESOLUTION_AUTO: 'AUTO',
     RESOLUTION_FIXED: 'FIXED',
-    Application: vi.fn().mockImplementation(() => mockApp),
+    Application: vi.fn(function MockApplication(this: unknown, ...args: unknown[]) {
+      void args;
+      return mockApp;
+    }),
     Mouse: vi.fn(),
     TouchDevice: vi.fn(),
     Entity: vi.fn(),
-    NullGraphicsDevice: vi.fn().mockImplementation((canvas) => new NullGraphicsDevice(canvas))
+    NullGraphicsDevice: vi.fn(function MockNullGraphicsDevice(this: unknown, canvas: HTMLCanvasElement) {
+      return new NullGraphicsDevice(canvas);
+    })
   };
 };
 
