@@ -106,8 +106,8 @@ importers:
         specifier: ^0.511.0 || ^0.514.0 || ^0.515.0 || ^0.523.0 || ^0.525.0 || ^0.539.0 || ^0.542.0 || ^0.543.0 || ^0.544.0 || ^0.552.0 || ^0.553.0
         version: 0.544.0(react@19.1.1)
       playcanvas:
-        specifier: 2.11.8
-        version: 2.11.8
+        specifier: 2.13.0
+        version: 2.13.0
       react:
         specifier: ^19.1.0
         version: 19.1.1
@@ -140,8 +140,8 @@ importers:
         specifier: ^1.6.0
         version: 1.7.0
       playcanvas:
-        specifier: 2.11.8
-        version: 2.11.8
+        specifier: 2.13.0
+        version: 2.13.0
       react:
         specifier: ^18.3.1 || ^19.1.0
         version: 19.1.1
@@ -1602,8 +1602,8 @@ packages:
   '@types/statuses@2.0.6':
     resolution: {integrity: sha512-xMAgYwceFhRA2zY+XbEA7mxYbA093wdiW8Vu6gZPGWy9cmOyU9XesH1tNcEWsKFd5Vzrqx5T3D38PWx1FIIXkA==}
 
-  '@types/webxr@0.5.23':
-    resolution: {integrity: sha512-GPe4AsfOSpqWd3xA/0gwoKod13ChcfV67trvxaW2krUbgb9gxQjnCx8zGshzMl8LSHZlNH5gQ8LNScsDuc7nGQ==}
+  '@types/webxr@0.5.24':
+    resolution: {integrity: sha512-h8fgEd/DpoS9CBrjEQXR+dIDraopAEfu4wYVNY2tEPwk60stPWhvZMf4Foo5FakuQ7HFZoa8WceaWFervK2Ovg==}
 
   '@typescript-eslint/eslint-plugin@8.46.3':
     resolution: {integrity: sha512-sbaQ27XBUopBkRiuY/P9sWGOWUW4rl8fDoHIUmLpZd8uldsTyB4/Zg6bWTegPoTLnKj9Hqgn3QD6cjPNB32Odw==}
@@ -3066,8 +3066,8 @@ packages:
   pkg-types@1.3.1:
     resolution: {integrity: sha512-/Jm5M4RvtBFVkKWRu2BLUTNP8/M2a+UwuAX+ae4770q1qVGtfjG+WTCupoZixokjmHiry8uI+dlY8KXYV5HVVQ==}
 
-  playcanvas@2.11.8:
-    resolution: {integrity: sha512-s6/Ot/pD24DyeXr47X/R1lSu0QeVWk0/RvAWnk3RSm9BBvq1UNqn3psPNI3a5A7ILjNamblYk+WlFdqGn4otRQ==}
+  playcanvas@2.13.0:
+    resolution: {integrity: sha512-3Gq6TiUrgY/gcJp0Vyt1loQ+ov4buKURtuAeJ3fy88WCRcmC9wW3iVRZToWCJixHZKITaS49ndCcQ3ogPwCC5Q==}
     engines: {node: '>=18.0.0'}
 
   plimit-lit@1.6.1:
@@ -5258,7 +5258,7 @@ snapshots:
   '@types/statuses@2.0.6':
     optional: true
 
-  '@types/webxr@0.5.23': {}
+  '@types/webxr@0.5.24': {}
 
   '@typescript-eslint/eslint-plugin@8.46.3(@typescript-eslint/parser@8.46.3(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:
@@ -6959,9 +6959,9 @@ snapshots:
       mlly: 1.8.0
       pathe: 2.0.3
 
-  playcanvas@2.11.8:
+  playcanvas@2.13.0:
     dependencies:
-      '@types/webxr': 0.5.23
+      '@types/webxr': 0.5.24
       '@webgpu/types': 0.1.65
     optionalDependencies:
       canvas: 3.1.0
