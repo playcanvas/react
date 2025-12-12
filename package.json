@@ -40,6 +40,6 @@
         "vitest": "4.0.8"
     },
     "dependencies": {
-        "next": "16.0.7"
+        "next": "16.0.9"
     }
 }
