@@ -102,7 +102,7 @@ importers:
         specifier: ^0.511.0 || ^0.514.0 || ^0.515.0 || ^0.523.0 || ^0.525.0 || ^0.539.0 || ^0.542.0 || ^0.543.0 || ^0.544.0 || ^0.552.0 || ^0.553.0
         version: 0.544.0(react@19.1.1)
       playcanvas:
-        specifier: 2.11.8
+        specifier: ^2.11.8
         version: 2.11.8
       react:
         specifier: ^19.1.0
@@ -136,7 +136,7 @@ importers:
         specifier: ^1.6.0
         version: 1.7.0
       playcanvas:
-        specifier: 2.11.8
+        specifier: ^2.11.8
         version: 2.11.8
       react:
         specifier: ^18.3.1 || ^19.1.0
