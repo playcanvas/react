@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.11.1
+
+### Patch Changes
+
+- 4f0986c: Relaxed "playcanvas" peer dependency from exact version 2.11.8 to ^2.11.8.
+
 ## 0.11.0
 
 ### Minor Changes

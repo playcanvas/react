@@ -1,5 +1,13 @@
 # @playcanvas/blocks
 
+## 0.3.5
+
+### Patch Changes
+
+- 4f0986c: Moved PlayCanvas from dependencies to peerDependencies (^2.11.8) to align with @playcanvas/react and avoid version conflicts
+- Updated dependencies [4f0986c]
+  - @playcanvas/react@0.11.1
+
 ## 0.3.4
 
 ### Patch Changes
