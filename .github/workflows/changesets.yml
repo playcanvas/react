@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 env:
   CI: true
@@ -16,6 +17,7 @@ jobs:
   version:
     timeout-minutes: 15
     runs-on: ubuntu-latest
+    if: ${{ github.repository_owner == 'playcanvas' }}
     steps:
       - name: Checkout code repository
         uses: actions/checkout@v6
@@ -42,8 +44,7 @@ jobs:
         with:
           commit: "chore: update versions"
           title: "chore: update versions"
-          publish: pnpm -w changeset publish
+          publish: pnpm -w changeset publish --provenance
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
