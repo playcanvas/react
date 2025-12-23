@@ -1,15 +1,19 @@
 "use client"
 
-import { FC } from "react";
+import { FC, ReactElement, createContext, useContext } from "react";
 import { useComponent } from "../hooks/index.ts";
-import { Container } from "../Container.tsx";
-import { Asset, Entity, type RenderComponent as PcRenderComponent } from "playcanvas";
+import { MeshInstance } from "./MeshInstance.tsx";
+import { Asset, Entity, MeshInstance as PcMeshInstance, type RenderComponent as PcRenderComponent } from "playcanvas";
 import { PublicProps, Serializable } from "../utils/types-utils.ts";
 import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation.ts";
 import { createComponentDefinition } from "../utils/validation.ts";
+import { Container } from "../Container.tsx";
+
+const MeshInstanceContext = createContext<((instance: PcMeshInstance) => void) | null>(null);
+
+export const useMeshInstanceRegistration = () => useContext(MeshInstanceContext);
 
 const RenderComponent: FC<RenderProps> = (props) => {
-    // console.log('RenderComponent', props.material.diffuse);
     useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
     return null;
 }
@@ -49,7 +53,9 @@ export const Render: FC<RenderProps> = (props) => {
     // console.log('safeProps', safeProps);
 
     // Otherwise, render the component
-    return <RenderComponent {...safeProps as Serializable<RenderProps>} />;
+    return <RenderComponent {...safeProps as Serializable<RenderProps>} >
+        { safeProps.children }
+    </RenderComponent>;
 }
 
 
@@ -66,7 +72,10 @@ interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'ass
      * The asset to render.
      */
     asset?: Asset;
-    children?: React.ReactNode;
+    /**
+     * A set of MeshInstance components to render.
+     */
+    children?:  ReactElement<typeof MeshInstance> | ReactElement<typeof MeshInstance>[];
 }
 
 const componentDefinition = createComponentDefinition<RenderProps, PcRenderComponent>(
