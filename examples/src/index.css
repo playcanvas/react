@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+  --color-brand: #ff6b35;
+  --color-brand-light: #ffab40;
+  --color-brand-gold: #f7931a;
+  --color-bg-dark: #0a0a0f;
+  --color-bg-panel: #12121a;
+  --color-text-muted: #8888a0;
+  --color-text-dim: #7777a0;
+  --color-text-subtle: #b0b0c0;
+}
+
+@layer base {
+  html, body, #root {
+    @apply w-full h-full overflow-hidden;
+  }
+  body {
+    @apply font-mono antialiased bg-bg-dark text-gray-200;
+  }
+}
