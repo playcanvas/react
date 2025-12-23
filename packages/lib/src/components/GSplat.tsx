@@ -45,7 +45,7 @@ componentDefinition.schema = {
         apply: (instance: GSplatComponent, props: Record<string, unknown>, key: string) => {
             const value = props[key] as boolean;
 
-            if(instance.unified === value) {
+            if (instance.unified === value) {
                 return;
             }
 
