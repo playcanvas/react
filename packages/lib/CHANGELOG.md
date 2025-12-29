@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.11.2
+
+### Patch Changes
+
+- e564a0e: Fix GSplat `unified` property not being applied correctly. This fix allows users to load Gaussian Splats with LODs.
+
 ## 0.11.1
 
 ### Patch Changes
