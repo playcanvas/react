@@ -10,6 +10,11 @@ const examples = [
     path: '/lod-streaming',
     title: 'LOD Streaming',
     description: 'Level-of-detail streaming with radial reveal effect'
+  },
+  {
+    path: '/multi-splat',
+    title: 'Multi Splat',
+    description: 'Multiple Gaussian Splats in a VR gallery environment'
   }
 ]
 
