@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.11.3
+
+### Patch Changes
+
+- c1106f7: Fixed GSplat component props re-application causing splat to disappear during React re-renders. Added equality guards for `instance` and `material` properties to prevent destructive setter calls when the value hasn't changed.
+
 ## 0.11.2
 
 ### Patch Changes
