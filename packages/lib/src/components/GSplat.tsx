@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { useComponent } from "../hooks/index.ts";
-import { Asset, Entity, GSplatComponent } from "playcanvas";
+import { Asset, Entity, GSplatComponent, GSplatInstance, ShaderMaterial } from "playcanvas";
 import { PublicProps } from "../utils/types-utils.ts";
 import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
 /**
@@ -59,6 +59,32 @@ componentDefinition.schema = {
             instance.enabled = false;
             instance.unified = value;
             instance.enabled = true;
+        }
+    },
+    material: {
+        validate: (val: unknown) => val === null || val instanceof ShaderMaterial,
+        errorMsg: (val: unknown) => `Invalid value for prop "material": "${val}". Expected a ShaderMaterial or null.`,
+        default: null,
+        apply: (instance: GSplatComponent, props: Record<string, unknown>, key: string) => {
+            const value = props[key] as ShaderMaterial | null;
+            if (instance.material === value) {
+                return;
+            }
+            if (value) {
+                instance.material = value;
+            }
+        }
+    },
+    instance: {
+        validate: (val: unknown) => val === null || val instanceof GSplatInstance,
+        errorMsg: (val: unknown) => `Invalid value for prop "instance": "${val}". Expected a GSplatInstance or null.`,
+        default: null,
+        apply: (instance: GSplatComponent, props: Record<string, unknown>, key: string) => {
+            const value = props[key] as GSplatInstance | null;
+            if (instance.instance === value) {
+                return;
+            }
+            instance.instance = value;
         }
     }
 }
