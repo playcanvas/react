@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@playcanvas/react": "workspace:*",
-    "playcanvas": "^2.14.4",
+    "playcanvas": "^2.16.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.1"
