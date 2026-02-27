@@ -29,6 +29,7 @@
         "@types/react-dom": "19.2.2",
         "@vitejs/plugin-react": "5.1.0",
         "eslint": "9.39.1",
+        "playcanvas": "^2.11.8",
         "eslint-plugin-import": "2.32.0",
         "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",

@@ -219,37 +219,35 @@ export function validatePropsWithDefaults<T extends object, InstanceType>(
  * @param props The props to apply
  */
 export function applyProps<T extends Record<string, unknown>, InstanceType>(
-    instance: InstanceType, 
-    schema: Schema<T, InstanceType>, 
+    instance: InstanceType,
+    schema: Schema<T, InstanceType>,
     props: T
-) {
-    Object.entries(props as Record<keyof T, unknown>).forEach(([key, value]) => {
-        if (key in schema) {
-            const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
-            if (propDef) {
-                if (propDef.apply) {
-                    // Use type assertion to satisfy the type checker
-                    propDef.apply(instance, props, key as string);
-                } else {
-                    try {
-                        (instance as Record<string, unknown>)[key] = value;
-                    } catch (error) {
-                        console.error(`Error applying prop ${key}: ${error}`);
-                    }
-                }
-            }
-        }   
+  ) {
+    Object.entries(props).forEach(([key, value]) => {
+      if (!(key in schema)) return;
+      const propDef = schema[key] as PropValidator<T[keyof T], InstanceType>;
+  
+      if (propDef.apply) {
+        propDef.apply(instance, props, key as string);
+      } else {
+        try {
+          (instance as Record<string, unknown>)[key] = value;
+        } catch (error) {
+          console.error(`Error applying prop ${key}:`, error);
+        }
+      }
     });
-}
+  }
 
-
+  
 /**
  * Property information including whether it's defined with a setter.
  */
 export type PropertyInfo = {
     value: unknown;
     isDefinedWithSetter: boolean;
-};
+    readOnly?: boolean; // Mark properties that should not be assigned
+  };
 
 /**
  * Get the pseudo public props of an instance with setter information. This is useful for creating a component definition from an instance.
@@ -283,7 +281,7 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
             const hasGetter = typeof descriptor.get === 'function';
             const hasSetter = typeof descriptor.set === 'function';
   
-            if (hasSetter && !hasGetter) return;   
+            if (hasSetter && !hasGetter) return;  // Only setter-only props are skipped 
 
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
@@ -369,8 +367,18 @@ export function createComponentDefinition<T, InstanceType>(
 
     // Basic type detection 
     entries.forEach(([key, propertyInfo]) => {
-        if(exclude.includes(String(key))) return;
-        const { value, isDefinedWithSetter } = propertyInfo;
+        if (exclude.includes(String(key))) return;
+        
+        // Mark getter-only properties as read-only
+        const descriptor = Object.getOwnPropertyDescriptor(
+          (instance as any).constructor.prototype,
+          key as string | symbol
+        );
+        if (descriptor && descriptor.get && !descriptor.set) {
+          propertyInfo.readOnly = true;
+        }
+        
+        const { value, isDefinedWithSetter } = propertyInfo;      
         
         // Colors
         if (value instanceof Color) {
@@ -380,6 +388,9 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val: unknown) => `Invalid value for prop "${String(key)}": "${val}". ` +
                     `Expected a hex like "#FF0000", CSS color name like "red", or an array "[1, 0, 0]").`,
                 apply: (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                      }
                     if(typeof props[key] === 'string') {
                         const colorString = getColorFromName(props[key] as string) || props[key] as string;
                         (instance[key as keyof InstanceType] as Color) = new Color().fromString(colorString);
@@ -397,8 +408,14 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 2 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec2) = new Vec2().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec2).set(...props[key] as [number, number]);
                 }
             };
@@ -411,8 +428,14 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 3 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec3) = new Vec3().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec3).set(...props[key] as [number, number, number]);
                 }
             };
@@ -424,8 +447,14 @@ export function createComponentDefinition<T, InstanceType>(
                 default: [value.x, value.y, value.z, value.w],
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec4) = new Vec4().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Vec4).set(...props[key] as [number, number, number, number]);
                 }
             };
@@ -439,8 +468,14 @@ export function createComponentDefinition<T, InstanceType>(
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". ` +
                     `Expected an array of 4 numbers.`,
                 apply: isDefinedWithSetter ? (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Quat) = new Quat().fromArray(props[key] as number[]);
                 } : (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as Quat).set(...props[key] as [number, number, number, number]);
                 }
             };
@@ -486,6 +521,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: value,
                 errorMsg: (val) => `Invalid value for prop "${String(key)}": "${JSON.stringify(val)}". Expected an array.`,
                 apply: (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     // For arrays, use a different approach to avoid spread operator issues
                     const values = props[key] as unknown[];
 
@@ -515,6 +553,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: value,
                 errorMsg: () => '',
                 apply: (instance, props, key) => {
+                    if (propertyInfo.readOnly) {
+                        return;
+                    }
                     (instance[key as keyof InstanceType] as unknown) = props[key];
                 }
             };
