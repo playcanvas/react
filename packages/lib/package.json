@@ -1,19 +1,7 @@
 {
     "name": "@playcanvas/react",
-    "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
-    "homepage": "https://developer.playcanvas.com/user-manual/react/",
     "version": "0.11.5",
-    "license": "MIT",
-    "type": "module",
-    "sideEffects": false,
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "scripts": {
-        "build": "tsc",
-        "test": "vitest run",
-        "test:watch": "vitest",
-        "test:coverage": "vitest run --coverage"
-    },
+    "description": "A React renderer for PlayCanvas – build interactive 3D applications using React's declarative paradigm.",
     "keywords": [
         "2d",
         "3d",
@@ -28,9 +16,7 @@
         "webgpu",
         "webxr"
     ],
-    "engines": {
-        "node": ">=18.0.0"
-    },
+    "homepage": "https://developer.playcanvas.com/user-manual/react/",
     "bugs": {
         "url": "https://github.com/playcanvas/react/issues"
     },
@@ -39,9 +25,9 @@
         "url": "https://github.com/playcanvas/react",
         "directory": "packages/lib"
     },
-    "files": [
-        "dist"
-    ],
+    "license": "MIT",
+    "sideEffects": false,
+    "type": "module",
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
@@ -51,6 +37,10 @@
             "types": "./dist/components/index.d.ts",
             "import": "./dist/components/index.js"
         },
+        "./hooks": {
+            "types": "./dist/hooks/index.d.ts",
+            "import": "./dist/hooks/index.js"
+        },
         "./scripts": {
             "types": "./dist/scripts/index.d.ts",
             "import": "./dist/scripts/index.js"
@@ -58,12 +48,10 @@
         "./utils": {
             "types": "./dist/utils/index.d.ts",
             "import": "./dist/utils/index.js"
-        },
-        "./hooks": {
-            "types": "./dist/hooks/index.d.ts",
-            "import": "./dist/hooks/index.js"
         }
     },
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "typesVersions": {
         "*": {
             "components": [
@@ -80,19 +68,17 @@
             ]
         }
     },
-    "peerDependencies": {
-        "playcanvas": "^2.11.8",
-        "react": "^18.3.1 || ^19.1.0",
-        "react-dom": "^18.3.1 || ^19.1.0",
-        "sync-ammo": "^0.1.2"
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsc",
+        "test": "vitest run",
+        "test:coverage": "vitest run --coverage",
+        "test:watch": "vitest"
     },
-    "peerDependenciesMeta": {
-        "sync-ammo": {
-            "optional": true
-        }
-    },
-    "publishConfig": {
-        "access": "public"
+    "dependencies": {
+        "dedent": "^1.6.0"
     },
     "devDependencies": {
         "@testing-library/jest-dom": "6.9.1",
@@ -106,7 +92,21 @@
         "jsdom": "27.4.0",
         "vitest": "4.1.8"
     },
-    "dependencies": {
-        "dedent": "^1.6.0"
+    "peerDependencies": {
+        "playcanvas": "^2.11.8",
+        "react": "^18.3.1 || ^19.1.0",
+        "react-dom": "^18.3.1 || ^19.1.0",
+        "sync-ammo": "^0.1.2"
+    },
+    "peerDependenciesMeta": {
+        "sync-ammo": {
+            "optional": true
+        }
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "publishConfig": {
+        "access": "public"
     }
 }

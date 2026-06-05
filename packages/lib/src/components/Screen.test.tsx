@@ -1,17 +1,18 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
+import type { Entity as PcEntity } from 'playcanvas';
+import { Vec2 } from 'playcanvas';
+import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { Screen } from './Screen.tsx';
-import { Entity } from '../Entity.tsx';
+
 import { Application } from '../Application.tsx';
-import { Vec2, Entity as PcEntity } from 'playcanvas';
+import { Entity } from '../Entity.tsx';
+
+import { Screen } from './Screen.tsx';
 
 const renderWithProviders = (ui: React.ReactNode) => {
     return render(
-        <Application deviceTypes={["null"]}>
-            <Entity>
-                {ui}
-            </Entity>
+        <Application deviceTypes={['null']}>
+            <Entity>{ui}</Entity>
         </Application>
     );
 };
@@ -32,11 +33,7 @@ describe('Screen', () => {
 
     it('should render with custom props', () => {
         const { container } = renderWithProviders(
-            <Screen
-                screenSpace={false}
-                referenceResolution={[1920, 1080]}
-                scaleMode="stretch"
-            />
+            <Screen screenSpace={false} referenceResolution={[1920, 1080]} scaleMode="stretch" />
         );
         expect(container).toBeTruthy();
     });
@@ -54,7 +51,7 @@ describe('Screen prop application', () => {
     it('applies referenceResolution as a Vec2, not a raw array', async () => {
         const ref = React.createRef<PcEntity>();
         render(
-            <Application deviceTypes={["null"]}>
+            <Application deviceTypes={['null']}>
                 <Entity ref={ref}>
                     <Screen referenceResolution={[1280, 720]} />
                 </Entity>

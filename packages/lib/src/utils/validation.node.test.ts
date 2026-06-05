@@ -12,17 +12,17 @@ import { describe, it, expect } from 'vitest';
  * jsdom and no playcanvas mocks — the same conditions as an SSG build.
  */
 describe('DOM-less import (SSR)', () => {
-  it('imports the package entry point without a DOM', async () => {
-    await expect(import('../index.ts')).resolves.toBeDefined();
-  });
+    it('imports the package entry point without a DOM', async () => {
+        await expect(import('../index.ts')).resolves.toBeDefined();
+    });
 
-  it('mock canvas answers the engine\'s layout probe', async () => {
-    const { getNullApplication } = await import('./validation.ts');
-    const app = getNullApplication();
+    it("mock canvas answers the engine's layout probe", async () => {
+        const { getNullApplication } = await import('./validation.ts');
+        const app = getNullApplication();
 
-    // The same call the GraphicsDevice constructor makes in engine 2.20.0+.
-    expect(() => app.graphicsDevice.updateClientRect()).not.toThrow();
-    expect(app.graphicsDevice.clientRect.width).toBe(0);
-    expect(app.graphicsDevice.clientRect.height).toBe(0);
-  });
+        // The same call the GraphicsDevice constructor makes in engine 2.20.0+.
+        expect(() => app.graphicsDevice.updateClientRect()).not.toThrow();
+        expect(app.graphicsDevice.clientRect.width).toBe(0);
+        expect(app.graphicsDevice.clientRect.height).toBe(0);
+    });
 });

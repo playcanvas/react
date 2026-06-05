@@ -1,46 +1,45 @@
-"use client";
+'use client';
 
-import { useEffect, useRef, useState } from "react";
-import { Entity } from "@playcanvas/react";
-import { Camera, Script } from "@playcanvas/react/components";
-import { useTimeline, useAssetViewer } from "./splat-viewer-context.ts";
-import { Vec3, Entity as PcEntity } from "playcanvas";
+import { Entity } from '@playcanvas/react';
+import { Camera, Script } from '@playcanvas/react/components';
+import { useApp, useParent } from '@playcanvas/react/hooks';
+import type { Entity as PcEntity } from 'playcanvas';
+import { Vec3 } from 'playcanvas';
+// @ts-expect-error there is no type definition for the camera-controls script
+import { CameraControls } from 'playcanvas/scripts/esm/camera-controls.mjs';
+import { useEffect, useRef, useState } from 'react';
 
-import { AnimationTrack, AnimCamera, createRotationTrack } from "./utils/animation.ts"; // assumed
-import { computeStartingPose, Pose, PoseType } from "./utils/pose.ts";
-import { useApp, useParent } from "@playcanvas/react/hooks";
-import { PostEffectsSettings, StaticPostEffects } from "./utils/effects.ts";
-import { paris, neutral, noir } from "./utils/style.ts";
-
-// @ts-expect-error There is no type definition for the camera-controls script
-import { CameraControls } from "playcanvas/scripts/esm/camera-controls.mjs";
-import { useRenderOnCameraChange } from "./hooks/use-render-on-camera-change.ts";
+import { useRenderOnCameraChange } from './hooks/use-render-on-camera-change.tsx';
+import { useTimeline, useAssetViewer } from './splat-viewer-context.tsx';
+import type { AnimationTrack } from './utils/animation.ts';
+import { AnimCamera, createRotationTrack } from './utils/animation.ts'; // assumed
+import type { PostEffectsSettings } from './utils/effects.tsx';
+import { StaticPostEffects } from './utils/effects.tsx';
+import type { PoseType } from './utils/pose.ts';
+import { computeStartingPose, Pose } from './utils/pose.ts';
+import { paris, neutral, noir } from './utils/style.ts';
 
 const variants = new Map<string, PostEffectsSettings>([
-  ['paris', paris],
-  ['neutral', neutral],
-  ['noir', noir]
+    ['paris', paris],
+    ['neutral', neutral],
+    ['noir', noir]
 ]);
 
-const length = (a: [number, number, number], b: [number, number, number]) => Math.sqrt(
-  Math.pow(a[0] - b[0], 2) +
-  Math.pow(a[1] - b[1], 2) + 
-  Math.pow(a[2] - b[2], 2)
-)
+const length = (a: [number, number, number], b: [number, number, number]) =>
+    Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2) + Math.pow(a[2] - b[2], 2));
 
 type CameraControlsProps = {
     /* The focus point of the camera */
-    focus?: [number, number, number]
-    enablePan: boolean,
-    enableFly: boolean,
-    enableOrbit: boolean,
-    enabled?: boolean,
-    distance?: number,
-    animate?: boolean,
-}
+    focus?: [number, number, number];
+    enablePan: boolean;
+    enableFly: boolean;
+    enableOrbit: boolean;
+    enabled?: boolean;
+    distance?: number;
+    animate?: boolean;
+};
 
 function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ...props }: CameraControlsProps) {
-
     const entity = useParent();
 
     useEffect(() => {
@@ -53,161 +52,164 @@ function CameraController({ focus = [0, 0, 0], distance = 0, animate = false, ..
         const controls = (entity.script?.cameraControls || entity.script?._CameraControls) as CameraControls;
         if (controls) {
             controls.focus(new Vec3().fromArray(focus), false);
-
         }
     }, [focus, distance, animate]);
 
-    return (<>
-        <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
-    </>);
+    return (
+        <>
+            <Script script={CameraControls} rotateSpeed={0.5} rotateDamping={0.985} {...props} />
+        </>
+    );
 }
 
 export function SmartCamera({
-  fov = 30,
-  animationTrack,
-  variant = "neutral"
+    fov = 30,
+    animationTrack,
+    variant = 'neutral'
 }: {
-  fov?: number;
-  animationTrack?: AnimationTrack;
-  variant?: "paris" | "neutral" | "noir" | "none" | PostEffectsSettings;
+    fov?: number;
+    animationTrack?: AnimationTrack;
+    variant?: 'paris' | 'neutral' | 'noir' | 'none' | PostEffectsSettings;
 }) {
+    const entityRef = useRef<PcEntity>(null);
+    const { subscribe, isPlaying } = useTimeline();
+    const { mode, subscribeCameraReset } = useAssetViewer();
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
+    const app = useApp();
+    const initialPoseRef = useRef<PoseType | null>(null);
 
-  const entityRef = useRef<PcEntity>(null);
-  const { subscribe, isPlaying } = useTimeline();
-  const { mode, subscribeCameraReset } = useAssetViewer();
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [shouldUseRenderOnCameraChange, setShouldUseRenderOnCameraChange] = useState(false);
-  const app = useApp();
-  const initialPoseRef = useRef<PoseType | null>(null);
-
-  useEffect(() => {
-    timeoutRef.current = setTimeout(() => {
-      setShouldUseRenderOnCameraChange(true);
-      app.renderNextFrame = true;
-    }, 200);
-    return () => clearTimeout(timeoutRef.current!);
-  });
-
-  useRenderOnCameraChange(shouldUseRenderOnCameraChange ? entityRef.current : null);
-  
-  const [pose, setPose] = useState<PoseType>({
-    position: [2, 1, 2],
-    target: [0, 0, 0]
-  });
-
-  const [animation, setAnimation] = useState<AnimCamera | null>(animationTrack ? AnimCamera.fromTrack(animationTrack) : null);
-
-  useEffect(() => {
-
-    const initialPose = computeStartingPose(app, fov);
-    initialPoseRef.current = initialPose;
-    
-    setPose(initialPose);
-    if(!animation) {
-        const actualPose = new Pose().fromLookAt(new Vec3().fromArray(initialPose.position), new Vec3().fromArray(initialPose.target));
-        const track = createRotationTrack(actualPose)
-        setAnimation(track);
-    }
-
-  }, [app]);
-
-  // Expose reset functionality through callback
-  useEffect(() => {
-
-    if (!subscribeCameraReset) return;
-
-    const unsubscribe = subscribeCameraReset(() => {
-      if (!initialPoseRef.current || !entityRef.current) return;
-      
-      setPose(computeStartingPose(app, fov));
-
-      // Force a render
-      app.renderNextFrame = true;
+    useEffect(() => {
+        timeoutRef.current = setTimeout(() => {
+            setShouldUseRenderOnCameraChange(true);
+            app.renderNextFrame = true;
+        }, 200);
+        return () => clearTimeout(timeoutRef.current!);
     });
 
-    return unsubscribe;
-  }, [subscribeCameraReset]);
+    // eslint-disable-next-line react-hooks/refs -- the camera hook consumes the existing imperative entity ref
+    useRenderOnCameraChange(shouldUseRenderOnCameraChange ? entityRef.current : null);
 
-  // Listen to timeline changes
-  useEffect(() => {
+    const [pose, setPose] = useState<PoseType>({
+        position: [2, 1, 2],
+        target: [0, 0, 0]
+    });
 
-    if (!animation || !isPlaying) return;
+    const [animation, setAnimation] = useState<AnimCamera | null>(
+        animationTrack ? AnimCamera.fromTrack(animationTrack) : null
+    );
 
-    const pose = new Pose();
-    // const rot = new Quat();
-    const unsub = subscribe((t) => {
-        animation.cursor.value = t * animation.frameRate;
-        animation.update();
-        animation.getPose(pose);
-        
-        //   if (mode === "animation") {
-        entityRef.current?.setPosition(animation.position);
-        entityRef.current?.setRotation(pose.rotation);
+    useEffect(() => {
+        const initialPose = computeStartingPose(app, fov);
+        initialPoseRef.current = initialPose;
 
-    //   } else if (mode === "transition") {
-        // // blend from previous to this
-        // const { pos: fromPos, rot: fromRot } = transitionStartRef.current!;
-        // const currentPos = new Vec3().lerp(fromPos, pose, 0.1);
-        // const currentRot = new Quat().slerp(fromRot, rot, 0.1);
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- the engine-derived pose initializes camera state
+        setPose(initialPose);
+        if (!animation) {
+            const actualPose = new Pose().fromLookAt(
+                new Vec3().fromArray(initialPose.position),
+                new Vec3().fromArray(initialPose.target)
+            );
+            const track = createRotationTrack(actualPose);
+            setAnimation(track);
+        }
+    }, [app]);
 
-        // entityRef.current?.setPosition(currentPos);
-        // entityRef.current?.setRotation(currentRot);
+    // Expose reset functionality through callback
+    useEffect(() => {
+        if (!subscribeCameraReset) return;
 
-        // if (
-        //   currentPos.distance(pose) < 0.01 &&
-        //   Quat.dot(currentRot, rot) > 0.999
-        // ) {
-        //   setMode("animation");
-        // }
+        const unsubscribe = subscribeCameraReset(() => {
+            if (!initialPoseRef.current || !entityRef.current) return;
+
+            setPose(computeStartingPose(app, fov));
+
+            // Force a render
+            app.renderNextFrame = true;
+        });
+
+        return unsubscribe;
+    }, [subscribeCameraReset]);
+
+    // Listen to timeline changes
+    useEffect(() => {
+        if (!animation || !isPlaying) return;
+
+        const pose = new Pose();
+        // const rot = new Quat();
+        const unsub = subscribe((t) => {
+            animation.cursor.value = t * animation.frameRate;
+            animation.update();
+            animation.getPose(pose);
+
+            //   if (mode === "animation") {
+            entityRef.current?.setPosition(animation.position);
+            entityRef.current?.setRotation(pose.rotation);
+
+            //   } else if (mode === "transition") {
+            // // blend from previous to this
+            // const { pos: fromPos, rot: fromRot } = transitionStartRef.current!;
+            // const currentPos = new Vec3().lerp(fromPos, pose, 0.1);
+            // const currentRot = new Quat().slerp(fromRot, rot, 0.1);
+
+            // entityRef.current?.setPosition(currentPos);
+            // entityRef.current?.setRotation(currentRot);
+
+            // if (
+            //   currentPos.distance(pose) < 0.01 &&
+            //   Quat.dot(currentRot, rot) > 0.999
+            // ) {
+            //   setMode("animation");
+            // }
+            //   }
+        });
+
+        return unsub;
+    }, [mode, animation, isPlaying]);
+
+    // When timeline starts playing, begin transition
+    //   useEffect(() => {
+    //     if (isPlaying && mode === "interactive" && animation) {
+    //       transitionStartRef.current = {
+    //         pos: entityRef.current?.getPosition().clone(),
+    //         rot: entityRef.current?.getRotation().clone(),
+    //       };
+    //       setMode("transition");
+    //     }
+    //   }, [isPlaying]);
+
+    //   if (!animationTrack || mode === "interactive") {
+    //     return (
+    //       <Entity name="camera" ref={entityRef} position={pose.position}>
+    //         <Camera fov={fov} clearColor="#f3e8ff" />
+    //         <CameraController
+    //           focus={pose.target}
+    //           enablePan={type === "fly"}
+    //           enableFly={type === "fly"}
+    //           enableOrbit={type === "orbit"}
+    //         />
+    //         <StaticPostEffects />
+    //       </Entity>
+    //     );
     //   }
-    });
 
-    return unsub;
-  }, [mode, animation, isPlaying]);
+    // If the variant is a string, use the default variant, otherwise use the variant object passed in
+    const style = typeof variant === 'string' ? (variants.get(variant) ?? neutral) : variant;
 
-  // When timeline starts playing, begin transition
-//   useEffect(() => {
-//     if (isPlaying && mode === "interactive" && animation) {
-//       transitionStartRef.current = {
-//         pos: entityRef.current?.getPosition().clone(),
-//         rot: entityRef.current?.getRotation().clone(),
-//       };
-//       setMode("transition");
-//     }
-//   }, [isPlaying]);
+    const distance = length(pose.position, pose.target) * 0.5;
 
-//   if (!animationTrack || mode === "interactive") {
-//     return (
-//       <Entity name="camera" ref={entityRef} position={pose.position}>
-//         <Camera fov={fov} clearColor="#f3e8ff" />
-//         <CameraController
-//           focus={pose.target}
-//           enablePan={type === "fly"}
-//           enableFly={type === "fly"}
-//           enableOrbit={type === "orbit"}
-//         />
-//         <StaticPostEffects />
-//       </Entity>
-//     );
-//   }
-
-  // If the variant is a string, use the default variant, otherwise use the variant object passed in
-  const style = typeof variant === 'string' ? variants.get(variant) ?? neutral : variant;
-
-  const distance = length(pose.position, pose.target) * 0.5
-
-  return (
-    <Entity name="camera" ref={entityRef} position={pose.position}>
-      <Camera fov={fov} clearColor="#f3e8ff" />
-      <CameraController
-        focus={pose.target}
-        distance={distance}
-        enablePan={mode === "fly"}
-        enableFly={true}
-        enableOrbit={mode === "orbit"}
-        enabled={!isPlaying}
-      />
-      {variant !== 'none' && <StaticPostEffects {...style}/>}
-    </Entity>
-  );
+    return (
+        <Entity name="camera" ref={entityRef} position={pose.position}>
+            <Camera fov={fov} clearColor="#f3e8ff" />
+            <CameraController
+                focus={pose.target}
+                distance={distance}
+                enablePan={mode === 'fly'}
+                enableFly={true}
+                enableOrbit={mode === 'orbit'}
+                enabled={!isPlaying}
+            />
+            {variant !== 'none' && <StaticPostEffects {...style} />}
+        </Entity>
+    );
 }

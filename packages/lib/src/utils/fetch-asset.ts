@@ -1,5 +1,7 @@
-import { Application, Asset } from "playcanvas";
-import { warnOnce } from "./validation.ts";
+import type { Application } from 'playcanvas';
+import { Asset } from 'playcanvas';
+
+import { warnOnce } from './validation.ts';
 
 type AssetType = ConstructorParameters<typeof Asset>[1];
 
@@ -8,7 +10,6 @@ export type AssetMeta = {
      * The normalized progress of the asset loading.
      */
     progress: number;
-
 } & Record<string, unknown>;
 
 export type FetchAssetOptions = {
@@ -38,14 +39,11 @@ export type FetchAssetOptions = {
     onProgress?: (meta: AssetMeta) => void;
 };
 
-export const fetchAsset = ({
-    app, url, type, props = {}, onProgress
-}: FetchAssetOptions ): Promise<Asset> => {
+export const fetchAsset = ({ app, url, type, props = {}, onProgress }: FetchAssetOptions): Promise<Asset> => {
     return new Promise((resolve, reject) => {
-
         let propsKey = url;
         try {
-            propsKey += JSON.stringify(props, Object.keys(props).sort())
+            propsKey += JSON.stringify(props, Object.keys(props).sort());
         } catch {
             const error = `Invalid props for "fetchAsset({ url: '${url}', type: '${type}' })". \`props\` must be serializable to JSON.`;
             warnOnce(error);
@@ -55,7 +53,13 @@ export const fetchAsset = ({
         let asset = app.assets.find(propsKey, type);
 
         if (!asset) {
-            asset = new Asset(propsKey, type as AssetType, { url, ...(props.file ?? {}) }, props.data ?? {}, props.options ?? {});
+            asset = new Asset(
+                propsKey,
+                type as AssetType,
+                { url, ...(props.file ?? {}) },
+                props.data ?? {},
+                props.options ?? {}
+            );
             app.assets.add(asset);
         }
 
@@ -65,21 +69,21 @@ export const fetchAsset = ({
             resolve(asset);
         };
 
-        const handleError = (err : string) => { 
+        const handleError = (err: string) => {
             cleanup();
             reject(err);
         };
 
         const handleProgress = (totalReceived: number, totalRequired: number) => {
-            if(typeof totalReceived !== 'number' || typeof totalRequired !== 'number') {
+            if (typeof totalReceived !== 'number' || typeof totalRequired !== 'number') {
                 warnOnce('Invalid progress callback parameters');
                 return;
             }
 
-            onProgress?.({ 
-                progress: totalReceived / totalRequired, 
-                totalReceived, 
-                totalRequired 
+            onProgress?.({
+                progress: totalReceived / totalRequired,
+                totalReceived,
+                totalRequired
             });
         };
 
@@ -94,11 +98,11 @@ export const fetchAsset = ({
         }
 
         if (asset.resource) {
-            handleLoad()
+            handleLoad();
         } else {
             asset.once('load', handleLoad);
             asset.once('error', handleError);
-            
+
             // Start loading if not already loading
             if (!asset.loading) {
                 app.assets.load(asset);

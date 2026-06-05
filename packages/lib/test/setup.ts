@@ -1,15 +1,22 @@
 import '@testing-library/jest-dom';
-import { expect, afterEach, vi } from 'vitest';
-import { cleanup } from '@testing-library/react';
 import * as matchers from '@testing-library/jest-dom/matchers';
-import * as playcanvas from 'playcanvas'
+import { cleanup } from '@testing-library/react';
+import type * as playcanvas from 'playcanvas';
+import { expect, afterEach, vi } from 'vitest';
+
 import { toHaveBeenCalledWithEvent } from './matchers.ts';
 
 // Mock ResizeObserver
 class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
+    observe() {
+        return undefined;
+    }
+    unobserve() {
+        return undefined;
+    }
+    disconnect() {
+        return undefined;
+    }
 }
 
 window.ResizeObserver = ResizeObserver;
@@ -19,73 +26,71 @@ expect.extend(matchers);
 
 // Add custom matchers
 expect.extend({
-  toHaveBeenCalledWithProps(mock: ReturnType<typeof vi.fn>, props: Record<string, unknown>) {
-    const pass = this.equals(mock.mock.calls[0][0], props);
-    return {
-      pass,
-      message: () => 
-        `expected ${mock.getMockName()} to have been called with ${JSON.stringify(props)}`
-    };
-  },
-  toHaveBeenCalledWithEvent,
+    toHaveBeenCalledWithProps(mock: ReturnType<typeof vi.fn>, props: Record<string, unknown>) {
+        const pass = this.equals(mock.mock.calls[0][0], props);
+        return {
+            pass,
+            message: () => `expected ${mock.getMockName()} to have been called with ${JSON.stringify(props)}`
+        };
+    },
+    toHaveBeenCalledWithEvent
 });
 
 // Cleanup after each test case
 afterEach(() => {
-  cleanup();
-  vi.clearAllMocks();
+    cleanup();
+    vi.clearAllMocks();
 });
 
 // Create test application with spies
 const createTestApp = (actual: typeof playcanvas) => {
+    const canvas = document.createElement('canvas');
 
-  const canvas = document.createElement('canvas');
+    const app = new actual.Application(canvas, {
+        graphicsDevice: new actual.NullGraphicsDevice(canvas),
+        touch: new actual.TouchDevice(canvas),
+        mouse: new actual.Mouse(canvas)
+    });
 
-  const app = new actual.Application(canvas, {
-    graphicsDevice: new actual.NullGraphicsDevice(canvas),
-    touch: new actual.TouchDevice(canvas),
-    mouse: new actual.Mouse(canvas)
-  });
+    // Spies
+    vi.spyOn(app, 'start');
+    vi.spyOn(app, 'destroy');
+    vi.spyOn(app, 'setCanvasFillMode');
+    vi.spyOn(app, 'setCanvasResolution');
+    vi.spyOn(app as playcanvas.EventHandler, 'on');
+    vi.spyOn(app as playcanvas.EventHandler, 'off');
+    vi.spyOn(app.root, 'addChild');
+    vi.spyOn(app.root, 'removeChild');
+    vi.spyOn(app.graphicsDevice as playcanvas.EventHandler, 'on');
+    vi.spyOn(app.graphicsDevice as playcanvas.EventHandler, 'off');
+    vi.spyOn(app.mouse as playcanvas.EventHandler, 'on');
+    vi.spyOn(app.mouse as playcanvas.EventHandler, 'off');
+    vi.spyOn(app.touch as playcanvas.EventHandler, 'on');
+    vi.spyOn(app.touch as playcanvas.EventHandler, 'off');
 
-  // Spies
-  vi.spyOn(app, 'start');
-  vi.spyOn(app, 'destroy');
-  vi.spyOn(app, 'setCanvasFillMode');
-  vi.spyOn(app, 'setCanvasResolution');
-  vi.spyOn(app as playcanvas.EventHandler, 'on');
-  vi.spyOn(app as playcanvas.EventHandler, 'off');
-  vi.spyOn(app.root, 'addChild');
-  vi.spyOn(app.root, 'removeChild');
-  vi.spyOn(app.graphicsDevice as playcanvas.EventHandler, 'on');
-  vi.spyOn(app.graphicsDevice as playcanvas.EventHandler, 'off');
-  vi.spyOn(app.mouse as playcanvas.EventHandler, 'on');
-  vi.spyOn(app.mouse as playcanvas.EventHandler, 'off');
-  vi.spyOn(app.touch as playcanvas.EventHandler, 'on');
-  vi.spyOn(app.touch as playcanvas.EventHandler, 'off');
-
-  return app;
+    return app;
 };
 
 vi.mock('playcanvas', async () => {
-  const actual = await vi.importActual<typeof import('playcanvas')>('playcanvas');
+    const actual = await vi.importActual<typeof playcanvas>('playcanvas');
 
-  const MockApplication = vi.fn(function MockApplication(this: unknown, ...args: unknown[]) {
-    void args;
-    return createTestApp(actual);
-  });
+    const MockApplication = vi.fn(function MockApplication(this: unknown, ...args: unknown[]) {
+        void args;
+        return createTestApp(actual);
+    });
 
-  return {
-    ...actual,
-    Application: MockApplication,
-  };
+    return {
+        ...actual,
+        Application: MockApplication
+    };
 });
 
 // Mock ResizeObserver
 global.ResizeObserver = vi.fn(function MockResizeObserver(this: unknown, ...args: unknown[]) {
-  void args;
-  return {
-    observe: vi.fn(),
-    unobserve: vi.fn(),
-    disconnect: vi.fn(),
-  };
-}); 
+    void args;
+    return {
+        observe: vi.fn(),
+        unobserve: vi.fn(),
+        disconnect: vi.fn()
+    };
+});

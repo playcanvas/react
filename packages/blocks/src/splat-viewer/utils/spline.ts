@@ -56,11 +56,7 @@ class CubicSpline {
             const p1 = knots[idx + dim * 3 + 1];
             idx += 3;
 
-            result[i] =
-                p0 * ((1 + twot) * omt2) +
-                m0 * (t * omt2) +
-                p1 * (t2 * (3 - twot)) +
-                m1 * (t2 * (t - 1));
+            result[i] = p0 * ((1 + twot) * omt2) + m0 * (t * omt2) + p1 * (t2 * (3 - twot)) + m1 * (t2 * (t - 1));
         }
     }
 
@@ -86,14 +82,16 @@ class CubicSpline {
                     tangent = (p - points[idx - dim]) / (t - times[i - 1]);
                 } else {
                     // finite difference tangents
-                    tangent = 0.5 * ((points[idx + dim] - p) / (times[i + 1] - t) + (p - points[idx - dim]) / (t - times[i - 1]));
+                    tangent =
+                        0.5 *
+                        ((points[idx + dim] - p) / (times[i + 1] - t) + (p - points[idx - dim]) / (t - times[i - 1]));
 
                     // cardinal spline tangents
                     // tangent = (points[idx + dim] - points[idx - dim]) / (times[i + 1] - times[i - 1]);
                 }
 
                 // apply tension
-                tangent *= (1.0 - tension);
+                tangent *= 1.0 - tension;
 
                 knots[idx * 3] = tangent;
                 knots[idx * 3 + 1] = p;

@@ -1,32 +1,34 @@
-"use client"
+'use client';
 
-import { FC } from "react";
-import { useComponent } from "../hooks/index.ts";
-import { Container } from "../Container.tsx";
-import { Asset, Entity, type RenderComponent as PcRenderComponent } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils.ts";
-import { getStaticNullApplication, validatePropsPartial, Schema } from "../utils/validation.ts";
-import { createComponentDefinition } from "../utils/validation.ts";
+import { Asset, Entity } from 'playcanvas';
+import type { RenderComponent as PcRenderComponent } from 'playcanvas';
+import type { FC } from 'react';
+
+import { Container } from '../Container.tsx';
+import { useComponent } from '../hooks/index.ts';
+import type { PublicProps, Serializable } from '../utils/types-utils.ts';
+import type { Schema } from '../utils/validation.ts';
+import { getStaticNullApplication, validatePropsPartial, createComponentDefinition } from '../utils/validation.ts';
 
 const RenderComponent: FC<RenderProps> = (props) => {
     // console.log('RenderComponent', props.material.diffuse);
-    useComponent("render", props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
+    useComponent('render', props, componentDefinition.schema as Schema<RenderProps, PcRenderComponent>);
     return null;
-}
+};
 
 /**
  * A Render component allows an entity to render a 3D model. You can specify the type of model to render with the `type` prop,
  * which can be a primitive shape, or a model asset.
- * 
+ *
  * @param {RenderProps} props - The props to pass to the render component.
  * @see https://api.playcanvas.com/engine/classes/RenderComponent.html
- * 
+ *
  * @example
  * const { data: asset } = useAsset('./statue.glb')
  * <Entity name='Box'   >
  *  <Render type="box" />
  * </Entity>
- * 
+ *
  * @example
  * <Entity name='asset'>
  *  <Render type="asset" asset={asset} />
@@ -37,25 +39,23 @@ export const Render: FC<RenderProps> = (props) => {
     const safeProps = validatePropsPartial(props, componentDefinition);
 
     // Don't render if the type is asset and the asset is not provided
-    if(safeProps.type === "asset" && !safeProps.asset) return null;
+    if (safeProps.type === 'asset' && !safeProps.asset) return null;
 
     // Render a container if the asset is a container
     if (safeProps.asset?.type === 'container') {
-        return <Container asset={safeProps.asset as Asset} >
-            { safeProps.children }
-        </Container>
+        return <Container asset={safeProps.asset as Asset}>{safeProps.children}</Container>;
     }
 
     // console.log('safeProps', safeProps);
 
     // Otherwise, render the component
-    return <RenderComponent {...safeProps as Serializable<RenderProps>} />;
-}
+    return <RenderComponent {...(safeProps as Serializable<RenderProps>)} />;
+};
 
+const primitiveTypes = ['asset', 'box', 'capsule', 'cone', 'cylinder', 'plane', 'sphere', 'torus'] as const;
+type PrimitiveType = (typeof primitiveTypes)[number];
 
-const primitiveTypes = ["asset", "box", "capsule", "cone", "cylinder", "plane", "sphere", "torus"] as const;
-type PrimitiveType = typeof primitiveTypes[number];
-
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'asset'> {
     /**
      * The type of primitive shape to render.
@@ -70,11 +70,11 @@ interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'ass
 }
 
 const componentDefinition = createComponentDefinition<RenderProps, PcRenderComponent>(
-    "Render",
+    'Render',
     () => new Entity('mock-render', getStaticNullApplication()).addComponent('render') as PcRenderComponent,
     (component) => (component as PcRenderComponent).system.destroy(),
-    { apiName: "RenderComponent" }   
-)
+    { apiName: 'RenderComponent' }
+);
 
 componentDefinition.schema = {
     ...componentDefinition.schema,
@@ -90,10 +90,11 @@ componentDefinition.schema = {
     },
     type: {
         validate: (value: unknown) => typeof value === 'string' && primitiveTypes.includes(value as PrimitiveType),
-        errorMsg: (value: unknown) => `Invalid value for prop "type": ${value}. Expected one of: "${primitiveTypes.join('", "')}".`,
-        default: "box"
+        errorMsg: (value: unknown) =>
+            `Invalid value for prop "type": ${value}. Expected one of: "${primitiveTypes.join('", "')}".`,
+        default: 'box'
     }
-}
+};
 
 export { componentDefinition as renderComponentDefinition };
 export default Render;

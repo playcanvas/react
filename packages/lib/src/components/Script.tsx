@@ -1,15 +1,17 @@
-import { Script as PcScript } from "playcanvas";
-import { useScript } from "../hooks/index.ts";
-import { forwardRef, memo, useMemo } from "react";
-import { ComponentDefinition, validatePropsPartial } from "../utils/validation.ts";
-import { shallowEquals } from "../utils/compare.tsx";
-import { SubclassOf } from "../utils/types-utils.ts";
+import { Script as PcScript } from 'playcanvas';
+import { forwardRef, memo, useMemo } from 'react';
+
+import { useScript } from '../hooks/index.ts';
+import { shallowEquals } from '../utils/compare.tsx';
+import type { SubclassOf } from '../utils/types-utils.ts';
+import type { ComponentDefinition } from '../utils/validation.ts';
+import { validatePropsPartial } from '../utils/validation.ts';
 
 /**
  * The Script component allows you to hook into the entity's lifecycle. This allows you to
  * run code  during the frame update loop, or when the entity is created or destroyed.
  * Use this for high-performance code that needs to run on every frame.
- * 
+ *
  * @param {ScriptProps} props - The props to pass to the script component.
  * @see https://api.playcanvas.com/engine/classes/Script.html
  * @example
@@ -24,26 +26,26 @@ import { SubclassOf } from "../utils/types-utils.ts";
  * <Script script={Rotator} />
  */
 
-const ScriptComponent = forwardRef<PcScript, ScriptProps>(function ScriptComponent(
-    props,
-    ref
-  ): React.ReactElement | null {
-    const validatedProps = validatePropsPartial(props as ScriptProps, componentDefinition, false);
-  
-    const { script, ...restProps } = validatedProps;
-  
-    const memoizedProps = useMemo(() => restProps, [restProps]);
-  
-    useScript(script as SubclassOf<PcScript>, memoizedProps, ref);
-  
-    return null;
-  });
+const ScriptComponent = forwardRef<PcScript, ScriptProps>(
+    function ScriptComponent(props, ref): React.ReactElement | null {
+        const validatedProps = validatePropsPartial(props as ScriptProps, componentDefinition, false);
+
+        const { script, ...restProps } = validatedProps;
+
+        const memoizedProps = useMemo(() => restProps, [restProps]);
+
+        useScript(script as SubclassOf<PcScript>, memoizedProps, ref);
+
+        return null;
+    }
+);
 
 // Memoize the component to prevent re-rendering if `script` or `props` are the same
 export const Script = memo(ScriptComponent, (prevProps, nextProps) => {
-    return prevProps.script === nextProps.script && shallowEquals(prevProps, nextProps)
+    return prevProps.script === nextProps.script && shallowEquals(prevProps, nextProps);
 });
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing index signature
 interface ScriptProps {
     script: SubclassOf<PcScript>;
     [key: string]: unknown;
@@ -54,13 +56,14 @@ class NullScript extends PcScript {
 }
 
 const componentDefinition = {
-    name: "Script",
-    apiName: "ScriptComponent",
-    schema : {
+    name: 'Script',
+    apiName: 'ScriptComponent',
+    schema: {
         script: {
-            validate: (value: unknown): boolean => Boolean(value && value instanceof Function && value.prototype instanceof PcScript),
+            validate: (value: unknown): boolean =>
+                Boolean(value && value instanceof Function && value.prototype instanceof PcScript),
             errorMsg: (value: unknown) => `Invalid value for prop "script": "${value}". Expected a subclass of Script.`,
             default: NullScript
         }
     }
-} as ComponentDefinition<ScriptProps, PcScript>
+} as ComponentDefinition<ScriptProps, PcScript>;

@@ -1,4 +1,5 @@
-import { Application, BoundingBox,  GSplatComponent, Vec3 } from 'playcanvas';
+import type { Application, GSplatComponent } from 'playcanvas';
+import { BoundingBox, Vec3 } from 'playcanvas';
 
 import { lerp, ExtendedQuat } from './math.ts';
 
@@ -6,10 +7,9 @@ const v = new Vec3();
 
 // stores a camera pose
 class Pose {
-
     position: Vec3 = new Vec3();
     rotation: ExtendedQuat = new ExtendedQuat();
-    distance: number = 1;
+    distance = 1;
 
     constructor(other = null) {
         if (other) {
@@ -45,21 +45,20 @@ class Pose {
 }
 
 export type PoseType = {
-    position: [number, number, number],
-    target: [number, number, number]
-}
+    position: [number, number, number];
+    target: [number, number, number];
+};
 
-const computeStartingPose = (app: Application, fov: number) : PoseType => {
-
+const computeStartingPose = (app: Application, fov: number): PoseType => {
     const gsplat = app.root.findComponent('gsplat') as unknown as GSplatComponent;
 
     if (!gsplat) {
-        throw new Error("GSplat not found");
+        throw new Error('GSplat not found');
     }
 
     const bbox = gsplat?.instance?.meshInstance?.aabb ?? new BoundingBox();
     const sceneSize = bbox.halfExtents.length() * 1.5;
-    const distance = sceneSize / Math.sin(fov / 180 * Math.PI * 0.5);
+    const distance = sceneSize / Math.sin((fov / 180) * Math.PI * 0.5);
 
     const position = new Vec3(2, 1, 2).normalize().mulScalar(distance).add(bbox.center).toArray();
     const target = bbox.center.toArray();
@@ -68,6 +67,6 @@ const computeStartingPose = (app: Application, fov: number) : PoseType => {
         position,
         target
     } as PoseType;
-}
+};
 
 export { Pose, computeStartingPose };

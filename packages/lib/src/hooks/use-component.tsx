@@ -1,61 +1,58 @@
-import { useLayoutEffect, useRef } from "react";
-import { useParent } from "./use-parent.tsx";
-import { useApp } from "./use-app.tsx";
-import { Application, Component, Entity } from "playcanvas";
-import { applyProps, Schema } from "../utils/validation.ts";
+import type { Application, Component, Entity } from 'playcanvas';
+import { useLayoutEffect, useRef } from 'react';
 
-export function useComponent<T, InstanceType>(
-  ctype: string | null, 
-  props: T, 
-  schema: Schema<T, InstanceType>
-): void {
-  const componentRef = useRef<Component | null>(null);
-  const parent : Entity = useParent();
-  const app : Application = useApp();
+import type { Schema } from '../utils/validation.ts';
+import { applyProps } from '../utils/validation.ts';
 
-  useLayoutEffect(() => {
-    if(!ctype) {
-      return;
-    }
+import { useApp } from './use-app.tsx';
+import { useParent } from './use-parent.tsx';
 
-    if (parent) {
-      // Only add the component if it hasn't been added yet
-      if (!componentRef.current) {
-        componentRef.current = parent.addComponent(ctype);
-      }
-    }
+export function useComponent<T, InstanceType>(ctype: string | null, props: T, schema: Schema<T, InstanceType>): void {
+    const componentRef = useRef<Component | null>(null);
+    const parent: Entity = useParent();
+    const app: Application = useApp();
 
-    return () => {
-      const comp = componentRef.current
-      componentRef.current = null;
-
-      if(!app || !app.root) return;
-
-      if (comp) {
-        type SystemKeys = keyof typeof app.systems;
-        if (app.systems[ctype as SystemKeys] && parent.c[ctype]) {
-          parent.removeComponent(ctype);
+    useLayoutEffect(() => {
+        if (!ctype) {
+            return;
         }
-      }
-    };
-  }, [app, parent, ctype]);
 
-  // Update component props
-  useLayoutEffect(() => {
+        if (parent) {
+            // Only add the component if it hasn't been added yet
+            if (!componentRef.current) {
+                componentRef.current = parent.addComponent(ctype);
+            }
+        }
 
-    if(!ctype) {
-      return
-    }
+        return () => {
+            const comp = componentRef.current;
+            componentRef.current = null;
 
-    const comp: Component | null | undefined = componentRef.current
-    // Ensure componentRef.current exists before updating props
-    if (!comp) return;
+            if (!app || !app.root) return;
 
-    const filteredProps = Object.fromEntries(
-      Object.entries(props as Record<keyof Component, unknown>).filter(([key]) => key in comp)
-    );
+            if (comp) {
+                type SystemKeys = keyof typeof app.systems;
+                if (app.systems[ctype as SystemKeys] && parent.c[ctype]) {
+                    parent.removeComponent(ctype);
+                }
+            }
+        };
+    }, [app, parent, ctype]);
 
-    applyProps(comp as InstanceType, schema, filteredProps as Record<keyof Component, unknown>);
+    // Update component props
+    useLayoutEffect(() => {
+        if (!ctype) {
+            return;
+        }
 
-  });
-};
+        const comp: Component | null | undefined = componentRef.current;
+        // Ensure componentRef.current exists before updating props
+        if (!comp) return;
+
+        const filteredProps = Object.fromEntries(
+            Object.entries(props as Record<keyof Component, unknown>).filter(([key]) => key in comp)
+        );
+
+        applyProps(comp as InstanceType, schema, filteredProps as Record<keyof Component, unknown>);
+    });
+}

@@ -3,18 +3,18 @@
  * Provides access to component schemas to know which properties to serialize
  */
 
+import { cameraComponentDefinition } from '../../components/Camera.tsx';
 import { lightComponentDefinition } from '../../components/Light.tsx';
 import { renderComponentDefinition } from '../../components/Render.tsx';
-import { cameraComponentDefinition } from '../../components/Camera.tsx';
 
 /**
  * Registry mapping component type names to their schema definitions
  */
 export const componentSchemaRegistry: Record<string, { schema?: Record<string, unknown> }> = {
-  light: lightComponentDefinition,
-  render: renderComponentDefinition,
-  camera: cameraComponentDefinition,
-  // Add more as they're exported from component files
+    light: lightComponentDefinition,
+    render: renderComponentDefinition,
+    camera: cameraComponentDefinition
+    // Add more as they're exported from component files
 };
 
 /**
@@ -22,14 +22,13 @@ export const componentSchemaRegistry: Record<string, { schema?: Record<string, u
  * Uses the actual component schema as source of truth
  */
 export function getSerializablePropertyNames(componentType: string): string[] | null {
-  const definition = componentSchemaRegistry[componentType];
-  
-  if (!definition || !definition.schema) {
-    // No schema found - return null to signal we should serialize all properties
-    return null;
-  }
+    const definition = componentSchemaRegistry[componentType];
 
-  // Return all property keys defined in the schema
-  return Object.keys(definition.schema);
+    if (!definition || !definition.schema) {
+        // No schema found - return null to signal we should serialize all properties
+        return null;
+    }
+
+    // Return all property keys defined in the schema
+    return Object.keys(definition.schema);
 }
-

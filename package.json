@@ -18,25 +18,27 @@
         "build:docs": "pnpm --filter docs run build",
         "build": "pnpm run build:lib && pnpm run build:blocks && pnpm run build:docs",
         "start": "pnpm --filter docs run start",
+        "fmt": "prettier --check packages eslint.config.mjs prettier.config.mjs",
+        "fmt:fix": "prettier --write packages eslint.config.mjs prettier.config.mjs",
         "lint": "pnpm -r exec eslint .",
+        "lint:fix": "pnpm -r exec eslint . --fix",
         "test": "pnpm -r run test"
     },
     "devDependencies": {
         "@changesets/cli": "2.31.0",
-        "@eslint/js": "9.39.4",
+        "@playcanvas/eslint-config": "3.0.0-beta.8",
         "@testing-library/dom": "10.4.1",
         "@types/react": "19.2.17",
         "@types/react-dom": "19.2.3",
         "@vitejs/plugin-react": "5.2.0",
         "eslint": "9.39.4",
         "eslint-plugin-import": "2.32.0",
-        "eslint-plugin-react": "7.37.5",
         "eslint-plugin-react-compiler": "19.0.0-beta-ebf51a3-20250411",
         "globals": "16.5.0",
         "pkg-pr-new": "0.0.75",
+        "prettier": "3.9.6",
         "type-fest": "5.7.0",
         "typescript": "5.9.3",
-        "typescript-eslint": "8.60.1",
         "vitest": "4.1.8"
     }
 }
