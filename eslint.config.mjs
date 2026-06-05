@@ -1,30 +1,28 @@
 import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import reactCompiler from 'eslint-plugin-react-compiler'
+import typescriptConfig from "@playcanvas/eslint-config/typescript";
+import reactConfig from "@playcanvas/eslint-config/react";
+import reactCompiler from "eslint-plugin-react-compiler";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-  {languageOptions: { globals: {...globals.browser, ...globals.node} }},
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
+  // shared tiers: /react is additive-only and spread on top of /typescript
+  ...typescriptConfig,
+  ...reactConfig,
+
+  // repo-specific (preserved):
+  // browser globals — this is a React browser renderer; /typescript only sets node globals
+  { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+
+  // eslint-plugin-react-compiler is NOT bundled by /react, so it stays repo-specific
   {
     plugins: {
-      'react-compiler': reactCompiler,
-    },
-    settings: {
-      react: {
-        version: "detect", // Automatically detect React version
-      }
+      "react-compiler": reactCompiler,
     },
     rules: {
-      'react/prop-types': 'off',
+      "react/prop-types": "off",
       "react/jsx-uses-react": "off",
       "react/react-in-jsx-scope": "off",
-      "react-compiler/react-compiler": "warn"
+      "react-compiler/react-compiler": "warn",
     },
-  }
+  },
 ];
