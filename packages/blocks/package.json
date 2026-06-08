@@ -59,15 +59,15 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^0.511.0 || ^0.514.0 || ^0.515.0 || ^0.523.0 || ^0.525.0 || ^0.539.0 || ^0.542.0 || ^0.543.0 || ^0.544.0 || ^0.552.0 || ^0.553.0",
+    "lucide-react": "^0.511.0 || ^0.514.0 || ^0.515.0 || ^0.523.0 || ^0.525.0 || ^0.539.0 || ^0.542.0 || ^0.543.0 || ^0.544.0 || ^0.552.0 || ^0.553.0 || ^0.577.0",
     "tailwind-merge": "^3.3.0",
     "tw-animate-css": "^1.3.0",
     "vaul": "^1.1.2"
   },
   "devDependencies": {
-    "@types/react": "19.2.2",
-    "@types/react-dom": "19.2.2",
-    "tsc-alias": "1.8.16"
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "tsc-alias": "1.8.17"
   },
   "peerDependencies": {
     "playcanvas": "^2.11.8",
