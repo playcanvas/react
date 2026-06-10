@@ -16,10 +16,10 @@ _⚡ A full-featured library for interactive 3D in React._
 **@playcanvas/react gets you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It's a complete, batteries-included toolkit for interactive 3D experiences in React.
 
 <p>
-  <a href="https://developer.playcanvas.com/user-manual/react/examples/">
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/motion/">
     <img src="https://github.com/user-attachments/assets/f7be5ba5-69ae-454e-b730-f37a4b4f37ef" alt="Motion example" width="49%" style="margin: 6px;" />
   </a>
-  <a href="https://developer.playcanvas.com/user-manual/react/examples/">
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/model-viewer/">
     <img src="https://github.com/user-attachments/assets/fc90d53e-0d7f-485a-9d14-855d1662bc89" alt="Model viewer example" width="49%" style="margin: 6px;" />
   </a>
   <a href="https://developer.playcanvas.com/user-manual/react/examples/physics/">
@@ -81,11 +81,13 @@ Et voilà! ✨
 
 ## Ready to build something?
 
-Now you've got the tools, you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/react/getting-started/) guide for a step-by-step intro, or dive into the examples to see it all in action.
+Now you've got the tools, you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/react/getting-started/) guide for a step-by-step intro, or dive into the [examples](https://developer.playcanvas.com/user-manual/react/examples/) to see it all in action.
 
 - [Building a scene](https://developer.playcanvas.com/user-manual/react/building-a-scene/)
 - [Loading a 3D model](https://developer.playcanvas.com/user-manual/react/guide/loading-assets/)
 - [Interaction](https://developer.playcanvas.com/user-manual/react/guide/interactivity/)
+- [Model Viewer](https://developer.playcanvas.com/user-manual/react/examples/model-viewer/)
+- [Motion](https://developer.playcanvas.com/user-manual/react/examples/motion/)
 - [Physics](https://developer.playcanvas.com/user-manual/react/examples/physics/)
 - [Splats](https://developer.playcanvas.com/user-manual/react/api/gsplat/)
 
