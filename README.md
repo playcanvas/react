@@ -22,7 +22,7 @@ _⚡ A full-featured library for interactive 3D in React._
   <a href="https://developer.playcanvas.com/user-manual/react/examples/">
     <img src="https://github.com/user-attachments/assets/fc90d53e-0d7f-485a-9d14-855d1662bc89" alt="Model viewer example" width="49%" style="margin: 6px;" />
   </a>
-  <a href="https://developer.playcanvas.com/user-manual/react/guide/physics/">
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/physics/">
     <img src="https://github.com/user-attachments/assets/084fc21a-8efa-4967-9e50-e9520a627e8c" alt="Physics example" width="49%" style="margin: 6px;" />
   </a>
   <a href="https://stackblitz.com/edit/pc-react-tick-tock?file=src%2FScene.tsx">
@@ -86,7 +86,7 @@ Now you've got the tools, you're ready to start building. Start with the [Gettin
 - [Building a scene](https://developer.playcanvas.com/user-manual/react/building-a-scene/)
 - [Loading a 3D model](https://developer.playcanvas.com/user-manual/react/guide/loading-assets/)
 - [Interaction](https://developer.playcanvas.com/user-manual/react/guide/interactivity/)
-- [Physics](https://developer.playcanvas.com/user-manual/react/guide/physics/)
+- [Physics](https://developer.playcanvas.com/user-manual/react/examples/physics/)
 - [Splats](https://developer.playcanvas.com/user-manual/react/api/gsplat/)
 
 You can also browse the full [documentation](https://developer.playcanvas.com/user-manual/react/) or the [API reference](https://developer.playcanvas.com/user-manual/react/api/).
