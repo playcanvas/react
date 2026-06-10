@@ -1,49 +1,47 @@
 [![Version](https://img.shields.io/npm/v/@playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://www.npmjs.com/package/@playcanvas/react)
-[![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=333333&colorB=444444&label=discord&logo=discord&logoColor=ffffff)](https://discord.com/channels/408617316415307776/408617316415307778)
+[![Discord](https://img.shields.io/discord/740090768164651008?style=flat&colorA=333333&colorB=444444&label=discord&logo=discord&logoColor=ffffff)](https://discord.gg/RSaMRzg)
 [![Twitter](https://img.shields.io/twitter/follow/playcanvas?label=%40playcanvas&style=flat&colorA=333333&colorB=333333&logo=x&logoColor=ffffff)](https://x.com/playcanvas)
-[![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://github.com/playcanvas/react)
+[![Issues](https://img.shields.io/github/issues/playcanvas/react?style=flat&colorA=333333&colorB=444444)](https://github.com/playcanvas/react/issues)
 [![pkg.pr.new](https://pkg.pr.new/badge/playcanvas/react)](https://pkg.pr.new/~/playcanvas/react)
 
-## @playcanvas/react
+# @playcanvas/react
 _⚡ A full-featured library for interactive 3D in React._
 
-@playcanvas/react is a thin wrapper around PlayCanvas - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
+@playcanvas/react is a thin wrapper around [PlayCanvas](https://github.com/playcanvas/engine) — a battle-tested, real-time 3D engine — designed to get you up and running fast.
 
-<img src="https://github.com/user-attachments/assets/4e652314-8540-41ba-ba90-7ffba9f1731d" />
+<img src="https://github.com/user-attachments/assets/4e652314-8540-41ba-ba90-7ffba9f1731d" alt="PlayCanvas React" />
 
 ## Why PlayCanvas React?
 
-**@playcanvas/react is designed to get you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It's a complete, batteries-included toolkit for interactive 3D experiences in React.
+**@playcanvas/react gets you building fast** — without the usual mess of wiring together separate libraries for physics, input or asset management. It's a complete, batteries-included toolkit for interactive 3D experiences in React.
 
-It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships with powerful built-in features out of the box.
-
-<p>  
-  <a href="https://playcanvas-react.vercel.app/examples/motion">
-    <img src="https://github.com/user-attachments/assets/f7be5ba5-69ae-454e-b730-f37a4b4f37ef" width="49%" style="margin: 6px;" />
+<p>
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/motion/">
+    <img src="https://github.com/user-attachments/assets/f7be5ba5-69ae-454e-b730-f37a4b4f37ef" alt="Motion example" width="49%" style="margin: 6px;" />
   </a>
-  <a href="https://playcanvas-react.vercel.app/examples/model-viewer">
-    <img src="https://github.com/user-attachments/assets/fc90d53e-0d7f-485a-9d14-855d1662bc89" width="49%" style="margin: 6px;" />
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/model-viewer/">
+    <img src="https://github.com/user-attachments/assets/fc90d53e-0d7f-485a-9d14-855d1662bc89" alt="Model viewer example" width="49%" style="margin: 6px;" />
   </a>
-  <a href="https://playcanvas-react.vercel.app/examples/physics">
-    <img src="https://github.com/user-attachments/assets/084fc21a-8efa-4967-9e50-e9520a627e8c" width="49%" style="margin: 6px;" />
+  <a href="https://developer.playcanvas.com/user-manual/react/examples/physics/">
+    <img src="https://github.com/user-attachments/assets/084fc21a-8efa-4967-9e50-e9520a627e8c" alt="Physics example" width="49%" style="margin: 6px;" />
   </a>
   <a href="https://stackblitz.com/edit/pc-react-tick-tock?file=src%2FScene.tsx">
-    <img src="https://github.com/user-attachments/assets/66eab2db-197f-4f66-b159-cf62eba8a928" width="49%" style="margin: 6px;" />
+    <img src="https://github.com/user-attachments/assets/66eab2db-197f-4f66-b159-cf62eba8a928" alt="Tick tock clock example" width="49%" style="margin: 6px;" />
   </a>
 </p>
 
 ### Features
 
 - 🎭 Simple Scene API
-- ⏳ Suspenseful Asset loading
-- ️👆 Pointer Events
+- ⏳ Suspenseful asset loading
+- 👆 Pointer events
 - 🛠️ Physics out of the box
 - ⚡ Script component
 - 🏗️ Entity Component System
 
 ## Getting Started
 
-⚡ Start building in minutes with our [playcanvas-react.app/new](https://playcanvas-react.vercel.app/new) template.
+⚡ Start building in minutes with the [StackBlitz starter](https://stackblitz.com/edit/pc-react-tick-tock?file=src%2FScene.tsx).
 
 Install with your favorite package manager...
 
@@ -53,13 +51,13 @@ npm install @playcanvas/react playcanvas
 
 You can also clone the following starter template.
 
-```bash copy
+```bash
 git clone https://github.com/marklundin/playcanvas-react-template.git
 ```
 
 ### Show me the code
 
-Here's how you render a sphere. 
+Here's how you render a sphere.
 
 ```jsx
 import { Application, Entity } from '@playcanvas/react';
@@ -76,50 +74,48 @@ export function AssetViewer() {
       <Render type="sphere"/>
     </Application>
   );
-};
+}
 ```
 
 Et voilà! ✨
 
 ## Ready to build something?
 
-Now you've got the tools you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/playcanvas-react/getting-started) for a step-by-step intro, or jump straight into the [Playground](https://playcanvas-react.vercel.app/examples) to explore real examples in action.
+Now you've got the tools, you're ready to start building. Start with the [Getting Started](https://developer.playcanvas.com/user-manual/react/getting-started/) guide for a step-by-step intro, or dive into the [examples](https://developer.playcanvas.com/user-manual/react/examples/) to see it all in action.
 
-- [Hello World](https://playcanvas-react.vercel.app/examples/hello-world)
-- [Loading a 3D model](https://playcanvas-react.vercel.app/examples/load-a-3D-model)
-- [Interaction](https://playcanvas-react.vercel.app/examples/pointer-events)
-- [Physics](https://playcanvas-react.vercel.app/examples/physics)
-- [Splats](https://playcanvas-react.vercel.app/examples/splats)
+- [Building a scene](https://developer.playcanvas.com/user-manual/react/building-a-scene/)
+- [Loading a 3D model](https://developer.playcanvas.com/user-manual/react/guide/loading-assets/)
+- [Interaction](https://developer.playcanvas.com/user-manual/react/guide/interactivity/)
+- [Model Viewer](https://developer.playcanvas.com/user-manual/react/examples/model-viewer/)
+- [Motion](https://developer.playcanvas.com/user-manual/react/examples/motion/)
+- [Physics](https://developer.playcanvas.com/user-manual/react/examples/physics/)
+- [Splats](https://developer.playcanvas.com/user-manual/react/api/gsplat/)
 
-You can also jump straight into the [docs](https://developer.playcanvas.com/user-manual/playcanvas-react) or [api](https://developer.playcanvas.com/user-manual/playcanvas-react/api).
+You can also browse the full [documentation](https://developer.playcanvas.com/user-manual/react/) or the [API reference](https://developer.playcanvas.com/user-manual/react/api/).
 
-## Who’s building with @playcanvas/react?
+## Who's building with @playcanvas/react?
 
-Developers and studios are already using @playcanvas/react in production
+Developers and studios are already using @playcanvas/react in production.
 
-- ⚡ [Snap AI](ai.snap.com) uses @playcanvas/react to build real-time 3D interfaces inside their next-gen tools.
-- [GSplat Share](https://gsplat.org/) – Share your splats with optional time-limited and password-protected links.
-- ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we’ll feature it below.
+- [Snap AI](https://ai.snap.com) — Real-time 3D interfaces inside Snap's next-gen tools.
+- [GSplat Share](https://gsplat.org/) — Share your splats with optional time-limited and password-protected links.
+- ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we'll feature it.
 
-## AI assisted editors
+## AI-assisted editors
 
-To get your IDE up to speed, you can install the latest MDC rules for cursor. Or [grab them here](https://developer.playcanvas.com/user-manual/playcanvas-react/rules) to add them manually.
+To get your IDE up to speed, install the [PlayCanvas React rules](https://github.com/playcanvas/react/blob/main/packages/lib/.playcanvas-react.mdc) for Cursor:
 
 ```bash
-mkdir -p .cursor/rules && curl -s https://developer.playcanvas.com/user-manual/playcanvas-react/rules -o .cursor/rules/playcanvas-react.mdc
+mkdir -p .cursor/rules && curl -s https://raw.githubusercontent.com/playcanvas/react/main/packages/lib/.playcanvas-react.mdc -o .cursor/rules/playcanvas-react.mdc
 ```
 
 ## Contributing
 
-If you want to build the repo from scratch, check out the following. The monorepo is split into 3 main packages:
+The monorepo is split into 2 packages:
 
-- [@playcanvas/react](/packages/lib) - This contains the main react library
-- [@playcanvas/blocks](/packages/blocks) - High level React components for common 3D use cases
-- [@playcanvas/docs](/packages/docs) - The Documentation site.
+- [@playcanvas/react](/packages/lib) - The main React library
+- [@playcanvas/blocks](/packages/blocks) - High-level React components for common 3D use cases
 
-If you want to run this entire project locally, including docs just `npm install` and `npm run dev` from the root of the monorepo. This will install and build all the local dependencies and run a local webserver of the docs. 
-
-You can make changes to either the react or blocks lib and build them locally by doing `npm run build:lib` or `npm run build:blocks` respectively.
+To get set up, run `pnpm install` from the root of the monorepo. You can then build each package with `pnpm run build:lib` or `pnpm run build:blocks`, and run the tests with `pnpm test`.
 
 All contributions are welcome :heart:
-
