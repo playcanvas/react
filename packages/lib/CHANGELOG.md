@@ -1,5 +1,11 @@
 # @playcanvas/react
 
+## 0.11.5
+
+### Patch Changes
+
+- 4f25e4e: Fix stale homepage URLs in package metadata: `@playcanvas/react` now points at the canonical docs path and `@playcanvas/blocks` at its GitHub README instead of the retired Vercel site.
+
 ## 0.11.4
 
 ### Patch Changes
