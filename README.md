@@ -97,7 +97,7 @@ You can also browse the full [documentation](https://developer.playcanvas.com/us
 
 Developers and studios are already using @playcanvas/react in production.
 
-- [Snap AI](https://ai.snap.com) — Real-time 3D interfaces inside Snap's next-gen tools.
+- [Snap AI](https://ai.snapchat.com/) — Real-time 3D interfaces inside Snap's next-gen tools.
 - [GSplat Share](https://gsplat.org/) — Share your splats with optional time-limited and password-protected links.
 - ✨ Your project here? [Submit a PR](https://github.com/playcanvas/react/compare) and we'll feature it.
 
