@@ -27,7 +27,9 @@ const componentDefinition = createComponentDefinition(
     "GSplat",
     () => new Entity("mock-gsplat", getStaticNullApplication()).addComponent('gsplat') as GSplatComponent,
     (component) => (component as GSplatComponent).system.destroy(),
-    { apiName: "GSplatComponent" }
+    // `id` is a getter-only property and `lodDistances`/`splatBudget` are removed
+    // in engine 2.18+, so they must not become settable schema props
+    { apiName: "GSplatComponent", exclude: ['id', 'lodDistances', 'splatBudget'] }
 )
 
 componentDefinition.schema = {
