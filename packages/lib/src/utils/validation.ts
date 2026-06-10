@@ -288,9 +288,12 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
                 const originalWarn = console.warn;
+                const originalError = console.error;
                 try {
-                    // Temporarily silence the console
-                    console.warn = () => {}; 
+                    // Temporarily silence the console — deprecated engine getters
+                    // log removal notices through both console.warn and console.error
+                    console.warn = () => {};
+                    console.error = () => {};
 
                     const value = descriptor.get.call(container);
                     // Create a shallow copy of the value to avoid reference issues
@@ -312,6 +315,7 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
                 finally {
                     // Restore the console
                     console.warn = originalWarn;
+                    console.error = originalError;
                 }
             } else if (hasSetter) {
                 // Setter-only property
