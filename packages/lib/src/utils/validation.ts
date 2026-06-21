@@ -283,7 +283,11 @@ export function getPseudoPublicProps(container: Record<string, unknown>): Record
             const hasGetter = typeof descriptor.get === 'function';
             const hasSetter = typeof descriptor.set === 'function';
   
-            if (hasSetter && !hasGetter) return;   
+            if (hasSetter && !hasGetter) return;
+
+            // Skip read-only props (a getter with no setter). They can't be applied,
+            // and assigning to them throws — e.g. `ElementComponent.aabb`.
+            if (hasGetter && !hasSetter) return;
 
             // If it's a getter/setter property, try to get the value
             if (descriptor.get) {
@@ -519,6 +523,9 @@ export function createComponentDefinition<T, InstanceType>(
                 default: value,
                 errorMsg: () => '',
                 apply: (instance, props, key) => {
+                    // Don't assign null/undefined — many engine setters reject it
+                    // (e.g. ElementComponent.color runs `this._color.copy(value)`).
+                    if (props[key] === null || props[key] === undefined) return;
                     (instance[key as keyof InstanceType] as unknown) = props[key];
                 }
             };

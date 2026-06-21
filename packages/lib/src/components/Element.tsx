@@ -7,17 +7,18 @@ import { PublicProps, Serializable } from "../utils/types-utils.ts";
 import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation.ts";
 
 /**
- * The Screen component allows an entity to render a 2D screen space UI element.
- * This is useful for creating UI elements that are rendered in screen space rather than world space.
- * 
- * @param {ElementProps} props - The props to pass to the screen component.
+ * The Element component renders 2D UI content — text, an image, or a group — on an entity.
+ * Add it to a child of an entity that has a {@link Screen} component.
+ *
+ * @param {ElementProps} props - The props to pass to the element component.
  * @see https://api.playcanvas.com/engine/classes/ElementComponent.html
- * 
+ *
  * @example
  * <Entity>
- *  <Screen screenSpace={true} />
- *   <Element>Hey</Element>
- *  </Screen>
+ *   <Screen />
+ *   <Entity>
+ *     <Element type="text" fontAsset={font} text="Hello, World!" />
+ *   </Entity>
  * </Entity>
  */
 export const Element: FC<ElementProps> = (props) => {
