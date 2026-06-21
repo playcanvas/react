@@ -2,7 +2,7 @@
   "name": "@playcanvas/blocks",
   "description": "High level abstract 3D primitives for React",
   "homepage": "https://github.com/playcanvas/react/tree/main/packages/blocks#readme",
-  "version": "0.3.8",
+  "version": "0.3.9",
   "license": "MIT",
   "type": "module",
   "sideEffects": false,
