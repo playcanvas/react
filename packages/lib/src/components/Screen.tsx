@@ -2,7 +2,7 @@
 
 import { FC } from "react";
 import { useComponent } from "../hooks/index.ts";
-import { Entity, ScreenComponent } from "playcanvas";
+import { Entity, ScreenComponent, Vec2 } from "playcanvas";
 import { PublicProps, Serializable } from "../utils/types-utils.ts";
 import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation.ts";
 
@@ -60,7 +60,11 @@ componentDefinition.schema = {
     referenceResolution: {
         validate: (value: unknown) => Array.isArray(value) && value.length === 2 && value.every(v => typeof v === "number"),
         errorMsg: (value: unknown) => `Invalid value for prop "referenceResolution": ${value}. Expected a tuple of [number, number].`,
-        default: [1280, 720]
+        default: [1280, 720],
+        // The engine setter reads `value.x`/`value.y`, so convert the array to a Vec2.
+        apply: (instance, props, key) => {
+            (instance[key as keyof ScreenComponent] as Vec2) = new Vec2().fromArray(props[key] as number[]);
+        }
     },
     scaleMode: {
         validate: (value: unknown) => typeof value === "string" && ["blend", "stretch", "fit"].includes(value as string),
