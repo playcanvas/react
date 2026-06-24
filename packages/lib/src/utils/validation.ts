@@ -2,6 +2,7 @@ import { Color, Quat, Vec2, Vec3, Vec4, Mat4, Application, NullGraphicsDevice, M
 import { getColorFromName } from "./color.ts";
 import { Serializable } from "./types-utils.ts";
 import { env } from "./env.ts";
+import { valuesEqual } from "./compare.tsx";
 
 // Limit the size of the warned set to prevent memory leaks
 const MAX_WARNED_SIZE = 1000;
@@ -218,6 +219,7 @@ export function validatePropsWithDefaults<T extends object, InstanceType>(
  * @param schema The schema of the container
  * @param props The props to apply
  */
+
 export function applyProps<T extends Record<string, unknown>, InstanceType>(
     instance: InstanceType, 
     schema: Schema<T, InstanceType>, 
@@ -227,6 +229,13 @@ export function applyProps<T extends Record<string, unknown>, InstanceType>(
         if (key in schema) {
             const propDef = schema[key as keyof T] as PropValidator<T[keyof T], InstanceType>;
             if (propDef) {
+                const currentValue = (instance as Record<string, unknown>)[key];
+                
+                // Skip if value hasn't changed (avoids side effects from setters)
+                if (valuesEqual(currentValue, value)) {
+                    return;
+                }
+                
                 if (propDef.apply) {
                     // Use type assertion to satisfy the type checker
                     propDef.apply(instance, props, key as string);
