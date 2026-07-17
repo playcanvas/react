@@ -83,13 +83,7 @@
     "peerDependencies": {
         "playcanvas": "^2.11.8",
         "react": "^18.3.1 || ^19.1.0",
-        "react-dom": "^18.3.1 || ^19.1.0",
-        "sync-ammo": "^0.1.2"
-    },
-    "peerDependenciesMeta": {
-        "sync-ammo": {
-            "optional": true
-        }
+        "react-dom": "^18.3.1 || ^19.1.0"
     },
     "publishConfig": {
         "access": "public"
@@ -107,6 +101,7 @@
         "vitest": "4.1.8"
     },
     "dependencies": {
-        "dedent": "^1.6.0"
+        "dedent": "^1.6.0",
+        "sync-ammo": "^0.1.2"
     }
 }
