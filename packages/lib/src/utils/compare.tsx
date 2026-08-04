@@ -1,4 +1,3 @@
-
 /**
  * Simple deep equality check for two objects
  * @param {Record<string, unknown>} a - The first object
@@ -16,23 +15,61 @@ export function deepEqual(a: Record<string, unknown>, b: Record<string, unknown>
     return aKeys.every(key => deepEqual(a[key] as Record<string, unknown>, b[key] as Record<string, unknown>));
 }
 
-type Equalable = {
-    equals: (other: unknown) => boolean;
-  };
-  
-  function hasEqualsMethod(obj: unknown): obj is Equalable {
-    return typeof obj === 'object' && 
-      obj !== null && 
-      'equals' in obj && 
-      typeof (obj as Equalable).equals === 'function';
-  }
-  
-  export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string, unknown>): boolean => {
+interface Approximate {
+    equalsApprox(other: unknown): boolean;
+}
+
+interface Equatable {
+    equals(other: unknown): boolean;
+}
+
+/**
+ * Check if two values are equal. Handles primitives, null/undefined, 
+ * and objects with `equalsApprox` or `equals` methods (Vec3, Color, etc.)
+ * 
+ * Priority order:
+ * 1. Strict equality (===)
+ * 2. Floating point approximation (equalsApprox) - handles precision drift
+ * 3. Structural equality (equals)
+ * 
+ * @param a - First value to compare
+ * @param b - Second value to compare
+ * @returns True if values are equal, false otherwise
+ */
+export function valuesEqual(a: unknown, b: unknown): boolean {
+    if (a === b) return true;
+    
+    // Early exit if either is null/undefined (using type coercion)
+    if (a == null || b == null) return false;
+
+    if (typeof a === 'object') {
+        // Priority 1: Floating point approximation (handles precision drift)
+        if ('equalsApprox' in a && typeof (a as Approximate).equalsApprox === 'function') {
+            return (a as Approximate).equalsApprox(b);
+        }
+
+        // Priority 2: Strict structural equality
+        if ('equals' in a && typeof (a as Equatable).equals === 'function') {
+            return (a as Equatable).equals(b);
+        }
+    }
+
+    // For other objects, return false to trigger re-apply (conservative)
+    return false;
+}
+
+/**
+ * Shallow equality check for two objects. Compares each property using valuesEqual.
+ * 
+ * @param objA - First object to compare
+ * @param objB - Second object to compare
+ * @returns True if objects are shallowly equal, false otherwise
+ */
+export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string, unknown>): boolean => {
     // If the two objects are the same object, return true
     if (objA === objB) {
         return true;
     }
-      
     
     // If either is not an object (null or primitives), return false
     if (typeof objA !== 'object' || objA === null || typeof objB !== 'object' || objB === null) {
@@ -48,15 +85,10 @@ type Equalable = {
         return false;
     }
     
-    // Check if all keys and their values are equal
+    // Check if all keys and their values are equal using valuesEqual
     for (let i = 0; i < keysA.length; i++) {
         const key = keysA[i];
-        const propA = objA[key];
-        const propB = objB[key];
-        // If the object has an equality operator, use this
-        if(hasEqualsMethod(propA)) {
-            return propA.equals(propB);
-        } else if (propA !== propB) {
+        if (!valuesEqual(objA[key], objB[key])) {
             return false;
         }
     }
