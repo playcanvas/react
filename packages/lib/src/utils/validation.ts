@@ -549,7 +549,17 @@ export function createComponentDefinition<T, InstanceType>(
  * @returns A mock application that is used to render the application without a canvas.
  */
 export function getNullApplication() {
-    const mockCanvas = { id: 'pc-react-mock-canvas' };
+    const mockCanvas = {
+        id: 'pc-react-mock-canvas',
+        width: 0,
+        height: 0,
+        // The GraphicsDevice constructor may probe the canvas for layout
+        // (engine 2.20.0+ calls getBoundingClientRect). This module is evaluated
+        // during SSR/SSG where no DOM exists, so the mock must answer without one.
+        getBoundingClientRect: () => ({
+            x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0
+        })
+    };
     // @ts-expect-error - Mock canvas is not a real canvas
     return new Application(mockCanvas, { graphicsDevice: new NullGraphicsDevice(mockCanvas) });
 }
