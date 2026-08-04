@@ -549,7 +549,19 @@ export function createComponentDefinition<T, InstanceType>(
  * @returns A mock application that is used to render the application without a canvas.
  */
 export function getNullApplication() {
-    const mockCanvas = { id: 'pc-react-mock-canvas' };
+    const mockCanvas = {
+        id: 'pc-react-mock-canvas',
+        width: 0,
+        height: 0,
+        // Engine 2.20.0–2.20.4 calls getBoundingClientRect() unconditionally from
+        // the GraphicsDevice constructor; 2.21.0 made it optional again
+        // (https://github.com/playcanvas/engine/pull/9000). This module is evaluated
+        // during SSR/SSG where no DOM exists, so the mock must answer the probe
+        // itself to keep the whole peer range (^2.11.8) importable in Node.
+        getBoundingClientRect: () => ({
+            x: 0, y: 0, width: 0, height: 0, top: 0, right: 0, bottom: 0, left: 0
+        })
+    };
     // @ts-expect-error - Mock canvas is not a real canvas
     return new Application(mockCanvas, { graphicsDevice: new NullGraphicsDevice(mockCanvas) });
 }
