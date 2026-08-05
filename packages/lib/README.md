@@ -5,6 +5,7 @@
 [![pkg.pr.new](https://pkg.pr.new/badge/playcanvas/react)](https://pkg.pr.new/~/playcanvas/react)
 
 ## @playcanvas/react
+
 _⚡ A full-featured library for interactive 3D in React._
 
 @playcanvas/react is a thin wrapper around PlayCanvas - a batteries included library for building interactive 3D content in React. Designed to get you up and running fast.
@@ -58,13 +59,14 @@ npx create playcanvas@latest -t react-t
 Or install in an existing project with your favorite package manager:
 
 **npm**
+
 ```bash
 npm install @playcanvas/react
 ```
 
 ### Show me the code
 
-Here's how you render a sphere. 
+Here's how you render a sphere.
 
 ```jsx
 import { Application, Entity } from '@playcanvas/react';
@@ -72,16 +74,16 @@ import { Camera, Render } from '@playcanvas/react/components';
 import { OrbitControls } from '@playcanvas/react/scripts';
 
 export function AssetViewer() {
-  return (
-    <Application>
-      <Entity position={[0, 2, 0]}>
-        <Camera />
-        <OrbitControls />
-      </Entity>
-      <Render type="sphere"/>
-    </Application>
-  );
-};
+    return (
+        <Application>
+            <Entity position={[0, 2, 0]}>
+                <Camera />
+                <OrbitControls />
+            </Entity>
+            <Render type="sphere" />
+        </Application>
+    );
+}
 ```
 
 Et voilà! ✨
@@ -135,9 +137,8 @@ If you want to build the repo from scratch, check out the following. The monorep
 - [@playcanvas/blocks](/packages/blocks) - High level React components for common 3D use cases
 - [@playcanvas/docs](/packages/docs) - The Documentation site.
 
-If you want to run this entire project locally, including docs just `npm install` and `npm run dev` from the root of the monorepo. This will install and build all the local dependencies and run a local webserver of the docs. 
+If you want to run this entire project locally, including docs just `npm install` and `npm run dev` from the root of the monorepo. This will install and build all the local dependencies and run a local webserver of the docs.
 
 You can make changes to either the react or blocks lib and build them locally by doing `npm run build:lib` or `npm run build:blocks` respectively.
 
 All contributions are welcome :heart:
-

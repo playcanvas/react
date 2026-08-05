@@ -1,11 +1,13 @@
-import React from 'react';
 import { render, waitFor } from '@testing-library/react';
+import type { Entity as PcEntity } from 'playcanvas';
+import React from 'react';
 import { describe, it, expect } from 'vitest';
-import { Entity as PcEntity } from 'playcanvas';
+
+import { Application } from '../Application.tsx';
+import { Entity } from '../Entity.tsx';
+
 import { Element } from './Element.tsx';
 import { Screen } from './Screen.tsx';
-import { Entity } from '../Entity.tsx';
-import { Application } from '../Application.tsx';
 
 describe('Element', () => {
     // Regression: the auto-generated schema used to include the engine's read-only
@@ -14,7 +16,7 @@ describe('Element', () => {
         const ref = React.createRef<PcEntity>();
 
         render(
-            <Application deviceTypes={["null"]}>
+            <Application deviceTypes={['null']}>
                 <Entity>
                     <Screen />
                     <Entity ref={ref}>

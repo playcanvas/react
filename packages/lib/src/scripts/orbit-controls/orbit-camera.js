@@ -1,7 +1,22 @@
 import {
-    Script, math, Vec3, BoundingBox, Quat, Vec2, PROJECTION_PERSPECTIVE,
-    MOUSEBUTTON_LEFT, MOUSEBUTTON_RIGHT, MOUSEBUTTON_MIDDLE, EVENT_TOUCHCANCEL,
-    EVENT_TOUCHSTART, EVENT_TOUCHEND, EVENT_TOUCHMOVE, EVENT_MOUSEDOWN, EVENT_MOUSEMOVE, EVENT_MOUSEUP, EVENT_MOUSEWHEEL
+    Script,
+    math,
+    Vec3,
+    BoundingBox,
+    Quat,
+    Vec2,
+    PROJECTION_PERSPECTIVE,
+    MOUSEBUTTON_LEFT,
+    MOUSEBUTTON_RIGHT,
+    MOUSEBUTTON_MIDDLE,
+    EVENT_TOUCHCANCEL,
+    EVENT_TOUCHSTART,
+    EVENT_TOUCHEND,
+    EVENT_TOUCHMOVE,
+    EVENT_MOUSEDOWN,
+    EVENT_MOUSEMOVE,
+    EVENT_MOUSEUP,
+    EVENT_MOUSEWHEEL
 } from 'playcanvas';
 
 export class OrbitCamera extends Script {
@@ -84,10 +99,7 @@ export class OrbitCamera extends Script {
         if (this.frameOnStart) {
             this.focus(this._focusEntity);
         } else {
-            this.resetAndLookAtEntity(
-                this.entity.getPosition(),
-                this._focusEntity
-            );
+            this.resetAndLookAtEntity(this.entity.getPosition(), this._focusEntity);
         }
     }
 
@@ -140,7 +152,6 @@ export class OrbitCamera extends Script {
         return this.entity.camera.orthoHeight;
     }
 
-
     /**
      * Property to get and set the pitch of the camera around the pivot point (degrees).
      * Clamped between this.pitchAngleMin and this.pitchAngleMax.
@@ -155,7 +166,6 @@ export class OrbitCamera extends Script {
     get pitch() {
         return this._targetPitch;
     }
-
 
     /**
      * Property to get and set the yaw of the camera around the pivot point (degrees)
@@ -196,7 +206,6 @@ export class OrbitCamera extends Script {
         return this._pivotPoint;
     }
 
-
     /** @private */
     _distance = 10;
 
@@ -236,9 +245,7 @@ export class OrbitCamera extends Script {
         const halfExtents = this._modelsAabb.halfExtents;
         const radius = Math.max(halfExtents.x, halfExtents.y, halfExtents.z);
 
-        this.distance =
-            (radius * 1.5) /
-            Math.sin(0.5 * this.entity.camera.fov * math.DEG_TO_RAD);
+        this.distance = (radius * 1.5) / Math.sin(0.5 * this.entity.camera.fov * math.DEG_TO_RAD);
 
         this._removeInertia();
 
@@ -327,8 +334,7 @@ export class OrbitCamera extends Script {
 
     update(dt) {
         // Add inertia, if any
-        const t =
-            this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);
+        const t = this.inertiaFactor === 0 ? 1 : Math.min(dt / this.inertiaFactor, 1);
         this._distance = math.lerp(this._distance, this._targetDistance, t);
         this._yaw = math.lerp(this._yaw, this._targetYaw, t);
         this._pitch = math.lerp(this._pitch, this._targetPitch, t);
@@ -405,10 +411,7 @@ export class OrbitCamera extends Script {
         const transformedForward = new Vec3();
         quat.transformVector(Vec3.FORWARD, transformedForward);
 
-        return (
-            Math.atan2(-transformedForward.x, -transformedForward.z) *
-            math.RAD_TO_DEG
-        );
+        return Math.atan2(-transformedForward.x, -transformedForward.z) * math.RAD_TO_DEG;
     }
 
     _clampDistance(distance) {
@@ -434,13 +437,9 @@ export class OrbitCamera extends Script {
 
         quatWithoutYaw.transformVector(Vec3.FORWARD, transformedForward);
 
-        return (
-            Math.atan2(transformedForward.y, -transformedForward.z) *
-            math.RAD_TO_DEG
-        );
+        return Math.atan2(transformedForward.y, -transformedForward.z) * math.RAD_TO_DEG;
     }
 }
-
 
 export class OrbitCameraInputMouse extends Script {
     static scriptName = 'orbitCameraInputMouse';
@@ -557,12 +556,9 @@ export class OrbitCameraInputMouse extends Script {
     onMouseWheel(event) {
         if (this.entity.camera.projection === PROJECTION_PERSPECTIVE) {
             this.orbitCamera.distance -=
-                event.wheelDelta * -2 *
-                this.distanceSensitivity *
-                (this.orbitCamera.distance * 0.1);
+                event.wheelDelta * -2 * this.distanceSensitivity * (this.orbitCamera.distance * 0.1);
         } else {
-            this.orbitCamera.orthoHeight -=
-                event.wheelDelta * -2 * this.distanceSensitivity;
+            this.orbitCamera.orthoHeight -= event.wheelDelta * -2 * this.distanceSensitivity;
         }
         event.event.preventDefault();
     }
@@ -648,10 +644,7 @@ export class OrbitCameraInputTouch extends Script {
             this.lastTouchPoint.set(touches[0].x, touches[0].y);
         } else if (touches.length === 2) {
             // If there are 2 touches on the screen, then set the pinch distance
-            this.lastPinchDistance = this.getPinchDistance(
-                touches[0],
-                touches[1]
-            );
+            this.lastPinchDistance = this.getPinchDistance(touches[0], touches[1]);
             this.calcMidPoint(touches[0], touches[1], this.lastPinchMidPoint);
         }
     }
@@ -667,12 +660,7 @@ export class OrbitCameraInputTouch extends Script {
         const distance = this.orbitCamera.distance;
 
         camera.screenToWorld(midPoint.x, midPoint.y, distance, fromWorldPoint);
-        camera.screenToWorld(
-            this.lastPinchMidPoint.x,
-            this.lastPinchMidPoint.y,
-            distance,
-            toWorldPoint
-        );
+        camera.screenToWorld(this.lastPinchMidPoint.x, this.lastPinchMidPoint.y, distance, toWorldPoint);
 
         worldDiff.sub2(toWorldPoint, fromWorldPoint);
 
@@ -688,27 +676,18 @@ export class OrbitCameraInputTouch extends Script {
         if (touches.length === 1) {
             const touch = touches[0];
 
-            this.orbitCamera.pitch -=
-                (touch.y - this.lastTouchPoint.y) * this.orbitSensitivity;
-            this.orbitCamera.yaw -=
-                (touch.x - this.lastTouchPoint.x) * this.orbitSensitivity;
+            this.orbitCamera.pitch -= (touch.y - this.lastTouchPoint.y) * this.orbitSensitivity;
+            this.orbitCamera.yaw -= (touch.x - this.lastTouchPoint.x) * this.orbitSensitivity;
 
             this.lastTouchPoint.set(touch.x, touch.y);
         } else if (touches.length === 2) {
             // Calculate the difference in pinch distance since the last event
-            const currentPinchDistance = this.getPinchDistance(
-                touches[0],
-                touches[1]
-            );
-            const diffInPinchDistance =
-                currentPinchDistance - this.lastPinchDistance;
+            const currentPinchDistance = this.getPinchDistance(touches[0], touches[1]);
+            const diffInPinchDistance = currentPinchDistance - this.lastPinchDistance;
             this.lastPinchDistance = currentPinchDistance;
 
             this.orbitCamera.distance -=
-                diffInPinchDistance *
-                this.distanceSensitivity *
-                0.1 *
-                (this.orbitCamera.distance * 0.1);
+                diffInPinchDistance * this.distanceSensitivity * 0.1 * (this.orbitCamera.distance * 0.1);
 
             // Calculate pan difference
             this.calcMidPoint(touches[0], touches[1], pinchMidPoint);

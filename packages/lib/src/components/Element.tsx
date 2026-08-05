@@ -1,10 +1,13 @@
-"use client"
+'use client';
 
-import { FC } from "react";
-import { useComponent } from "../hooks/index.ts";
-import { Entity, ElementComponent } from "playcanvas";
-import { PublicProps, Serializable } from "../utils/types-utils.ts";
-import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication, Schema } from "../utils/validation.ts";
+import type { ElementComponent } from 'playcanvas';
+import { Entity } from 'playcanvas';
+import type { FC } from 'react';
+
+import { useComponent } from '../hooks/index.ts';
+import type { PublicProps, Serializable } from '../utils/types-utils.ts';
+import type { Schema } from '../utils/validation.ts';
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from '../utils/validation.ts';
 
 /**
  * The Element component renders 2D UI content — text, an image, or a group — on an entity.
@@ -24,25 +27,24 @@ import { validatePropsWithDefaults, createComponentDefinition, getStaticNullAppl
 export const Element: FC<ElementProps> = (props) => {
     const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
-    useComponent("element", safeProps, componentDefinition.schema);
+    useComponent('element', safeProps, componentDefinition.schema);
     return null;
 };
 
-type ElementProps = Partial<Serializable<PublicProps<ElementComponent>>>
+type ElementProps = Partial<Serializable<PublicProps<ElementComponent>>>;
 
 const componentDefinition = createComponentDefinition<ElementProps, ElementComponent>(
-    "Element",
-    () => new Entity("mock-element", getStaticNullApplication()).addComponent("element") as ElementComponent,
+    'Element',
+    () => new Entity('mock-element', getStaticNullApplication()).addComponent('element') as ElementComponent,
     (component) => (component as ElementComponent).system.destroy(),
-    { apiName: "ElementComponent" }
+    { apiName: 'ElementComponent' }
 );
-
 
 componentDefinition.schema = {
     ...componentDefinition.schema,
     children: {
-        validate: (value: unknown) => typeof value === "string",
+        validate: (value: unknown) => typeof value === 'string',
         errorMsg: (value: unknown) => `Invalid value for prop "children": ${value}. Expected a string.`,
-        default: "Invalid children"
+        default: 'Invalid children'
     }
-} as Schema<ElementProps, ElementComponent>; 
+} as Schema<ElementProps, ElementComponent>;

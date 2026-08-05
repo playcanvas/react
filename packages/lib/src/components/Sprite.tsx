@@ -1,12 +1,15 @@
-import { FC } from "react";
-import { useComponent } from "../hooks/index.ts";
-import { PublicProps } from "../utils/types-utils.ts";
-import { Asset, Entity, SpriteComponent } from "playcanvas";
-import { createComponentDefinition, validatePropsWithDefaults, Schema, getStaticNullApplication } from "../utils/validation.ts";
+import type { SpriteComponent } from 'playcanvas';
+import { Asset, Entity } from 'playcanvas';
+import type { FC } from 'react';
+
+import { useComponent } from '../hooks/index.ts';
+import type { PublicProps } from '../utils/types-utils.ts';
+import type { Schema } from '../utils/validation.ts';
+import { createComponentDefinition, validatePropsWithDefaults, getStaticNullApplication } from '../utils/validation.ts';
 
 /**
  * The Sprite component allows an entity to render a 2D sprite.
- * 
+ *
  * @param {SpriteProps} props - The props to pass to the sprite component.
  * @see https://api.playcanvas.com/engine/classes/SpriteComponent.html
  * @example
@@ -15,23 +18,23 @@ import { createComponentDefinition, validatePropsWithDefaults, Schema, getStatic
  * </Entity>
  */
 export const Sprite: FC<SpriteProps> = (props) => {
-
     const safeProps = validatePropsWithDefaults(props, componentDefinition);
 
-    useComponent("sprite", safeProps, componentDefinition.schema);
+    useComponent('sprite', safeProps, componentDefinition.schema);
     return null;
-}
+};
 
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface SpriteProps extends Partial<PublicProps<SpriteComponent>> {
-    asset : Asset
+    asset: Asset;
 }
 
 const componentDefinition = createComponentDefinition<SpriteProps, SpriteComponent>(
-    "Sprite",
-    () => new Entity("mock-sprite", getStaticNullApplication()).addComponent('sprite') as SpriteComponent,
+    'Sprite',
+    () => new Entity('mock-sprite', getStaticNullApplication()).addComponent('sprite') as SpriteComponent,
     (component) => (component as SpriteComponent).system.destroy(),
-    { apiName: "SpriteComponent" }
-)
+    { apiName: 'SpriteComponent' }
+);
 
 componentDefinition.schema = {
     ...componentDefinition.schema,
@@ -40,4 +43,4 @@ componentDefinition.schema = {
         errorMsg: (value: unknown) => `Invalid value for prop "asset": "${value}". Expected an Asset.`,
         default: null
     }
-} as Schema<SpriteProps, SpriteComponent>
+} as Schema<SpriteProps, SpriteComponent>;

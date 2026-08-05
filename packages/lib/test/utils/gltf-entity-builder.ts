@@ -1,104 +1,101 @@
-import { Entity as PcEntity, Application as PcApplication } from 'playcanvas';
+import type { Application as PcApplication } from 'playcanvas';
+import { Entity as PcEntity } from 'playcanvas';
 
 /**
  * Builder class for creating mock GLTF-like entity hierarchies
  * Uses real PlayCanvas Entity instances for authentic testing
  */
 export class GltfEntityBuilder {
-  private root: PcEntity;
-  private app: PcApplication;
-  private entityMap: Map<string, PcEntity> = new Map();
+    private root: PcEntity;
+    private app: PcApplication;
+    private entityMap = new Map<string, PcEntity>();
 
-  constructor(app: PcApplication, rootName: string = 'RootNode') {
-    this.app = app;
-    this.root = new PcEntity(rootName, app);
-    this.entityMap.set(rootName, this.root);
-  }
-
-  /**
-   * Add a child entity to a parent
-   * @param parentName - Name of the parent entity
-   * @param childName - Name of the child entity
-   * @returns The builder for chaining
-   */
-  addChild(parentName: string, childName: string): this {
-    const parent = this.entityMap.get(parentName);
-    if (!parent) {
-      throw new Error(`Parent entity "${parentName}" not found`);
+    constructor(app: PcApplication, rootName = 'RootNode') {
+        this.app = app;
+        this.root = new PcEntity(rootName, app);
+        this.entityMap.set(rootName, this.root);
     }
 
-    const child = new PcEntity(childName, this.app);
-    parent.addChild(child);
-    this.entityMap.set(childName, child);
-    return this;
-  }
+    /**
+     * Add a child entity to a parent
+     * @param parentName - Name of the parent entity
+     * @param childName - Name of the child entity
+     * @returns The builder for chaining
+     */
+    addChild(parentName: string, childName: string): this {
+        const parent = this.entityMap.get(parentName);
+        if (!parent) {
+            throw new Error(`Parent entity "${parentName}" not found`);
+        }
 
-  /**
-   * Add multiple children to a parent
-   * @param parentName - Name of the parent entity
-   * @param childNames - Array of child names to add
-   * @returns The builder for chaining
-   */
-  addChildren(parentName: string, childNames: string[]): this {
-    for (const childName of childNames) {
-      this.addChild(parentName, childName);
-    }
-    return this;
-  }
-
-  /**
-   * Add a component to an entity
-   * @param entityName - Name of the entity
-   * @param componentType - Type of component (e.g., 'light', 'render', 'camera')
-   * @param data - Component data
-   * @returns The builder for chaining
-   */
-  addComponent(
-    entityName: string,
-    componentType: string,
-    data?: Record<string, unknown>
-  ): this {
-    const entity = this.entityMap.get(entityName);
-    if (!entity) {
-      throw new Error(`Entity "${entityName}" not found`);
+        const child = new PcEntity(childName, this.app);
+        parent.addChild(child);
+        this.entityMap.set(childName, child);
+        return this;
     }
 
-    entity.addComponent(componentType, data);
-    return this;
-  }
+    /**
+     * Add multiple children to a parent
+     * @param parentName - Name of the parent entity
+     * @param childNames - Array of child names to add
+     * @returns The builder for chaining
+     */
+    addChildren(parentName: string, childNames: string[]): this {
+        for (const childName of childNames) {
+            this.addChild(parentName, childName);
+        }
+        return this;
+    }
 
-  /**
-   * Get an entity by name
-   * @param name - Name of the entity
-   * @returns The entity or undefined if not found
-   */
-  getEntity(name: string): PcEntity | undefined {
-    return this.entityMap.get(name);
-  }
+    /**
+     * Add a component to an entity
+     * @param entityName - Name of the entity
+     * @param componentType - Type of component (e.g., 'light', 'render', 'camera')
+     * @param data - Component data
+     * @returns The builder for chaining
+     */
+    addComponent(entityName: string, componentType: string, data?: Record<string, unknown>): this {
+        const entity = this.entityMap.get(entityName);
+        if (!entity) {
+            throw new Error(`Entity "${entityName}" not found`);
+        }
 
-  /**
-   * Get the root entity
-   * @returns The root entity
-   */
-  getRoot(): PcEntity {
-    return this.root;
-  }
+        entity.addComponent(componentType, data);
+        return this;
+    }
 
-  /**
-   * Get all entities as a map
-   * @returns Map of entity names to entities
-   */
-  getEntityMap(): Map<string, PcEntity> {
-    return this.entityMap;
-  }
+    /**
+     * Get an entity by name
+     * @param name - Name of the entity
+     * @returns The entity or undefined if not found
+     */
+    getEntity(name: string): PcEntity | undefined {
+        return this.entityMap.get(name);
+    }
 
-  /**
-   * Build and return the root entity
-   * @returns The root entity of the hierarchy
-   */
-  build(): PcEntity {
-    return this.root;
-  }
+    /**
+     * Get the root entity
+     * @returns The root entity
+     */
+    getRoot(): PcEntity {
+        return this.root;
+    }
+
+    /**
+     * Get all entities as a map
+     * @returns Map of entity names to entities
+     */
+    getEntityMap(): Map<string, PcEntity> {
+        return this.entityMap;
+    }
+
+    /**
+     * Build and return the root entity
+     * @returns The root entity of the hierarchy
+     */
+    build(): PcEntity {
+        return this.root;
+    }
 }
 
 /**
@@ -107,37 +104,35 @@ export class GltfEntityBuilder {
  * @param structure - Nested structure defining the hierarchy
  * @returns The root entity
  */
-export function createEntityHierarchy(
-  app: PcApplication,
-  structure: EntityStructure
-): PcEntity {
-  const root = new PcEntity(structure.name, app);
+export function createEntityHierarchy(app: PcApplication, structure: EntityStructure): PcEntity {
+    const root = new PcEntity(structure.name, app);
 
-  // Add components if specified
-  if (structure.components) {
-    for (const [type, data] of Object.entries(structure.components)) {
-      root.addComponent(type, data);
+    // Add components if specified
+    if (structure.components) {
+        for (const [type, data] of Object.entries(structure.components)) {
+            root.addComponent(type, data);
+        }
     }
-  }
 
-  // Add children recursively
-  if (structure.children) {
-    for (const childStructure of structure.children) {
-      const child = createEntityHierarchy(app, childStructure);
-      root.addChild(child);
+    // Add children recursively
+    if (structure.children) {
+        for (const childStructure of structure.children) {
+            const child = createEntityHierarchy(app, childStructure);
+            root.addChild(child);
+        }
     }
-  }
 
-  return root;
+    return root;
 }
 
 /**
  * Structure definition for entity hierarchy
  */
+// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing recursive declaration
 export interface EntityStructure {
-  name: string;
-  components?: Record<string, Record<string, unknown> | undefined>;
-  children?: EntityStructure[];
+    name: string;
+    components?: Record<string, Record<string, unknown> | undefined>;
+    children?: EntityStructure[];
 }
 
 /**
@@ -147,18 +142,18 @@ export interface EntityStructure {
  * @returns The found entity or null
  */
 export function findEntityByName(root: PcEntity, name: string): PcEntity | null {
-  if (root.name === name) {
-    return root;
-  }
-
-  for (const child of root.children) {
-    const found = findEntityByName(child as PcEntity, name);
-    if (found) {
-      return found;
+    if (root.name === name) {
+        return root;
     }
-  }
 
-  return null;
+    for (const child of root.children) {
+        const found = findEntityByName(child as PcEntity, name);
+        if (found) {
+            return found;
+        }
+    }
+
+    return null;
 }
 
 /**
@@ -167,21 +162,18 @@ export function findEntityByName(root: PcEntity, name: string): PcEntity | null 
  * @param componentType - Type of component to find
  * @returns Array of entities with the component
  */
-export function findEntitiesWithComponent(
-  root: PcEntity,
-  componentType: string
-): PcEntity[] {
-  const entities: PcEntity[] = [];
+export function findEntitiesWithComponent(root: PcEntity, componentType: string): PcEntity[] {
+    const entities: PcEntity[] = [];
 
-  if (root.c?.[componentType]) {
-    entities.push(root);
-  }
+    if (root.c?.[componentType]) {
+        entities.push(root);
+    }
 
-  for (const child of root.children) {
-    entities.push(...findEntitiesWithComponent(child as PcEntity, componentType));
-  }
+    for (const child of root.children) {
+        entities.push(...findEntitiesWithComponent(child as PcEntity, componentType));
+    }
 
-  return entities;
+    return entities;
 }
 
 /**
@@ -190,13 +182,13 @@ export function findEntitiesWithComponent(
  * @returns Total number of entities
  */
 export function countEntities(root: PcEntity): number {
-  let count = 1; // Count the root
+    let count = 1; // Count the root
 
-  for (const child of root.children) {
-    count += countEntities(child as PcEntity);
-  }
+    for (const child of root.children) {
+        count += countEntities(child as PcEntity);
+    }
 
-  return count;
+    return count;
 }
 
 /**
@@ -205,14 +197,13 @@ export function countEntities(root: PcEntity): number {
  * @param parentPath - Parent path (for recursion)
  * @returns Array of paths
  */
-export function getAllPaths(root: PcEntity, parentPath: string = ''): string[] {
-  const currentPath = parentPath ? `${parentPath}.${root.name}` : root.name;
-  const paths = [currentPath];
+export function getAllPaths(root: PcEntity, parentPath = ''): string[] {
+    const currentPath = parentPath ? `${parentPath}.${root.name}` : root.name;
+    const paths = [currentPath];
 
-  for (const child of root.children) {
-    paths.push(...getAllPaths(child as PcEntity, currentPath));
-  }
+    for (const child of root.children) {
+        paths.push(...getAllPaths(child as PcEntity, currentPath));
+    }
 
-  return paths;
+    return paths;
 }
-

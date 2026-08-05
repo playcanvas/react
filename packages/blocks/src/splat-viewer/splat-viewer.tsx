@@ -1,108 +1,106 @@
-"use client"
+'use client';
 
-import { Application, Entity } from "@playcanvas/react"
-import { useApp, useSplat } from "@playcanvas/react/hooks"
-import { GSplat } from "@playcanvas/react/components"
-import { Suspense, useCallback, useEffect, useRef, useState } from "react"
-import { AssetViewerProvider, useAssetViewer, useTimeline } from "./splat-viewer-context.ts"
-import { TooltipProvider } from "@components/ui/tooltip"
-import { cn } from "@lib/utils"
-import { AnimationTrack } from "./utils/animation.ts"
-import { SmartCamera } from "./smart-camera.ts"
-import { HelpDialog } from "./help-dialog.ts"
-import { RESOLUTION_AUTO, FILLMODE_NONE } from "playcanvas"
-import { useSubscribe } from "./hooks/use-subscribe.ts"
-export type CameraMode = 'orbit' |  'fly';
+import { Application, Entity } from '@playcanvas/react';
+import { GSplat } from '@playcanvas/react/components';
+import { useApp, useSplat } from '@playcanvas/react/hooks';
+import { RESOLUTION_AUTO, FILLMODE_NONE } from 'playcanvas';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+
+import { TooltipProvider } from '@components/ui/tooltip';
+import { cn } from '@lib/utils';
+
+import { HelpDialog } from './help-dialog.tsx';
+import { useSubscribe } from './hooks/use-subscribe.ts';
+import { SmartCamera } from './smart-camera.tsx';
+import { AssetViewerProvider, useAssetViewer, useTimeline } from './splat-viewer-context.tsx';
+import type { AnimationTrack } from './utils/animation.ts';
+export type CameraMode = 'orbit' | 'fly';
 
 type CameraControlsProps = {
-    /** 
-     * The type of camera controls to use. 
-     * 
+    /**
+     * The type of camera controls to use.
+     *
      * - `orbit`: An orbit camera that follows the splat.
      * - `fly`: A fly camera that follows the splat.
-     * 
+     *
      * @defaultValue 'orbit'
      */
-    mode?: CameraMode,
+    mode?: CameraMode;
 
     /**
      * The default mode of the camera.
-     * 
+     *
      * @defaultValue 'orbit'
      */
-    defaultMode?: CameraMode,
-}
-
+    defaultMode?: CameraMode;
+};
 
 type SplatViewerComponentProps = CameraControlsProps & {
     /**
      * The url of an image to display whilst the asset is loading.
      */
-    src: string | Record<string, unknown>,
+    src: string | Record<string, unknown>;
     /**
      * The style of the camera to use.
-     * 
-     * - `paris`: A warm saturated style.   
+     *
+     * - `paris`: A warm saturated style.
      * - `neutral`: A neutral style.
      * - `noir`: A black/white style.
-     * 
+     *
      * @defaultValue 'neutral'
      */
-    variant?: "paris" | "neutral" | "noir" | 'none' | Record<string, unknown>,
+    variant?: 'paris' | 'neutral' | 'noir' | 'none' | Record<string, unknown>;
 
     /**
-     * The track to use for the animation 
+     * The track to use for the animation
      */
-    track?: AnimationTrack,
-    
+    track?: AnimationTrack;
+
     /**
      * Whether to automatically play the animation
      * @defaultValue false
      */
-    autoPlay?: boolean,
+    autoPlay?: boolean;
 
     /**
      * A callback function for when the type of camera changes
      */
-    onTypeChange?: (type: 'orbit' | 'fly') => void,
+    onTypeChange?: (type: 'orbit' | 'fly') => void;
 
     /**
      * A callback function for when the asset progress changes
      */
-    onAssetProgress?: (progress: number) => void,
-}
+    onAssetProgress?: (progress: number) => void;
+};
 
 type PosterComponentProps = {
     /**
-     * The url of the poster image 
+     * The url of the poster image
      */
-    poster?: string,
-}
+    poster?: string;
+};
 
-export type SplatViewerProps = SplatViewerComponentProps & PosterComponentProps & {
+export type SplatViewerProps = SplatViewerComponentProps &
+    PosterComponentProps & {
+        /**
+         * The className of the container
+         */
+        className?: string;
 
-    /**
-     * The className of the container 
-     */
-    className?: string,
-
-    /**
-     * The children of the component 
-     */
-    children?: React.ReactNode,
-}
+        /**
+         * The children of the component
+         */
+        children?: React.ReactNode;
+    };
 
 const identity = (a: unknown) => a;
 
-function SplatComponent({
-    src,
-    variant = "neutral",
-    onAssetProgress
-}: SplatViewerComponentProps) {
+function SplatComponent({ src, variant = 'neutral', onAssetProgress }: SplatViewerComponentProps) {
     const isObject = typeof src === 'object';
     const { asset, error, subscribe } = useSplat(
-        isObject ? "vfs://force-use-sogs-parser.json" : src,
-        isObject ? { data: src, options: { mapUrl: identity }} : {} );
+        isObject ? 'vfs://force-use-sogs-parser.json' : src,
+        isObject ? { data: src, options: { mapUrl: identity } } : {}
+    );
 
     const { isInteracting } = useAssetViewer();
     const { isPlaying } = useTimeline();
@@ -120,6 +118,7 @@ function SplatComponent({
     // Hide the cursor when the timeline is playing and the user is not interacting
     useEffect(() => {
         if (app.graphicsDevice.canvas) {
+            // eslint-disable-next-line react-hooks/immutability -- this effect synchronizes the engine canvas cursor
             app.graphicsDevice.canvas.style.cursor = isPlaying && !isInteracting ? 'none' : 'grab';
         }
     }, [isInteracting, app, isPlaying]);
@@ -147,53 +146,48 @@ function SplatComponent({
             canvas.removeEventListener('mouseleave', onMouseUp);
         };
     }, [app, isPlaying, isInteracting]);
-    
+
     if (error) throw new Error(error);
     if (!asset) return null;
 
     return (
         <>
-            { 
-                // type === 'animation' ? <AnimationCamera fov={30} track={track} /> : 
+            {
+                // type === 'animation' ? <AnimationCamera fov={30} track={track} /> :
                 // type === 'orbit' ? <InteractiveCamera fov={30} /> :
-                // <InteractiveCamera fov={30} type={type} /> 
+                // <InteractiveCamera fov={30} type={type} />
                 <SmartCamera fov={30} variant={variant} />
             }
             <Entity rotation={[0, 0, 180]}>
                 <GSplat asset={asset} />
             </Entity>
         </>
-    )
+    );
 }
 
 function PosterComponent({ poster }: PosterComponentProps) {
-    return (
-        <img src={poster} alt="poster" />
-    )
+    return <img src={poster} alt="poster" />;
 }
 
 /**
  * The SplatViewer is a component that displays a Gaussian Splat.
  */
-export function SplatViewer( { 
-    src, 
-    variant = "neutral",
+export function SplatViewer({
+    src,
+    variant = 'neutral',
     poster,
     mode = 'orbit',
     defaultMode = 'orbit',
     onTypeChange,
-    className, 
+    className,
     children
-} : SplatViewerProps) {
-
+}: SplatViewerProps) {
     const [subscribe, notify] = useSubscribe<number>();
     const onAssetProgress = useCallback((progress: number) => notify(progress), [src, notify]);
 
     const isControlled = !mode;
     const containerRef = useRef<HTMLDivElement>(null!);
-    const [uncontrolledMode, setUncontrolledMode] = useState<CameraMode>(
-        defaultMode
-    );
+    const [uncontrolledMode, setUncontrolledMode] = useState<CameraMode>(defaultMode);
 
     const setCameraMode = useCallback(
         (mode: CameraMode) => {
@@ -206,28 +200,27 @@ export function SplatViewer( {
     const currentMode = isControlled ? mode : uncontrolledMode;
 
     return (
-        <div ref={containerRef} className={cn("relative overflow-hidden", className)}> 
-            <AssetViewerProvider 
-                targetRef={containerRef} 
+        <div ref={containerRef} className={cn('relative overflow-hidden', className)}>
+            <AssetViewerProvider
+                targetRef={containerRef}
                 src={src}
                 mode={currentMode}
                 setMode={setCameraMode}
                 subscribe={subscribe}
             >
-                <Suspense fallback={<PosterComponent poster={poster} />} >
-                    <Application 
-                        fillMode={FILLMODE_NONE} 
-                        resolutionMode={RESOLUTION_AUTO} 
+                <Suspense fallback={<PosterComponent poster={poster} />}>
+                    <Application
+                        fillMode={FILLMODE_NONE}
+                        resolutionMode={RESOLUTION_AUTO}
                         autoRender={false}
-                        graphicsDeviceOptions={{ antialias: false }}>
+                        graphicsDeviceOptions={{ antialias: false }}
+                    >
                         <SplatComponent src={src} onAssetProgress={onAssetProgress} variant={variant} />
                     </Application>
-                    <TooltipProvider>
-                        { children }
-                    </TooltipProvider>
+                    <TooltipProvider>{children}</TooltipProvider>
                 </Suspense>
                 <HelpDialog />
             </AssetViewerProvider>
         </div>
-    )
+    );
 }

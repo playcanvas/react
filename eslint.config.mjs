@@ -1,30 +1,23 @@
-import globals from "globals";
-import pluginJs from "@eslint/js";
-import tseslint from "typescript-eslint";
-import pluginReact from "eslint-plugin-react";
-import reactCompiler from 'eslint-plugin-react-compiler'
+import react from '@playcanvas/eslint-config/react';
+import typescript from '@playcanvas/eslint-config/typescript';
+import reactCompiler from 'eslint-plugin-react-compiler';
+import globals from 'globals';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
-  {files: ["**/*.{js,mjs,cjs,ts,jsx,tsx}"]},
-  {languageOptions: { globals: {...globals.browser, ...globals.node} }},
-  pluginJs.configs.recommended,
-  ...tseslint.configs.recommended,
-  pluginReact.configs.flat.recommended,
-  {
-    plugins: {
-      'react-compiler': reactCompiler,
-    },
-    settings: {
-      react: {
-        version: "detect", // Automatically detect React version
-      }
-    },
-    rules: {
-      'react/prop-types': 'off',
-      "react/jsx-uses-react": "off",
-      "react/react-in-jsx-scope": "off",
-      "react-compiler/react-compiler": "warn"
-    },
-  }
+    ...typescript,
+    ...react,
+    { languageOptions: { globals: { ...globals.browser, ...globals.node } } },
+    {
+        plugins: {
+            'react-compiler': reactCompiler
+        },
+        rules: {
+            'import-x/no-unresolved': ['error', { ignore: ['^@playcanvas/react(?:/|$)'] }],
+            'react/prop-types': 'off',
+            'react/jsx-uses-react': 'off',
+            'react/react-in-jsx-scope': 'off',
+            'react-compiler/react-compiler': 'warn'
+        }
+    }
 ];
