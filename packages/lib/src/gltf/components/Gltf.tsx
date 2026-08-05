@@ -1,6 +1,6 @@
 'use client';
 
-import type { Asset, Entity } from 'playcanvas';
+import type { Asset, ContainerResource, Entity } from 'playcanvas';
 import type { ReactNode } from 'react';
 import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 
@@ -100,16 +100,12 @@ export const Gltf: React.FC<GltfProps> = ({ asset, render = true, children }) =>
         }
 
         // Instantiate the render entity
-        if (
-            !asset.resource ||
-            // We should use GLBContainerResource instead of any, but its not exported from playcanvas
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            typeof (asset.resource as any).instantiateRenderEntity !== 'function'
-        ) {
+        const resource = asset.resource as ContainerResource | undefined;
+        if (!resource || typeof resource.instantiateRenderEntity !== 'function') {
             console.error('Asset resource does not have instantiateRenderEntity method');
             return;
         }
-        const entity = (asset.resource as { instantiateRenderEntity: () => Entity }).instantiateRenderEntity();
+        const entity = resource.instantiateRenderEntity();
 
         if (!entity) {
             console.error('Failed to instantiate GLTF asset');

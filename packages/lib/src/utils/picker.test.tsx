@@ -55,18 +55,17 @@ const mockPicker = () => {
     const prepareSpy = vi.fn();
     const getSelectionSpy = vi.fn().mockResolvedValue([null]);
     const resizeSpy = vi.fn();
-    const pickerCtorSpy = vi
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .spyOn(pc as any, 'Picker')
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        .mockImplementation(function MockPicker(this: unknown, ...args: unknown[]): any {
-            void args;
-            return {
-                prepare: prepareSpy,
-                getSelectionAsync: getSelectionSpy,
-                resize: resizeSpy
-            };
-        });
+    const pickerCtorSpy = vi.spyOn(pc, 'Picker').mockImplementation(function MockPicker(
+        this: unknown,
+        ...args: unknown[]
+    ) {
+        void args;
+        return {
+            prepare: prepareSpy,
+            getSelectionAsync: getSelectionSpy,
+            resize: resizeSpy
+        } as unknown as pc.Picker;
+    });
     return { prepareSpy, getSelectionSpy, resizeSpy, pickerCtorSpy };
 };
 
