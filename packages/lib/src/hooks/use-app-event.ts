@@ -81,14 +81,9 @@ export function useAppEvent<TEventMap = BaseEventCallbackMap, TEventName extends
 
     const handler = useCallback(
         (...args: unknown[]) => {
-            if (event === 'update') {
-                // update event always receives delta time as first argument
-                (callback as (dt: number) => void)(args[0] as number);
-            } else {
-                (callback as () => void)();
-            }
+            (callback as (...args: unknown[]) => void)(...args);
         },
-        [callback, event]
+        [callback]
     );
 
     useEffect(() => {
