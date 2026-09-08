@@ -1,6 +1,6 @@
 {
     "name": "@playcanvas/blocks",
-    "version": "0.3.9",
+    "version": "0.3.10",
     "description": "High level abstract 3D primitives for React",
     "keywords": [
         "shadcn",
