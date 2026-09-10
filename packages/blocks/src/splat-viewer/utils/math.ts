@@ -12,7 +12,6 @@ const y = new Vec3();
 const z = new Vec3();
 
 class ExtendedQuat extends Quat {
-
     // set a quaternion given an orthonormal basis
     fromBasis(x: Vec3, y: Vec3, z: Vec3) {
         const m00 = x.x;

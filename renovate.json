@@ -24,6 +24,12 @@
       "assignees": ["marklundin"],
       "semanticCommitType": "feat",
       "semanticCommitScope": "playcanvas"
+    },
+    {
+      "description": "changesets/action v2 requires Changesets CLI v3; hold the major until the CLI and workflow inputs are migrated",
+      "matchManagers": ["github-actions"],
+      "matchPackageNames": ["changesets/action"],
+      "allowedVersions": "<2"
     }
   ]
 }

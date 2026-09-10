@@ -1,33 +1,33 @@
 import { Mat4, Vec3 } from 'playcanvas';
 
 import { ExtendedQuat } from './math.ts';
+import type { Pose } from './pose.ts';
 import { CubicSpline } from './spline.ts';
-import { Pose } from './pose.ts';
 
 const q = new ExtendedQuat();
 
 export type AnimationTrack = {
     /* The name of the track */
-    name: string,
+    name: string;
     /* The duration of the track */
-    duration: number,
+    duration: number;
     /* The frame rate of the track */
-    frameRate: number,
+    frameRate: number;
     /* The target of the track */
-    target: string,
+    target: string;
     /* The loop mode of the track */
-    loopMode: 'none' | 'repeat' | 'pingpong',
+    loopMode: 'none' | 'repeat' | 'pingpong';
     /* The interpolation of the track */
-    interpolation: 'spline',
+    interpolation: 'spline';
     /* The keyframes of the track */
     keyframes: {
-        times: number[],
+        times: number[];
         values: {
-            position: number[],
-            target: number[]
-        }
-    }
-}
+            position: number[];
+            target: number[];
+        };
+    };
+};
 
 // track an animation cursor with support for looping and ping-pong modes
 class AnimCursor {
@@ -71,21 +71,26 @@ class AnimCursor {
             this.cursor = value;
         } else {
             switch (this.loopMode) {
-                case 'none': this.cursor = this.duration; break;
-                case 'repeat': this.cursor %= this.duration; break;
-                case 'pingpong': this.cursor %= (this.duration * 2); break;
+                case 'none':
+                    this.cursor = this.duration;
+                    break;
+                case 'repeat':
+                    this.cursor %= this.duration;
+                    break;
+                case 'pingpong':
+                    this.cursor %= this.duration * 2;
+                    break;
             }
         }
     }
 
     get value() {
-        return this.cursor;// > this.duration ? this.duration - this.cursor : this.cursor;
+        return this.cursor; // > this.duration ? this.duration - this.cursor : this.cursor;
     }
 }
 
 // Manage the state of a camera animation track
 class AnimCamera {
-
     time = 0;
     spline;
 
@@ -104,7 +109,7 @@ class AnimCamera {
     rotation = new Vec3();
 
     constructor(spline: CubicSpline, duration: number, loopMode: 'none' | 'repeat' | 'pingpong', frameRate: number) {
-        this.time = 0
+        this.time = 0;
         this.spline = spline;
         this.cursor.reset(duration, loopMode);
         this.frameRate = frameRate;
@@ -150,7 +155,6 @@ class AnimCamera {
 
     // construct an animation from a settings track
     static fromTrack(track: AnimationTrack) {
-
         const { keyframes, duration, frameRate, loopMode } = track;
         const { times, values } = keyframes;
         const { position, target } = values;
@@ -162,30 +166,29 @@ class AnimCamera {
             points.push(target[i * 3], target[i * 3 + 1], target[i * 3 + 2]);
         }
 
-        const extra = (duration === times[times.length - 1] / frameRate) ? 1 : 0;
+        const extra = duration === times[times.length - 1] / frameRate ? 1 : 0;
 
         const spline = CubicSpline.fromPointsLooping((duration + extra) * frameRate, times, points, -1);
 
         return new AnimCamera(spline, duration, loopMode, frameRate);
     }
-    
 }
 
 type RotationTrackProps = {
     /**
      * The number of keys to generate
      */
-    keys?: number,
+    keys?: number;
     /**
      * The duration of the track
      */
-    duration?: number,
-}
+    duration?: number;
+};
 
 export const createRotationTrack = (initial: Pose, options: RotationTrackProps = { keys: 12, duration: 20 }) => {
     const { keys = 12, duration = 20 } = options;
 
-    const times = new Array(keys).fill(0).map((_, i) => i / keys * duration);
+    const times = new Array(keys).fill(0).map((_, i) => (i / keys) * duration);
     const position = [];
     const target = [];
 
@@ -201,7 +204,7 @@ export const createRotationTrack = (initial: Pose, options: RotationTrackProps =
     );
 
     for (let i = 0; i < keys; ++i) {
-        mat.setFromEulerAngles(0, -i / keys * 360, 0);
+        mat.setFromEulerAngles(0, (-i / keys) * 360, 0);
         mat.transformPoint(dif, vec);
 
         position.push(initialTarget.x + vec.x);
@@ -229,8 +232,6 @@ export const createRotationTrack = (initial: Pose, options: RotationTrackProps =
             }
         }
     });
-    
-    
-}
+};
 
 export { AnimCamera };

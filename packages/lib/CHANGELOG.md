@@ -1,5 +1,23 @@
 # @playcanvas/react
 
+## 0.11.5
+
+### Patch Changes
+
+- 4f25e4e: Fix stale homepage URLs in package metadata: `@playcanvas/react` now points at the canonical docs path and `@playcanvas/blocks` at its GitHub README instead of the retired Vercel site.
+- f88e26e: Fix the `Screen` and `Element` components, which previously failed to render.
+
+    - `<Element>` threw `Cannot set property aabb` on mount: the generated prop schema included read-only engine getters (such as `aabb`) and tried to assign to them. It also applied `null` defaults for props the user never set, which broke settable-but-initially-null props like `color` (`this._color.copy(null)`). Read-only accessors are now excluded from the schema, and the schema no longer assigns `null`/`undefined` defaults.
+    - `<Screen>` rendered nothing because `referenceResolution` was applied as a raw array; the engine setter reads `value.x`/`value.y`, so it now receives a `Vec2`.
+
+    Also corrects the `Element` component's JSDoc (previously a copy of `Screen`'s, with an invalid example).
+
+## 0.11.4
+
+### Patch Changes
+
+- 8a44703: Fix console errors when using GSplat with playcanvas 2.18+: exclude the read-only `id` and the removed `lodDistances`/`splatBudget` properties from the GSplat schema, and silence `console.error` during mock-component introspection so engine removal notices don't leak at import time.
+
 ## 0.11.3
 
 ### Patch Changes

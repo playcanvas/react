@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-export { Camera } from './Camera.tsx'
-export { GSplat } from './GSplat.tsx'
-export { Light } from './Light.tsx'
-export { Render } from './Render.tsx'
-export { Script } from './Script.tsx'
-export { Sprite } from './Sprite.tsx'
-export { Align } from './Align.tsx'
-export { Anim } from './Anim.tsx'
-export { RigidBody } from './RigidBody.tsx'
-export { Collision } from './Collision.tsx'
-export { Screen } from './Screen.tsx'
-export { Element } from './Element.tsx'
-export { Gizmo } from './Gizmo.tsx'
-export { Environment } from './Environment.tsx'
+export { Camera } from './Camera.tsx';
+export { GSplat } from './GSplat.tsx';
+export { Light } from './Light.tsx';
+export { Render } from './Render.tsx';
+export { Script } from './Script.tsx';
+export { Sprite } from './Sprite.tsx';
+export { Align } from './Align.tsx';
+export { Anim } from './Anim.tsx';
+export { RigidBody } from './RigidBody.tsx';
+export { Collision } from './Collision.tsx';
+export { Screen } from './Screen.tsx';
+export { Element } from './Element.tsx';
+export { Gizmo } from './Gizmo.tsx';
+export { Environment } from './Environment.tsx';

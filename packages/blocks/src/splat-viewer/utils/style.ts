@@ -1,4 +1,4 @@
-import { PostEffectsSettings } from "./effects.ts"
+import type { PostEffectsSettings } from './effects.ts';
 
 export const paris: PostEffectsSettings = {
     lighting: {
@@ -11,17 +11,14 @@ export const paris: PostEffectsSettings = {
         sharpness: 0,
         samples: 4,
         toneMapping: 4,
-        fog: "none",
+        fog: 'none',
         fogColor: {
             r: 0,
             g: 0,
             b: 0,
             a: 1
         },
-        fogRange: [
-            0,
-            100
-        ],
+        fogRange: [0, 100],
         fogDensity: 0.01,
         renderFormatFallback0: 12,
         renderFormatFallback1: 14,
@@ -31,7 +28,7 @@ export const paris: PostEffectsSettings = {
         fogEnd: 100
     },
     ssao: {
-        type: "none",
+        type: 'none',
         intensity: 0.5,
         radius: 30,
         samples: 12,
@@ -72,7 +69,7 @@ export const paris: PostEffectsSettings = {
         enabled: true,
         intensity: 10
     }
-}
+};
 
 export const neutral: PostEffectsSettings = {
     lighting: {
@@ -85,17 +82,14 @@ export const neutral: PostEffectsSettings = {
         sharpness: 0,
         samples: 8,
         toneMapping: 4,
-        fog: "none",
+        fog: 'none',
         fogColor: {
             r: 0,
             g: 0,
             b: 0,
             a: 1
         },
-        fogRange: [
-            0,
-            100
-        ],
+        fogRange: [0, 100],
         fogDensity: 0.01,
         renderFormatFallback0: 12,
         renderFormatFallback1: 14,
@@ -105,7 +99,7 @@ export const neutral: PostEffectsSettings = {
         fogEnd: 100
     },
     ssao: {
-        type: "none",
+        type: 'none',
         intensity: 0.5,
         radius: 30,
         samples: 12,
@@ -146,7 +140,7 @@ export const neutral: PostEffectsSettings = {
         enabled: false,
         intensity: 10
     }
-}
+};
 
 export const noir: PostEffectsSettings = {
     lighting: {
@@ -159,17 +153,14 @@ export const noir: PostEffectsSettings = {
         sharpness: 0,
         samples: 4,
         toneMapping: 4,
-        fog: "none",
+        fog: 'none',
         fogColor: {
             r: 0,
             g: 0,
             b: 0,
             a: 1
         },
-        fogRange: [
-            0,
-            100
-        ],
+        fogRange: [0, 100],
         fogDensity: 0.01,
         renderFormatFallback0: 12,
         renderFormatFallback1: 14,
@@ -179,7 +170,7 @@ export const noir: PostEffectsSettings = {
         fogEnd: 100
     },
     ssao: {
-        type: "none",
+        type: 'none',
         intensity: 0.5,
         radius: 30,
         samples: 12,
@@ -220,4 +211,4 @@ export const noir: PostEffectsSettings = {
         enabled: true,
         intensity: 10
     }
-}
+};

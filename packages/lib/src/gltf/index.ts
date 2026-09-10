@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 // Components
 export { Gltf } from './components/Gltf.tsx';
@@ -6,18 +6,17 @@ export type { GltfProps } from './components/Gltf.tsx';
 export { Modify } from './components/Modify.tsx';
 
 // Hooks
-export { useEntity } from './hooks/use-entity.ts';
+export { useEntity } from './hooks/use-entity.tsx';
 
 // Types
 export type {
-  Rule,
-  Action,
-  MergedRule,
-  ModifyNodeProps,
-  ModifyLightProps,
-  ModifyRenderProps,
-  ModifyCameraProps
+    Rule,
+    Action,
+    MergedRule,
+    ModifyNodeProps,
+    ModifyLightProps,
+    ModifyRenderProps,
+    ModifyCameraProps
 } from './types';
 
 export type { PathPredicate, EntityMetadata } from './utils/path-matcher.ts';
-

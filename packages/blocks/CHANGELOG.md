@@ -1,18 +1,34 @@
 # @playcanvas/blocks
 
+## 0.3.9
+
+### Patch Changes
+
+- 4f25e4e: Fix stale homepage URLs in package metadata: `@playcanvas/react` now points at the canonical docs path and `@playcanvas/blocks` at its GitHub README instead of the retired Vercel site.
+- Updated dependencies [4f25e4e]
+- Updated dependencies [f88e26e]
+    - @playcanvas/react@0.11.5
+
+## 0.3.8
+
+### Patch Changes
+
+- Updated dependencies [8a44703]
+    - @playcanvas/react@0.11.4
+
 ## 0.3.7
 
 ### Patch Changes
 
 - Updated dependencies [c1106f7]
-  - @playcanvas/react@0.11.3
+    - @playcanvas/react@0.11.3
 
 ## 0.3.6
 
 ### Patch Changes
 
 - Updated dependencies [e564a0e]
-  - @playcanvas/react@0.11.2
+    - @playcanvas/react@0.11.2
 
 ## 0.3.5
 
@@ -20,7 +36,7 @@
 
 - 4f0986c: Moved PlayCanvas from dependencies to peerDependencies (^2.11.8) to align with @playcanvas/react and avoid version conflicts
 - Updated dependencies [4f0986c]
-  - @playcanvas/react@0.11.1
+    - @playcanvas/react@0.11.1
 
 ## 0.3.4
 
@@ -30,14 +46,14 @@
 - Updated dependencies [86f01de]
 - Updated dependencies [19a8f7f]
 - Updated dependencies [e800b2e]
-  - @playcanvas/react@0.11.0
+    - @playcanvas/react@0.11.0
 
 ## 0.3.3
 
 ### Patch Changes
 
 - Updated dependencies [61b1f1d]
-  - @playcanvas/react@0.10.3
+    - @playcanvas/react@0.10.3
 
 ## 0.3.2
 
@@ -45,7 +61,7 @@
 
 - Updated dependencies [deab2a7]
 - Updated dependencies [f147fa5]
-  - @playcanvas/react@0.10.2
+    - @playcanvas/react@0.10.2
 
 ## 0.3.1
 
@@ -53,7 +69,7 @@
 
 - Updated dependencies [39c8647]
 - Updated dependencies [98dc81c]
-  - @playcanvas/react@0.10.1
+    - @playcanvas/react@0.10.1
 
 ## 0.3.0
 
@@ -68,7 +84,7 @@
 - Updated dependencies [3edf166]
 - Updated dependencies [fa859ed]
 - Updated dependencies [3082203]
-  - @playcanvas/react@0.10.0
+    - @playcanvas/react@0.10.0
 
 ## 0.2.1
 
@@ -76,7 +92,7 @@
 
 - f6bf216: Updated camera api (removed resetZoom)
 - Updated dependencies [6372f9c]
-  - @playcanvas/react@0.9.1
+    - @playcanvas/react@0.9.1
 
 ## 0.2.0
 
@@ -88,7 +104,7 @@
 
 - 3f6a73f: Removes redundant Quaternion methods
 - Updated dependencies [118c922]
-  - @playcanvas/react@0.9.0
+    - @playcanvas/react@0.9.0
 
 ## 0.1.3
 
@@ -99,7 +115,7 @@
 - Updated dependencies [f5f3001]
 - Updated dependencies [91fac3a]
 - Updated dependencies [6c3f3c9]
-  - @playcanvas/react@0.8.0
+    - @playcanvas/react@0.8.0
 
 ## 0.1.2
 
@@ -111,7 +127,7 @@
 - Updated dependencies [28998cb]
 - Updated dependencies [0b08685]
 - Updated dependencies [62d7178]
-  - @playcanvas/react@0.7.0
+    - @playcanvas/react@0.7.0
 
 ## 0.1.1
 
@@ -126,7 +142,7 @@
 - Updated dependencies [637d196]
 - Updated dependencies [842abe2]
 - Updated dependencies [85229d7]
-  - @playcanvas/react@0.6.0
+    - @playcanvas/react@0.6.0
 
 ## 0.1.0
 
@@ -140,4 +156,4 @@
 - 8348361: Updated @playcanvas/blocks to use 2.8.0 of the engine
 - Updated dependencies [4917998]
 - Updated dependencies [894ca08]
-  - @playcanvas/react@0.5.0
+    - @playcanvas/react@0.5.0

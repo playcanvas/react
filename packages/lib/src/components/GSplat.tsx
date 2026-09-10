@@ -1,10 +1,12 @@
-"use client"
+'use client';
 
-import { FC } from "react";
-import { useComponent } from "../hooks/index.ts";
-import { Asset, Entity, GSplatComponent, GSplatInstance, ShaderMaterial } from "playcanvas";
-import { PublicProps } from "../utils/types-utils.ts";
-import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from "../utils/validation.ts";
+import type { GSplatComponent } from 'playcanvas';
+import { Asset, Entity, GSplatInstance, ShaderMaterial } from 'playcanvas';
+import type { FC } from 'react';
+
+import { useComponent } from '../hooks/index.ts';
+import type { PublicProps } from '../utils/types-utils.ts';
+import { validatePropsWithDefaults, createComponentDefinition, getStaticNullApplication } from '../utils/validation.ts';
 /**
  * The GSplat component allows an entity to render a Gaussian Splat.
  * @param {GSplatProps} props - The props to pass to the GSplat component.
@@ -14,21 +16,21 @@ import { validatePropsWithDefaults, createComponentDefinition, getStaticNullAppl
  * <GSplat asset={splat} />
  */
 export const GSplat: FC<GSplatProps> = (props) => {
-
     const safeProps = validatePropsWithDefaults<GSplatProps, GSplatComponent>(props, componentDefinition);
-    useComponent("gsplat", safeProps, componentDefinition.schema);
-    return null
-
+    useComponent('gsplat', safeProps, componentDefinition.schema);
+    return null;
 };
 
-type GSplatProps = Partial<PublicProps<GSplatComponent>>
+type GSplatProps = Partial<PublicProps<GSplatComponent>>;
 
 const componentDefinition = createComponentDefinition(
-    "GSplat",
-    () => new Entity("mock-gsplat", getStaticNullApplication()).addComponent('gsplat') as GSplatComponent,
+    'GSplat',
+    () => new Entity('mock-gsplat', getStaticNullApplication()).addComponent('gsplat') as GSplatComponent,
     (component) => (component as GSplatComponent).system.destroy(),
-    { apiName: "GSplatComponent" }
-)
+    // `id` is a getter-only property and `lodDistances`/`splatBudget` are removed
+    // in engine 2.18+, so they must not become settable schema props
+    { apiName: 'GSplatComponent', exclude: ['id', 'lodDistances', 'splatBudget'] }
+);
 
 componentDefinition.schema = {
     ...componentDefinition.schema,
@@ -87,4 +89,4 @@ componentDefinition.schema = {
             instance.instance = value;
         }
     }
-}
+};
