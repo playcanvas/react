@@ -17,10 +17,14 @@ import { useParent } from './use-parent.tsx';
  *   myProperty: 'value',
  * });
  */
-export const useScript = (scriptConstructor: SubclassOf<Script>, props: Props, ref: ForwardedRef<Script>): void => {
+export const useScript = (
+    scriptConstructor: SubclassOf<Script> & { scriptName?: string },
+    props: Props,
+    ref: ForwardedRef<Script>
+): void => {
     const parent: Entity = useParent();
     const app: Application = useApp();
-    const scriptName: string = toLowerCamelCase(scriptConstructor.name);
+    const scriptName: string = scriptConstructor.scriptName || toLowerCamelCase(scriptConstructor.name);
     const scriptRef = useRef<Script | null>(null);
     const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
