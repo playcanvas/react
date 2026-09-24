@@ -5,6 +5,7 @@ import {
     FILLMODE_KEEP_ASPECT,
     RESOLUTION_AUTO,
     Application as PlayCanvasApplication,
+    ElementInput,
     Mouse,
     TouchDevice,
     RESOLUTION_FIXED,
@@ -159,8 +160,13 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
                 return;
             }
 
-            // Proceed with normal PlayCanvas init
+            // Proceed with normal PlayCanvas init. The ElementInput gives <Element useInput> and
+            // the button, scroll view and scrollbar components their input. It is created before
+            // the mouse and touch devices so that its listeners run first, which lets a UI event
+            // handler that calls stopPropagation() keep the event from them too.
+            const elementInput = new ElementInput(canvas);
             const pcApp = new PlayCanvasApplication(canvas, {
+                elementInput,
                 mouse: new Mouse(canvas),
                 touch: new TouchDevice(canvas),
                 graphicsDevice: dev
