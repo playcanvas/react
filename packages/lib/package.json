@@ -90,7 +90,7 @@
         "@vitest/coverage-v8": "4.1.8",
         "eslint-plugin-require-extensions": "0.1.3",
         "jsdom": "27.4.0",
-        "vitest": "4.1.8"
+        "vitest": "4.1.11"
     },
     "peerDependencies": {
         "playcanvas": "^2.11.8",
