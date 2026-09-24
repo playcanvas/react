@@ -41,10 +41,11 @@ interface ScreenProps extends Partial<Serializable<PublicProps<ScreenComponent>>
      */
     referenceResolution?: [number, number];
     /**
-     * The scale mode of the screen.
+     * The scale mode of the screen: `"blend"` scales the screen to fit its reference resolution,
+     * and `"none"` leaves it unscaled. World-space screens are always unscaled.
      * @default "blend"
      */
-    scaleMode?: 'blend' | 'stretch' | 'fit';
+    scaleMode?: 'blend' | 'none';
 }
 
 const componentDefinition = createComponentDefinition<ScreenProps, ScreenComponent>(
@@ -73,10 +74,9 @@ componentDefinition.schema = {
         }
     },
     scaleMode: {
-        validate: (value: unknown) =>
-            typeof value === 'string' && ['blend', 'stretch', 'fit'].includes(value as string),
-        errorMsg: (value: unknown) =>
-            `Invalid value for prop "scaleMode": ${value}. Expected one of: "blend", "stretch", "fit".`,
+        // The engine's SCALEMODE_BLEND and SCALEMODE_NONE. Any other value makes it fall back to "none".
+        validate: (value: unknown) => typeof value === 'string' && ['blend', 'none'].includes(value as string),
+        errorMsg: (value: unknown) => `Invalid value for prop "scaleMode": ${value}. Expected one of: "blend", "none".`,
         default: 'blend'
     }
 } as Schema<ScreenProps, ScreenComponent>;
