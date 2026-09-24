@@ -40,11 +40,9 @@ jobs:
         run: pnpm run build:lib && pnpm run build:blocks
       
       - name: Create and publish versions
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
-          commit: "chore: update versions"
-          title: "chore: update versions"
-          publish: pnpm -w changeset publish
-          createGithubReleases: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update versions"
+          pr-title: "chore: update versions"
+          publish-script: pnpm -w changeset publish
+          create-github-releases: true
