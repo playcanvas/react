@@ -30,6 +30,12 @@
       "matchManagers": ["github-actions"],
       "matchPackageNames": ["changesets/action"],
       "allowedVersions": "<2"
+    },
+    {
+      "description": "typescript-eslint doesn't support TypeScript 7 yet (its peer range is <6.1.0); hold the major until it does",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["typescript"],
+      "allowedVersions": "<7"
     }
   ]
 }
