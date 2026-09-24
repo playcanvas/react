@@ -3,3 +3,11 @@ packages:
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true
+
+# pnpm 10 skipped these install scripts with a warning; pnpm 11+ fails the
+# install unless each one is explicitly allowed or denied.
+allowBuilds:
+  canvas: false
+  esbuild: false
+  msw: false
+  unrs-resolver: false
