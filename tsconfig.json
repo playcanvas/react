@@ -9,7 +9,6 @@
       "skipLibCheck": true,
       "jsx": "react-jsx",
       "moduleResolution": "bundler",
-      "baseUrl": ".",
       "resolveJsonModule": true,
       "rewriteRelativeImportExtensions": true
     },

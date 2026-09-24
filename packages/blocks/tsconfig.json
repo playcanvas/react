@@ -15,7 +15,6 @@
         "outDir": "./dist",
         "rootDir": "./src",
         "moduleResolution": "bundler",
-        "baseUrl": ".",
         "skipLibCheck": true,
         "paths": {
             "@components/*": ["./src/components/*"],

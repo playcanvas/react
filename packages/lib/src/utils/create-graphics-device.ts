@@ -34,7 +34,6 @@ export async function internalCreateGraphicsDevice(
     }
 
     const deviceCreateFuncs: (() => Promise<GraphicsDevice>)[] = deviceTypes.map((deviceType) => {
-        // @ts-expect-error - navigator is not defined in the test environment
         if (deviceType === DEVICETYPE_WEBGPU && globalThis.navigator?.gpu) {
             return async () => {
                 const device = new WebgpuGraphicsDevice(canvas, options);
