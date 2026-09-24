@@ -36,6 +36,12 @@
       "matchManagers": ["npm"],
       "matchPackageNames": ["typescript"],
       "allowedVersions": "<7"
+    },
+    {
+      "description": "eslint-plugin-react and eslint-plugin-jsx-a11y (via @playcanvas/eslint-config) and eslint-plugin-import have no ESLint 10 releases yet; hold the major until they do or are replaced",
+      "matchManagers": ["npm"],
+      "matchPackageNames": ["eslint"],
+      "allowedVersions": "<10"
     }
   ]
 }
