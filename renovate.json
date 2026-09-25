@@ -5,7 +5,8 @@
     {
       "matchManagers": ["npm"],
       "groupName": "all npm dependencies",
-      "schedule": ["on monday at 10:00am"]
+      "schedule": ["on monday at 10:00am"],
+      "minimumReleaseAge": "1 day"
     },
     {
       "matchDepTypes": ["devDependencies"],
@@ -16,6 +17,7 @@
       "rangeStrategy": "widen"
     },
     {
+      "description": "pnpm-workspace.yaml exempts playcanvas from pnpm's minimumReleaseAge, so engine updates can land as soon as they are released",
       "matchPackageNames": ["playcanvas"],
       "groupName": "playcanvas",
       "prCreation": "immediate",
