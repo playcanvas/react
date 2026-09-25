@@ -170,6 +170,50 @@ describe('Script Component', () => {
     });
 
     describe('Cleanup', () => {
+        class _OrbitCamera extends PcScript {
+            static scriptName = 'orbitCamera';
+        }
+
+        class FallbackScript extends PcScript {}
+
+        it.each([
+            ['explicit scriptName', _OrbitCamera, 'orbitCamera'],
+            ['class-name fallback', FallbackScript, 'fallbackScript']
+        ] as const)('should clean up and remount using %s', async (_label, script, scriptName) => {
+            const scriptRef = React.createRef<PcScript>();
+            const Container = ({ mounted }: { mounted: boolean }) => (
+                <Application deviceTypes={['null']}>
+                    <Entity>{mounted && <Script script={script} ref={scriptRef} />}</Entity>
+                </Application>
+            );
+
+            const { rerender } = render(<Container mounted />);
+            await waitFor(() => expect(scriptRef.current).toBeInstanceOf(script));
+            const firstInstance = scriptRef.current!;
+            const entity = firstInstance.entity;
+            expect(entity.script![scriptName]).toBe(firstInstance);
+
+            rerender(<Container mounted={false} />);
+            expect(scriptRef.current).toBeNull();
+            expect(entity.script).toBeDefined();
+            expect(entity.script![scriptName]).toBeUndefined();
+
+            const warnSpy = vi.spyOn(console, 'warn');
+            try {
+                rerender(<Container mounted />);
+                await waitFor(() => expect(scriptRef.current).toBeInstanceOf(script));
+                expect(scriptRef.current).not.toBe(firstInstance);
+                expect(scriptRef.current!.entity).toBe(entity);
+                expect(entity.script![scriptName]).toBe(scriptRef.current);
+                expect(warnSpy).not.toHaveBeenCalled();
+            } finally {
+                warnSpy.mockRestore();
+            }
+
+            rerender(<Container mounted={false} />);
+            expect(entity.script![scriptName]).toBeUndefined();
+        });
+
         it('should clean up script instance on unmount', async () => {
             const destroySpy = vi.fn();
 

@@ -20,7 +20,6 @@ import { useParent } from './use-parent.tsx';
 export const useScript = (scriptConstructor: SubclassOf<Script>, props: Props, ref: ForwardedRef<Script>): void => {
     const parent: Entity = useParent();
     const app: Application = useApp();
-    const scriptName: string = toLowerCamelCase(scriptConstructor.name);
     const scriptRef = useRef<Script | null>(null);
     const scriptComponentRef = useRef<ScriptComponent | null>(null);
 
@@ -63,7 +62,7 @@ export const useScript = (scriptConstructor: SubclassOf<Script>, props: Props, r
             scriptComponentRef.current = null;
 
             if (app && app.root && script && scriptComponent) {
-                scriptComponent.destroy(scriptName);
+                scriptComponent.destroy(scriptConstructor as unknown as Parameters<ScriptComponent['destroy']>[0]);
 
                 if (ref) {
                     if (typeof ref === 'function') {
@@ -88,8 +87,6 @@ export const useScript = (scriptConstructor: SubclassOf<Script>, props: Props, r
         Object.assign(script, filteredProps);
     }, [props]);
 };
-
-const toLowerCamelCase = (str: string): string => str[0].toLowerCase() + str.substring(1);
 
 /* eslint-disable @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/consistent-type-definitions -- preserve the existing index signature */
 interface Props {
