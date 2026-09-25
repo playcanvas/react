@@ -131,14 +131,11 @@ This installs the rules for the registry and for @playcanvas/react and adds them
 
 ## Contributing
 
-If you want to build the repo from scratch, check out the following. The monorepo is split into 3 main packages:
+The monorepo is split into 2 packages:
 
-- [@playcanvas/react](/packages/lib) - This contains the main react library
-- [@playcanvas/blocks](/packages/blocks) - High level React components for common 3D use cases
-- [@playcanvas/docs](/packages/docs) - The Documentation site.
+- [@playcanvas/react](/packages/lib) - The main React library
+- [@playcanvas/blocks](/packages/blocks) - High-level React components for common 3D use cases
 
-If you want to run this entire project locally, including docs just `npm install` and `npm run dev` from the root of the monorepo. This will install and build all the local dependencies and run a local webserver of the docs.
-
-You can make changes to either the react or blocks lib and build them locally by doing `npm run build:lib` or `npm run build:blocks` respectively.
+To get set up, run `pnpm install` from the root of the monorepo. You can then build each package with `pnpm run build:lib` or `pnpm run build:blocks`, and run the tests with `pnpm test`.
 
 All contributions are welcome :heart:
