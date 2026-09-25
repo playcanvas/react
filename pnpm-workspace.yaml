@@ -4,6 +4,13 @@ packages:
 linkWorkspacePackages: true
 preferWorkspacePackages: true
 
+# Only install versions published at least a day ago. This is pnpm's default
+# since v11; it is stated here so renovate.json can match it. playcanvas is
+# first-party, so engine updates are exempt and install as soon as released.
+minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - playcanvas
+
 # pnpm 10 skipped these install scripts with a warning; pnpm 11+ fails the
 # install unless each one is explicitly allowed or denied.
 allowBuilds:
