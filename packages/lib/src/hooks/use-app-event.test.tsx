@@ -1,14 +1,16 @@
-import { renderHook } from '@testing-library/react';
+import { renderHook, waitFor } from '@testing-library/react';
 import React from 'react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 import { Application } from '../Application.tsx';
 
 import { useAppEvent } from './use-app-event.ts';
+import { useApp } from './use-app.tsx';
 
 /**
- * Note that we can't test the actual firing of the callbacks in tests,
- * because these events are not fire in the Null device type.
+ * Note that we can't test the actual firing of the built-in frame events in tests,
+ * because these events are not fired in the Null device type. Custom events can be
+ * fired directly with `app.fire(...)`.
  *
  * It's possible that we can run headless once we have a node-wgpu environment.
  */
@@ -112,5 +114,33 @@ describe('useAppEvent', () => {
 
         // Should not throw during cleanup
         unmount();
+    });
+
+    it('should forward all arguments to the callback for custom events', async () => {
+        // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the interface generic coverage
+        interface CustomEventMap {
+            levelComplete: (level: number, score: number) => void;
+        }
+
+        const levelCompleteCallback = vi.fn();
+        let capturedApp: ReturnType<typeof useApp> | undefined;
+
+        renderHook(
+            () => {
+                capturedApp = useApp();
+                useAppEvent<CustomEventMap>('levelComplete', levelCompleteCallback);
+            },
+            {
+                wrapper: ({ children }) => <Application deviceTypes={['null']}>{children}</Application>
+            }
+        );
+
+        await waitFor(() => expect(capturedApp).toBeDefined());
+
+        capturedApp!.fire('levelComplete', 3, 1000);
+
+        // PlayCanvas pads unused fire() arguments with undefined, so compare the leading ones
+        expect(levelCompleteCallback).toHaveBeenCalledTimes(1);
+        expect(levelCompleteCallback.mock.calls[0].slice(0, 2)).toEqual([3, 1000]);
     });
 });
