@@ -2,4 +2,4 @@
 "@playcanvas/react": patch
 ---
 
-Respect explicit static scriptName values when cleaning up Script components so unmounting removes the registered script and remounting avoids duplicate-script warnings. Preserve class-name fallback cleanup for scripts without an explicit name.
+Fix Script cleanup for scripts whose class name differs from their registered name (such as an explicit static `scriptName` after bundling or minification), so unmounting removes the script and remounting no longer warns about a duplicate.
