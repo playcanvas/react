@@ -26,12 +26,6 @@
       "semanticCommitScope": "playcanvas"
     },
     {
-      "description": "changesets/action v2 requires Changesets CLI v3; hold the major until the CLI and workflow inputs are migrated",
-      "matchManagers": ["github-actions"],
-      "matchPackageNames": ["changesets/action"],
-      "allowedVersions": "<2"
-    },
-    {
       "description": "typescript-eslint doesn't support TypeScript 7 yet (its peer range is <6.1.0); hold the major until it does",
       "matchManagers": ["npm"],
       "matchPackageNames": ["typescript"],
