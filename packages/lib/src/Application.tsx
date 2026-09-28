@@ -7,6 +7,7 @@ import {
     Application as PlayCanvasApplication,
     Mouse,
     TouchDevice,
+    Keyboard,
     RESOLUTION_FIXED,
     DEVICETYPE_WEBGL2,
     DEVICETYPE_WEBGPU,
@@ -163,6 +164,9 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
             const pcApp = new PlayCanvasApplication(canvas, {
                 mouse: new Mouse(canvas),
                 touch: new TouchDevice(canvas),
+                // On the window, as in the Editor and <pc-app>, so key presses register without the
+                // canvas having focus. Destroying the app detaches it.
+                keyboard: new Keyboard(window),
                 graphicsDevice: dev
             });
             pcApp.start();
