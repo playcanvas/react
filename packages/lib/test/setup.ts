@@ -42,12 +42,14 @@ afterEach(() => {
     vi.clearAllMocks();
 });
 
-// Create test application with spies
-const createTestApp = (actual: typeof playcanvas) => {
+// Create test application with spies. The element input the component creates is passed through,
+// so that tests can check what it gives the UI.
+const createTestApp = (actual: typeof playcanvas, options?: { elementInput?: playcanvas.ElementInput }) => {
     const canvas = document.createElement('canvas');
 
     const app = new actual.Application(canvas, {
         graphicsDevice: new actual.NullGraphicsDevice(canvas),
+        elementInput: options?.elementInput,
         touch: new actual.TouchDevice(canvas),
         mouse: new actual.Mouse(canvas)
     });
@@ -75,8 +77,7 @@ vi.mock('playcanvas', async () => {
     const actual = await vi.importActual<typeof playcanvas>('playcanvas');
 
     const MockApplication = vi.fn(function MockApplication(this: unknown, ...args: unknown[]) {
-        void args;
-        return createTestApp(actual);
+        return createTestApp(actual, args[1] as { elementInput?: playcanvas.ElementInput } | undefined);
     });
 
     return {

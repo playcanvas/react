@@ -1,14 +1,38 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import type { Application as PlayCanvasApplication } from 'playcanvas';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 // eslint-disable-next-line import-x/order -- preserve the existing side-effect import order
 import React from 'react';
 
 import { Application, ApplicationWithoutCanvas } from './Application.tsx';
+import { useApp } from './hooks/index.ts';
 
 describe('Application', () => {
     beforeEach(() => {
         vi.clearAllMocks();
+    });
+
+    // Without an ElementInput, elements with useInput, buttons and scroll views get no input
+    it('creates an ElementInput for the UI', async () => {
+        const onApp = vi.fn();
+        const CaptureApp = () => {
+            const app = useApp();
+            React.useEffect(() => onApp(app), [app]);
+            return null;
+        };
+
+        render(
+            <Application deviceTypes={['null']}>
+                <CaptureApp />
+            </Application>
+        );
+
+        await waitFor(() => expect(onApp).toHaveBeenCalled());
+
+        const app = onApp.mock.calls[0][0] as PlayCanvasApplication;
+        expect(app.elementInput).toBeTruthy();
+        expect(app.elementInput!.app).toBe(app);
     });
 
     it('The Application component renders with default props', () => {
