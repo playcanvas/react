@@ -6,7 +6,8 @@
       "matchManagers": ["npm"],
       "groupName": "all npm dependencies",
       "schedule": ["on monday at 10:00am"],
-      "minimumReleaseAge": "1 day"
+      "minimumReleaseAge": "1 day",
+      "labels": ["dependencies"]
     },
     {
       "matchDepTypes": ["devDependencies"],
