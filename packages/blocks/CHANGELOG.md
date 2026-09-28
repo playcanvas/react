@@ -1,5 +1,11 @@
 # @playcanvas/blocks
 
+## 0.3.12
+
+### Patch Changes
+
+- 46fb5cf: Allow `lucide-react` ^1.0.0.
+
 ## 0.3.11
 
 ### Patch Changes
