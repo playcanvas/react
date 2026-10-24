@@ -102,6 +102,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         canvasRef,
         fillMode = FILLMODE_NONE,
         resolutionMode = RESOLUTION_AUTO,
+        maxPixelRatio,
         usePhysics = false,
         graphicsDeviceOptions,
         deviceTypes = [DEVICETYPE_WEBGL2],
@@ -182,6 +183,21 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         };
     }, [graphicsOptsKey, deviceTypeKey]); // ← stable deps
 
+    /* eslint-disable react-hooks/immutability, react-compiler/react-compiler -- this effect intentionally mutates the engine's graphics device */
+    // Applied before the fill and resolution modes below, so the canvas resize they trigger uses this ratio
+    useEffect(() => {
+        if (!app || maxPixelRatio === undefined) return;
+        const device = app.graphicsDevice;
+        const defaultRatio = device.maxPixelRatio;
+        device.maxPixelRatio = maxPixelRatio;
+
+        // Hand back the device's own ratio, so removing the prop restores the engine default
+        return () => {
+            device.maxPixelRatio = defaultRatio;
+        };
+    }, [app, maxPixelRatio]);
+    /* eslint-enable react-hooks/immutability, react-compiler/react-compiler */
+
     // Separate useEffect for these props to avoid re-rendering
     useEffect(() => {
         if (!app) return;
@@ -241,6 +257,23 @@ interface ApplicationProps
      * @default RESOLUTION_AUTO
      */
     resolutionMode?: typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED;
+
+    /**
+     * The maximum pixel ratio to render at, which sets `app.graphicsDevice.maxPixelRatio`. The canvas
+     * renders at the smaller of this value and `window.devicePixelRatio`, so a value above 1 keeps the
+     * scene sharp on high-DPI screens, at the cost of rendering more pixels. Keep it at or below
+     * `window.devicePixelRatio`, as in the example: the engine also reads it back as the pixel ratio in
+     * effect, such as when mapping pointer positions for UI element drags.
+     *
+     * When omitted, the graphics device keeps its own default, which caps rendering at CSS resolution
+     * and can look soft on high-DPI screens.
+     *
+     * @example
+     * <Application maxPixelRatio={Math.min(window.devicePixelRatio, 2)} />
+     *
+     * This renders at the screen's full resolution, up to twice the CSS resolution.
+     */
+    maxPixelRatio?: number;
 
     /**
      * When `true`, the PlayCanvas Physics system will be enabled.
@@ -338,6 +371,11 @@ componentDefinition.schema = {
             [RESOLUTION_AUTO, RESOLUTION_FIXED].includes(value as typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED),
         errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
         default: RESOLUTION_AUTO
+    },
+    maxPixelRatio: {
+        validate: (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value > 0,
+        errorMsg: (value: unknown) => `maxPixelRatio must be a finite number greater than 0. Received: ${value}`,
+        default: undefined
     },
     graphicsDeviceOptions: {
         validate: (value: unknown) => value === undefined || (typeof value === 'object' && value !== null),

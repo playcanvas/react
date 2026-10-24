@@ -1,10 +1,21 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import type { Application as PlayCanvasApplication } from 'playcanvas';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import '@testing-library/jest-dom';
 // eslint-disable-next-line import-x/order -- preserve the existing side-effect import order
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Application, ApplicationWithoutCanvas } from './Application.tsx';
+import { useApp } from './hooks/use-app.tsx';
+
+// Hands the PlayCanvas app to the test once the Application has created it
+const AppProbe = ({ onApp }: { onApp: (app: PlayCanvasApplication) => void }) => {
+    const app = useApp();
+    useEffect(() => {
+        onApp(app);
+    }, [app, onApp]);
+    return null;
+};
 
 describe('Application', () => {
     beforeEach(() => {
@@ -51,6 +62,83 @@ describe('Application', () => {
         } finally {
             warnSpy.mockRestore();
         }
+    });
+
+    describe('maxPixelRatio', () => {
+        // The Null graphics device used in tests defaults to a ratio of 1
+        const DEFAULT_RATIO = 1;
+
+        // Renders an Application and waits for its app to exist. Resolves with the app's graphics
+        // device and a function that re-renders the same Application with a new maxPixelRatio.
+        const renderApplication = async (maxPixelRatio?: number) => {
+            const onApp = vi.fn();
+            const tree = (ratio?: number) => (
+                <Application deviceTypes={['null']} maxPixelRatio={ratio}>
+                    <AppProbe onApp={onApp} />
+                </Application>
+            );
+
+            const { rerender } = render(tree(maxPixelRatio));
+            await waitFor(() => expect(onApp).toHaveBeenCalled());
+
+            const app: PlayCanvasApplication = onApp.mock.calls[0][0];
+            return {
+                device: app.graphicsDevice,
+                setMaxPixelRatio: (ratio?: number) => rerender(tree(ratio))
+            };
+        };
+
+        it('sets the graphics device maxPixelRatio', async () => {
+            const { device } = await renderApplication(2);
+
+            expect(device.maxPixelRatio).toBe(2);
+        });
+
+        it('updates the graphics device maxPixelRatio when the prop changes', async () => {
+            const { device, setMaxPixelRatio } = await renderApplication(2);
+
+            setMaxPixelRatio(1.5);
+
+            expect(device.maxPixelRatio).toBe(1.5);
+        });
+
+        it('keeps the graphics device default when maxPixelRatio is omitted', async () => {
+            const { device } = await renderApplication();
+
+            expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
+        });
+
+        it('restores the graphics device default when maxPixelRatio is removed', async () => {
+            const { device, setMaxPixelRatio } = await renderApplication(2);
+
+            setMaxPixelRatio(undefined);
+
+            expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
+        });
+
+        it.each([0, -1, NaN, Infinity])(
+            'warns and keeps the graphics device default when maxPixelRatio is %s',
+            async (ratio) => {
+                const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+                try {
+                    const { device } = await renderApplication(ratio);
+
+                    await vi.waitFor(() =>
+                        expect(warnSpy).toHaveBeenCalledWith(
+                            '%c[PlayCanvas React]:',
+                            expect.any(String), // the CSS string
+                            expect.stringContaining(
+                                `maxPixelRatio must be a finite number greater than 0. Received: ${ratio}`
+                            )
+                        )
+                    );
+                    expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
+                } finally {
+                    warnSpy.mockRestore();
+                }
+            }
+        );
     });
 
     it.skip('The Application component applies canvasRef prop correctly', () => {
