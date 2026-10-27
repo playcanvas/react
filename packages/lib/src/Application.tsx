@@ -23,6 +23,7 @@ import { defaultGraphicsDeviceOptions } from './types/graphics-device-options.ts
 import type { DeviceType } from './utils/create-graphics-device.ts';
 import { internalCreateGraphicsDevice } from './utils/create-graphics-device.ts';
 import { env } from './utils/env.ts';
+import { applyMaxPixelRatio } from './utils/max-pixel-ratio.ts';
 import { usePicker } from './utils/picker.tsx';
 import type { PublicProps } from './utils/types-utils.ts';
 import {
@@ -102,6 +103,7 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         canvasRef,
         fillMode = FILLMODE_NONE,
         resolutionMode = RESOLUTION_AUTO,
+        maxPixelRatio,
         usePhysics = false,
         graphicsDeviceOptions,
         deviceTypes = [DEVICETYPE_WEBGL2],
@@ -182,6 +184,13 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         };
     }, [graphicsOptsKey, deviceTypeKey]); // ← stable deps
 
+    // Applied before the fill and resolution modes below, so the canvas resize they trigger uses this ratio.
+    // The cleanup hands back the device's own ratio, so removing the prop restores the engine default.
+    useEffect(() => {
+        if (!app || maxPixelRatio === undefined) return;
+        return applyMaxPixelRatio(app.graphicsDevice, maxPixelRatio);
+    }, [app, maxPixelRatio]);
+
     // Separate useEffect for these props to avoid re-rendering
     useEffect(() => {
         if (!app) return;
@@ -241,6 +250,23 @@ interface ApplicationProps
      * @default RESOLUTION_AUTO
      */
     resolutionMode?: typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED;
+
+    /**
+     * The maximum pixel ratio to render at. The canvas renders at the smaller of this value and the
+     * display's own pixel ratio (`window.devicePixelRatio`), which is followed as it changes, for
+     * example when the window moves to another monitor. A value above 1 keeps the scene sharp on
+     * high-DPI screens, at the cost of rendering more pixels, and `Infinity` always renders at the
+     * display's full resolution. The ratio in effect is set as `app.graphicsDevice.maxPixelRatio`.
+     *
+     * When omitted, the graphics device keeps its own default, which caps rendering at CSS resolution
+     * and can look soft on high-DPI screens.
+     *
+     * @example
+     * <Application maxPixelRatio={2} />
+     *
+     * This renders at the screen's full resolution, up to twice the CSS resolution.
+     */
+    maxPixelRatio?: number;
 
     /**
      * When `true`, the PlayCanvas Physics system will be enabled.
@@ -338,6 +364,11 @@ componentDefinition.schema = {
             [RESOLUTION_AUTO, RESOLUTION_FIXED].includes(value as typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED),
         errorMsg: () => `"resolutionMode" must be one of: ${RESOLUTION_AUTO}, ${RESOLUTION_FIXED}`,
         default: RESOLUTION_AUTO
+    },
+    maxPixelRatio: {
+        validate: (value: unknown) => typeof value === 'number' && value > 0,
+        errorMsg: (value: unknown) => `maxPixelRatio must be a number greater than 0. Received: ${value}`,
+        default: undefined
     },
     graphicsDeviceOptions: {
         validate: (value: unknown) => value === undefined || (typeof value === 'object' && value !== null),
