@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import type { Application as PlayCanvasApplication } from 'playcanvas';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import '@testing-library/jest-dom';
 // eslint-disable-next-line import-x/order -- preserve the existing side-effect import order
 import React, { useEffect } from 'react';
@@ -68,6 +68,30 @@ describe('Application', () => {
         // The Null graphics device used in tests defaults to a ratio of 1
         const DEFAULT_RATIO = 1;
 
+        beforeEach(() => {
+            // Render on a 3x display
+            vi.stubGlobal('devicePixelRatio', 3);
+        });
+
+        afterEach(() => {
+            vi.unstubAllGlobals();
+        });
+
+        // Stands in for matchMedia, and keeps each query's change listeners so a test can fire them
+        const stubMatchMedia = () => {
+            const queries: { media: string; listeners: Set<() => void> }[] = [];
+            vi.stubGlobal('matchMedia', (media: string) => {
+                const listeners = new Set<() => void>();
+                queries.push({ media, listeners });
+                return {
+                    media,
+                    addEventListener: (_type: string, listener: () => void) => listeners.add(listener),
+                    removeEventListener: (_type: string, listener: () => void) => listeners.delete(listener)
+                };
+            });
+            return queries;
+        };
+
         // Renders an Application and waits for its app to exist. Resolves with the app's graphics
         // device and a function that re-renders the same Application with a new maxPixelRatio.
         const renderApplication = async (maxPixelRatio?: number) => {
@@ -94,6 +118,29 @@ describe('Application', () => {
             expect(device.maxPixelRatio).toBe(2);
         });
 
+        it.each([4, Infinity])('caps maxPixelRatio %s at the display pixel ratio', async (ratio) => {
+            const { device } = await renderApplication(ratio);
+
+            expect(device.maxPixelRatio).toBe(3);
+        });
+
+        it.each([
+            [2, 400, 200],
+            [4, 600, 300]
+        ])('sizes the canvas for maxPixelRatio %s', async (ratio, width, height) => {
+            const clientWidth = vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(200);
+            const clientHeight = vi.spyOn(Element.prototype, 'clientHeight', 'get').mockReturnValue(100);
+
+            try {
+                const { device } = await renderApplication(ratio);
+
+                expect([device.canvas.width, device.canvas.height]).toEqual([width, height]);
+            } finally {
+                clientWidth.mockRestore();
+                clientHeight.mockRestore();
+            }
+        });
+
         it('updates the graphics device maxPixelRatio when the prop changes', async () => {
             const { device, setMaxPixelRatio } = await renderApplication(2);
 
@@ -116,29 +163,58 @@ describe('Application', () => {
             expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
         });
 
-        it.each([0, -1, NaN, Infinity])(
-            'warns and keeps the graphics device default when maxPixelRatio is %s',
-            async (ratio) => {
-                const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+        it('applies maxPixelRatio again after the graphics device is restored', async () => {
+            const { device, setMaxPixelRatio } = await renderApplication(2);
 
-                try {
-                    const { device } = await renderApplication(ratio);
+            // WebGPU resets the ratio when it restores a lost device
+            device.maxPixelRatio = 1;
+            device.fire('devicerestored');
 
-                    await vi.waitFor(() =>
-                        expect(warnSpy).toHaveBeenCalledWith(
-                            '%c[PlayCanvas React]:',
-                            expect.any(String), // the CSS string
-                            expect.stringContaining(
-                                `maxPixelRatio must be a finite number greater than 0. Received: ${ratio}`
-                            )
-                        )
-                    );
-                    expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
-                } finally {
-                    warnSpy.mockRestore();
-                }
+            expect(device.maxPixelRatio).toBe(2);
+
+            // Once the prop is removed, a restore leaves the default alone
+            setMaxPixelRatio(undefined);
+            device.fire('devicerestored');
+
+            expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
+        });
+
+        it('follows changes to the display pixel ratio', async () => {
+            const queries = stubMatchMedia();
+            const { device, setMaxPixelRatio } = await renderApplication(4);
+            expect(device.maxPixelRatio).toBe(3);
+
+            // The window moves to a 2x display
+            vi.stubGlobal('devicePixelRatio', 2);
+            queries.at(-1)?.listeners.forEach((listener) => listener());
+
+            expect(device.maxPixelRatio).toBe(2);
+            expect(queries.at(-1)?.media).toBe('(resolution: 2dppx)');
+
+            // Removing the prop stops following the display
+            setMaxPixelRatio(undefined);
+
+            expect(queries.every(({ listeners }) => listeners.size === 0)).toBe(true);
+        });
+
+        it.each([0, -1, NaN])('warns and keeps the graphics device default when maxPixelRatio is %s', async (ratio) => {
+            const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
+
+            try {
+                const { device } = await renderApplication(ratio);
+
+                await vi.waitFor(() =>
+                    expect(warnSpy).toHaveBeenCalledWith(
+                        '%c[PlayCanvas React]:',
+                        expect.any(String), // the CSS string
+                        expect.stringContaining(`maxPixelRatio must be a number greater than 0. Received: ${ratio}`)
+                    )
+                );
+                expect(device.maxPixelRatio).toBe(DEFAULT_RATIO);
+            } finally {
+                warnSpy.mockRestore();
             }
-        );
+        });
     });
 
     it.skip('The Application component applies canvasRef prop correctly', () => {

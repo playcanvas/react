@@ -2,4 +2,4 @@
 "@playcanvas/react": minor
 ---
 
-Add a `maxPixelRatio` prop to `Application` and `ApplicationWithoutCanvas`, which sets `app.graphicsDevice.maxPixelRatio` so apps can render sharply on high-DPI screens, for example `<Application maxPixelRatio={Math.min(window.devicePixelRatio, 2)} />`. The prop is re-applied when it changes, and when it is omitted the engine's default is kept.
+Add a `maxPixelRatio` prop to `Application` and `ApplicationWithoutCanvas`, so apps can render sharply on high-DPI screens, for example `<Application maxPixelRatio={2} />`. The canvas renders at the smaller of this value and the display's pixel ratio, which is followed as it changes. When the prop is omitted, the engine's default is kept.

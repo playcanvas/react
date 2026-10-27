@@ -23,6 +23,7 @@ import { defaultGraphicsDeviceOptions } from './types/graphics-device-options.ts
 import type { DeviceType } from './utils/create-graphics-device.ts';
 import { internalCreateGraphicsDevice } from './utils/create-graphics-device.ts';
 import { env } from './utils/env.ts';
+import { applyMaxPixelRatio } from './utils/max-pixel-ratio.ts';
 import { usePicker } from './utils/picker.tsx';
 import type { PublicProps } from './utils/types-utils.ts';
 import {
@@ -183,20 +184,12 @@ export const ApplicationWithoutCanvas: FC<ApplicationWithoutCanvasProps> = (prop
         };
     }, [graphicsOptsKey, deviceTypeKey]); // ← stable deps
 
-    /* eslint-disable react-hooks/immutability, react-compiler/react-compiler -- this effect intentionally mutates the engine's graphics device */
-    // Applied before the fill and resolution modes below, so the canvas resize they trigger uses this ratio
+    // Applied before the fill and resolution modes below, so the canvas resize they trigger uses this ratio.
+    // The cleanup hands back the device's own ratio, so removing the prop restores the engine default.
     useEffect(() => {
         if (!app || maxPixelRatio === undefined) return;
-        const device = app.graphicsDevice;
-        const defaultRatio = device.maxPixelRatio;
-        device.maxPixelRatio = maxPixelRatio;
-
-        // Hand back the device's own ratio, so removing the prop restores the engine default
-        return () => {
-            device.maxPixelRatio = defaultRatio;
-        };
+        return applyMaxPixelRatio(app.graphicsDevice, maxPixelRatio);
     }, [app, maxPixelRatio]);
-    /* eslint-enable react-hooks/immutability, react-compiler/react-compiler */
 
     // Separate useEffect for these props to avoid re-rendering
     useEffect(() => {
@@ -259,17 +252,17 @@ interface ApplicationProps
     resolutionMode?: typeof RESOLUTION_AUTO | typeof RESOLUTION_FIXED;
 
     /**
-     * The maximum pixel ratio to render at, which sets `app.graphicsDevice.maxPixelRatio`. The canvas
-     * renders at the smaller of this value and `window.devicePixelRatio`, so a value above 1 keeps the
-     * scene sharp on high-DPI screens, at the cost of rendering more pixels. Keep it at or below
-     * `window.devicePixelRatio`, as in the example: the engine also reads it back as the pixel ratio in
-     * effect, such as when mapping pointer positions for UI element drags.
+     * The maximum pixel ratio to render at. The canvas renders at the smaller of this value and the
+     * display's own pixel ratio (`window.devicePixelRatio`), which is followed as it changes, for
+     * example when the window moves to another monitor. A value above 1 keeps the scene sharp on
+     * high-DPI screens, at the cost of rendering more pixels, and `Infinity` always renders at the
+     * display's full resolution. The ratio in effect is set as `app.graphicsDevice.maxPixelRatio`.
      *
      * When omitted, the graphics device keeps its own default, which caps rendering at CSS resolution
      * and can look soft on high-DPI screens.
      *
      * @example
-     * <Application maxPixelRatio={Math.min(window.devicePixelRatio, 2)} />
+     * <Application maxPixelRatio={2} />
      *
      * This renders at the screen's full resolution, up to twice the CSS resolution.
      */
@@ -373,8 +366,8 @@ componentDefinition.schema = {
         default: RESOLUTION_AUTO
     },
     maxPixelRatio: {
-        validate: (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value > 0,
-        errorMsg: (value: unknown) => `maxPixelRatio must be a finite number greater than 0. Received: ${value}`,
+        validate: (value: unknown) => typeof value === 'number' && value > 0,
+        errorMsg: (value: unknown) => `maxPixelRatio must be a number greater than 0. Received: ${value}`,
         default: undefined
     },
     graphicsDeviceOptions: {
