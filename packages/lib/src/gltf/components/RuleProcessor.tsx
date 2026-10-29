@@ -15,7 +15,6 @@ import { componentSchemaRegistry } from '../utils/schema-registry.ts';
  * Internal component that applies final merged rules to entities
  * Handles component modifications and renders new children
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public component declaration
 export interface RuleProcessorProps {
     entity: Entity;
     rule: MergedRule;

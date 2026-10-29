@@ -2,7 +2,6 @@
  * Type definition for graphics device options that can be passed to the PlayCanvas Application.
  * These options correspond to WebGL context attributes.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public options declaration
 export interface GraphicsDeviceOptions {
     /** Whether the canvas contains an alpha buffer. */
     alpha?: boolean;

@@ -10,7 +10,6 @@ import type { Entity } from 'playcanvas';
  * - Combined queries: "head.*[light]"
  */
 
-/* eslint-disable @typescript-eslint/consistent-type-definitions -- preserve the public path declarations */
 export interface PathMatcherOptions {
     caseSensitive?: boolean;
 }
@@ -22,7 +21,6 @@ export interface EntityMetadata {
     name: string;
     originalChildGUIDs: string[];
 }
-/* eslint-enable @typescript-eslint/consistent-type-definitions */
 
 export type PathPredicate = (entity: Entity, metadata: EntityMetadata) => boolean;
 

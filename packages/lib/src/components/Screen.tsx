@@ -28,7 +28,6 @@ export const Screen: FC<ScreenProps> = (props) => {
     return null;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface ScreenProps extends Partial<Serializable<PublicProps<ScreenComponent>>> {
     /**
      * Whether the screen is rendered in screen space.

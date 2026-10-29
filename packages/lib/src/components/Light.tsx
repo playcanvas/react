@@ -26,7 +26,6 @@ export const Light: FC<LightProps> = (props) => {
     return null;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface LightProps extends Partial<Serializable<PublicProps<LightComponent>>> {
     /**
      * The type of the light.

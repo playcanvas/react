@@ -58,7 +58,6 @@ describe('useAppEvent', () => {
 
     it('should support custom events with custom EventCallbackMap', () => {
         // Define a custom event map - no need to extend BaseEventCallbackMap
-        // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the interface generic coverage
         interface CustomEventMap {
             levelComplete: (level: number, score: number) => void;
             playerDeath: (position: [number, number, number]) => void;
@@ -88,7 +87,6 @@ describe('useAppEvent', () => {
 
     it('should support custom events without extending BaseEventCallbackMap', () => {
         // Define a custom event map that doesn't extend BaseEventCallbackMap
-        // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the interface generic coverage
         interface StandaloneEventMap {
             gameStart: () => void;
             gamePause: (paused: boolean) => void;
@@ -117,7 +115,6 @@ describe('useAppEvent', () => {
     });
 
     it('should forward all arguments to the callback for custom events', async () => {
-        // eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the interface generic coverage
         interface CustomEventMap {
             levelComplete: (level: number, score: number) => void;
         }

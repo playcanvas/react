@@ -14,9 +14,8 @@ export default [
         },
         rules: {
             'import-x/no-unresolved': ['error', { ignore: ['^@playcanvas/react(?:/|$)'] }],
+            // false positives through memo(forwardRef(...)) and hook results named `props`
             'react/prop-types': 'off',
-            'react/jsx-uses-react': 'off',
-            'react/react-in-jsx-scope': 'off',
             'react-compiler/react-compiler': 'warn'
         }
     }

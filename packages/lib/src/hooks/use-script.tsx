@@ -88,8 +88,8 @@ export const useScript = (scriptConstructor: SubclassOf<Script>, props: Props, r
     }, [props]);
 };
 
-/* eslint-disable @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/consistent-type-definitions -- preserve the existing index signature */
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style -- preserve the existing index signature */
 interface Props {
     [key: string]: unknown;
 }
-/* eslint-enable @typescript-eslint/consistent-indexed-object-style, @typescript-eslint/consistent-type-definitions */
+/* eslint-enable @typescript-eslint/consistent-indexed-object-style */

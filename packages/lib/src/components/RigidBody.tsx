@@ -77,7 +77,6 @@ export const RigidBody: FC<RigidBodyProps> = (props) => {
 const rigidBodyTypes = [BODYTYPE_STATIC, BODYTYPE_DYNAMIC, BODYTYPE_KINEMATIC] as const;
 type RigidBodyType = (typeof rigidBodyTypes)[number];
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface RigidBodyProps extends Partial<Serializable<PublicProps<RigidBodyComponent>>> {
     /**
      * Sets the rigid body type determines how the body is simulated.

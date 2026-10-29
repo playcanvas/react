@@ -7,7 +7,6 @@ import { Children, useLayoutEffect, useRef, useState } from 'react';
 import { Entity } from '../Entity.tsx';
 import { useApp, useParent } from '../hooks/index.ts';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing component declaration
 interface AlignProps {
     left?: boolean;
     right?: boolean;
