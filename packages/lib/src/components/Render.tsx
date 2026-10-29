@@ -55,7 +55,6 @@ export const Render: FC<RenderProps> = (props) => {
 const primitiveTypes = ['asset', 'box', 'capsule', 'cone', 'cylinder', 'plane', 'sphere', 'torus'] as const;
 type PrimitiveType = (typeof primitiveTypes)[number];
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface RenderProps extends Omit<Partial<PublicProps<PcRenderComponent>>, 'asset'> {
     /**
      * The type of primitive shape to render.

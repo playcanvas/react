@@ -45,7 +45,6 @@ export const Script = memo(ScriptComponent, (prevProps, nextProps) => {
     return prevProps.script === nextProps.script && shallowEquals(prevProps, nextProps);
 });
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing index signature
 interface ScriptProps {
     script: SubclassOf<PcScript>;
     [key: string]: unknown;

@@ -76,7 +76,6 @@ export const Collision: FC<CollisionProps> = (props) => {
     return null;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface CollisionProps extends Partial<Serializable<PublicProps<CollisionComponent>>> {
     type?: 'box' | 'capsule' | 'compound' | 'cone' | 'cylinder' | 'mesh' | 'sphere';
 }

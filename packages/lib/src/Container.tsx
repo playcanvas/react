@@ -5,7 +5,6 @@ import { useLayoutEffect, useRef } from 'react';
 
 import { Entity } from './Entity.tsx';
 import { useApp } from './hooks/index.ts';
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing index signature
 interface ContainerProps {
     asset: Asset;
     children?: React.ReactNode;

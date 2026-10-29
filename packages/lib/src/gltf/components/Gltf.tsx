@@ -13,7 +13,6 @@ import { PathMatcher } from '../utils/path-matcher.ts';
 
 import { RuleProcessor } from './RuleProcessor.tsx';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public component declaration
 export interface GltfProps {
     /**
      * The GLTF asset loaded via useModel

@@ -26,7 +26,6 @@ type AssetResultCallback = (meta: AssetMeta) => void;
 /**
  * Result of an asset loading operation
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public hook result declaration
 export interface AssetResult {
     /**
      * The loaded asset, or null if not loaded or failed

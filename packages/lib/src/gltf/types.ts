@@ -24,7 +24,6 @@ export enum ActionType {
 /**
  * Base action interface
  */
-/* eslint-disable @typescript-eslint/consistent-type-definitions -- preserve the public gltf declarations */
 export interface BaseAction {
     type: ActionType;
     ruleId: string;
@@ -132,4 +131,3 @@ export interface ModifyNodeProps {
     clearChildren?: boolean;
     children?: ReactNode;
 }
-/* eslint-enable @typescript-eslint/consistent-type-definitions */

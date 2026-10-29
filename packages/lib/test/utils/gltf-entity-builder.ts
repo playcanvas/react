@@ -128,7 +128,6 @@ export function createEntityHierarchy(app: PcApplication, structure: EntityStruc
 /**
  * Structure definition for entity hierarchy
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing recursive declaration
 export interface EntityStructure {
     name: string;
     components?: Record<string, Record<string, unknown> | undefined>;

@@ -54,7 +54,6 @@ export const Anim: FC<AnimProps> = (props) => {
     return null;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface AnimProps extends Partial<Serializable<PublicProps<AnimComponent>>> {
     /**
      * The asset containing the animations to play. Setting this prop will automatically assign the animations to the component.

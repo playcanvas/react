@@ -24,7 +24,6 @@ export const Sprite: FC<SpriteProps> = (props) => {
     return null;
 };
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the inherited engine props
 interface SpriteProps extends Partial<PublicProps<SpriteComponent>> {
     asset: Asset;
 }

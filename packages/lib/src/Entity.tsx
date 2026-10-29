@@ -134,7 +134,6 @@ export const Entity = forwardRef<PcEntity, EntityProps>(function Entity(props, r
 type PointerEventCallback = (event: SyntheticPointerEvent) => void;
 type MouseEventCallback = (event: SyntheticMouseEvent) => void;
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public inherited prop override
 export interface EntityProps extends Partial<PublicProps<PcEntity>> {
     /**
      * The name of the entity

@@ -4,7 +4,6 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 /**
  * Physics context type containing physics state information.
  */
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the public context declaration
 export interface PhysicsContextType {
     /**
      * Whether physics is enabled on the application.
@@ -55,7 +54,6 @@ let physicsInstanceCount = 0;
  */
 export const usePhysics = () => useContext(PhysicsContext);
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-definitions -- preserve the existing provider declaration
 interface PhysicsProviderProps {
     children: React.ReactNode;
     enabled: boolean;

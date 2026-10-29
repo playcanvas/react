@@ -236,7 +236,6 @@ type CanvasProps = {
 // These props are excluded from the <Application/> component props.
 type ExcludedApplicationProps = 'mouse' | 'touch' | 'keyboard' | 'gamepads' | 'scene' | 'scripts' | 'assets';
 
-/* eslint-disable @typescript-eslint/consistent-type-definitions -- interfaces preserve inherited prop overrides */
 interface ApplicationProps
     extends Omit<Partial<PublicProps<PlayCanvasApplication>>, ExcludedApplicationProps>, CanvasProps {
     /**
@@ -297,7 +296,6 @@ interface ApplicationWithoutCanvasProps extends ApplicationProps {
     /** A ref to a html canvas element */
     canvasRef: React.RefObject<HTMLCanvasElement | null>;
 }
-/* eslint-enable @typescript-eslint/consistent-type-definitions */
 
 const exclude: ExcludedApplicationProps[] = ['mouse', 'touch', 'keyboard', 'gamepads', 'scene', 'scripts', 'assets'];
 
