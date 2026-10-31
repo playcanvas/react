@@ -51,8 +51,8 @@ export const shallowEquals = (objA: Record<string, unknown>, objB: Record<string
         const propA = objA[key];
         const propB = objB[key];
         // If the object has an equality operator, use this
-        if (hasEqualsMethod(propA)) {
-            return propA.equals(propB);
+        if (hasEqualsMethod(propA) && !propA.equals(propB)) {
+            return false;
         } else if (propA !== propB) {
             return false;
         }
