@@ -33,7 +33,7 @@ describe('Screen', () => {
 
     it('should render with custom props', () => {
         const { container } = renderWithProviders(
-            <Screen screenSpace={false} referenceResolution={[1920, 1080]} scaleMode="stretch" />
+            <Screen screenSpace={false} referenceResolution={[1920, 1080]} scaleMode="none" />
         );
         expect(container).toBeTruthy();
     });
@@ -64,5 +64,22 @@ describe('Screen prop application', () => {
         expect(screen.referenceResolution).toBeInstanceOf(Vec2);
         expect(screen.referenceResolution.x).toBe(1280);
         expect(screen.referenceResolution.y).toBe(720);
+    });
+
+    // Regression: the scaleMode validator only allowed "blend", "stretch" and "fit", so the
+    // engine's "none" was replaced by the "blend" default.
+    it('applies a scale mode of none', async () => {
+        const ref = React.createRef<PcEntity>();
+        render(
+            <Application deviceTypes={['null']}>
+                <Entity ref={ref}>
+                    <Screen scaleMode="none" />
+                </Entity>
+            </Application>
+        );
+
+        await waitFor(() => expect(ref.current?.screen).toBeTruthy());
+
+        expect(ref.current!.screen!.scaleMode).toBe('none');
     });
 });

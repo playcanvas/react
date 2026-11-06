@@ -361,13 +361,18 @@ export function createComponentDefinition<T, InstanceType>(
         // Colors
         if (value instanceof Color) {
             schema[key as keyof T] = {
-                validate: (val) => (Array.isArray(val) && val.length === 3) || typeof val === 'string',
+                validate: (val) =>
+                    val instanceof Color ||
+                    (Array.isArray(val) && (val.length === 3 || val.length === 4)) ||
+                    typeof val === 'string',
                 default: (value as Color).toString(true),
                 errorMsg: (val: unknown) =>
                     `Invalid value for prop "${String(key)}": "${val}". ` +
-                    `Expected a hex like "#FF0000", CSS color name like "red", or an array "[1, 0, 0]").`,
+                    `Expected a hex like "#FF0000", CSS color name like "red", an array "[1, 0, 0]" or a Color).`,
                 apply: (instance, props, key) => {
-                    if (typeof props[key] === 'string') {
+                    if (props[key] instanceof Color) {
+                        (instance[key as keyof InstanceType] as Color) = (props[key] as Color).clone();
+                    } else if (typeof props[key] === 'string') {
                         const colorString = getColorFromName(props[key] as string) || (props[key] as string);
                         (instance[key as keyof InstanceType] as Color) = new Color().fromString(colorString);
                     } else {
