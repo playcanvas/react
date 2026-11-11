@@ -103,6 +103,8 @@ Developers and studios are already using @playcanvas/react in production.
 
 ## AI-assisted editors
 
+Coding agents: start from the [PlayCanvas React guides index](https://developer.playcanvas.com/user-manual/react/llms.txt), which links a Markdown version of every page.
+
 To get your IDE up to speed, install the [PlayCanvas React rules](https://github.com/playcanvas/react/blob/main/packages/lib/.playcanvas-react.mdc) for Cursor:
 
 ```bash
