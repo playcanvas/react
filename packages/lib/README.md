@@ -51,7 +51,7 @@ It's built around PlayCanvas - a battle-tested, real-time 3D engine and ships wi
 Create a new @playcanvas/react project and follow the instructions:
 
 ```bash
-npx create playcanvas@latest -t react-t
+npm create playcanvas@latest my-app -- -f react
 ```
 
 ### Manual Installation
