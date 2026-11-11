@@ -111,6 +111,8 @@ Developers and studios are already using @playcanvas/react in production
 
 Every component comes with MDC rules for autocompletion, documentation, and AI integration — ready for use in tools like Cursor or Windsurf.
 
+Coding agents: start from the [PlayCanvas React guides index](https://developer.playcanvas.com/user-manual/react/llms.txt), which links a Markdown version of every page.
+
 ### Install AI Rules for @playcanvas/react
 
 ```bash
